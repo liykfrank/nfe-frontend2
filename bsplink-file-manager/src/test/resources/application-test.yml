@@ -1,0 +1,49 @@
+spring:
+      
+  flyway:
+    locations: classpath:/db/migration,/db/data/dev 
+
+  jpa:
+    generate-ddl: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        ddl-auto: none
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
+app:         
+  file_name_rex: ^([A-Z]{2})([a-z0-9]{2})([^_]+)_.*$
+  file_name_outbox_replacement: $3/$1/outbox/$2/
+  file_name_eliminated_replacement: $3/$1/outbox/$2/eliminated
+  file_name_type_replacement: $2
+  local_uploaded_files_directory: uploaded_files
+  local_downloaded_files_directory: downloaded_files
+  zip:
+    name: test.zip
+  yade:  
+    inbox:
+    outbox:
+    host:
+      sftp: 
+        name: sftpserver
+        user: user
+        password: password
+        directory:
+        protocol: sftp
+        port:
+      local:
+        name: localhost
+        user:
+        password:
+        directory: 
+        protocol: local
+        port:
+        

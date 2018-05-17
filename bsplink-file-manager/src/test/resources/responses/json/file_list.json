@@ -1,0 +1,146 @@
+{
+	"content": [
+		{
+			"id": 1,
+			"name": "ILei8385_20180128_file1",
+			"type": "fileType1",
+			"bytes": 1001,
+			"uploadDateTime": "2018-01-01T00:00:00Z",
+			"status": "UNREAD"
+		},
+		{
+			"id": 2,
+			"name": "ILei8385_20180128_file2",
+			"type": "fileType2",
+			"bytes": 1002,
+			"uploadDateTime": "2018-01-02T00:00:00Z",
+			"status": "UNREAD"
+		},
+		{
+			"id": 3,
+			"name": "ILei8385_20180128_file3",
+			"type": "fileType3",
+			"bytes": 1003,
+			"uploadDateTime": "2018-01-03T00:00:00Z",
+			"status": "DOWNLOADED"
+		},
+		{
+			"id": 4,
+			"name": "ILei8385_20180128_file4",
+			"type": "fileType4",
+			"bytes": 1004,
+			"uploadDateTime": "2018-01-04T00:00:00Z",
+			"status": "DOWNLOADED"
+		},
+		{
+			"id": 5,
+			"name": "ILei8385_20180128_file5",
+			"type": "fileType5",
+			"bytes": 1005,
+			"uploadDateTime": "2018-01-05T00:00:00Z",
+			"status": "UNREAD"
+		},
+		{
+			"id": 6,
+			"name": "ILei8385_20180128_file6",
+			"type": "fileType6",
+			"bytes": 1006,
+			"uploadDateTime": "2018-01-06T00:00:00Z",
+			"status": "UNREAD"
+		},
+		{
+			"id": 7,
+			"name": "ILei8385_20180128_file7",
+			"type": "fileType7",
+			"bytes": 1007,
+			"uploadDateTime": "2018-01-07T00:00:00Z",
+			"status": "UNREAD"
+		},
+		{
+			"id": 8,
+			"name": "ILei8385_20180128_file8",
+			"type": "fileType8",
+			"bytes": 1008,
+			"uploadDateTime": "2018-01-08T00:00:00Z",
+			"status": "DOWNLOADED"
+		},
+		{
+			"id": 9,
+			"name": "ILei8385_20180128_file9",
+			"type": "fileType9",
+			"bytes": 1009,
+			"uploadDateTime": "2018-01-09T00:00:00Z",
+			"status": "DOWNLOADED"
+		},
+		{
+			"id": 10,
+			"name": "ILei8385_20180128_file10",
+			"type": "fileType10",
+			"bytes": 1010,
+			"uploadDateTime": "2018-01-10T00:00:00Z",
+			"status": "UNREAD"
+		},
+		{
+			"id": 11,
+			"name": "ILei8385_20180128_603",
+			"type": "fileType11",
+			"bytes": 1020,
+			"uploadDateTime": "2018-01-10T00:00:00Z",
+			"status": "UNREAD"
+		},
+		{
+			"id": 12,
+			"name": "ILei8385_20180128_604",
+			"type": "fileType12",
+			"bytes": 1020,
+			"uploadDateTime": "2018-01-10T00:00:00Z",
+			"status": "DELETED"
+		},
+		{
+			"id": 13,
+			"name": "CA288385_20180126_CONVPROCESS_203",
+			"type": "fileType13",
+			"bytes": 1020,
+			"uploadDateTime": "2018-01-10T00:00:00Z",
+			"status": "UNREAD"
+		},
+		{
+			"id": 14,
+			"name": "ESe62203_20180506.zip",
+			"type": "fileType14",
+			"bytes": 1020,
+			"uploadDateTime": "2018-01-10T00:00:00Z",
+			"status": "UNREAD"
+		},
+		{
+			"id": 15,
+			"name": "ESe62204_20180506.zip",
+			"type": "fileType15",
+			"bytes": 1020,
+			"uploadDateTime": "2018-01-10T00:00:00Z",
+			"status": "UNREAD"
+		}
+	],
+	"pageable": {
+		"sort": {
+			"sorted": true,
+			"unsorted": false
+		},
+		"pageSize": 20,
+		"pageNumber": 0,
+		"offset": 0,
+		"unpaged": false,
+		"paged": true
+	},
+	"last": true,
+	"totalPages": 1,
+	"totalElements": 15,
+	"numberOfElements": 15,
+	"first": true,
+	"sort": {
+		"sorted": true,
+		"unsorted": false
+	},
+	"size": 20,
+	"number": 0
+}

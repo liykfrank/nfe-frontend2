@@ -1,0 +1,31 @@
+# Rename this file cutting out the ".example" suffix.
+#
+# Configure the database replacing the ${db*} values or using properties,
+# e.g: -Ddbhost=myDbHost -Ddbname=myDbname -Ddbuser=myDbuser -Ddbpassword=myDbpassword
+# 
+spring:
+  datasource:
+    url: jdbc:postgresql://${dbhost:localhost}:5432/${dbname}
+    username: ${dbuser}
+    password: ${dbpassword}
+    
+# Configuration for yade transfer file
+app:
+  local_uploaded_files_directory: uploaded_files
+  yade:
+    enabled: true|false
+    host:
+      sftp:
+        name: ${sftpservername}
+        user: ${sftpuser}
+        password: ${sftppassword}
+        directory: ${sftpdirectory}
+        protocol: ftp|sftp|http|https
+      local:
+        name: local
+        # User if necessary
+        user: ${localname}
+        # Password if necessary
+        password: ${localpassword}
+        directory: files
+        protocol: local

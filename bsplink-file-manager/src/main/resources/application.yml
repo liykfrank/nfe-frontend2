@@ -1,0 +1,20 @@
+spring:
+  devtools:
+    restart:
+      exclude: files/**
+  jpa:
+    properties:
+      hibernate:
+        temp:
+          # Gets rid of PostgreSql's related exception:
+          # Disabling contextual LOB creation as createClob() method threw error
+          use_jdbc_metadata_defaults: false
+app:
+  file_name_rex: ^([A-Z]{2})([a-z0-9]{2})([^_]+)_.*$
+  file_name_outbox_replacement: $3/$1/outbox/$2/
+  file_name_eliminated_replacement: $3/$1/outbox/$2/eliminated
+  file_name_type_replacement: $2
+  local_uploaded_files_directory: uploaded_files
+  local_downloaded_files_directory: downloaded_files
+  zip:
+    name: test.zip
