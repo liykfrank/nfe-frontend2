@@ -1,0 +1,20 @@
+<div *ngIf="accounts">
+  <div>
+    <app-sftp-account-grid #sftpGrid [accounts]="accounts" (select)="onSelect($event)"></app-sftp-account-grid>
+  </div>
+
+  
+  <div *ngIf="sftpAccount">
+    <app-sftp-account
+      [sftpAccount]="sftpAccount"
+      [isNew]="selAccount==null"
+      (onCancel)="cancelClicked($event)"
+      (onDelete)="deleteClicked($event)"
+      (onRegister)="saveClicked($event)"
+      ></app-sftp-account>
+  </div>
+
+  <div *ngIf="!sftpAccount">
+    <jqxButton (onClick)="newClicked()">New</jqxButton>
+  </div>
+</div>

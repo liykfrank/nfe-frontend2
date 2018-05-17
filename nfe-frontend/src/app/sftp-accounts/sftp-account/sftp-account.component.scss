@@ -1,0 +1,23 @@
+@import '../../theme/table';
+
+img {
+    width: 28px;
+    height: 16px;
+    padding: 0;
+}
+
+.td {
+    width: 330px;
+}
+
+.td:first-child {
+    width: 100px;
+}
+
+div.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+}

@@ -1,0 +1,20 @@
+[0510/121224.392:ERROR:prune_crash_reports.cc(34)] PruneCrashReportDatabase: Failed to get pending reports
+[0510/123838.461:ERROR:process_reader_win.cc(151)] SuspendThread: Acceso denegado. (0x5)
+[0510/123838.465:ERROR:process_reader_win.cc(151)] SuspendThread: Acceso denegado. (0x5)
+[0510/123838.465:ERROR:process_reader_win.cc(151)] SuspendThread: Acceso denegado. (0x5)
+[0510/123838.465:ERROR:process_reader_win.cc(151)] SuspendThread: Acceso denegado. (0x5)
+[0510/123838.465:ERROR:process_reader_win.cc(151)] SuspendThread: Acceso denegado. (0x5)
+[0510/123838.466:ERROR:process_reader_win.cc(151)] SuspendThread: Acceso denegado. (0x5)
+[0510/123838.466:ERROR:process_reader_win.cc(123)] NtOpenThread: {Acceso denegado} Un proceso ha solicitado acceso a un objeto, pero no se le han concedido esos derechos de acceso. (0xc0000022)
+[0510/123838.468:ERROR:exception_snapshot_win.cc(88)] thread ID 14304 not found in process
+[0510/123838.468:WARNING:crash_report_exception_handler.cc(62)] ProcessSnapshotWin::Initialize failed
+[0510/150141.297:ERROR:process_reader_win.cc(151)] SuspendThread: Acceso denegado. (0x5)
+[0510/150141.303:ERROR:process_reader_win.cc(151)] SuspendThread: Acceso denegado. (0x5)
+[0510/150141.304:ERROR:process_reader_win.cc(151)] SuspendThread: Acceso denegado. (0x5)
+[0510/150141.304:ERROR:process_reader_win.cc(151)] SuspendThread: Acceso denegado. (0x5)
+[0510/150141.305:ERROR:process_reader_win.cc(151)] SuspendThread: Acceso denegado. (0x5)
+[0510/150141.305:ERROR:process_reader_win.cc(151)] SuspendThread: Acceso denegado. (0x5)
+[0510/150141.306:ERROR:process_reader_win.cc(123)] NtOpenThread: {Acceso denegado} Un proceso ha solicitado acceso a un objeto, pero no se le han concedido esos derechos de acceso. (0xc0000022)
+[0510/150141.309:ERROR:exception_snapshot_win.cc(88)] thread ID 2820 not found in process
+[0510/150141.309:WARNING:crash_report_exception_handler.cc(62)] ProcessSnapshotWin::Initialize failed
+[0510/151346.280:ERROR:prune_crash_reports.cc(34)] PruneCrashReportDatabase: Failed to get pending reports

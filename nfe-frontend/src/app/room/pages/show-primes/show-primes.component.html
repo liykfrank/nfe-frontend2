@@ -1,0 +1,8 @@
+<p>
+  show-primes works!
+</p>
+<h3 class="first">Single</h3>
+    <p-dropdown [options]="cities" [(ngModel)]="selectedCity" placeholder="Select a City" optionLabel="name" [showClear]="true"></p-dropdown>
+    <p>Selected City: {{selectedCity ? selectedCity.name : 'none'}}</p>
+    <button (click)="selectMod()" >Sel item</button>
+

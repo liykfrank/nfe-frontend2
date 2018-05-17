@@ -1,0 +1,19 @@
+<div class="files-upload" *ngIf="configuration">
+  <p-fileUpload #uploadComp
+    [customUpload]="customUpload"
+    [url]="url"
+    [name]="name"
+    [multiple]="multipleUpload"
+    [chooseLabel]="chooseLabel"
+    (onSelect)="onSelect($event)"
+    (onUpload)="onUpload($event)">
+    <ng-template pTemplate="content">
+      <ul *ngIf="uploadedFiles.length">
+        <b>Next Files have been uploaded correctly :</b>
+        <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
+      </ul>
+      <p-messages [(value)]="msgs"></p-messages>
+    </ng-template>
+  </p-fileUpload>
+</div>
+

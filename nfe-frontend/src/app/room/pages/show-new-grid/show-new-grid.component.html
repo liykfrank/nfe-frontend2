@@ -1,0 +1,22 @@
+<p>
+  show-new-grid works!
+</p>
+<!-- with page rendereer -->
+ <!-- <jqxGridnew #gridReference id="grid"
+    [width]="'100%'" [source]="dataAdapter" [columns]="columns"
+    [pageable]="true" [autoheight]="true" [sortable]="true"
+    [altrows]="true" [enabletooltips]="true" [editable]="false"
+    [selectionmode]="'checkbox'"
+
+     [pagerrenderer]="pagerrenderer">
+</jqxGridnew>
+ -->
+
+<jqxGridnew #gridReference id="grid"
+[width]="'100%'" [source]="dataAdapter" [columns]="columns"
+[pageable]="true" [autoheight]="true" [sortable]="true"
+[altrows]="true" [enabletooltips]="true" [editable]="false"
+[selectionmode]="'checkbox'"
+[pagermode]="'simple'"
+ >
+</jqxGridnew>

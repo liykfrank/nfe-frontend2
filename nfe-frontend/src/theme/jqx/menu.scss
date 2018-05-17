@@ -1,0 +1,34 @@
+menu {
+    //background: #002A51;
+    jqxmenu {
+
+        background: #002A51 !important;
+        ul {
+            background: #002A51 !important;
+            li  {
+                background: #002A51 !important;
+
+                a{
+
+                    color: white;
+                    
+                }
+
+                a:hover {
+                    color: white;
+                }
+
+            }
+        }
+    }
+
+    .jqx-widget-header{
+        background: #002A51 !important;
+        border: 0px;
+    }
+
+    .jqx-menu-item-top a:hover{
+        color: white;
+    }
+
+}

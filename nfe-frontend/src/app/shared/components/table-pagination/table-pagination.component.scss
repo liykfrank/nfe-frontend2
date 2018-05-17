@@ -1,0 +1,17 @@
+.table-pagination {
+  .table-pagination-nums {
+    margin-bottom: 4px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    .numpag {
+      display: inline-block;
+      padding: 6px;
+      cursor: pointer;
+    }
+
+    .currentpag {
+      background-color: lightblue;
+    }
+  }
+}

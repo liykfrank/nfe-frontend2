@@ -1,0 +1,12 @@
+/* You can add global styles to this file, and also import other style files */
+body{
+  min-height: 100vh;
+  background: linear-gradient(#B4DEF7, white);
+  overflow: auto !important;
+  position: static !important;
+  // width: 100vh;
+  //display: flex;
+  //flex-direction: row;
+
+}
+@import './theme/content';

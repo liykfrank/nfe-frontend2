@@ -1,0 +1,12 @@
+div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.buttons {
+    flex-flow: row;
+    flex-wrap: wrap;
+}

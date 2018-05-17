@@ -1,0 +1,27 @@
+@import 'variables';
+
+.footer {
+  background: $color-footer;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  .footer_logo{
+      flex: 0 0 auto;
+      transform: scale(0.5);
+  }
+
+  .title {
+      padding: 0px 5px 0px 0px;
+  }
+
+  .title {
+      flex: 0 0 auto;
+  }
+
+  .terms_conditions{
+      flex: 0 0 auto;
+      color: red;
+  }
+}

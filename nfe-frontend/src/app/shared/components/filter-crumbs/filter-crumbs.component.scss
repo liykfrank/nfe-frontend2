@@ -1,0 +1,33 @@
+
+.filterResults {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+
+  p{
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+
+  .resultTag {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    background: #014E81;
+    margin: 5px;
+    color: white;
+    font-style: bold;
+    padding: 0px 5px 0px 5px;
+
+    img {
+      margin: 0px 0px 0px 5px;
+      width: 20px;
+      height: 20px;
+    }
+
+  }
+}

@@ -1,0 +1,36 @@
+jqxtabs {
+
+  .jqx-tabs{
+      border: 0px;
+  }
+
+  .jqx-tabs-header {
+    background: #E3E3E3;
+  }
+
+  .jqx-tabs-headerWrapper{
+      padding-top: 30px;
+  }
+
+  .jqx-tabs-jqx-tabs-titleWrapper{
+      // display: flex;
+      justify-content: center;
+  }
+
+  .jqx-tabs-titleContentWrapper{
+      line-height: 40px;
+      color: #4B5C79;
+      font-weight: bold;
+  }
+
+  li:first-child {
+    .jqx-tabs-close-button {
+      visibility: hidden !important;
+    }
+  }
+
+  .jqx-tabs-close-button{
+      line-height: 40px;
+  }
+
+}

@@ -1,0 +1,8 @@
+<div class="table-pagination">
+  <div class="table-pagination-nums">
+     <div *ngFor="let numPag of pagesar; let i= index" class="numpag" (click)="clNumPage(i)" [class.currentpag]="isCurrentPage(i)">
+      {{i}}
+    </div>
+  </div>
+  <ng-content></ng-content>
+</div>

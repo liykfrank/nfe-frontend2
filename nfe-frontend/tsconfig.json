@@ -1,0 +1,38 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ]
+  },
+  "include": [
+    "src/**/*"
+ ],
+  "files": [
+    // For all widgets used, add the relevant .ts file.
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid.ts",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxtabs",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxcheckbox",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxmenu",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxinput",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxnumberinput",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxcalendar",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxradiobutton",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxprogressbar",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxnotification"
+ ]
+}

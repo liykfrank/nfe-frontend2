@@ -1,0 +1,66 @@
+<jqxMenu class="menu" [autoOpen]="true">
+    <ul>
+        <li>
+            <a (click)="openTab('dashboard')">DASHBOARD</a>
+        </li>
+        <li>
+            <a (click)="openTab('adm_acm')">ADM/ACM</a>
+            <ul>
+                <li>
+                    <a (click)="openTab('query_adm')">Query ADM</a>
+                </li>
+                <li>
+                    <a (click)="openTab('query_acm')">Query ACM</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a (click)="openTab('refunds')">REFUNDS</a>
+        </li>
+        <li>
+            <a (click)="openTab('reports')">REPORTS</a>
+        </li>
+        <li>
+            <a [id]="_utilsService.wrapperMenuID(actions.FILES)">FILES</a>
+            <ul>
+              <li>
+                  <a [id]="_utilsService.wrapperMenuID(actions.QUERY_FILES)" (click)="openTab('query_files')">Query Files</a>
+              </li>
+              <li>
+                  <a [id]="_utilsService.wrapperMenuID(actions.QUERY_FILES_READ_ONLY)" (click)="openTab('query_files/readOnly')">Query Files Read Only</a>
+              </li>
+              <li>
+                  <a [id]="_utilsService.wrapperMenuID(actions.UPLOAD_FILES)"(click)="openTab('upload_files')">Upload Files</a>
+              </li>
+          </ul>
+        </li>
+
+        <li>
+            <a (click)="openTab('sftp_accounts')">SFTP Accounts</a>
+            <ul>
+              <li>
+                  <a (click)="openTab('query_sftp_accounts')">Query SFTP Accounts</a>
+              </li>
+              <li>
+                  <a (click)="openTab('create_sftp_account')">Create SFTP Account</a>
+              </li>
+          </ul>
+        </li>
+
+        <li>
+            <a (click)="openTab('ticketing')">TICKETING</a>
+        </li>
+        <li>
+            <a (click)="openTab('general_info')">GENERAL INFO</a>
+        </li>
+        <li>
+            <a (click)="openTab('self_service')">SELF SERVICE</a>
+        </li>
+        <li>
+            <a (click)="openTab('admin')">ADMIN</a>
+        </li>
+        <li>
+          <a (click)="openTab('monitor')">MONITOR</a>
+      </li>
+    </ul>
+</jqxMenu>

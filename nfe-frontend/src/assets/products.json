@@ -1,0 +1,21 @@
+﻿[{"Discontinued":true,
+    "ProductName":"aaaaa" ,
+      "QuantityPerUnit":4,
+      "UnitPrice":6.2,
+       "UnitsInStock":7.8 }
+  ,{"Discontinued":true,
+    "ProductName":"bbbb" ,
+      "QuantityPerUnit":4,
+      "UnitPrice":6.2,
+       "UnitsInStock":7.8 },
+       {"Discontinued":true,
+    "ProductName":"ccccc" ,
+      "QuantityPerUnit":4,
+      "UnitPrice":6.2,
+       "UnitsInStock":7.8 },
+       {"Discontinued":true,
+    "ProductName":"dddddd" ,
+      "QuantityPerUnit":4,
+      "UnitPrice":60.2,
+       "UnitsInStock":72.8 }     ]
+

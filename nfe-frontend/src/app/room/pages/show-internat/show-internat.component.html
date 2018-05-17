@@ -1,0 +1,19 @@
+<p>
+  show-internat works!
+</p>
+Change language:
+<button (click)="selectLocale('en', 'US', 'USD');">United States</button>
+<button (click)="selectLocale('es', 'ES', 'EUR');">Spanish</button>
+<button (click)="selectLocale('it', 'IT', 'EUR');">Italia</button>
+<div>
+Text International :
+{{ 'Title' | translate: lang }}
+<br>
+{{ 'Greeting' | translate: lang }}
+<div l10nTranslate>Greeting</div>
+<div l10nTranslate>Title</div>
+Code LANG = {{lang}}
+
+</div>
+
+

@@ -1,0 +1,75 @@
+#!/usr/bin/env groovy
+
+env.sourceBranch = env.gitlabSourceBranch ?: 'develop'
+env.gitlabRepositoryUrl = env.gitlabSourceRepoHttpUrl ?: 'http://gitlab.nfedev.accelya.com/bsplink/nfe-frontend.git'
+
+echo "[INFO] Source Branch: ${env.sourceBranch}"
+echo "[INFO] Source Repository URL: ${env.gitlabRepositoryUrl}"
+
+pipeline {
+
+    agent none
+
+    stages {
+        
+        stage('Build') {
+            
+            agent {
+                label 'master'
+            }
+            
+            steps {
+                checkout poll: false, scm: [
+					$class: 'GitSCM',
+					branches: [[name: "*/${env.sourceBranch}" ]],
+					doGenerateSubmoduleConfigurations: false,
+						extensions: [],
+						submoduleCfg: [],
+						userRemoteConfigs: [[
+							credentialsId: env.gitlabCredentialsId,
+							url: "${env.gitlabRepositoryUrl}"
+					]]]
+
+				nodejs('nodejs') {
+				    sh 'npm install'
+                    sh 'npm run build'
+                }
+
+                dir('dist') {
+                    stash name: 'nfe-frontend'
+                }
+            }
+        }
+
+        stage('Test') {
+            
+            agent {
+                label 'master'
+            }
+            
+            steps {
+                
+                nodejs('nodejs') {
+                    sh 'npm run test'
+                    //sh 'npm run e2e'
+                }
+			}
+        }
+
+        stage('Deploy') {
+            
+            agent {
+                label 'a2lyadesch1'
+            }
+            
+            steps {
+                
+                dir('dist') {
+                    unstash 'nfe-frontend'
+                }
+                
+                sh './deploy-docker.sh'
+			}
+        }
+  	}
+}

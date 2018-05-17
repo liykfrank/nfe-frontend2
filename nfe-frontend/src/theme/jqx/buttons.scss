@@ -1,0 +1,24 @@
+button.jqx-button{
+  background: #014E81;
+  color: white;
+  width: 155px;
+  height: 30px;
+  border-radius: 5px;
+  cursor: pointer !important ;
+}
+
+.no_background {
+  .jqx-button {
+    background: none;
+    color: #014E81;
+    border: 0px;
+  }
+}
+
+.white_background {
+  .jqx-button {
+    background: white;
+    color: #014E81;
+    border: 1px solid #014E81;
+  }
+}

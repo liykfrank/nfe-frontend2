@@ -1,0 +1,15 @@
+{
+    "Title": "Angular localization",
+    "Subtitle": "It's a small world",
+    "Change language": "Change language",
+    "Greeting": "Hi!",
+    "YearFilter": "Year",
+    "MonthFilter": "Month",
+    "DatesFilter": "Dates(From/To)",
+    "FileType": "File Type",
+    "StatusFilter": "File Status",
+    "ResetFilter": "Reset",
+    "File": "File",
+    "Size": "Size",
+    "Date": "Date"
+}

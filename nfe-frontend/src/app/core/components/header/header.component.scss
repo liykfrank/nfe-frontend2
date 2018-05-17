@@ -1,0 +1,80 @@
+
+    header{
+      background: #002A51;
+      flex: 0 0 100px;
+      flex-direction: row;
+      align-items: center;
+
+          .lvl1{
+              display: flex;
+              align-items: center;
+              height: 60px;
+              img {
+                  width: 70px;
+                  height: 40px;
+                  padding: 10px;
+              }
+              background: #F6F6F6;
+              flex: 0 0 60px;
+              p {
+                  margin: 0px;
+                  padding: 0px;
+              }
+
+              .principal-nav{
+                  display: flex;
+                  justify-content: flex-end;
+                  width: 100%;
+
+                  .principal-buttons {
+                      display: flex;
+                      flex-direction: row;
+                      .button{
+                          display: flex;
+                          flex-direction: column;
+                          justify-content: center;
+                          align-items: center
+                      }
+
+                  }
+                  .user{
+                      display: flex;
+                      flex-direction: column;
+                      justify-content: center;
+                      color: white;
+                      background: #16E7C1;
+                      font-size: 12px;
+                      padding: 0px 60px 0px 10px;
+
+                  }
+                  .country{
+                      display: flex;
+                      flex-direction: column;
+                      justify-content: center;
+                      padding: 0px 60px 0px 20px;
+                      border-right: 1px solid gray;
+                  }
+                  .user-account{
+                      display: flex;
+                      flex-direction: row;
+                      justify-content: center;
+                      align-items: center;
+                      padding: 0px 60px 0px 20px;
+                      border-right: 1px solid gray;
+                  }
+                  .notifications{
+                      display:flex;
+                      flex-direction: column;
+                      justify-content: center;
+                  }
+
+              }
+
+          }
+
+          .lvl2{
+              background: #002A51;
+              height: 40px;
+              flex: 0 0 auto;
+          }
+}

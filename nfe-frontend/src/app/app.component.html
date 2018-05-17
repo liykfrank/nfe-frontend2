@@ -1,0 +1,12 @@
+<!--The content below is only a placeholder and can be replaced.-->
+
+<!--support mobile- <ion-app *ngIf="ionic"></ion-app> -->
+<!-- OUTLET -->
+ <div *ngIf="!ionic" class="content">
+   <app-header class="header"></app-header>
+   <div class="section">
+     <router-outlet  ></router-outlet>
+   </div>
+   <app-footer></app-footer>
+ </div>
+

@@ -1,0 +1,41 @@
+<form [formGroup]="sftpForm" novalidate>
+  <div class="table">
+    <div class="tr">
+      <div class="td">
+        Login
+      </div>
+      <div class="td">
+        <jqxInput formControlName="login" [disabled]="!isNew" [height]="25" [width]="150"></jqxInput>
+      </div>
+    </div>
+    <div class="tr">
+      <div class="td">
+        Mode
+      </div>
+      <div class="td">
+        <jqxDropDownList #mode formControlName="mode" [height]="25" [width]="150" [source]="accountModes" [autoDropDownHeight]="true"></jqxDropDownList>
+      </div>
+    </div>
+    <div class="tr">
+      <div class="td">
+        Status
+      </div>
+      <div class="td">
+        <jqxDropDownList #status formControlName="status" [height]="25" [width]="150" [source]="accountStatus" [autoDropDownHeight]="true"></jqxDropDownList>
+      </div>
+    </div>
+    <div class="tr">
+      <div class="td">
+        Public Key <img src="../../../../assets/images/glyph/svg/si-glyph-key-2.svg" alt="">
+      </div>
+      <div class="td">
+        <jqxTextArea formControlName="publicKey" [width]="300" [height]="90"></jqxTextArea>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="buttons">
+  <jqxButton [disabled]="!sftpForm.valid" (onClick)="register()">Save</jqxButton>
+  <jqxButton (onClick)="cancel()">Cancel</jqxButton>
+  <jqxButton (onClick)="delete()" *ngIf="!isNew">Delete</jqxButton>
+</div>

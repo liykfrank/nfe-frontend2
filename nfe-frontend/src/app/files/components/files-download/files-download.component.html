@@ -1,0 +1,26 @@
+<div class="top_buttons" *ngIf="!readOnly">
+  <app-buttons id="uploadFiles" [title]="'Upload files'" (clickBut)="tabsService.addTabAction(actions.UPLOAD_FILES);"></app-buttons>
+</div>
+<p-growl  [life]="3000"  ></p-growl>
+<app-files-filter [dataFilters]="dataFilterLoad" (searchCl)="searchCl($event)"
+ (resetCl)="resetAllFilters()" [statusList]="statusList" >
+</app-files-filter>
+<app-filter-crumbs [elementsFilter]="elementsFilter" ></app-filter-crumbs>
+
+<app-table-pagination (pageChange)="pageChange($event)" (reload)="loadDataTable($event.filter,true)"
+>
+  <jqxGridnew #gridReference id="grid"
+  [width]="'100%'" [source]="dataAdapter" [columns]="columns"
+  [pageable]="false" [autoheight]="true" [sortable]="true"
+  [altrows]="true" [enabletooltips]="true" [editable]="false"
+  [selectionmode]="!readOnly ? 'checkbox' : 'none'"
+   >
+  </jqxGridnew>
+</app-table-pagination>
+
+
+<div class="bottom_buttons" *ngIf="!readOnly">
+  <app-buttons id="downloadFiles" [title]="'Download'" (clickBut)="download()" [disabled]="isSelected()" ></app-buttons>
+  <app-buttons [title]="'Print'" [hidden]="true"></app-buttons>
+  <app-buttons id="deleteFiles" [title]="'Delete'" (clickBut)="remove()" [disabled]="isSelected()"></app-buttons>
+</div>
