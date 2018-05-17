@@ -1,0 +1,81 @@
+#!/bin/bash
+
+#-------------------------------------------------------------------------------
+# Configuration.
+#-------------------------------------------------------------------------------
+
+export SFTP_DIRECTORY="/sftp"
+export SFTP_USER_GROUP="sftp-users"
+export SFTP_USERS_HOME="/home"
+export DEFAULT_USER_GROUP="users"
+
+export SFTP_AM_SCRIPTS_INSTALL_DIR="/usr/local/bin"
+export SFTP_AM_INIT_SCRIPT="sftp-am-init.bash"
+export SFTP_AM_SCRIPTS="
+	$SFTP_AM_INIT_SCRIPT
+	sftp-am-authorize-key.bash
+	sftp-am-add-update.bash
+    sftp-am-delete.bash
+	sftp-am.source
+"
+
+#-------------------------------------------------------------------------------
+# Functions.
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+# Ask for user's confirmation.
+#
+# It can be confirmed in line using "-y" as first argument.
+#-------------------------------------------------------------------------------
+function confirm_or_exit() {
+
+	local MESSAGE="$1"
+	local ASSUME_YES="$2"
+
+	if [[ "$ASSUME_YES" != "-y" ]]; then
+
+		echo -e "$MESSAGE"
+		echo
+		echo    "Continue? [s/N]"
+
+		read CONFIRMATION
+
+		if ! [[ "$CONFIRMATION" =~ s|S ]]; then
+
+			echo "cancelled"
+			exit 1
+		fi
+	fi
+}
+
+function assert_user_is_root() {
+
+	if [ "$(id -u)" != "0" ]; then
+
+		echo "Script should be run as root user."
+		exit 1
+	fi
+}
+
+function group_exists() {
+
+	local GROUP="$1"
+
+	getent group "$GROUP" >/dev/null
+}
+
+function user_exists() {
+
+	local USER="$1"
+
+	getent passwd "$USER" >/dev/null
+}
+
+function is_sftp_user() {
+
+	local USER="$1"
+
+	groups "$USER" | grep -q "\<$SFTP_USER_GROUP\>"
+}
+

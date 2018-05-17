@@ -1,0 +1,12 @@
+spring:
+
+  jpa:
+    properties:
+      hibernate:
+        temp:
+          # Gets rid of PostgreSql's related exception:
+          # Disabling contextual LOB creation as createClob() method threw error
+          use_jdbc_metadata_defaults: false
+        default_schema: sftpaccountmanager
+  flyway:
+    schemas: sftpaccountmanager
