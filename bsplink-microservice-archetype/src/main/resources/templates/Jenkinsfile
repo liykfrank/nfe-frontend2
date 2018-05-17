@@ -1,0 +1,53 @@
+#!/usr/bin/env groovy
+
+env.sourceBranch = env.gitlabSourceBranch ?: 'master'
+env.gitlabRepositoryUrl = env.gitlabSourceRepoHttpUrl ?: 'http://a2lgit1/bsplink/@projectName@.git'
+
+echo "[INFO] Source Branch: ${env.sourceBranch}"
+echo "[INFO] Source Repository URL: ${env.gitlabRepositoryUrl}"
+
+pipeline {
+
+    agent any
+
+	//configuration for returning the pipeline execution status to Gitlab
+	options {
+        gitLabConnection('A2LGIT1')
+        gitlabCommitStatus(name: 'jenkins')
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+		    	checkout poll: false, scm: [
+					$class: 'GitSCM',
+					branches: [[name: "*/${env.sourceBranch}" ]],
+					doGenerateSubmoduleConfigurations: false,
+						extensions: [],
+						submoduleCfg: [],
+						userRemoteConfigs: [[
+							credentialsId: env.gitlabCredentialsId,
+							url: "${env.gitlabRepositoryUrl}"
+					]]]
+
+				configFileProvider([configFile(fileId: 'gradle.properties', targetLocation: '.')]) {
+                	sh './gradlew clean build'
+                }
+            }
+        }
+        
+    	stage('Publish')  {
+			steps {
+				sh './gradlew uploadArchives'
+			}
+		}
+		
+		stage('SonarQube') {
+            steps {
+            	withSonarQubeEnv('a2lsonarq1') {
+                	sh './gradlew sonarqube'
+             	}
+            }
+        }
+  	}
+}

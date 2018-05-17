@@ -1,0 +1,10 @@
+
+spring:
+  application:
+    name: @projectName@
+
+server:
+  port: 0
+
+logging:
+  file: ${spring.application.name}.json.log
