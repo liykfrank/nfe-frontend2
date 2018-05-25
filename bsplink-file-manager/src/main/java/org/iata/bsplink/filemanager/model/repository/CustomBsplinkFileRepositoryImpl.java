@@ -12,6 +12,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.iata.bsplink.filemanager.model.entity.BsplinkFile;
+import org.iata.bsplink.filemanager.model.entity.BsplinkFileStatus;
 import org.iata.bsplink.filemanager.pojo.BsplinkFileSearchCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -64,10 +65,13 @@ public class CustomBsplinkFileRepositoryImpl implements CustomBsplinkFileReposit
                 conditions);
 
         addEqualConditionIfValueIsPresent(searchCriteria.getName(), root.get("name"),
-                conditions);
-
+                conditions);      
+        
         addEqualConditionIfValueIsPresent(searchCriteria.getStatus(), root.get("status"),
                 conditions);
+
+        addNotEqualConditionIfValueIsNotPresent(searchCriteria.getStatus(), root.get("status"),
+                conditions, BsplinkFileStatus.TRASHED);
 
         addEqualConditionIfValueIsPresent(searchCriteria.getType(), root.get("type"),
                 conditions);
@@ -86,6 +90,15 @@ public class CustomBsplinkFileRepositoryImpl implements CustomBsplinkFileReposit
         if (value != null) {
 
             conditions.add(criteriaBuilder.equal(path, value));
+        }
+    }
+
+    private void addNotEqualConditionIfValueIsNotPresent(Object value, Path<Object> path,
+            List<Predicate> conditions, Object notEqualToValue) {
+
+        if (value == null) {
+
+            conditions.add(criteriaBuilder.notEqual(path, notEqualToValue));
         }
     }
 

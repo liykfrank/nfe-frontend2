@@ -4,5 +4,6 @@ public enum BsplinkFileStatus {
     DELETED,
     DOWNLOADED,
     UNREAD,
-    SENT
+    SENT,
+    TRASHED
 }

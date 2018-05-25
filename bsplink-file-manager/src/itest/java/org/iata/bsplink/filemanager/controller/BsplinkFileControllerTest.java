@@ -6,6 +6,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -73,10 +75,10 @@ public class BsplinkFileControllerTest {
 
     @Autowired
     private BsplinkFileConfigService bsplinkFileConfigurationService;
-    
+
     @MockBean
     private YadeUtils yadeUtils;
-   
+
     @Before
     public void setUp() throws IOException, BsplinkValidationException {
         File uploadFolder = new File(applicationConfiguration.getLocalUploadedFilesDirectory());
@@ -211,6 +213,37 @@ public class BsplinkFileControllerTest {
     }
 
     @Test
+    public void testDeleteSingleFileThrowsException() throws Exception {
+
+        BsplinkFile bsplinkFile = new BsplinkFile();
+        bsplinkFile.setName("ESxx2203_20181010_test15367.txt");
+        bsplinkFile.setType("xx");
+        bsplinkFile.setBytes(1212L);
+        bsplinkFile.setUploadDateTime(Instant.now());
+        bsplinkFileRepository.saveAndFlush(bsplinkFile);
+        Long id = bsplinkFile.getId();
+
+        when(yadeUtils.transfer(any(), any(), any(), any())).thenThrow(new Exception());
+
+        mockMvc.perform(delete("/v1/files/" + id)).andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void testDeletesDeletedSingleFile() throws Exception {
+
+        BsplinkFile bsplinkFile = new BsplinkFile();
+        bsplinkFile.setName("ESxx2203_20181011_test15367.txt");
+        bsplinkFile.setType("xx");
+        bsplinkFile.setBytes(1212L);
+        bsplinkFile.setUploadDateTime(Instant.now());
+        bsplinkFile.setStatus(BsplinkFileStatus.DELETED);
+        bsplinkFileRepository.saveAndFlush(bsplinkFile);
+        Long id = bsplinkFile.getId();
+
+        mockMvc.perform(delete("/v1/files/" + id)).andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void testDeleteSingleFileReturnsNotFound() throws Exception {
 
         mockMvc.perform(delete("/v1/files/999")).andExpect(status().isNotFound());
@@ -274,7 +307,7 @@ public class BsplinkFileControllerTest {
         Long bytes = 88L;
         String name = "abcdefghi.txt";
         BsplinkFileStatus status = BsplinkFileStatus.UNREAD;
-        String type = "UNKNOWN";
+        String type = "abcdefghi.txt";
         Instant instant = Instant.now();
 
         String json = String.format(

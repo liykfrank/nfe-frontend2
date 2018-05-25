@@ -13,17 +13,19 @@ import org.springframework.data.domain.Sort;
 public interface BsplinkFileService {
 
     public Optional<BsplinkFile> findById(Long id);
+    
+    public List<BsplinkFile> updateStatusToTrashed(BsplinkFile file);
 
     public List<BsplinkFile> findAllById(Iterable<Long> ids);
 
-    public BsplinkFile save(BsplinkFile file);
+    public BsplinkFile save(BsplinkFile file);   
 
     public BsplinkFile updateStatusToDownloaded(BsplinkFile file);
 
     public Page<BsplinkFile> find(BsplinkFileSearchCriteria searchCriteria, Pageable pageable,
             Sort sort);
 
-    public void deleteOneFile(BsplinkFile file);
+    public void deleteOneFile(BsplinkFile file) throws Exception;
 
     public List<EntityActionResponse<Long>> deleteMultipleFiles(List<Long> ids);
 }

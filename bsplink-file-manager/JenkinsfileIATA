@@ -1,0 +1,20 @@
+#!/usr/bin/env groovy
+
+pipeline {
+
+    agent any
+
+    stages {
+    	stage('SonarQube') {
+            steps {
+            	withSonarQubeEnv('a2lsonarq1 - IATA') {
+            	    dir('bsplink-file-manager') {
+            	        configFileProvider([configFile(fileId: 'gradle.properties', targetLocation: '.')]) {
+	            	        sh './gradlew sonarqube'
+            	        }
+            	    }
+	            }
+	        }
+	  	}
+	}
+}

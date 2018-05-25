@@ -1,9 +1,9 @@
-# BSPlink File Manager.
+# BSPlink File Manager
 
 `BSPlink File Manager` centralizes user's files operations: uploads, downloads,
 file list, etc...
 
-## Spring profiles.
+## Spring profiles
 
 ### dev
 
@@ -17,7 +17,7 @@ app.yade.host.sftp properties in order to connect with the sftp server.
 
 This profile is activated when running tests.
 
-## Database.
+## Database
 
 Without specific database, both `dev` profile and `test suite` use an `h2`
 in memory database. The `PostgresSql` driver is also provided so you can
@@ -32,13 +32,20 @@ http://localhost:8080/h2-console. Configure the `JDBC URL` value with
 **destroys all the data** in the database so be careful with the database
 you use.
 
+
 ## Application Configuration
 
-app.local_uploaded_files_directory: directory where uploaded files are stored temporarily
-app.local_downloaded_files_directory: directory where downloaded files are stored temporarily
+It is necessary to set the directory where uploaded files are stored temporarily, in the app.local_uploaded_files_directory property. 
+And the app.local_downloaded_files_directory property where downloaded files are stored temporarily.
+Also it is required to set the dev profile properties as commented before.
+In addition the following properties have to be established in the application.yml file:
 
-- no default value applied
-- for uploading/downloading files it is necessary to configure existing directories
+- file_name_rex: ^([A-Z]{2})([a-z0-9]{2})([^_]+)_.*$ Defines the base regular expression to apply to files. E.g.: ILei8385_20180128_file would be a valid file name.
+- file_name_outbox_replacement: $3/$1/outbox/$2/ It is apply to the previous regular expression to get from file name, the user outbox directory.
+- file_name_eliminated_replacement: $3/$1/outbox/$2/eliminated Regex replacement to get from file name, the user eliminated directory.
+- file_name_type_replacement: $2 Regex replacement to get from file name, the file type.
+
+
 
 ### Configuration for yade-utils transfer file
 Yade-utils allows to establish connections through different protocols such us ftp, sftp, http, https, webdav... etc.

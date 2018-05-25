@@ -2,12 +2,14 @@ package org.iata.bsplink.filemanager.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +18,7 @@ import org.iata.bsplink.filemanager.model.entity.BsplinkFile;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFileStatus;
 import org.iata.bsplink.filemanager.model.repository.BsplinkFileRepository;
 import org.iata.bsplink.filemanager.response.EntityActionResponse;
+import org.iata.bsplink.filemanager.utils.BsplinkFileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -23,13 +26,24 @@ import org.springframework.http.HttpStatus;
 public class BsplinkFileServiceImplTest {
 
     private BsplinkFileRepository bsplinkFileRepository;
-    private BsplinkFileService bsplinkFileService;   
+    private BsplinkFileService bsplinkFileService;
+    private BsplinkFileUtils bsplinkFileUtils;
 
     @Before
     public void setUp() {
 
         bsplinkFileRepository = mock(BsplinkFileRepository.class);
-        bsplinkFileService = new BsplinkFileServiceImpl(bsplinkFileRepository);
+        bsplinkFileUtils = mock(BsplinkFileUtils.class);
+        bsplinkFileService = new BsplinkFileServiceImpl(bsplinkFileRepository, bsplinkFileUtils);
+    }
+
+    @Test
+    public void testUpdateStatusToTrashed() {
+        BsplinkFile file = getBspLinkFileMock().get();
+        when(bsplinkFileRepository.findByName(file.getName()))
+                .thenReturn(getList());
+        List<BsplinkFile> fileUpdates = bsplinkFileService.updateStatusToTrashed(file);
+        assertEquals(fileUpdates.get(0).getStatus(), BsplinkFileStatus.TRASHED);
     }
 
     @Test
@@ -49,11 +63,34 @@ public class BsplinkFileServiceImplTest {
 
     private void setUpDeleteMultipleFilesTestMocks() {
 
-        Optional<BsplinkFile> optionalFile = Optional.of(new BsplinkFile());
-
-        when(bsplinkFileRepository.findById(any())).thenReturn(optionalFile);
+        when(bsplinkFileRepository.findById(any())).thenReturn(Optional.of(new BsplinkFile()))
+                .thenReturn(Optional.of(new BsplinkFile()));
         when(bsplinkFileRepository.save(any())).thenThrow(new RuntimeException("foo"));
-    }   
+    }
+
+    @Test
+    public void testDeleteDeletedMultipleFilesReturnsBadRequest() {
+
+        setUpDeleteDeletedFilesTestMocks();
+
+        List<Long> ids = Arrays.asList(1L, 2L);
+
+        List<EntityActionResponse<Long>> result = bsplinkFileService.deleteMultipleFiles(ids);
+
+        for (EntityActionResponse<Long> response : result) {
+            assertThat(response.getStatus(), equalTo(HttpStatus.BAD_REQUEST.value()));
+        }
+    }
+
+    private void setUpDeleteDeletedFilesTestMocks() {
+        BsplinkFile bsplinkFile1 = new BsplinkFile();
+        bsplinkFile1.setStatus(BsplinkFileStatus.DELETED);
+        BsplinkFile bsplinkFile2 = new BsplinkFile();
+        bsplinkFile2.setStatus(BsplinkFileStatus.DELETED);
+
+        when(bsplinkFileRepository.findById(any())).thenReturn(Optional.of(bsplinkFile1))
+                .thenReturn(Optional.of(bsplinkFile2));;
+    }
 
     @Test
     public void testFindById() {
@@ -111,6 +148,12 @@ public class BsplinkFileServiceImplTest {
         optionalFile.get().setBytes(1024L);
 
         return optionalFile;
+    }
+    
+    private List<BsplinkFile> getList() {
+        List<BsplinkFile> list = new ArrayList<>();
+        list.add(getBspLinkFileMock().get());
+        return list;
     }
 
     private Optional<BsplinkFile> getBsplinkFileMockDownloadStatus() {
