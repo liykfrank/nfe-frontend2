@@ -1,3 +1,4 @@
+import { environment } from '../../environments/environment';
 import { DownFilesResource } from './services/resources/downfiles.resource';
 import { FilesRoutingModule } from './files-routing.module';
 import { NgModule } from '@angular/core';
@@ -16,7 +17,11 @@ import { RemoveFileResource } from './services/resources/removefile.resource';
 import { UtilsService } from '../shared/services/utils.service';
 import { ConfigurationService } from '../files/services/configuration.service';
 import { FormsModule } from '@angular/forms';
+import { ListFilesMockResource } from './services/resources/mocks/listfiles.resopurce';
+import { DownFileMockResource } from './services/resources/mocks/downfile.resource';
 
+const utils=new UtilsService();
+utils.env=environment;
 @NgModule({
   imports: [CommonModule, FormsModule, SharedModule, FilesRoutingModule],
   declarations: [
@@ -33,8 +38,8 @@ import { FormsModule } from '@angular/forms';
     FilesFilterComponent
   ],
   providers: [
-    ListFilesResource,
-    DownFileResource,
+    utils.getProv(ListFilesResource,ListFilesMockResource),
+    utils.getProv(DownFileResource,DownFileMockResource),
     DownFilesResource,
     RemoveFileResource,
     RemoveFilesResource,

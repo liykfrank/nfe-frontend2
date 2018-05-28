@@ -1,27 +1,21 @@
+import { SftpAccountsPasswordResource } from './services/resources/sftp-accounts-password-resource';
 import { NgModule } from "@angular/core";
 import { SharedModule } from "../shared/shared.module";
 import { SftpAccountsService } from "./services/sftp-accounts.service";
-import { SftpAccountsQueryComponent } from "./sftp-accounts-query/sftp-accounts-query.component";
-import { SftpAccountMaintenanceComponent } from "./sftp-account-maintenance/sftp-account-maintenance.component";
-import { SftpAccountGridComponent } from "./sftp-account-grid/sftp-account-grid.component";
 import { jqxTextAreaComponent } from "../../../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxtextarea";
-import { SftpAccountComponent } from "./sftp-account/sftp-account.component";
-import { ReactiveFormsModule } from "@angular/forms";
+import { SftpAccountComponent } from "./components/sftp-account/sftp-account.component";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { SftpAccountResource } from "./services/resources/sftp-account-resource";
+import { SftpAccountsResource } from "./services/resources/sftp-accounts-resource";
 
 @NgModule({
-  imports: [SharedModule, ReactiveFormsModule],
+  imports: [SharedModule, ReactiveFormsModule, FormsModule],
   declarations: [
-    jqxTextAreaComponent,
-    SftpAccountsQueryComponent,
     SftpAccountComponent,
-    SftpAccountMaintenanceComponent,
-    SftpAccountGridComponent
   ],
   entryComponents: [
-    jqxTextAreaComponent,
-    SftpAccountsQueryComponent,
-    SftpAccountMaintenanceComponent
+    SftpAccountComponent
   ],
-  providers: [SftpAccountsService]
+  providers: [SftpAccountResource, SftpAccountsResource, SftpAccountsPasswordResource, SftpAccountsService]
 })
 export class SftpAccountsModule {}

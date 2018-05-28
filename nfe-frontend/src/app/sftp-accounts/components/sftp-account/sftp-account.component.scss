@@ -1,0 +1,45 @@
+@import '../../theme/table';
+
+img {
+    width: 28px;
+    height: 16px;
+    padding: 0;
+}
+
+.td {
+    width: 330px;
+    border-bottom: 0px;
+}
+
+.td:first-child {
+    width: 110px;
+}
+
+div.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+}
+
+div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.buttons {
+  flex-flow: row;
+  flex-wrap: wrap;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+span.inline-error-text {
+  color: red;
+}

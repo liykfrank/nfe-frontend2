@@ -1,8 +1,8 @@
 import { writeFile, writeFileSync, createReadStream, createWriteStream } from 'fs';
-import { argv } from 'yargs';
+//import { argv } from 'yargs';
 
-const environment = argv.env;
-console.log('enterrr set karmaa '+ environment)
+//const environment = argv.env;
+//console.log('enterrr set karmaa '+ environment)
 const targetPath='./karma.conf.js';
 const srcPath='./karma.demo.conf.js';
 createReadStream(srcPath).pipe(createWriteStream(targetPath));

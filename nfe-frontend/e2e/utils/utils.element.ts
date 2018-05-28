@@ -1,14 +1,12 @@
-
-import { browser, by, element, ElementFinder, promise } from 'protractor';
+import { browser, by, element, ElementFinder, promise } from "protractor";
 
 export class UtilsElement {
-
   /**
    * Find element on web Finding By
    * @param id Elem id
    */
   findById(id: string): ElementFinder {
-    console.log('Finding element by id: ' + id);
+    console.log("Finding element by id: " + id);
     return element(by.id(id));
   }
 
@@ -17,7 +15,7 @@ export class UtilsElement {
    * @param name Elem name
    */
   findByName(name: string): ElementFinder {
-    console.log('Finding element by name: ' + name);
+    console.log("Finding element by name: " + name);
     return element(by.name(name));
   }
 
@@ -26,7 +24,7 @@ export class UtilsElement {
    * @param css Elem CSS
    */
   findByCSS(css: string): ElementFinder {
-    console.log('Finding element by css: ' + css);
+    console.log("Finding element by css: " + css);
     return element(by.css(css));
   }
 
@@ -59,7 +57,7 @@ export class UtilsElement {
    * @param elem Elem
    */
   isPresentFindByElem(elem: ElementFinder) {
-    console.log('Checking presence of element');
+    console.log("Checking presence of element");
     return expect(elem.isPresent()).toBe(true);
   }
 
@@ -92,7 +90,7 @@ export class UtilsElement {
    * @param elem Elem
    */
   isNotPresentFindByElem(elem: ElementFinder) {
-    console.log('Checking NO presence of element');
+    console.log("Checking NO presence of element");
     return expect(elem.isPresent()).toBe(false);
   }
 
@@ -125,8 +123,16 @@ export class UtilsElement {
    * @param elem Elem
    */
   beTruthyFindByElem(elem: ElementFinder) {
-    console.log('Checking presence of element');
+    console.log("Checking presence of element");
     return expect(elem).toBeTruthy();
   }
 
+  selectElementOnDropDown(elem: ElementFinder, cssDropDown: string, n: number) {
+    elem.click().then(() => {
+      element
+        .all(by.css(cssDropDown))
+        .get(1)
+        .click();
+    });
+  }
 }

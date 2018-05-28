@@ -1,42 +1,42 @@
 import { Injectable, Injector } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { SftpAccount } from '../models/sftp-account';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+
+import { NwBaseAbstract } from '../../shared/base/nw-base-abstract';
+import { SftpAccount } from '../models/sftp-account.model';
+import { SftpAccountPassword, SftpAccountPasswordIf } from './../models/sftp-account-password.model';
+import { SftpAccountResource } from './resources/sftp-account-resource';
+import { SftpAccountsPasswordResource } from './resources/sftp-accounts-password-resource';
+import { SftpAccountsResource } from './resources/sftp-accounts-resource';
 
 @Injectable()
-export class SftpAccountsService {
-
-  private serviceUrl: string;
-
+export class SftpAccountsService extends NwBaseAbstract {
   constructor(
-    private httpClient: HttpClient
+    injector: Injector,
+    private sftpAccountResource: SftpAccountResource,
+    private sftpAccountsResource: SftpAccountsResource,
+    private sftpAccountsPasswordResource: SftpAccountsPasswordResource
   ) {
-    this.serviceUrl = 
-      environment.accounts.basePath +
-      environment.accounts.api.accounts;
+    super(injector);
   }
 
   public accounts(): Observable<SftpAccount[]>{
-    return this.httpClient.get<SftpAccount[]>(this.serviceUrl);
+    return this.sftpAccountsResource.get();
   }
 
-  public account(login: string): Observable<SftpAccount> {
-    const url = `${this.serviceUrl}/${login}`;
-    return this.httpClient.get<SftpAccount>(url);
+  public deleteAccount(login: string): Observable<any> {
+    return this.sftpAccountResource.deleteById(login);
   }
 
-  public createAccount(sftpAccount: SftpAccount) {
-    return this.httpClient.post<SftpAccount>(this.serviceUrl, sftpAccount);
+  public modifyAccount(sftpAccount: SftpAccount): Observable<any>{
+    return this.sftpAccountResource.putById(sftpAccount);
   }
 
-  public deleteAccount(login: string) {
-    const url = `${this.serviceUrl}/${login}`;
-    return this.httpClient.delete(url);
+  public createAccount(sftpAccount: SftpAccount): Observable<any>{
+    return this.sftpAccountResource.post<SftpAccount>(sftpAccount);
   }
 
-  public putAccount(sftpAccount: SftpAccount) {
-    const url = `${this.serviceUrl}/${sftpAccount.login}`;
-    return this.httpClient.put(url, sftpAccount);
+  public changePassword(sftpAccount: SftpAccount, SftpAccountsPassword: SftpAccountPasswordIf): Observable<any>{
+    return this.sftpAccountsPasswordResource.putPassword<SftpAccountPasswordIf>(sftpAccount, SftpAccountsPassword);
   }
+
 }

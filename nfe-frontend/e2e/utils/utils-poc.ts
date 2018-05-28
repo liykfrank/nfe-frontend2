@@ -4,7 +4,7 @@ import { promise } from "selenium-webdriver";
 const glob = require("glob");
 const fs = require("fs");
 const path = require("path");
-const TIME_WAIT_DEFAULT:number= 7000;
+const TIME_WAIT_DEFAULT:number= 20000;
 export class UtilsProc {
   removeDirAll(directory) {
     fs.readdir(directory, (err, files) => {

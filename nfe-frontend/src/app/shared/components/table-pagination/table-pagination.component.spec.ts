@@ -4,17 +4,17 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TablePaginationComponent } from './table-pagination.component';
 import { SharedModule } from '../../shared.module';
-import { JqxNwGridComponent } from '../jqx-nw-grid/jqx-nw-grid.component';
 import { SortType } from '../../../files/models/sort-type.enum';
 import { EventEmitter } from '@angular/core';
 import { TestModel } from './test/test-model';
 import { Pagination } from '../../../files/models/pagination';
+import { jqxGridComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 
 describe('TablePaginationComponent', () => {
   let component: TablePaginationComponent;
   let fixture: ComponentFixture<TablePaginationComponent>;
-  let table: jasmine.SpyObj<JqxNwGridComponent>;
-  table = jasmine.createSpyObj<JqxNwGridComponent>('table', ['getrows','getselectedrowindexes',
+  let table: jasmine.SpyObj<jqxGridComponent>;
+  table = jasmine.createSpyObj<jqxGridComponent>('table', ['getrows','getselectedrowindexes',
   'getrowdata','updatebounddata','clearselection','selectrow']);
   table.getrows.and.returnValue([{},{}]);
   table.getselectedrowindexes.and.returnValue([0,1]);

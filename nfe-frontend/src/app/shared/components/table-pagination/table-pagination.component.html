@@ -1,8 +1,17 @@
 <div class="table-pagination">
+  <div class="table-pagination-mask" [hidden]="!showMask_" ></div>
   <div class="table-pagination-nums">
      <div *ngFor="let numPag of pagesar; let i= index" class="numpag" (click)="clNumPage(i)" [class.currentpag]="isCurrentPage(i)">
       {{i}}
     </div>
+    <div *ngIf="getAllSelected().length>0" class="selec-elems">
+        Selected elements : {{getAllSelected().length  }}
+        <span (click)="clearselection()" class="clear-selec">
+          Clear Selection
+        </span>
+    </div>
   </div>
-  <ng-content></ng-content>
+  <div class="content-table">
+    <ng-content></ng-content>
+  </div>
 </div>

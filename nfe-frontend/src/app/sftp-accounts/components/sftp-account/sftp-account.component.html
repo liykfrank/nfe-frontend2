@@ -1,0 +1,88 @@
+<div *ngIf="this.sftpAccount">
+  <div>
+    <p-messages [(value)]="msgs"></p-messages>
+  </div>
+  <form *ngIf="!changePwd" #sftpAccountForm="ngForm">
+    <div class="table">
+      <div class="tr">
+        <div class="td">
+          Login
+        </div>
+        <div class="td">
+          <input pInputText type="text" name="login" [(ngModel)]="this.sftpAccount.login" [readOnly]="this.sftpAccountAlreadyExists"
+            required/>
+        </div>
+      </div>
+      <div *ngIf="sftpAccountAlreadyExists" class="tr">
+        <div class="td">
+          Password
+        </div>
+        <div class="td">
+          <a id="changePassword" (click)="changePassword()">Change Password</a>
+        </div>
+      </div>
+      <div class="tr">
+        <div class="td">
+          Status
+        </div>
+        <div class="td">
+          <p-dropdown [options]="this.accountStatus" [(ngModel)]="this.sftpAccount.status" placeholder="Select a Status"
+            name="status" [readonly]="!sftpAccountAlreadyExists" [showClear]="sftpAccountAlreadyExists" required></p-dropdown>
+        </div>
+      </div>
+      <div class="tr">
+        <div class="td">
+          Public Key <img src="../../../../assets/images/glyph/svg/si-glyph-key-2.svg" alt="">
+        </div>
+        <div class="td">
+          <textarea pInputTextarea rows="5" cols="30" autoResize="autoResize" name="publicKey" [(ngModel)]="this.sftpAccount.publicKey"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="buttons">
+      <jqxButton id="SaveSftpAccount" [disabled]="!sftpAccountForm.valid" (onClick)="save()">Save</jqxButton>
+      <jqxButton id="DeleteSftpAccount" [disabled]="!sftpAccountAlreadyExists" (onClick)="delete()">Delete</jqxButton>
+    </div>
+  </form>
+
+  <form *ngIf="changePwd" #changePasswordForm="ngForm">
+    <div class="tr">
+      <div class="td">
+        Old pasword
+      </div>
+      <div class="td">
+        <input pPassword type="password" name="oldPassword" [(ngModel)]="sftpAccountPassword.oldPassword" [feedback]="false" (focus)="showOldPasswordError=false" #oldPassword="ngModel" required/>
+      </div>
+    </div>
+    <div *ngIf="showOldPasswordError && !oldPassword.pristine" class="td">
+        <span class="inline-error-text">Old password is incorrect</span>
+      </div>
+    <div class="tr">
+      <div class="td">
+        Password
+      </div>
+      <div class="td">
+        <input pPassword type="password" name="password" [(ngModel)]="sftpAccountPassword.password" #password="ngModel"  required minlength="8" />
+      </div>
+    </div>
+    <div *ngIf="password.errors?.minlength && password.touched" class="td">
+        <span class="inline-error-text">Password length must be greater than 8</span>
+      </div>
+    <div class="tr">
+      <div class="td">
+        Confirm Password
+      </div>
+      <div class="td">
+        <input pPassword type="password" name="confirmPasword" [(ngModel)]="sftpAccountPassword.confirmPassword" [feedback]="false"
+          #confirmPassword="ngModel" required minlength="8"/>
+      </div>
+    </div>
+    <div *ngIf="!passwordsMatch() && confirmPassword.control.touched" class="td">
+      <span class="inline-error-text">Passwords do not match</span>
+    </div>
+    <div class="buttons">
+      <jqxButton id="savePassword" [disabled]="!changePasswordForm.valid || !passwordsMatch()" (onClick)="savePassword()">Save</jqxButton>
+      <jqxButton id="cancelChangePassword" (onClick)="cancelChangePassword()">Cancel</jqxButton>
+    </div>
+  </form>
+</div>

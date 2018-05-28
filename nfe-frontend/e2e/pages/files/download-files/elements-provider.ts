@@ -77,14 +77,23 @@ export class ElementsProviderDown{
     return elems;
   }
 
+  getCellTable(column:number,row:number):ElementFinder{
+    const elems:ElementArrayFinder= element.all(by.css('div[role="gridcell"]:nth-child('+column+ ')'));
+    return elems.get(row);
+  }
+
   getInputTypeFile(){
     const el = element(by.css('jqxinput input'));
     return el;
   }
 
   getNotDataTable():ElementFinder{
-    const el = element(by.css('div[role="gridcell"] span'));
-    el.getText().then(tx=>expect(tx).toBe('No data to display'));
+    const el = element(by.css('.jqx-grid-cell span'));
+    return el;
+  }
+
+  getSecondPageTable():ElementFinder{
+    const el = element(by.css('.numpag:nth-child(2)'));
     return el;
   }
 }

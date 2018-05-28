@@ -1,8 +1,8 @@
 import { writeFile, writeFileSync, createReadStream, createWriteStream } from 'fs';
-import { argv } from 'yargs';
+//import { argv } from 'yargs';
 
-const environment = argv.env;
-console.log('enterrr set proctactor '+ environment)
+//const environment = argv.env;
+//console.log('enterrr set proctactor '+ environment)
 const targetPath='./protractor.conf.js';
 const srcPath='./protractor.demo.conf.js';
 createReadStream(srcPath).pipe(createWriteStream(targetPath));

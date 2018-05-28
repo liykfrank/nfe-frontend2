@@ -8,7 +8,7 @@ const { SpecReporter } = require('jasmine-spec-reporter');
 console.log('path '+process.cwd());
 mkdir(process.cwd()+'/e2e/resources/downloads');
 exports.config = {
-  allScriptsTimeout: 11000,
+  allScriptsTimeout: 25000,
   specs: [
     './e2e/**/*.e2e-spec.ts'
   ],
@@ -35,6 +35,13 @@ exports.config = {
     showColors: true,
     defaultTimeoutInterval: 30000,
     print: function() {}
+  },
+  onComplete() {
+    var globals = require('protractor');
+    var browser = globals.browser;
+    browser.ignoreSynchronization = true;
+    browser.close().then(()=>console.log('brwser closeddd***'));
+    console.log('cpmleteee ******')
   },
   onPrepare() {
     require('ts-node').register({

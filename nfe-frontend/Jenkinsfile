@@ -11,13 +11,13 @@ pipeline {
     agent none
 
     stages {
-        
+
         stage('Build') {
-            
+
             agent {
                 label 'master'
             }
-            
+
             steps {
                 checkout poll: false, scm: [
 					$class: 'GitSCM',
@@ -41,33 +41,33 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            
+         stage('Test') {
+
             agent {
                 label 'master'
             }
-            
+
             steps {
-                
+
                 nodejs('nodejs') {
                     sh 'npm run test'
-                    //sh 'npm run e2e'
+                   // sh 'npm run e2e'
                 }
 			}
         }
 
         stage('Deploy') {
-            
+
             agent {
                 label 'a2lyadesch1'
             }
-            
+
             steps {
-                
+
                 dir('dist') {
                     unstash 'nfe-frontend'
                 }
-                
+
                 sh './deploy-docker.sh'
 			}
         }

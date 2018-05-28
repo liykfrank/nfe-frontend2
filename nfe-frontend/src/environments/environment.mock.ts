@@ -23,7 +23,7 @@ export const environment = {
   },
   accounts: {
     api: {
-      accounts: 'v1/accounts'
+      accounts: ''
     },
     basePath: ''
   },

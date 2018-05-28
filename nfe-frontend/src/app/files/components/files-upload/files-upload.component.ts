@@ -53,17 +53,12 @@ export class FilesUploadComponent implements OnInit, AfterViewInit {
   }
 
   onUpload(event): void {
-    for (const file of event.files) {
-      this.uploadedFiles.push(file);
-    }
+    this.uploadedFiles = event.files;
   }
 
   onSelect(event): void {
     this.checkErrors(event.files);
   }
-
-  /*uploadHandler(event): void {
-  }*/
 
   getFileIndexInArray(file, array): number {
     return array.map(function (f) {
@@ -84,7 +79,8 @@ export class FilesUploadComponent implements OnInit, AfterViewInit {
 
     if (!validExtension) {
       errSummary = `${file.name}: Invalid file extension,`;
-      errDetail = `allowed file extensions: '${allowedExtensions.join('\', \'').toString()}'`;
+      // errDetail = `allowed file extensions: '${allowedExtensions.join('\', \'').toString()}'`;
+      errDetail = '';
       this.msgs.push({ severity: 'error', summary: errSummary, detail: errDetail });
     }
 
@@ -122,6 +118,7 @@ export class FilesUploadComponent implements OnInit, AfterViewInit {
   isValidFileName(file: any): boolean {
     const filenamePatterns: string[] = this.configuration.fileNamePatterns;
     const validName: boolean = filenamePatterns.some(function (regExStr, index, array) {
+      console.log(regExStr);
       const regEx: RegExp = new RegExp(regExStr);
       return regEx.test(file.name);
     });

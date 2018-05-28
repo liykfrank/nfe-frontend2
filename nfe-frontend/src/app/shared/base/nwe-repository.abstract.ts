@@ -53,9 +53,8 @@ export abstract class NwRepositoryAbstract<T, K> extends NwBaseAbstract {
     if(environment.mock){
       return this.url;
     }
-    if(pathVariables){
-        urlEnd+='/';
-        pathVariables.forEach((pathv) => urlEnd+=pathv);
+    if(pathVariables) {
+        pathVariables.forEach((pathv) => urlEnd += '/' + pathv);
     }
     return urlEnd;
   }

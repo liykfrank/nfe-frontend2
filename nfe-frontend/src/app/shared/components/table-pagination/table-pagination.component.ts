@@ -7,14 +7,15 @@ import {
   ContentChild,
   AfterContentInit,
   Output,
-  EventEmitter
+  EventEmitter,
+  AfterViewInit
 } from "@angular/core";
 import { NwAbstractComponent } from "../../base/abstract-component";
-import { JqxNwGridComponent } from "../jqx-nw-grid/jqx-nw-grid.component";
 import { Pagination } from "../../../files/models/pagination";
 import { ListData } from "../../../files/models/list-data";
 import { PageRowsHelper } from "./rows/page-rows-helper";
 import { SortType } from '../../../files/models/sort-type.enum';
+import { jqxGridComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 
 @Component({
   selector: "app-table-pagination",
@@ -22,14 +23,15 @@ import { SortType } from '../../../files/models/sort-type.enum';
   styleUrls: ["./table-pagination.component.scss"]
 })
 export class TablePaginationComponent extends NwAbstractComponent
-  implements OnInit, AfterContentInit {
+  implements OnInit, AfterContentInit,AfterViewInit {
   @Output() pageChange = new EventEmitter<number>();
   @Output() reload = new EventEmitter<any>();
   @Input() pageCurrent: number;
   pagination: Pagination;
-  @ContentChild("gridReference") table: JqxNwGridComponent;
+  @ContentChild("gridReference") table: jqxGridComponent;
   rowsHelper: PageRowsHelper;
   pagesar=[];
+  showMask_:boolean=false;
 
   constructor(injector: Injector) {
     super(injector);
@@ -45,10 +47,12 @@ export class TablePaginationComponent extends NwAbstractComponent
   }
 
   clNumPage(num: number) {
+    console.log("on clNumPage");
     this.log.info("number page click " + num);
     //this.pageCurrent=num;
     this.pageChange.emit(num);
     this.log.info("grid rows " + this.table.getrows().length);
+    this.showMask_=true;
   }
 
   isCurrentPage(numPag) {
@@ -57,17 +61,20 @@ export class TablePaginationComponent extends NwAbstractComponent
 
   ngAfterContentInit(): void {
    // this.log.info("grid rows " + this.table.getrows().length);
-  }
 
+  }
+  ngAfterViewInit(): void {
+   //this.showMask();
+  }
   getPages() {
-     if(this.pagination){
-       this.log.info('total pages getpages '+ this.pagination.totalPages);
-       this.pagesar.length=0;
-       for(let i=0;i<this.pagination.totalPages;i++){
+    if(this.pagination){
+      this.log.info('total pages getpages '+ this.pagination.totalPages);
+      this.pagesar.length=0;
+      for(let i=0;i<this.pagination.totalPages;i++){
         this.pagesar.push({});
-       }
       }
-       return this.pagesar;
+    }
+    return this.pagesar;
   }
 
   public updatePaginationData<T>(listData: ListData<T>, pageCurrent: number, sort: boolean= false ) {
@@ -83,9 +90,11 @@ export class TablePaginationComponent extends NwAbstractComponent
     //refresh selection
     this.refreshPageSelection();
     this.getPages();
+    this.hideMask();
   }
 
   refreshPageSelection(){
+    console.log("on refreshPageSelection");
     if(this.table.getselectedrowindexes().length>0){
       this.table.clearselection();
     }
@@ -102,12 +111,14 @@ export class TablePaginationComponent extends NwAbstractComponent
 
   updatePageRowsCurrent(){
     this.rowsHelper.delPage(this.pageCurrent);
-    this.table.getselectedrowindexes().forEach((num)=>{
-      const data = this.table.getrowdata(num);
-      this.rowsHelper.addRowPage(this.pageCurrent,num,data);
-      //this.log.info('add row selected '+ num+ ' page '+ this.pageCurrent);
-      //console.log(this.rowsHelper.listPagesRows);
-    });
+    if( this.table.getselectedrowindexes()){
+      this.table.getselectedrowindexes().forEach((num)=>{
+        const data = this.table.getrowdata(num);
+        this.rowsHelper.addRowPage(this.pageCurrent,num,data);
+        //this.log.info('add row selected '+ num+ ' page '+ this.pageCurrent);
+        //console.log(this.rowsHelper.listPagesRows);
+      });
+    }
  }
 
  getAllSelected():any[]{
@@ -116,7 +127,9 @@ export class TablePaginationComponent extends NwAbstractComponent
  }
 
  clearselection(){
-  this.table.clearselection();
+  if(this.table.getselectedrowindexes() && this.table.getselectedrowindexes().length>0){
+    this.table.clearselection();
+  }
   this.rowsHelper.clean();
  }
 
@@ -144,6 +157,9 @@ export class TablePaginationComponent extends NwAbstractComponent
 
 }
 
+hideMask(){
+  this.showMask_=false;
+}
  showAlert(cad){
   alert('bbb');
  }

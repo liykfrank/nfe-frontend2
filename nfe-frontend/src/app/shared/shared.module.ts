@@ -17,6 +17,8 @@ import { jqxRadioButtonComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_
 import { jqxTabsComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxtabs';
 import { CodeHighlighterModule } from 'primeng/codehighlighter';
 import { GrowlModule } from 'primeng/growl';
+import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
 
 import { jqxButtonComponent } from '../../../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 import { jqxFileUploadComponent } from '../../../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxfileupload';
@@ -30,12 +32,10 @@ import { FilterCrumbsComponent } from './components/filter-crumbs/filter-crumbs.
 import { GridComponent } from './components/grid/grid.component';
 import { InputComponent } from './components/input/input.component';
 import { JqxNwComboComponent } from './components/jqx-nw-combo/jqx-nw-combo.component';
-import { JqxNwGridComponent } from './components/jqx-nw-grid/jqx-nw-grid.component';
 import { ListComponent } from './components/list/list.component';
 import { NumberComponent } from './components/number/number.component';
 import { SafeUrlPipe } from './components/pipes/safe-url.pipe';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
-import { RadiobuttonComponent } from './components/radiobutton/radiobutton.component';
 import { TablePaginationComponent } from './components/table-pagination/table-pagination.component';
 import { UtilsService } from './services/utils.service';
 
@@ -48,6 +48,8 @@ import { UtilsService } from './services/utils.service';
     TranslationModule.forRoot(l10nConfig),
     FormsModule,
     FileUploadModule,
+    InputTextModule,
+    PasswordModule,
     DropdownModule,
     GrowlModule,
     CodeHighlighterModule
@@ -63,7 +65,6 @@ import { UtilsService } from './services/utils.service';
     jqxCalendarComponent,
     jqxRadioButtonComponent,
     jqxDateTimeInputComponent,
-    RadiobuttonComponent,
     jqxProgressBarComponent,
     jqxButtonComponent,
     jqxDropDownListComponent,
@@ -72,9 +73,7 @@ import { UtilsService } from './services/utils.service';
     InputComponent,
     NumberComponent,
     CalendarComponent,
-    RadiobuttonComponent,
     ProgressBarComponent,
-    JqxNwGridComponent,
     ButtonsComponent,
     ListComponent,
     FilterCrumbsComponent,
@@ -104,17 +103,17 @@ import { UtilsService } from './services/utils.service';
     jqxDropDownListComponent,
     jqxDateTimeInputComponent,
     jqxFileUploadComponent,
-    RadiobuttonComponent,
     InputComponent,
     NumberComponent,
     CalendarComponent,
     ProgressBarComponent,
-    JqxNwGridComponent,
     jqxButtonComponent,
     ButtonsComponent,
     ListComponent,
     FilterCrumbsComponent,
     FileUploadModule,
+    InputTextModule,
+    PasswordModule,
     DropdownModule,
     JqxNwComboComponent,
     jqxNotificationComponent,

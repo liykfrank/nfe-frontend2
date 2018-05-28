@@ -1,0 +1,50 @@
+{
+  "content": [
+    {
+      "id": 1,
+      "name": "file1",
+      "type": "some file type",
+      "bytes": 1024,
+      "uploadDate": "2018-03-23T10:00:00",
+      "status": "DOWNLOADED"
+    },
+    {
+      "id": 2,
+      "name": "file2",
+      "type": "some file type",
+      "bytes": 1024,
+      "uploadDate": "2018-03-23T10:00:00",
+      "status": "DOWNLOADED"
+    },
+    {
+      "id": 3,
+      "name": "file3",
+      "type": "some file type",
+      "bytes": 1024,
+      "uploadDate": "2018-03-23T10:00:00",
+      "status": "DOWNLOADED"
+    }
+  ],
+  "pageable": {
+    "sort": {
+      "sorted": false,
+      "unsorted": true
+    },
+    "offset": 0,
+    "pageSize": 20,
+    "pageNumber": 0,
+    "unpaged": false,
+    "paged": true
+  },
+  "last": true,
+  "totalPages": 1,
+  "totalElements": 5,
+  "size": 20,
+  "number": 0,
+  "sort": {
+    "sorted": false,
+    "unsorted": true
+  },
+  "numberOfElements": 5,
+  "first": true
+}

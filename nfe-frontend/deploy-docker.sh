@@ -37,4 +37,6 @@ docker build --rm -t $DOCKER_IMAGE_NAME .
 # -----------------------------------
 echo
 echo "[INFO] Create and start docker container"
-docker run --name $DOCKER_CONTAINER_NAME -p $EXPOSED_PORT:8080 -d $DOCKER_IMAGE_NAME
+docker run -d --name "$DOCKER_CONTAINER_NAME" \
+	--restart unless-stopped \
+	-p $EXPOSED_PORT:8080 "$DOCKER_IMAGE_NAME"

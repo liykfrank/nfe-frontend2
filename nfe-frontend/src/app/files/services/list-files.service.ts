@@ -45,7 +45,6 @@ export class ListFilesService extends NwBaseAbstract {
 
   downloadFile(file: FileNw) {
     let params = new HttpParams();
-    //params = params.append(ParamsEnum.ID, file.id.toString());
     return this.downFileRes.getFile(params, file.id.toString());
   }
 
@@ -65,14 +64,32 @@ export class ListFilesService extends NwBaseAbstract {
     return this.remFilesRes.delete(params);
   }
 
-  getStatusCodes(): Array<string> {
-    return ["ALL STATUS", "DELETED", "DOWNLOADED", "UNREAD"];
+  getStatusCodes(bool: Boolean): Array<string> {
+    let list: string[] = ["ALL STATUS", "DELETED", "DOWNLOADED", "SENT", "UNREAD"];
+
+    /*
+    if (bool) {
+      list.push("TRASHED");
+    }
+    */
+    return list;
   }
+
   convertFilterToParams(filter: ListFilesFilter): HttpParams {
     let params = new HttpParams();
 
-    if (filter.maxUploadDate) {
-      filter.maxUploadDate.setDate(filter.maxUploadDate.getDate() + 1);
+    if (filter.minUploadDate != null) {
+      filter.minUploadDate.setHours(0);
+      filter.minUploadDate.setMinutes(0);
+      filter.minUploadDate.setSeconds(0);
+      filter.minUploadDate.setMilliseconds(0);
+    }
+
+    if (filter.maxUploadDate != null) {
+      filter.maxUploadDate.setHours(23);
+      filter.maxUploadDate.setMinutes(59);
+      filter.maxUploadDate.setSeconds(59);
+      filter.maxUploadDate.setMilliseconds(999);
     }
 
     this.utils.execFn(

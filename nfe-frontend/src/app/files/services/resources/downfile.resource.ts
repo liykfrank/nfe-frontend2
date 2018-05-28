@@ -17,13 +17,16 @@ export class DownFileResource extends NwRepositoryAbstract<any, Object> {
     );
   }
 
-
   public getFile(params?: HttpParams, idFile?:string): Observable<Blob> {
     return this.httpService
       .get(this.getUrl([idFile]), {
         params: params,
+        observe: 'response',
         responseType: "blob"
+      })
+       .map(resp=>{
+        this.log.info(resp.headers.get('Content-Disposition'));
+        return resp.body;
       });
   }
-
 }

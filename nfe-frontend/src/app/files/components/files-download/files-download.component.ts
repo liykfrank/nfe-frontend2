@@ -1,3 +1,4 @@
+import { StatusBar } from '@ionic-native/status-bar';
 import { Pagination } from './../../models/pagination';
 import { IFileDeleted } from './../../models/contract/delete-files.model';
 import { ActionsEnum } from "./../../../shared/models/actions-enum.enum";
@@ -8,11 +9,12 @@ import {
   OnInit,
   AfterViewInit,
   ViewChild,
-  Injector
+  Injector,
+  AfterContentInit,
+  ElementRef
 } from "@angular/core";
 import { ListFilesService } from "../../services/list-files.service";
 import { FileNw } from "../../models/file";
-import { JqxNwGridComponent } from "../../../shared/components/jqx-nw-grid/jqx-nw-grid.component";
 import { saveAs } from "file-saver/FileSaver";
 import { NwAbstractComponent } from "../../../shared/base/abstract-component";
 import { IElementFilter } from "../../../shared/components/filter-crumbs/ielement-filter.model";
@@ -24,6 +26,8 @@ import { MessageService } from 'primeng/components/common/messageservice';
 import { TablePaginationComponent } from '../../../shared/components/table-pagination/table-pagination.component';
 import { SortType } from '../../models/sort-type.enum';
 import { TabsStateService } from "../../../core/services/tabs-state.service";
+import {environment } from './../../../../environments/environment';
+import { jqxGridComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 
 declare var $: any;
 @Component({
@@ -33,8 +37,11 @@ declare var $: any;
   providers: [MessageService]
 })
 export class FilesDownloadComponent extends NwAbstractComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit, AfterContentInit {
+
   @ViewChild(TablePaginationComponent) tablePagination: TablePaginationComponent;
+
+  @ViewChild('gridReference') gridReference: jqxGridComponent;
 
   dataFiles: FileNw[] = [];
   elementsFilter: IElementFilter[];
@@ -61,7 +68,7 @@ export class FilesDownloadComponent extends NwAbstractComponent
       { name: "name", type: "string" },
       { name: "type", type: "string" },
       { name: "bytes", type: "numbre" },
-      { name: "uploadDate", type: "date" },
+      { name: "uploadDateTime", type: "date" },
       { name: "status", type: "string" }
     ],
     datatype: "json",
@@ -88,23 +95,24 @@ export class FilesDownloadComponent extends NwAbstractComponent
   }
 
   ngOnInit() {
-    this.statusList = this.listFilesServ.getStatusCodes();
+    this.statusList = this.listFilesServ.getStatusCodes(this.readOnly);
     //create initial filter
     this.dataFilterIni = this.getDataFilterIni();
     //clone data filter from initial
     this.dataFilterCurrent = this.utils.cloneObj(this.dataFilterIni);
     this.dataFilterLoad = this.utils.cloneObj(this.dataFilterIni);
-
-
+    if((environment as any).testUnit == undefined || !(environment as any).testUnit ){
+      this.tablePagination.showMask_=true;
+    }
   }
 
   ngAfterViewInit(): void {
     this.loadDataTable(this.dataFilterIni);
   }
 
-  /*  get dataFilterClone(){
-    return Object.assign({}, this.dataFilter);;
-  } */
+  ngAfterContentInit(): void {
+
+  }
 
   private getDataFilterIni(): ListFilesFilter {
     const filter = new ListFilesFilter();
@@ -124,12 +132,14 @@ export class FilesDownloadComponent extends NwAbstractComponent
    * @param event -new filter
    */
   searchCl(event) {
+    this.tablePagination.showMask_=true;
     const filterData: ListFilesFilter = event;
     //reset pagination
     filterData.sizePage=this.dataFilterIni.sizePage;
     filterData.numberPage=this.dataFilterIni.numberPage;
     //reset sort
     filterData.sort=null;
+    this.tablePagination.clearselection();
     //load data table
     this.loadDataTable(filterData,true);
     //update cuurent search filters
@@ -190,10 +200,13 @@ export class FilesDownloadComponent extends NwAbstractComponent
     const files = this.getFilesSelected();
     if (files.length == 0) return;
     if (files.length == 1) {
-      this.listFilesServ.downloadFile(files[0]).subscribe(data => {
-        if (data.type == "text/xml") saveAs(data, "filenew.txt");
+       const nameFile= files[0].name;
+        this.listFilesServ.downloadFile(files[0]).subscribe(data => {
+        if (data.type == "text/xml") saveAs(data, nameFile+ '.txt');
         //save or open
-        else saveAs(data, "filenew");
+        else {
+          saveAs(data, nameFile);
+        }
         this.refreshQuery();
       });
       return;
@@ -201,7 +214,7 @@ export class FilesDownloadComponent extends NwAbstractComponent
     if (files.length > 1) {
       this.listFilesServ.downloadFiles(files).subscribe(data => {
         //save or open
-        saveAs(data, "filenew");
+        saveAs(data, "allfiles");
         this.refreshQuery();
       });
       return;
@@ -239,6 +252,19 @@ export class FilesDownloadComponent extends NwAbstractComponent
           this.refreshQuery();
         });
       return;
+    }
+  }
+
+  select(event: any): void {
+    if (!this.readOnly) {
+      let list: number[] = this.gridReference.getselectedrowindexes();
+      let check: Boolean = list.length > 0 ? list.indexOf(event.args.rowindex) >= 0 : false
+
+      if (!check) {
+        this.gridReference.selectrow(event.args.rowindex);
+      } else {
+        this.gridReference.unselectrow(event.args.rowindex);
+      }
     }
   }
 
@@ -334,7 +360,7 @@ export class FilesDownloadComponent extends NwAbstractComponent
     },
     {
       text: this.translation.translate("Date"),
-      datafield: "uploadDate",
+      datafield: "uploadDateTime",
       cellsformat: "d",
       width: "20%"
     },

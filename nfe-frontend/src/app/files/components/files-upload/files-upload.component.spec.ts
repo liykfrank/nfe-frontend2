@@ -76,7 +76,8 @@ describe('FilesUploadComponent', () => {
 
   it('#isValidFileExtension should save an error message', () => {
     const errSummary = `${file3.name}: Invalid file extension,`;
-    const errDetail = `allowed file extensions: '${component.configuration.allowedFileExtensions.join('\', \'').toString()}'`;
+    //const errDetail = `allowed file extensions: '${component.configuration.allowedFileExtensions.join('\', \'').toString()}'`;
+    const errDetail = '';
     component.isValidFileExtension(file3);
     expect(component.msgs[0]).toEqual({ severity: 'error', summary: errSummary, detail: errDetail });
   });
@@ -143,7 +144,7 @@ describe('FilesUploadComponent', () => {
 
   it('#onSelect should select 2 files', () => {
     const files: any[] = [file1, file2, file3, file4, file5, file6, file7];
-    const event: any = {files};
+    const event: any = {'files': files};
 
     component.ngOnInit();
     // Multiple upload
@@ -159,12 +160,15 @@ describe('FilesUploadComponent', () => {
   });
 
   it('#onUpload should upload 2 files', () => {
-    const files: any[] = [file5, file6];
-    const event: any = {files};
+    const files1: any[] = [file3];
+    const event1: any = {'files': files1};
+    const files2: any[] = [file5, file6];
+    const event2: any = {'files': files2};
 
     component.ngOnInit();
-    component.onUpload(event);
-    expect(component.uploadedFiles).toEqual(event.files);
+    component.onUpload(event1);
+    component.onUpload(event2);
+    expect(component.uploadedFiles).toEqual(files2);
   });
 
 });

@@ -6,7 +6,7 @@ import { IListFiles } from '../../models/contract/list-files';
 
 @Injectable()
 export class ListFilesResource extends NwRepositoryAbstract<IListFiles, Object> {
-  constructor(private http: HttpClient, injector: Injector) {
+  constructor( http: HttpClient, injector: Injector) {
     super(
       http,
       environment.basePath +

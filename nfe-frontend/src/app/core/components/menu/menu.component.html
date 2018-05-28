@@ -30,21 +30,13 @@
                   <a [id]="_utilsService.wrapperMenuID(actions.QUERY_FILES_READ_ONLY)" (click)="openTab('query_files/readOnly')">Query Files Read Only</a>
               </li>
               <li>
-                  <a [id]="_utilsService.wrapperMenuID(actions.UPLOAD_FILES)"(click)="openTab('upload_files')">Upload Files</a>
+                  <a [id]="_utilsService.wrapperMenuID(actions.UPLOAD_FILES)" (click)="openTab('upload_files')">Upload Files</a>
               </li>
           </ul>
         </li>
 
         <li>
-            <a (click)="openTab('sftp_accounts')">SFTP Accounts</a>
-            <ul>
-              <li>
-                  <a (click)="openTab('query_sftp_accounts')">Query SFTP Accounts</a>
-              </li>
-              <li>
-                  <a (click)="openTab('create_sftp_account')">Create SFTP Account</a>
-              </li>
-          </ul>
+            <a [id]="_utilsService.wrapperMenuID(actions.SFTP_ACCOUNTS)" (click)="openTab('sftp_accounts')">SFTP Accounts</a>
         </li>
 
         <li>

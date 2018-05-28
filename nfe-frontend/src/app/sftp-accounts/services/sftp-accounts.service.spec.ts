@@ -1,102 +1,134 @@
+import { HttpClientModule, HttpResponse } from '@angular/common/http';
+import { inject, TestBed } from '@angular/core/testing';
+import { LocalizationModule, TranslationModule } from 'angular-l10n';
+import { of } from 'rxjs/observable/of';
+
+import { l10nConfig } from '../../shared/base/conf/l10n.config';
+import { SftpAccountPassword } from '../models/sftp-account-password.model';
+import { SftpAccount } from './../models/sftp-account.model';
+import { SftpAccountResource } from './resources/sftp-account-resource';
+import { SftpAccountsPasswordResource } from './resources/sftp-accounts-password-resource';
+import { SftpAccountsResource } from './resources/sftp-accounts-resource';
 import { SftpAccountsService } from './sftp-accounts.service';
-import { SftpAccount } from '../models/sftp-account';
-import { defer } from 'rxjs/observable/defer';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { asyncError, asyncData } from '../../../testing/async-observable-helpers';
 
 describe('SftpAccountsService', () => {
-  let httpClientSpy: { get: jasmine.Spy, post: jasmine.Spy, put: jasmine.Spy, delete: jasmine.Spy };
-  let sftpAccountsService: SftpAccountsService;
+  const STATUS_201 = new HttpResponse({ status: 201 });
+  const STATUS_200 = new HttpResponse({ status: 200 });
+  const ACCOUNTS = [
+    new SftpAccount('user1', 'enabled', '1234'),
+    new SftpAccount('user2', 'disabled', null)
+  ];
+
+  const SPY_SVC = jasmine.createSpyObj('SftpAccountResource', [
+    'deleteById',
+    'putById',
+    'post'
+  ]);
+  SPY_SVC.deleteById.and.returnValue(of(STATUS_200));
+  SPY_SVC.putById.and.returnValue(of(STATUS_200));
+  SPY_SVC.post.and.returnValue(of(STATUS_201));
+
+  const SPY_SVCLIST = jasmine.createSpyObj<SftpAccountsResource>(
+    'SftpAccountsResource',
+    ['get']
+  );
+  SPY_SVCLIST.get.and.returnValue(of(ACCOUNTS));
+
+  const SPY_SVCPASS = jasmine.createSpyObj<SftpAccountsPasswordResource>(
+    'SftpAccountsResSftpAccountsPasswordResourceource',
+    ['putPassword']
+  );
+  SPY_SVCPASS.putPassword.and.returnValue(of(STATUS_200));
 
   beforeEach(() => {
-    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get', 'post', 'put', 'delete']);
-    sftpAccountsService = new SftpAccountsService(<any>httpClientSpy);
-  });
-
-  it('should be created', () => {
-    expect(sftpAccountsService).toBeTruthy();
-  });
-
-  it('should return expected accounts (HttpClient called once)', () => {
-    const expectedSftpAccounts: SftpAccount[] =
-      [{ login: "user1", mode: "RO", status: "enabled", publicKey: "1234" },
-      { login: "user2", mode: "RW", status: "disabled", publicKey: null }
-      ];
-
-    httpClientSpy.get.and.returnValue(asyncData(expectedSftpAccounts));
-
-    sftpAccountsService.accounts().subscribe(
-      data => expect(data).toEqual(expectedSftpAccounts, 'expected accounts'),
-      fail
-    );
-    expect(httpClientSpy.get.calls.count()).toBe(1, 'one call');
-  });
-
-  it('should return expected account (HttpClient called once)', () => {
-    const expectedSftpAccount: SftpAccount =
-      { login: "user1", mode: "RO", status: "enabled", publicKey: "1234" };
-
-    httpClientSpy.get.and.returnValue(asyncData(expectedSftpAccount));
-
-    sftpAccountsService.account("user1").subscribe(
-      data => expect(data).toEqual(expectedSftpAccount, 'expected account'),
-      fail
-    );
-
-    expect(httpClientSpy.get.calls.count()).toBe(1, 'one call');
-  });
-
-  it('should return an error when the server returns a 404', () => {
-    const errorResponse = new HttpErrorResponse({
-      error: 'test 404 error',
-      status: 404, statusText: 'Not Found'
+    TestBed.configureTestingModule({
+      imports: [
+        HttpClientModule,
+        TranslationModule.forRoot(l10nConfig),
+        LocalizationModule
+      ],
+      providers: [
+        { provide: SftpAccountResource, useValue: SPY_SVC },
+        { provide: SftpAccountsResource, useValue: SPY_SVCLIST },
+        { provide: SftpAccountsPasswordResource, useValue: SPY_SVCPASS },
+        SftpAccountsService
+      ]
     });
-
-    httpClientSpy.get.and.returnValue(asyncError(errorResponse));
-
-    sftpAccountsService.account("userX").subscribe(
-      account => fail('expected an error, no account'),
-      error => expect(error.status).toBe(404)
-    );
   });
 
-  it('should return an 201', () => {
-    const response = new HttpResponse({
-      status: 201, statusText: 'Created'
-    });
-    const newSftpAccount: SftpAccount =
-      { login: "user1", mode: "RO", status: "enabled", publicKey: "1234" };
+  it(
+    'Service should be created',
+    inject([SftpAccountsService], (svc: SftpAccountsService) => {
+      expect(svc).toBeTruthy();
+    })
+  );
 
-    httpClientSpy.post.and.returnValue(asyncData(response));
+  it(
+    'Should return expected accounts (HttpClient called once)',
+    inject([SftpAccountsService], (svc: SftpAccountsService) => {
+      svc.accounts().subscribe(data => {
+        expect(data).toEqual(ACCOUNTS, 'expected accounts');
+        expect(SPY_SVCLIST.get).toHaveBeenCalled();
+        expect(SPY_SVCLIST.get).toHaveBeenCalledTimes(1);
+      }, fail);
+    })
+  );
 
-    sftpAccountsService.createAccount(newSftpAccount).subscribe(
-      () => expect(response.status).toBe(201)
-    );
-  });
+  it(
+    'should return an 201',
+    inject([SftpAccountsService], (svc: SftpAccountsService) => {
+      const newSftpAccount: SftpAccount = new SftpAccount(
+        'user1',
+        'enabled',
+        '1234'
+      );
 
-  it('put should return an 200', () => {
-    const response = new HttpResponse({
-      status: 200, statusText: 'OK'
-    });
-    const newSftpAccount: SftpAccount =
-      { login: "user1", mode: "RO", status: "enabled", publicKey: "1234" };
+      let method = svc.createAccount(newSftpAccount);
+      method.subscribe(ret => {
+        expect(ret).toBeDefined();
+        expect(ret.status).toBe(201);
+      }, fail);
+    })
+  );
 
-    httpClientSpy.put.and.returnValue(asyncData(response));
+  it(
+    'put should return an 200',
+    inject([SftpAccountsService], (svc: SftpAccountsService) => {
+      const newSftpAccount: SftpAccount = new SftpAccount(
+        'user1',
+        'enabled',
+        '1234'
+      );
 
-    sftpAccountsService.putAccount(newSftpAccount).subscribe(
-      () => expect(response.status).toBe(200)
-    );
-  });
+      let method = svc.modifyAccount(newSftpAccount);
+      method.subscribe(ret => {
+        expect(ret).toBeDefined();
+        expect(ret.status).toBe(200);
+      }, fail);
+    })
+  );
 
-  it('delete should return an 200', () => {
-    const response = new HttpResponse({
-      status: 200, statusText: 'OK'
-    });
+  it(
+    'delete should return an 200',
+    inject([SftpAccountsService], (svc: SftpAccountsService) => {
+      let method = svc.deleteAccount('loginXX');
+      method.subscribe(ret => {
+        expect(ret).toBeDefined();
+        expect(ret.status).toBe(200);
+      }, fail);
+    })
+  );
 
-    httpClientSpy.delete.and.returnValue(asyncData(response));
+  it(
+    'Change Password should return an 200',
+    inject([SftpAccountsService], (svc: SftpAccountsService) => {
+      let pass: SftpAccountPassword = new SftpAccountPassword('Password1', 'Password2', 'Password2');
+      let method = svc.changePassword(ACCOUNTS[0], pass);
+      method.subscribe(ret => {
+        expect(ret).toBeDefined();
+        expect(ret.status).toBe(200);
+      }, fail);
+    })
+  );
 
-    sftpAccountsService.deleteAccount("loginXX").subscribe(
-      () => expect(response.status).toBe(200)
-    );
-  });
 });

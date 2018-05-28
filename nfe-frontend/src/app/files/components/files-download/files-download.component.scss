@@ -1,3 +1,5 @@
+.files-download-container{
+  height: 60vh;
 .top_buttons{
   display: flex;
   flex-direction: row;
@@ -47,4 +49,5 @@
   app-buttons{
     margin: 5px 15px 5px 5px;
   }
+}
 }
