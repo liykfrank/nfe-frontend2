@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.iata.bsplink.sftpaccountmanager.dto.AccountRequest;
+import org.iata.bsplink.sftpaccountmanager.model.AccountDetails;
 import org.iata.bsplink.sftpaccountmanager.model.entity.Account;
 import org.iata.bsplink.sftpaccountmanager.model.repository.AccountRepository;
 import org.springframework.beans.BeanUtils;
@@ -17,17 +18,20 @@ public class AccountService {
     private AccountRepository accountRepository;
     private SftpServerAccountManager sftpServerAccountManager;
     private PasswordInitializer passwordInitializer;
+    private AccountDetailsService accountDetailsService;
 
     /**
      * Instantiates the account service.
      */
     public AccountService(AccountRepository accountRepository,
             SftpServerAccountManager sftpServerAccountManager,
-            PasswordInitializer passwordInitializer) {
+            PasswordInitializer passwordInitializer,
+            AccountDetailsService accountDetailsService) {
 
         this.accountRepository = accountRepository;
         this.sftpServerAccountManager = sftpServerAccountManager;
         this.passwordInitializer = passwordInitializer;
+        this.accountDetailsService = accountDetailsService;
     }
 
     /**
@@ -59,9 +63,14 @@ public class AccountService {
 
         Account savedAccount = accountRepository.save(account);
 
-        sftpServerAccountManager.createAccount(savedAccount);
+        sftpServerAccountManager.createAccount(getAccountDetails(savedAccount));
 
         return savedAccount;
+    }
+
+    private AccountDetails getAccountDetails(Account account) {
+
+        return accountDetailsService.getAccountDetails(account);
     }
 
     public boolean loginExists(String login) {
@@ -88,7 +97,7 @@ public class AccountService {
         BeanUtils.copyProperties(accountRequest, optionalSavedAccount.get(), "login");
 
         accountRepository.save(optionalSavedAccount.get());
-        sftpServerAccountManager.updateAccount(optionalSavedAccount.get());
+        sftpServerAccountManager.updateAccount(getAccountDetails(optionalSavedAccount.get()));
 
         return optionalSavedAccount;
     }
@@ -110,7 +119,7 @@ public class AccountService {
         }
 
         accountRepository.delete(optionalSavedAccount.get());
-        sftpServerAccountManager.deleteAccount(optionalSavedAccount.get());
+        sftpServerAccountManager.deleteAccount(getAccountDetails(optionalSavedAccount.get()));
 
         return optionalSavedAccount;
     }

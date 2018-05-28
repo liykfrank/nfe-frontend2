@@ -72,7 +72,9 @@ public class AccountController {
      */
     @PostMapping()
     public ResponseEntity<AccountResponse> createAccount(
-            @RequestBody AccountRequest accountRequest) {
+            @Valid @RequestBody AccountRequest accountRequest, Errors errors) {
+
+        throwApplicationValidationExceptionIfThereAreErrors(errors);
 
         if (accountService.loginExists(accountRequest.getLogin())) {
 
@@ -85,12 +87,22 @@ public class AccountController {
                 HttpStatus.CREATED);
     }
 
+    private void throwApplicationValidationExceptionIfThereAreErrors(Errors errors) {
+
+        if (errors.hasErrors()) {
+
+            throw new ApplicationValidationException(errors);
+        }
+    }
+
     /**
      * Updates an SFTP account.
      */
     @PutMapping("/{login}")
     public ResponseEntity<AccountResponse> updateAccount(@PathVariable String login,
-            @RequestBody AccountRequest accountRequest) {
+            @Valid @RequestBody AccountRequest accountRequest, Errors errors) {
+
+        throwApplicationValidationExceptionIfThereAreErrors(errors);
 
         Optional<Account> optionalSavedAccount = accountService.update(login, accountRequest);
 

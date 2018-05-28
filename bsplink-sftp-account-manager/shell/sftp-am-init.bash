@@ -23,12 +23,18 @@ function patch_ssh_config() {
 	sed -e '/Subsystem\s*sftp/d' "$SSHD_CONFIG" > "$SSHD_CONFIG_TMP"
 
 	{
+		echo -e "\n# --- Automatically added $(date +%Y%m%d-%H%M%S): start"
 		echo -e "\nSubsystem sftp internal-sftp\n"
 		echo -e "Match Group ${SFTP_USER_GROUP}"
        		echo -e "\tAllowTCPForwarding no"
         	echo -e "\tX11Forwarding no"
 		echo -e "\tForceCommand internal-sftp"
-		echo -e "\tChrootDirectory /sftp/%u"
+		echo -e "\t# user is chrooted to their home."
+		echo -e "\tChrootDirectory %h"
+		echo -e "\t# authorized_keys file is stored in a common directory"
+		echo -e "\t# with the name of the user's login."
+		echo -e "\tAuthorizedKeysFile $SFTP_AUTHORIZED_KEYS_STORE/%u"
+		echo -e "\n# --- Automatically added: end\n"
 
 	} >> "$SSHD_CONFIG_TMP"
 
@@ -64,7 +70,7 @@ confirm_or_exit "$MESSAGE" "$1"
 # sshd_config configuration.
 #-------------------------------------------------------------------------------
 
-assert_user_is_root
+assert_current_user_is_root
 
 SSHD_CONFIG="/etc/ssh/sshd_config"
 
@@ -87,14 +93,14 @@ fi
 # sftp-users group creation.
 #-------------------------------------------------------------------------------
 
-if ! (group_exists "$SFTP_USER_GROUP"); then
-
-	groupadd "$SFTP_USER_GROUP"
-fi
+create_group_if_doesnt_exist "$SFTP_USER_GROUP"
 
 #-------------------------------------------------------------------------------
 # Chroot directory creation: owner should be root.
 #-------------------------------------------------------------------------------
 
 mkdir -pv "$SFTP_DIRECTORY"
+mkdir -pv "$SFTP_AUTHORIZED_KEYS_STORE"
+chgrp -v "$SFTP_USER_GROUP" "$SFTP_AUTHORIZED_KEYS_STORE"
+chmod 770 "$SFTP_AUTHORIZED_KEYS_STORE"
 

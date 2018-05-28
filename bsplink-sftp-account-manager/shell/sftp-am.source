@@ -6,18 +6,38 @@
 
 export SFTP_DIRECTORY="/sftp"
 export SFTP_USER_GROUP="sftp-users"
-export SFTP_USERS_HOME="/home"
+export SFTP_ACCOUNTS_DIRECTORY="$SFTP_DIRECTORY/accounts"
+export SFTP_AUTHORIZED_KEYS_STORE="$SFTP_DIRECTORY/authorized_keys"
 export DEFAULT_USER_GROUP="users"
 
 export SFTP_AM_SCRIPTS_INSTALL_DIR="/usr/local/bin"
 export SFTP_AM_INIT_SCRIPT="sftp-am-init.bash"
 export SFTP_AM_SCRIPTS="
 	$SFTP_AM_INIT_SCRIPT
-	sftp-am-authorize-key.bash
-	sftp-am-add-update.bash
-    sftp-am-delete.bash
+	sftp-am-authorize-key-check.bash
+	sftp-am-authorize-key-remove.bash
+	sftp-am-authorize-key-set.bash
+	sftp-am-mock-structure.bash
+	sftp-am-user-add-update.bash
+	sftp-am-user-delete.bash
 	sftp-am.source
 "
+
+#-------------------------------------------------------------------------------
+# Restrict path to known locations.
+#-------------------------------------------------------------------------------
+
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+#-------------------------------------------------------------------------------
+# Exit codes (see sysexits.h).
+#-------------------------------------------------------------------------------
+
+USAGE_ERROR=64
+INCORRECT_DATA=65
+USER_DOES_NOT_EXIST=67
+NO_ENOUGH_PERMISSIONS=77
+INCORRECT_PUBLIC_KEY=80
 
 #-------------------------------------------------------------------------------
 # Functions.
@@ -49,12 +69,12 @@ function confirm_or_exit() {
 	fi
 }
 
-function assert_user_is_root() {
+function assert_current_user_is_root() {
 
 	if [ "$(id -u)" != "0" ]; then
 
 		echo "Script should be run as root user."
-		exit 1
+		exit $NO_ENOUGH_PERMISSIONS
 	fi
 }
 
@@ -79,3 +99,76 @@ function is_sftp_user() {
 	groups "$USER" | grep -q "\<$SFTP_USER_GROUP\>"
 }
 
+function create_group_if_doesnt_exist() {
+
+	local GROUP="$1"
+
+	if ! (group_exists "$GROUP"); then
+
+		sudo groupadd "$GROUP"
+	fi
+}
+
+function fix_public_key() {
+
+	# Workaround for the "Public key is not valid" error caused
+	# by the addition of extraquotes to the public key.
+
+	echo "$1" | sed -e 's/"//g'
+}
+
+function is_valid_public_key() {
+
+	local PUBLIC_KEY="$(fix_public_key "$1")"
+	local TEMP_KEY="$(mktemp)"
+
+	echo "$PUBLIC_KEY" > "$TEMP_KEY"
+
+	ssh-keygen -l -f "$TEMP_KEY"
+
+	IS_VALID=$?
+
+	rm $TEMP_KEY
+
+	return $IS_VALID
+}
+
+function assert_public_key_is_valid() {
+
+	local PUBLIC_KEY="$1"
+
+	if ! (is_valid_public_key "$PUBLIC_KEY"); then
+
+		echo "Public key is not valid"
+		exit $INCORRECT_PUBLIC_KEY
+	fi
+}
+
+function get_authorized_keys_file_for_user() {
+
+	local USER="$1"
+
+	echo "$SFTP_AUTHORIZED_KEYS_STORE/$USER"
+}
+
+function assert_user_exists() {
+
+	local USER="$1"
+
+	if ! (user_exists "$USER" && is_sftp_user "$USER"); then
+
+		echo "User $USER doesn't exist or is not a sftp user"
+		exit $USER_DOES_NOT_EXIST
+	fi
+}
+
+function assert_directory_exists() {
+
+    local DIRECTORY="$1"
+
+    if ! [ -d "$DIRECTORY" ]; then
+
+        echo "No such directory: $DIRECTORY"
+        exit $INCORRECT_DATA
+    fi
+}

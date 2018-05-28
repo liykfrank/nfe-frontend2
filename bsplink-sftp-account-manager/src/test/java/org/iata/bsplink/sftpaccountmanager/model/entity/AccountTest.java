@@ -8,9 +8,14 @@ import static org.junit.Assert.assertNull;
 
 import java.time.Instant;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(JUnitParamsRunner.class)
 public class AccountTest {
 
     private Account account;
@@ -49,6 +54,25 @@ public class AccountTest {
         account.onPreUpdate();
 
         assertThat(account.getUpdatedTime(), greaterThanOrEqualTo(referenceTime));
+    }
+
+    @Test
+    @Parameters
+    public void testHasPublicKey(String publicKey, boolean expected) {
+
+        account.setPublicKey(publicKey);
+
+        assertThat(account.hasPublicKey(), equalTo(expected));
+    }
+
+    @SuppressWarnings("unused")
+    private Object[][] parametersForTestHasPublicKey() {
+
+        return new Object[][] {
+            { null, false },
+            { "", false },
+            { "any public key", true }
+        };
     }
 
 }

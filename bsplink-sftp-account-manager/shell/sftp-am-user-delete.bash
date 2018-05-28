@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#-------------------------------------------------------------------------------
+# Deletes an sftp user.
+#-------------------------------------------------------------------------------
+
 set -e
 
 source "$(dirname $0)/sftp-am.source"
@@ -17,17 +21,14 @@ if [[ -z "$USER" ]]; then
 	echo "$(basename $0) USERNAME"
 	echo
 
-	exit 1
+	exit $USAGE_ERROR
 fi
 
-assert_user_is_root
+assert_user_exists "$USER"
 
-if ! (is_sftp_user "$USER"); then
+sftp-am-authorize-key-remove.bash "$USER"
 
-	echo "User $USER is not an sftp user"
+sudo userdel -f "$USER"
 
-	exit 1
-fi
-
-userdel -f -r "$USER"
+echo "User $USER delete"
 

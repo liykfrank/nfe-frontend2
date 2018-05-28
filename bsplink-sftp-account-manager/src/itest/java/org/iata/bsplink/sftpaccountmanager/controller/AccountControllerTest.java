@@ -7,12 +7,13 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.LOGIN;
-import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.MODE;
 import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.PUBLIC_KEY;
 import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.getAccountFixture;
 import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.getAccountRequestFixture;
 import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,10 +31,10 @@ import junitparams.Parameters;
 import org.iata.bsplink.sftpaccountmanager.dto.AccountPasswordRequest;
 import org.iata.bsplink.sftpaccountmanager.dto.AccountRequest;
 import org.iata.bsplink.sftpaccountmanager.model.entity.Account;
-import org.iata.bsplink.sftpaccountmanager.model.entity.AccountMode;
 import org.iata.bsplink.sftpaccountmanager.model.entity.AccountStatus;
 import org.iata.bsplink.sftpaccountmanager.model.repository.AccountRepository;
 import org.iata.bsplink.sftpaccountmanager.service.AccountService;
+import org.iata.bsplink.sftpaccountmanager.service.SftpServerAccountManager;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -42,6 +43,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -83,10 +85,13 @@ public class AccountControllerTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @MockBean
+    private SftpServerAccountManager sftpServerAccountManager;
+
     private Account account;
 
     private AccountRequest accountRequest;
-    private String editableAccountJson;
+    private String accountRequestJson;
 
     private Instant referenceTime;
 
@@ -99,16 +104,23 @@ public class AccountControllerTest {
         account.setPassword(passwordEncoder.encode(PASSWORD));
 
         accountRequest = getAccountRequestFixture();
-        editableAccountJson = mapper.writeValueAsString(account);
+        accountRequestJson = mapper.writeValueAsString(accountRequest);
 
         referenceTime = Instant.now();
+
+        configurePublicKeyValidatorToReturn(true);
+    }
+
+    private void configurePublicKeyValidatorToReturn(boolean value) {
+
+        when(sftpServerAccountManager.publicKeyIsValid(anyString())).thenReturn(value);
     }
 
     @Test
     public void testCreatesAccount() throws Exception {
 
         String responseBody = mockMvc.perform(
-                post(BASE_URI).content(editableAccountJson).contentType(MediaType.APPLICATION_JSON))
+                post(BASE_URI).content(accountRequestJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
 
@@ -122,7 +134,6 @@ public class AccountControllerTest {
     private void assertAccountHasExpectedValues(Account actualAccount, Account expectedAccount) {
 
         assertThat(actualAccount.getLogin(), equalTo(LOGIN));
-        assertThat(actualAccount.getMode(), equalTo(MODE));
         assertThat(actualAccount.getPublicKey(), equalTo(PUBLIC_KEY));
         assertThat(actualAccount.getCreationTime(), greaterThanOrEqualTo(referenceTime));
         assertThat(actualAccount.getUpdatedTime(), greaterThanOrEqualTo(referenceTime));
@@ -136,7 +147,7 @@ public class AccountControllerTest {
         String expectedMessage = String.format("Login name %s exists already", LOGIN);
 
         String actualMessage = mockMvc.perform(
-                post(BASE_URI).content(editableAccountJson).contentType(MediaType.APPLICATION_JSON))
+                post(BASE_URI).content(accountRequestJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict())
                 .andReturn().getResolvedException().getMessage();
 
@@ -151,7 +162,7 @@ public class AccountControllerTest {
     @Test
     public void testReturnsNotFoundWhenTryingToUpdateInexistentAccount() throws Exception {
 
-        mockMvc.perform(put(LOGIN_URI).content(editableAccountJson)
+        mockMvc.perform(put(LOGIN_URI).content(accountRequestJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -161,14 +172,13 @@ public class AccountControllerTest {
 
         final Account savedAccount = createAccount();
 
-        accountRequest.setMode(AccountMode.RW);
         accountRequest.setStatus(AccountStatus.DISABLED);
         accountRequest.setPublicKey("modifiedKey");
 
-        editableAccountJson = mapper.writeValueAsString(accountRequest);
+        accountRequestJson = mapper.writeValueAsString(accountRequest);
 
         String responseBody = mockMvc
-                .perform(put(LOGIN_URI).content(editableAccountJson)
+                .perform(put(LOGIN_URI).content(accountRequestJson)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -176,7 +186,6 @@ public class AccountControllerTest {
         Account updatedAccount = mapper.readValue(responseBody, Account.class);
 
         assertThat(updatedAccount.getLogin(), equalTo(LOGIN));
-        assertThat(updatedAccount.getMode(), equalTo(AccountMode.RW));
         assertThat(updatedAccount.getPublicKey(), equalTo("modifiedKey"));
 
         assertThat(updatedAccount.getCreationTime(), equalTo(savedAccount.getCreationTime()));
@@ -342,5 +351,37 @@ public class AccountControllerTest {
         Account savedAccount = accountRepository.findById(account.getLogin()).get();
 
         assertThat(passwordEncoder.matches(NEW_PASSWORD, savedAccount.getPassword()), is(true));
+    }
+
+    @Test
+    public void testValidatesPublicKeyOnAccountCreation() throws Exception {
+
+        configurePublicKeyValidatorToReturn(false);
+
+        accountRequestJson = mapper.writeValueAsString(accountRequest);
+
+        mockMvc.perform(
+                post(BASE_URI).content(accountRequestJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("publicKey")))
+                .andExpect(jsonPath("$.validationErrors[0].message",
+                        equalTo("public key is not valid")));
+    }
+
+    @Test
+    public void testValidatesPublicKeyOnAccountUpdate() throws Exception {
+
+        configurePublicKeyValidatorToReturn(false);
+        createAccount();
+
+        accountRequest.setPublicKey("modifiedKey");
+        accountRequestJson = mapper.writeValueAsString(accountRequest);
+
+        mockMvc.perform(
+                put(LOGIN_URI).content(accountRequestJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("publicKey")))
+                .andExpect(jsonPath("$.validationErrors[0].message",
+                        equalTo("public key is not valid")));
     }
 }

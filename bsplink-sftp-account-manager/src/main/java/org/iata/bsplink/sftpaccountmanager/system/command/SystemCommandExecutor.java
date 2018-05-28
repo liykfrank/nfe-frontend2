@@ -7,11 +7,9 @@ import org.apache.commons.exec.CommandLine;
  */
 public interface SystemCommandExecutor {
 
-    public void exec(CommandLine command);
+    public void exec(CommandLine command) throws SystemCommandExecutorException;
 
     public int exitValue();
-
-    public boolean isFailure();
 
     public String stringOutput();
 }

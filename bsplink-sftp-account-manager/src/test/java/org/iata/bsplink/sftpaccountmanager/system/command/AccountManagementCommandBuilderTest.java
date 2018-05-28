@@ -1,49 +1,55 @@
 package org.iata.bsplink.sftpaccountmanager.system.command;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.iata.bsplink.sftpaccountmanager.system.command.AccountManagementCommandBuilder.SCRIPT_PUBLIC_KEY_ADD_UPDATE;
+import static org.iata.bsplink.sftpaccountmanager.system.command.AccountManagementCommandBuilder.SCRIPT_PUBLIC_KEY_CHECK;
+import static org.iata.bsplink.sftpaccountmanager.system.command.AccountManagementCommandBuilder.SCRIPT_PUBLIC_KEY_DELETE;
+import static org.iata.bsplink.sftpaccountmanager.system.command.AccountManagementCommandBuilder.SCRIPT_USER_ADD_UPDATE;
+import static org.iata.bsplink.sftpaccountmanager.system.command.AccountManagementCommandBuilder.SCRIPT_USER_DELETE;
+import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.GROUPS;
 import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.LOGIN;
-import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.MODE;
 import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.PUBLIC_KEY;
-import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.getAccountFixture;
+import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.ROOT_DIRECTORY;
+import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.getAccountDetailsFixture;
 import static org.junit.Assert.assertThat;
 
 import org.apache.commons.exec.CommandLine;
-import org.iata.bsplink.sftpaccountmanager.model.entity.Account;
+import org.iata.bsplink.sftpaccountmanager.model.AccountDetails;
 import org.junit.Before;
 import org.junit.Test;
 
 public class AccountManagementCommandBuilderTest {
 
-    private Account account;
+    private AccountDetails accountDetails;
     private AccountManagementCommandBuilder commandBuilder;
 
     @Before
     public void setUp() {
 
-        account = getAccountFixture();
-
+        accountDetails = getAccountDetailsFixture();
         commandBuilder = new AccountManagementCommandBuilder();
     }
 
     @Test
     public void testBuilsAccountCreationCommand() {
 
-        CommandLine command = commandBuilder.buildCreateAccountCommand(account);
+        CommandLine command = commandBuilder.buildCreateAccountCommand(accountDetails);
 
         assertAccountCreationOrUpdateCommand(command);
     }
 
     private void assertAccountCreationOrUpdateCommand(CommandLine command) {
 
-        assertThat(command.getExecutable(), equalTo("sftp-am-add-update.bash"));
+        assertThat(command.getExecutable(), equalTo(SCRIPT_USER_ADD_UPDATE));
         assertThat(command.getArguments()[0], equalTo(LOGIN));
-        assertThat(command.getArguments()[1], equalTo(MODE.toString()));
+        assertThat(command.getArguments()[1], equalTo(ROOT_DIRECTORY));
+        assertThat(command.getArguments()[2], equalTo(GROUPS));
     }
 
     @Test
     public void testBuilsAccountUpdateCommand() {
 
-        CommandLine command = commandBuilder.buildUpdateAccountCommand(account);
+        CommandLine command = commandBuilder.buildUpdateAccountCommand(accountDetails);
 
         assertAccountCreationOrUpdateCommand(command);
     }
@@ -51,14 +57,14 @@ public class AccountManagementCommandBuilderTest {
     @Test
     public void testBuilsAddPublicKeyCommand() {
 
-        CommandLine command = commandBuilder.buildAddPublicKeyCommand(account);
+        CommandLine command = commandBuilder.buildAddPublicKeyCommand(accountDetails);
 
         assertPublicKeyAdditionOrUpdateCommand(command);
     }
 
     private void assertPublicKeyAdditionOrUpdateCommand(CommandLine command) {
 
-        assertThat(command.getExecutable(), equalTo("sftp-am-authorize-key.bash"));
+        assertThat(command.getExecutable(), equalTo(SCRIPT_PUBLIC_KEY_ADD_UPDATE));
         assertThat(command.getArguments()[0], equalTo(LOGIN));
         assertThat(command.getArguments()[1], equalTo("\"" + PUBLIC_KEY + "\""));
     }
@@ -66,7 +72,7 @@ public class AccountManagementCommandBuilderTest {
     @Test
     public void testBuilsUpdatePublicKeyCommand() {
 
-        CommandLine command = commandBuilder.buildUpdatePublicKeyCommand(account);
+        CommandLine command = commandBuilder.buildUpdatePublicKeyCommand(accountDetails);
 
         assertPublicKeyAdditionOrUpdateCommand(command);
     }
@@ -74,9 +80,27 @@ public class AccountManagementCommandBuilderTest {
     @Test
     public void testBuilsAccountDeletionCommand() {
 
-        CommandLine command = commandBuilder.buildDeleteAccountCommand(account);
+        CommandLine command = commandBuilder.buildDeleteAccountCommand(accountDetails);
 
-        assertThat(command.getExecutable(), equalTo("sftp-am-delete.bash"));
+        assertThat(command.getExecutable(), equalTo(SCRIPT_USER_DELETE));
         assertThat(command.getArguments()[0], equalTo(LOGIN));
+    }
+
+    @Test
+    public void testBuilsDeletePublicKeyCommand() {
+
+        CommandLine command = commandBuilder.buildDeletePublicKeyCommand(accountDetails);
+
+        assertThat(command.getExecutable(), equalTo(SCRIPT_PUBLIC_KEY_DELETE));
+        assertThat(command.getArguments()[0], equalTo(LOGIN));
+    }
+
+    @Test
+    public void testBuilsCheckPublicKeyCommand() {
+
+        CommandLine command = commandBuilder.buildCheckPublicKeyCommand(PUBLIC_KEY);
+
+        assertThat(command.getExecutable(), equalTo(SCRIPT_PUBLIC_KEY_CHECK));
+        assertThat(command.getArguments()[0], equalTo("\"" + PUBLIC_KEY + "\""));
     }
 }

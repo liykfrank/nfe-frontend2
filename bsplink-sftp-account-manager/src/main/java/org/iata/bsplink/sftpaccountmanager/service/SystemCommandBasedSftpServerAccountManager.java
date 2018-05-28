@@ -1,9 +1,10 @@
 package org.iata.bsplink.sftpaccountmanager.service;
 
 import org.apache.commons.exec.CommandLine;
-import org.iata.bsplink.sftpaccountmanager.model.entity.Account;
+import org.iata.bsplink.sftpaccountmanager.model.AccountDetails;
 import org.iata.bsplink.sftpaccountmanager.system.command.AccountManagementCommandBuilder;
 import org.iata.bsplink.sftpaccountmanager.system.command.SystemCommandExecutor;
+import org.iata.bsplink.sftpaccountmanager.system.command.SystemCommandExecutorException;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -29,35 +30,74 @@ public class SystemCommandBasedSftpServerAccountManager implements SftpServerAcc
     }
 
     @Override
-    public void createAccount(Account account) {
+    public void createAccount(AccountDetails accountDetails) {
 
-        executeCommand(commandBuilder.buildCreateAccountCommand(account));
-        executeCommand(commandBuilder.buildAddPublicKeyCommand(account));
+        executeCommand(commandBuilder.buildCreateAccountCommand(accountDetails));
+
+        if (accountDetails.getAccount().hasPublicKey()) {
+
+            executeCommand(commandBuilder.buildAddPublicKeyCommand(accountDetails));
+        }
     }
 
     private void executeCommand(CommandLine command) {
 
-        executor.exec(command);
+        try {
 
-        if (executor.isFailure()) {
+            executor.exec(command);
 
-            throw new RuntimeException(
-                    "Command execution error: " + command + " output: " + executor.stringOutput());
+        } catch (SystemCommandExecutorException exception) {
+
+            throw new RuntimeException("Error executing command: " + command.getExecutable(),
+                    exception);
+        }
+
+    }
+
+    @Override
+    public void updateAccount(AccountDetails accountDetails) {
+
+        executeCommand(commandBuilder.buildUpdateAccountCommand(accountDetails));
+
+        if (accountDetails.getAccount().hasPublicKey()) {
+
+            executeCommand(commandBuilder.buildUpdatePublicKeyCommand(accountDetails));
+
+        } else {
+
+            executeCommand(commandBuilder.buildDeletePublicKeyCommand(accountDetails));
         }
     }
 
-    @Override
-    public void updateAccount(Account account) {
 
-        executeCommand(commandBuilder.buildUpdateAccountCommand(account));
-        executeCommand(commandBuilder.buildUpdatePublicKeyCommand(account));
+    @Override
+    public void deleteAccount(AccountDetails accountDetails) {
+
+        executeCommand(commandBuilder.buildDeleteAccountCommand(accountDetails));
     }
 
-
     @Override
-    public void deleteAccount(Account account) {
+    public boolean publicKeyIsValid(String publicKey) {
 
-        executeCommand(commandBuilder.buildDeleteAccountCommand(account));
+        CommandLine command = commandBuilder.buildCheckPublicKeyCommand(publicKey);
+
+        try {
+
+            executor.exec(commandBuilder.buildCheckPublicKeyCommand(publicKey));
+
+            // the command will fail if the key is not valid
+            return true;
+
+        } catch (SystemCommandExecutorException exception) {
+
+            if (exception.getExitValue() == INCORRECT_PUBLIC_KEY_EXIT) {
+
+                return false;
+            }
+
+            throw new RuntimeException("Error executing command: " + command.getExecutable(),
+                    exception);
+        }
     }
 
 }

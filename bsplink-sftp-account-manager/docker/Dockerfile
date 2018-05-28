@@ -5,6 +5,11 @@ FROM centos:centos7
 
 RUN yum -y update; yum clean all
 RUN yum -y install openssh-server passwd java-1.8.0-openjdk; yum clean all
+RUN yum -y install sudo; yum clean all
+
+# Intallation of development tools
+RUN yum -y install vim tree; yum clean all
+RUN mv /usr/bin/vi /usr/bin/bck.vi && ln -s /usr/bin/vim /usr/bin/vi
 
 RUN mkdir /var/run/sshd
 RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N '' 

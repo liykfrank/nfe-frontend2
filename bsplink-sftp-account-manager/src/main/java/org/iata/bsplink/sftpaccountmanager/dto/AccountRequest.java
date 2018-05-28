@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import org.iata.bsplink.sftpaccountmanager.model.entity.AccountMode;
 import org.iata.bsplink.sftpaccountmanager.model.entity.AccountStatus;
+import org.iata.bsplink.sftpaccountmanager.validation.constraints.PublicKeyConstraint;
 
 /**
  * DTO that contains the editable data of SFTP accounts.
@@ -20,11 +20,9 @@ public class AccountRequest {
     private String login;
 
     @NonNull
-    private AccountMode mode;
-
-    @NonNull
     private AccountStatus status;
 
+    @PublicKeyConstraint(emptyIsValid = true)
     private String publicKey;
 }
 

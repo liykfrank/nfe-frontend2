@@ -31,5 +31,5 @@ echo "Copying utility scripts"
 for SCRIPT in $SFTP_AM_SCRIPTS; do
 
 	cp -vf "$BASEDIR/$SCRIPT" "$INSTALL_DIR"
-	chmod -v 500 "$INSTALL_DIR/$SCRIPT"
+	chmod -v 555 "$INSTALL_DIR/$SCRIPT"
 done

@@ -34,6 +34,8 @@ if (docker ps -a | grep -q "\<${CONTAINER_NAME}\>"); then
 fi
 
 docker build --rm -t "$IMAGE_NAME" .
-docker run -d --name "$CONTAINER_NAME" -p $HOST_SSH_PORT:22 \
+docker run -d --name "$CONTAINER_NAME" \
+	--restart unless-stopped \
+	-p $HOST_SSH_PORT:22 \
 	-p $HOST_HTTP_PORT:8080 "$IMAGE_NAME"
 

@@ -10,3 +10,26 @@ spring:
         default_schema: sftpaccountmanager
   flyway:
     schemas: sftpaccountmanager
+
+# values for the fake service FakeAccountDetailsService
+app:
+  fake:
+    accounts:
+      -
+        login: user1
+        directory: /
+        groups:
+          - nfe
+          - nfe-r-main-075
+          - nfe-r-isoc-es
+          - nfe-r-dir-inbox
+          - nfe-w-ft-inbox_file_type1
+      -
+        login: user2
+        directory: /
+        groups:
+          - nfe
+          - nfe-r-main-075
+          - nfe-r-isoc-gb
+          - nfe-r-dir-inbox
+          - nfe-w-ft-inbox_file_type1

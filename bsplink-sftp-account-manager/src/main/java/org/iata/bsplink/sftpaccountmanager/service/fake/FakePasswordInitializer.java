@@ -1,10 +1,11 @@
-package org.iata.bsplink.sftpaccountmanager.service;
+package org.iata.bsplink.sftpaccountmanager.service.fake;
 
 import java.util.Optional;
 
 import lombok.extern.apachecommons.CommonsLog;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.iata.bsplink.sftpaccountmanager.service.PasswordInitializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -29,11 +29,6 @@ public class Account {
     @NonNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private AccountMode mode;
-
-    @NonNull
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private AccountStatus status = AccountStatus.ENABLED;
 
     @Column(nullable = false, updatable = false)
@@ -48,6 +43,14 @@ public class Account {
 
     @Column(length = 60)
     private String password;
+
+    /**
+     * Whether the account has public key defined or not.
+     */
+    public boolean hasPublicKey() {
+
+        return publicKey != null && ! publicKey.isEmpty();
+    }
 
     /**
      * Sets the account's creation and update time.

@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Profile;
@@ -32,16 +33,20 @@ public class DefaultSystemCommandExecutor implements SystemCommandExecutor {
     }
 
     @Override
-    public void exec(CommandLine command) {
+    public void exec(CommandLine command) throws SystemCommandExecutorException {
 
         try {
 
             exitValue = executor.execute(command);
 
+        } catch (ExecuteException executeException) {
+
+            throw new SystemCommandExecutorException(command.toString(),
+                    executeException.getExitValue(), output.toString(), executeException);
+
         } catch (Exception exception) {
 
-            throw new RuntimeException("Error executing command: " + command.getExecutable(),
-                    exception);
+            throw new SystemCommandExecutorException(command.toString(),exception);
         }
     }
 
@@ -51,14 +56,6 @@ public class DefaultSystemCommandExecutor implements SystemCommandExecutor {
         throwExceptionOnIllegalState();
 
         return exitValue;
-    }
-
-    @Override
-    public boolean isFailure() {
-
-        throwExceptionOnIllegalState();
-
-        return executor.isFailure(exitValue);
     }
 
     @Override

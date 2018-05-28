@@ -3,6 +3,7 @@ package org.iata.bsplink.sftpaccountmanager.service;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.LOGIN;
+import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.getAccountDetailsFixture;
 import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.getAccountFixture;
 import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.getAccountRequestFixture;
 import static org.junit.Assert.assertEquals;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.iata.bsplink.sftpaccountmanager.dto.AccountRequest;
+import org.iata.bsplink.sftpaccountmanager.model.AccountDetails;
 import org.iata.bsplink.sftpaccountmanager.model.entity.Account;
 import org.iata.bsplink.sftpaccountmanager.model.entity.AccountStatus;
 import org.iata.bsplink.sftpaccountmanager.model.repository.AccountRepository;
@@ -32,11 +34,13 @@ public class AccountServiceTest {
     private static final String PASSWORD_HASH = "fakePasswordHash";
 
     private Account account;
+    private AccountDetails accountDetails;
     private AccountRequest accountRequest;
     private AccountService accountService;
     private AccountRepository accountRepository;
     private SftpServerAccountManager sftpServerAccountManager;
     private PasswordInitializer passwordInitializer;
+    private AccountDetailsService accountDetailsService;
 
     @Before
     public void setUp() {
@@ -54,8 +58,13 @@ public class AccountServiceTest {
         passwordInitializer = mock(PasswordInitializer.class);
         when(passwordInitializer.generateNewPasswordHash()).thenReturn(PASSWORD_HASH);
 
+
+        accountDetails = getAccountDetailsFixture(account);
+        accountDetailsService = mock(AccountDetailsService.class);
+        when(accountDetailsService.getAccountDetails(account)).thenReturn(accountDetails);
+
         accountService = new AccountService(accountRepository, sftpServerAccountManager,
-                passwordInitializer);
+                passwordInitializer, accountDetailsService);
     }
 
     @Test
@@ -64,7 +73,7 @@ public class AccountServiceTest {
         accountService.create(accountRequest);
 
         verify(accountRepository).save(account);
-        verify(sftpServerAccountManager).createAccount(account);
+        verify(sftpServerAccountManager).createAccount(accountDetails);
     }
 
     @Test
@@ -124,7 +133,7 @@ public class AccountServiceTest {
                 accountService.update(accountRequest.getLogin(), getAccountRequestFixture());
 
         verify(accountRepository).save(account);
-        verify(sftpServerAccountManager).updateAccount(account);
+        verify(sftpServerAccountManager).updateAccount(accountDetails);
 
         assertTrue(optionalUpdatedAccount.isPresent());
         assertThat(optionalUpdatedAccount.get(), sameInstance(account));
@@ -152,7 +161,7 @@ public class AccountServiceTest {
         accountService.delete(LOGIN);
 
         verify(accountRepository).delete(account);
-        verify(sftpServerAccountManager).deleteAccount(account);
+        verify(sftpServerAccountManager).deleteAccount(accountDetails);
     }
 
     @Test

@@ -27,12 +27,6 @@ public class LoggerSystemCommandExecutor implements SystemCommandExecutor {
     }
 
     @Override
-    public boolean isFailure() {
-
-        return false;
-    }
-
-    @Override
     public String stringOutput() {
 
         return "Command executed successfully";

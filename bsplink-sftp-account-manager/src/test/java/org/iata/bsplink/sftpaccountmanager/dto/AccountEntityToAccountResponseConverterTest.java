@@ -2,7 +2,6 @@ package org.iata.bsplink.sftpaccountmanager.dto;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.LOGIN;
-import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.MODE;
 import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.PUBLIC_KEY;
 import static org.iata.bsplink.sftpaccountmanager.test.fixtures.AccountFixtures.STATUS;
 import static org.junit.Assert.assertThat;
@@ -42,7 +41,6 @@ public class AccountEntityToAccountResponseConverterTest {
         Account account = new Account();
 
         account.setLogin(login);
-        account.setMode(MODE);
         account.setPassword("anyPassword");
         account.setPublicKey(PUBLIC_KEY);
         account.setStatus(STATUS);
@@ -57,7 +55,6 @@ public class AccountEntityToAccountResponseConverterTest {
         AccountResponse accountResponse = new AccountResponse();
 
         accountResponse.setLogin(login);
-        accountResponse.setMode(MODE);
         accountResponse.setPublicKey(PUBLIC_KEY);
         accountResponse.setStatus(STATUS);
         accountResponse.setCreationTime(CREATION_TIME);
