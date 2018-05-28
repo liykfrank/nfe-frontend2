@@ -1,0 +1,54 @@
+#!/usr/bin/env groovy
+
+pipeline {
+
+    agent any
+
+    stages {
+    
+    	 stage('Build') {
+            steps {
+		    	checkout poll: false, scm: [
+					$class: 'GitSCM',
+					branches: [[name: "*/UAT" ]],
+					doGenerateSubmoduleConfigurations: false,
+						extensions: [],
+						submoduleCfg: [],
+						userRemoteConfigs: [[
+							credentialsId: env.bitbucketCredentialsId,
+							url: "git@bitbucket.org:iatacoe/nfe.git"
+					]]]
+
+				configFileProvider([configFile(fileId: 'gradle-iata.properties', targetLocation: '.')]) {
+                	sh './gradlew clean build'
+                }
+            }
+            
+            //publish unit tests and unit test coverage reports
+         	post {
+                always {
+                    junit '**/test-results/**/*.xml'
+                    step([$class: 'JacocoPublisher'])
+                }
+            }
+        }
+        
+    	stage('Publish')  {
+			steps {
+				sh './gradlew uploadArchives'
+			}
+		}
+    
+    	stage('SonarQube') {
+            steps {
+            	withSonarQubeEnv('a2lsonarq1 - IATA') {
+            	    dir('bsplink-file-manager') {
+            	        configFileProvider([configFile(fileId: 'gradle-iata.properties', targetLocation: '.')]) {
+	            	        sh './gradlew sonarqube'
+            	        }
+            	    }
+	            }
+	        }
+	  	}
+	}
+}
