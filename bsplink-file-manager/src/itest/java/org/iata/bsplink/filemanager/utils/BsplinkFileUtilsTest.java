@@ -133,7 +133,7 @@ public class BsplinkFileUtilsTest {
         BsplinkFile file1 = new BsplinkFile();
         file1.setId(1L);
         file1.setName("ILei8385_20180128_file1");
-        file1.setStatus(BsplinkFileStatus.UNREAD);
+        file1.setStatus(BsplinkFileStatus.NOT_DOWNLOADED);
         file1.setType("fileType1");
         file1.setUploadDateTime(Instant.parse("2018-01-01T00:00:00Z"));
         file1.setBytes(1001L);
@@ -141,7 +141,7 @@ public class BsplinkFileUtilsTest {
         BsplinkFile file2 = new BsplinkFile();
         file2.setId(2L);
         file2.setName("ILei8385_20180128_file2");
-        file2.setStatus(BsplinkFileStatus.UNREAD);
+        file2.setStatus(BsplinkFileStatus.NOT_DOWNLOADED);
         file2.setType("fileType2");
         file2.setUploadDateTime(Instant.parse("2018-01-02T00:00:00Z"));
         file2.setBytes(1002L);

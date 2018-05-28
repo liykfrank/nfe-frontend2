@@ -72,8 +72,7 @@ public class BsplinkFileServiceImpl implements BsplinkFileService {
     
     @Override
     public BsplinkFile updateStatusToDownloaded(BsplinkFile file) {
-        if (file.getStatus() == BsplinkFileStatus.SENT
-                || file.getStatus() == BsplinkFileStatus.UNREAD) {
+        if (file.getStatus() == BsplinkFileStatus.NOT_DOWNLOADED) {
             file.setStatus(BsplinkFileStatus.DOWNLOADED);
             return bsplinkFileRepository.save(file);
         }

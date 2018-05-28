@@ -90,7 +90,7 @@ public class BsplinkFileControllerTrashTest {
         bsplinkFile2.setName("ESxx2203_20181212_test15376.txt");
         bsplinkFile2.setType("xx");
         bsplinkFile2.setBytes(2424L);
-        bsplinkFile2.setStatus(BsplinkFileStatus.SENT);
+        bsplinkFile2.setStatus(BsplinkFileStatus.NOT_DOWNLOADED);
         bsplinkFile2.setUploadDateTime(Instant.now());
         bsplinkFileRepository.saveAndFlush(bsplinkFile2);
 
@@ -120,7 +120,7 @@ public class BsplinkFileControllerTrashTest {
         bsplinkFile2.setName("ESab2203_20180518_sent.txt");
         bsplinkFile2.setType("ab");
         bsplinkFile2.setBytes(43L);
-        bsplinkFile2.setStatus(BsplinkFileStatus.SENT);
+        bsplinkFile2.setStatus(BsplinkFileStatus.NOT_DOWNLOADED);
         bsplinkFile2.setUploadDateTime(Instant.now());
         bsplinkFileRepository.saveAndFlush(bsplinkFile2);
 

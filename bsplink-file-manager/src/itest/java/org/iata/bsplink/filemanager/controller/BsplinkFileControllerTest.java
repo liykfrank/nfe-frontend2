@@ -306,7 +306,7 @@ public class BsplinkFileControllerTest {
     public void testRegister() throws Exception {
         Long bytes = 88L;
         String name = "abcdefghi.txt";
-        BsplinkFileStatus status = BsplinkFileStatus.UNREAD;
+        BsplinkFileStatus status = BsplinkFileStatus.NOT_DOWNLOADED;
         String type = "abcdefghi.txt";
         Instant instant = Instant.now();
 

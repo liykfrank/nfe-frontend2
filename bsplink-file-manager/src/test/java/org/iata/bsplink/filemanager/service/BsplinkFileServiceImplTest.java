@@ -142,7 +142,7 @@ public class BsplinkFileServiceImplTest {
 
         optionalFile.get().setId(1L);
         optionalFile.get().setName("file1");
-        optionalFile.get().setStatus(BsplinkFileStatus.UNREAD);
+        optionalFile.get().setStatus(BsplinkFileStatus.NOT_DOWNLOADED);
         optionalFile.get().setType("type");
         optionalFile.get().setUploadDateTime(Instant.parse("2018-04-04T12:00:00Z"));
         optionalFile.get().setBytes(1024L);

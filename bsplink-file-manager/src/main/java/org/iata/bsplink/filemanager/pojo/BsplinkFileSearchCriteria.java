@@ -1,6 +1,7 @@
 package org.iata.bsplink.filemanager.pojo;
 
 import java.time.Instant;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +16,7 @@ public class BsplinkFileSearchCriteria {
     private Long id;
     private String name;
     private String type;
-    private BsplinkFileStatus status;
+    private List<BsplinkFileStatus> status;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Instant minUploadDateTime;

@@ -126,7 +126,7 @@ public class MultipartFileService {
         BsplinkFile bsplinkFile = new BsplinkFile();
         bsplinkFile.setName(file.getOriginalFilename());
         bsplinkFile.setBytes(file.getSize());
-        bsplinkFile.setStatus(BsplinkFileStatus.SENT);
+        bsplinkFile.setStatus(BsplinkFileStatus.NOT_DOWNLOADED);
         bsplinkFile.setType(bsplinkFileUtils.getFileType(file.getOriginalFilename()));
         bsplinkFile.setUploadDateTime(Instant.now());
 
