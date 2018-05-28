@@ -8,7 +8,6 @@ export SFTP_DIRECTORY="/sftp"
 export SFTP_USER_GROUP="sftp-users"
 export SFTP_ACCOUNTS_DIRECTORY="$SFTP_DIRECTORY/accounts"
 export SFTP_AUTHORIZED_KEYS_STORE="$SFTP_DIRECTORY/authorized_keys"
-export DEFAULT_USER_GROUP="users"
 
 export SFTP_AM_SCRIPTS_INSTALL_DIR="/usr/local/bin"
 export SFTP_AM_INIT_SCRIPT="sftp-am-init.bash"

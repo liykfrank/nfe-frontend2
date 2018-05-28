@@ -6,7 +6,7 @@
 
 set -e
 
-source "$(dirname $0)/sftp-am.source"
+source sftp-am.source
 
 #-------------------------------------------------------------------------------
 # Functions
@@ -35,6 +35,7 @@ function add_or_update_user() {
 			--no-user-group \
 			--groups "$USER_GROUPS" \
 			--shell /sbin/nologin \
+			-K MAIL_DIR=/dev/null \
 			"$USER"
 
 		echo "User $USER added"

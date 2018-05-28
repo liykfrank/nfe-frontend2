@@ -16,6 +16,7 @@ RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
 
 # Installation of sftp account manager scripts and initialization.
 ADD ./shell ./sftp-am-scripts
+ADD ./config ./config
 RUN chmod 755 ./sftp-am-scripts/install.bash
 RUN ./sftp-am-scripts/install.bash -y
 RUN rm -r ./sftp-am-scripts
@@ -23,5 +24,6 @@ RUN rm -r ./sftp-am-scripts
 ADD ./start.bash ./start.bash
 ADD ./bsplink-sftp-account-manager*jar ./
 
+ENV SPRING_PROFILES_ACTIVE dev
 ENV APP_FAKE_PASSWORD_INITIALIZER=PhrW7XN9
 ENTRYPOINT ["/start.bash"]

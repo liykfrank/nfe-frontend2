@@ -1,0 +1,7 @@
+nfe-sftp-am ALL=(ALL) NOPASSWD: /sbin/adduser *
+nfe-sftp-am ALL=(ALL) NOPASSWD: /sbin/groupadd *
+nfe-sftp-am ALL=(ALL) NOPASSWD: /sbin/userdel *
+nfe-sftp-am ALL=(ALL) NOPASSWD: /sbin/usermod *	
+nfe-sftp-am ALL=(ALL) NOPASSWD: /bin/mv * /sftp/authorized_keys/[A-Za-z]*
+nfe-sftp-am ALL=(ALL) NOPASSWD: /bin/chown * /sftp/authorized_keys/[A-Za-z]*
+nfe-sftp-am ALL=(ALL) NOPASSWD: /bin/chmod * /sftp/authorized_keys/[A-Za-z]*

@@ -6,7 +6,7 @@
 
 set -e
 
-source "$(dirname $0)/sftp-am.source"
+source sftp-am.source
 
 #-------------------------------------------------------------------------------
 # Functions
@@ -20,7 +20,7 @@ function delete_key() {
 	AUTHORIZED_KEYS_FILE_BCK="${AUTHORIZED_KEYS_FILE}.old"
 
 	if [ -e "$AUTHORIZED_KEYS_FILE" ]; then
-		mv -fv "$AUTHORIZED_KEYS_FILE" "$AUTHORIZED_KEYS_FILE_BCK"
+		sudo mv -fv "$AUTHORIZED_KEYS_FILE" "$AUTHORIZED_KEYS_FILE_BCK"
 	fi
 }
 

@@ -6,7 +6,7 @@
 
 set -e
 
-source "$(dirname $0)/sftp-am.source"
+source sftp-am.source
 
 #-------------------------------------------------------------------------------
 # Main

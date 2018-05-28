@@ -21,7 +21,6 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'checkstyle'
 apply plugin: 'jacoco'
-apply plugin: 'maven'
 
 group = 'org.iata.bsplink'
 version = '0.0.1-SNAPSHOT'
@@ -30,7 +29,7 @@ sourceCompatibility = 1.8
 repositories {
 	mavenCentral()
 	maven {
-	   url nexusPublicRepositoryUrl
+	   url 'http://nexus.nfedev.accelya.com/repository/maven-public'
 	}
 }
 
@@ -85,13 +84,11 @@ itest.mustRunAfter test
 
 // End of Integration tests
 
-// maven plugin configuration for uploading the generated artifact to Nexus
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: nexusSnapshotsRepositoryUrl){
-                 authentication(userName: nexusUsername, password: nexusPassword)
-            }
-        }
+sonarqube {
+    properties {
+        property "sonar.jacoco.reportPath", "build/jacoco/test.exec"
+        property "sonar.jacoco.itReportPath", "build/jacoco/itest.exec"
     }
 }
+
+tasks.sonarqube.dependsOn tasks.withType(Test)

@@ -6,7 +6,7 @@
 
 set -e
 
-source "$(dirname $0)/sftp-am.source"
+source sftp-am.source
 
 #-------------------------------------------------------------------------------
 # Functions
@@ -21,13 +21,17 @@ function create_or_update_key() {
 	AUTHORIZED_KEYS_FILE_BCK="${AUTHORIZED_KEYS_FILE}.old"
 
 	if [ -e "$AUTHORIZED_KEYS_FILE" ]; then
-		mv -fv "$AUTHORIZED_KEYS_FILE" "$AUTHORIZED_KEYS_FILE_BCK"
+		sudo mv -fv "$AUTHORIZED_KEYS_FILE" "$AUTHORIZED_KEYS_FILE_BCK"
 	fi
 
-	echo "$PUBLIC_KEY" > "$AUTHORIZED_KEYS_FILE"
+	local TEMPFILE="$(mktemp)"
 
-	chgrp -v "$SFTP_USER_GROUP" "$AUTHORIZED_KEYS_FILE"
-	chmod -v 440 "$AUTHORIZED_KEYS_FILE"
+	echo "$PUBLIC_KEY" > "$TEMPFILE"
+
+	sudo mv -fv "$TEMPFILE" "$AUTHORIZED_KEYS_FILE"
+
+	sudo chown -vR ${USER}:$SFTP_USER_GROUP "$AUTHORIZED_KEYS_FILE"
+	sudo chmod -v 440 "$AUTHORIZED_KEYS_FILE"
 }
 
 #-------------------------------------------------------------------------------

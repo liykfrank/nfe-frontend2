@@ -17,3 +17,90 @@ logging:
     org:
       hibernate:
         type: trace
+
+# values for the fake service FakeAccountDetailsService
+app:
+  fake:
+    accounts:
+      -
+        login: nfe-2203-ES-OUT-E6
+        directory: 2203/ES/outbox
+        groups:
+          - nfe
+          - nfe-r-main-2203
+          - nfe-r-isoc-es
+          - nfe-r-dir-outbox
+          - nfe-r-ft-outbox_e6
+          - nfe-r-dir-eliminated
+      -
+        login: nfe-8385-CA-OUT-E6-EI-28
+        directory: 8385/CA/outbox
+        groups:
+          - nfe
+          - nfe-r-main-8385
+          - nfe-r-isoc-ca
+          - nfe-r-dir-outbox
+          - nfe-r-ft-outbox_e6
+          - nfe-r-ft-outbox_ei
+          - nfe-r-ft-outbox_28
+          - nfe-r-dir-eliminated
+      -
+        login: nfe-8385-IL-IN-E6-EI
+        directory: 8385/IL/inbox
+        groups:
+          - nfe
+          - nfe-r-main-8385
+          - nfe-r-isoc-il
+          - nfe-r-dir-inbox
+          - nfe-w-ft-inbox_e6
+          - nfe-w-ft-inbox_ei
+          - nfe-r-dir-bad_files
+      -
+        login: nfe-2203
+        directory: 2203
+        groups:
+          - nfe
+          - nfe-r-main-2203
+          - nfe-r-isoc-ca
+          - nfe-r-isoc-es
+          - nfe-r-isoc-il
+          - nfe-r-dir-inbox
+          - nfe-r-dir-outbox
+          - nfe-w-ft-inbox_28
+          - nfe-w-ft-inbox_e6
+          - nfe-w-ft-inbox_e8
+          - nfe-w-ft-inbox_ei
+          - nfe-r-dir-eliminated
+          - nfe-r-dir-bad_files
+      -
+        login: nfe
+        directory: /
+        groups:
+          - nfe
+          - nfe-r-dir-bad_files
+          - nfe-r-dir-eliminated
+          - nfe-r-dir-inbox
+          - nfe-r-dir-outbox
+          - nfe-r-ft-inbox_28
+          - nfe-r-ft-inbox_e6
+          - nfe-r-ft-inbox_e8
+          - nfe-r-ft-inbox_ei
+          - nfe-r-ft-outbox_28
+          - nfe-r-ft-outbox_e6
+          - nfe-r-ft-outbox_e8
+          - nfe-r-ft-outbox_ei
+          - nfe-r-isoc-ca
+          - nfe-r-isoc-es
+          - nfe-r-isoc-il
+          - nfe-r-main-2203
+          - nfe-r-main-8385
+          - nfe-r-main-8386
+          - nfe-w-dir-eliminated
+          - nfe-w-ft-inbox_28
+          - nfe-w-ft-inbox_e6
+          - nfe-w-ft-inbox_e8
+          - nfe-w-ft-inbox_ei
+          - nfe-w-ft-outbox_28
+          - nfe-w-ft-outbox_e6
+          - nfe-w-ft-outbox_e8
+          - nfe-w-ft-outbox_ei

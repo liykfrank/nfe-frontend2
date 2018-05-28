@@ -16,9 +16,9 @@ source "$(dirname $0)/sftp-am.source"
 # Fake data.
 #-------------------------------------------------------------------------------
 MAIN_GROUP="nfe"
-MAIN_ACCOUNTS="057 075"
-COUNTRIES="ES GB"
-FILE_TYPES="file_type1 file_type2 file_type3"
+MAIN_ACCOUNTS="2203 8385 8386"
+COUNTRIES="ES CA IL"
+FILE_TYPES="ei e6 e8 28"
 
 #-------------------------------------------------------------------------------
 # Configuration.
@@ -38,6 +38,9 @@ MODE_READ="R"
 MODE_READ_WRITE="RW"
 
 TMP_FILE="/tmp/$(basename $0).tmp"
+
+# The user of the service should have read access to the accounts directories
+SERVICE_USER="nfe-sftp-am"
 
 #-------------------------------------------------------------------------------
 # Functions.
@@ -79,6 +82,7 @@ function add_file_types_to_directory() {
 		else
 
 			ELIMINATED_FILES_OUTBOX_DIRECTORY="$FILE_TYPE_DIRECTORY/$ELIMINATED_FILES_DIRECTORY"
+			echo "$ELIMINATED_FILES_OUTBOX_DIRECTORY|$MODE_READ|$ITEM_DIRECTORY|$ELIMINATED_FILES_DIRECTORY" >> $DATA_FILE
 			echo "$ELIMINATED_FILES_OUTBOX_DIRECTORY|$MODE_READ_WRITE|$ITEM_DIRECTORY|$ELIMINATED_FILES_DIRECTORY" >> $DATA_FILE
 		fi
 	done
@@ -167,6 +171,13 @@ function create_groups_and_set_acls() {
 	done <$DATA_FILE
 }
 
+function set_service_user_permissions() {
+
+	local DIRECTORY="$1"
+
+	setfacl -Rm u:$SERVICE_USER:rx "$DIRECTORY"
+}
+
 #-------------------------------------------------------------------------------
 # Main.
 #-------------------------------------------------------------------------------
@@ -177,5 +188,6 @@ chmod 600 $TMP_FILE
 create_data_list "$SFTP_ACCOUNTS_DIRECTORY" "$TMP_FILE"
 create_directories "$TMP_FILE"
 create_groups_and_set_acls "$TMP_FILE"
+set_service_user_permissions "$SFTP_ACCOUNTS_DIRECTORY"
 
 rm -f $TMP_FILE

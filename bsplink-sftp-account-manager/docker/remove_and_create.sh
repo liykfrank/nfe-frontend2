@@ -39,3 +39,6 @@ docker run -d --name "$CONTAINER_NAME" \
 	-p $HOST_SSH_PORT:22 \
 	-p $HOST_HTTP_PORT:8080 "$IMAGE_NAME"
 
+echo "Image created: ${IMAGE_NAME}"
+echo "Container name: ${CONTAINER_NAME}"
+echo "SSH port: ${HOST_SSH_PORT}"

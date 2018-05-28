@@ -1,0 +1,17 @@
+[Unit]
+Description=BSPlink NFE SFTP account manager
+After=syslog.target
+
+[Service]
+WorkingDirectory=/opt/bsplink-sftp-am
+#Environment=SPRING_PROFILES_ACTIVE=dev
+User=nfe-sftp-am
+ExecStart=/bin/java -jar bsplink-sftp-account-manager.jar
+SuccessExitStatus=143
+
+Restart=on-failure
+RestartSec=60
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target
