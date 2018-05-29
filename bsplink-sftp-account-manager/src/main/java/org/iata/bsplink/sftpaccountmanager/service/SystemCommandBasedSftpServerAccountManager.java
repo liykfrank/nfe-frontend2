@@ -3,6 +3,7 @@ package org.iata.bsplink.sftpaccountmanager.service;
 import static org.iata.bsplink.sftpaccountmanager.service.SftpServerAccountManagerError.INCORRECT_PUBLIC_KEY_EXIT;
 
 import org.apache.commons.exec.CommandLine;
+import org.iata.bsplink.commons.rest.exception.ApplicationInternalServerError;
 import org.iata.bsplink.sftpaccountmanager.model.AccountDetails;
 import org.iata.bsplink.sftpaccountmanager.system.command.AccountManagementCommandBuilder;
 import org.iata.bsplink.sftpaccountmanager.system.command.SystemCommandExecutor;
@@ -50,8 +51,8 @@ public class SystemCommandBasedSftpServerAccountManager implements SftpServerAcc
 
         } catch (SystemCommandExecutorException exception) {
 
-            throw new RuntimeException("Error executing command: " + command.getExecutable(),
-                    exception);
+            throw new ApplicationInternalServerError(
+                    "Error executing command: " + command.getExecutable(), exception);
         }
 
     }
@@ -97,8 +98,8 @@ public class SystemCommandBasedSftpServerAccountManager implements SftpServerAcc
                 return false;
             }
 
-            throw new RuntimeException("Error executing command: " + command.getExecutable(),
-                    exception);
+            throw new ApplicationInternalServerError(
+                    "Error executing command: " + command.getExecutable(), exception);
         }
     }
 
