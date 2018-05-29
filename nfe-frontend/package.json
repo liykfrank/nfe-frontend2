@@ -11,7 +11,6 @@
     "lint": "ng lint",
     "e2e": "ts-node setproct && ng e2e --env=mock-proc"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "^5.2.0",
     "@angular/common": "^5.2.0",

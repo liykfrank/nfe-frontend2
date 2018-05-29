@@ -56,6 +56,24 @@ pipeline {
 			}
         }
 
+        stage('SonarQube') {
+
+            agent {
+                label 'master'
+            }
+
+            steps {
+            	// withSonarQubeEnv('a2lsonarq1') {
+                //     // requires SonarQube Scanner 2.8+
+                //     def scannerHome = tool 'SonarQube Scanner 2.8';
+                //     sh "${scannerHome}/bin/sonar-scanner"
+	            // }
+                // sh 'npm login --registry=http://nexusinterno.nfedev.accelya.com/repository/nfe-frontend/'
+                sh 'npm publish --registry=http://nexusinterno.nfedev.accelya.com/repository/nfe-frontend/'
+	        }
+	  	}
+
+
         stage('Push to IATA repository') {
 
             agent {
@@ -85,3 +103,4 @@ pipeline {
         }
   	}
 }
+
