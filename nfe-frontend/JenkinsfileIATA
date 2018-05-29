@@ -1,0 +1,92 @@
+#!/usr/bin/env groovy
+
+pipeline {
+
+    agent none
+
+    stages {
+
+        stage('Build') {
+
+            agent {
+                label 'master'
+            }
+
+            steps {
+                checkout poll: false, scm: [
+					$class: 'GitSCM',
+					branches: [[name: "**/UAT" ]],
+					doGenerateSubmoduleConfigurations: false,
+						extensions: [],
+						submoduleCfg: [],
+						userRemoteConfigs: [[
+							credentialsId: env.bitbucketCredentialsId,
+							url: "git@bitbucket.org:iatacoe/nfe.git"
+					]]]
+
+                dir('$JOB_BASE_NAME') {
+                    nodejs('nodejs') {
+                        sh 'npm install'
+                        sh 'npm run build'
+                    }
+                }
+
+                dir('dist') {
+                    stash name: 'nfe-frontend'
+                }
+            }
+        }
+
+         stage('Test') {
+
+            agent {
+                label 'master'
+            }
+
+            steps {
+                dir('$JOB_BASE_NAME') {
+                    nodejs('nodejs') {
+                        sh 'npm run test'
+                    // sh 'npm run e2e'
+                    }
+                }
+			}
+        }
+
+        stage('Publish') {
+
+            agent {
+                label 'master'
+            }
+
+            steps {
+                dir('$JOB_BASE_NAME') {
+            	    // sh 'npm login --registry=http://nexus.nfedev.accelya.com/repository/nfe-frontend/'
+                    sh 'npm publish --registry=http://nexus.nfedev.accelya.com/repository/nfe-frontend/'
+                }
+	        }
+	  	}
+
+        stage('SonarQube') {
+
+            agent {
+                label 'master'
+            }
+
+            steps {
+                dir('$JOB_BASE_NAME') {
+                    configFileProvider([configFile(fileId: 'sonar-project.properties', targetLocation: '.')]) {
+                        script {
+                            def scannerHome = tool 'sonarscanner3.2.0';
+                            withSonarQubeEnv('a2lsonarq1 - IATA') {
+                                sh "${scannerHome}/bin/sonar-scanner"
+                            }
+                        }
+                    }
+                }
+	        }
+	  	}
+  	}
+}
+
+
