@@ -10,6 +10,10 @@ pipeline {
 
     agent none
 
+    // tools {
+    //     tool name: 'sonarscanner3.2.0', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+    // }
+
     stages {
 
         stage('Build') {
@@ -32,7 +36,7 @@ pipeline {
 
 				nodejs('nodejs') {
 				    sh 'npm install'
-                    sh 'npm run build'
+                    //sh 'npm run build'
                 }
 
                 dir('dist') {
@@ -41,20 +45,32 @@ pipeline {
             }
         }
 
-         stage('Test') {
+        //  stage('Test') {
+
+        //     agent {
+        //         label 'master'
+        //     }
+
+        //     steps {
+
+        //         nodejs('nodejs') {
+        //             sh 'npm run test'
+        //            // sh 'npm run e2e'
+        //         }
+		// 	}
+        // }
+
+        stage('Publish') {
 
             agent {
                 label 'master'
             }
 
             steps {
-
-                nodejs('nodejs') {
-                    sh 'npm run test'
-                   // sh 'npm run e2e'
-                }
-			}
-        }
+            	// sh 'npm login --registry=http://nexusinterno.nfedev.accelya.com/repository/nfe-frontend/'
+                sh 'npm publish --registry=http://nexusinterno.nfedev.accelya.com/repository/nfe-frontend/'
+	        }
+	  	}
 
         stage('SonarQube') {
 
@@ -63,16 +79,25 @@ pipeline {
             }
 
             steps {
-            	// withSonarQubeEnv('a2lsonarq1') {
-                //     // requires SonarQube Scanner 2.8+
-                //     def scannerHome = tool 'SonarQube Scanner 2.8';
-                //     sh "${scannerHome}/bin/sonar-scanner"
-	            // }
-                // sh 'npm login --registry=http://nexusinterno.nfedev.accelya.com/repository/nfe-frontend/'
-                sh 'npm publish --registry=http://nexusinterno.nfedev.accelya.com/repository/nfe-frontend/'
+
+                configFileProvider([configFile(fileId: 'sonar-project.properties', targetLocation: '.')]) {
+
+                    sh 'npm rebuild node-sass --force'
+                    sh 'npm i -s'
+                    sh 'npm run sonar'
+
+                    script {
+                        // requires SonarQube Scanner 2.8+
+                        def scannerHome = tool 'sonarscanner3.2.0';
+
+                        withSonarQubeEnv('a2lsonarq1') {
+                            //    sh "sonar-scanner"
+                            sh "${scannerHome}/bin/sonar-scanner"
+                        }
+                    }
+                }
 	        }
 	  	}
-
 
         stage('Push to IATA repository') {
 
