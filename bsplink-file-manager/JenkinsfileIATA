@@ -19,7 +19,7 @@ pipeline {
 							url: "git@bitbucket.org:iatacoe/nfe.git"
 					]]]
 				
-					configFileProvider([configFile(fileId: 'gradle-iata.properties', targetLocation: $JOB_BASE_NAME)]) {
+					configFileProvider([configFile(fileId: 'gradle-iata.properties', targetLocation: '$JOB_BASE_NAME')]) {
                 	    sh './gradlew -b $JOB_BASE_NAME/build.gradle clean build'
                 }
             }
