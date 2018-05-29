@@ -1,5 +1,7 @@
 package org.iata.bsplink.sftpaccountmanager.service;
 
+import static org.iata.bsplink.sftpaccountmanager.service.SftpServerAccountManagerError.INCORRECT_PUBLIC_KEY_EXIT;
+
 import org.apache.commons.exec.CommandLine;
 import org.iata.bsplink.sftpaccountmanager.model.AccountDetails;
 import org.iata.bsplink.sftpaccountmanager.system.command.AccountManagementCommandBuilder;

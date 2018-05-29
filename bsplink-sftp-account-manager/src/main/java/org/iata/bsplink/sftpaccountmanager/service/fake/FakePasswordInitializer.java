@@ -49,7 +49,7 @@ public class FakePasswordInitializer implements PasswordInitializer {
 
         String randomPassword = RandomStringUtils.randomAlphanumeric(8);
 
-        log.info(String.format("\n\nACCOUNT FAKE PASSWORD: %s\n\n", randomPassword));
+        log.info(String.format("%n%nACCOUNT FAKE PASSWORD: %s%n%n", randomPassword));
 
         fakePassword = Optional.of(randomPassword);
 

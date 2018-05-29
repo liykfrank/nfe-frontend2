@@ -8,10 +8,10 @@ public class SystemCommandExecutorException extends Exception {
     private static final int UNKNOWN_EXIT_VALUE = -1;
     private static final long serialVersionUID = 1L;
 
-    private int exitValue;
-    private String command;
-    private String output;
-    private String message;
+    private final int exitValue;
+    private final String command;
+    private final String output;
+    private final String message;
 
     public SystemCommandExecutorException(String command, Throwable cause) {
 

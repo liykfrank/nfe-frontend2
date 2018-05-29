@@ -7,8 +7,6 @@ import org.iata.bsplink.sftpaccountmanager.model.AccountDetails;
  */
 public interface SftpServerAccountManager {
 
-    public static final int INCORRECT_PUBLIC_KEY_EXIT = 80;
-
     public void createAccount(AccountDetails accountDetails);
 
     public void updateAccount(AccountDetails accountDetails);
