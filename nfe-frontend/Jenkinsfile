@@ -36,7 +36,7 @@ pipeline {
 
 				nodejs('nodejs') {
 				    sh 'npm install'
-                    //sh 'npm run build'
+                    sh 'npm run build'
                 }
 
                 dir('dist') {
@@ -52,7 +52,6 @@ pipeline {
             }
 
             steps {
-
                 nodejs('nodejs') {
                     sh 'npm run test'
                    // sh 'npm run e2e'
