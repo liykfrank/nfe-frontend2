@@ -7,10 +7,9 @@
     "start": "ng serve",
     "start-mock": "ng serve --env=mock",
     "build": "ng build --env=demo",
-    "test": "ts-node setkarma && ng test --env=mock-test --watch=false",
+    "test": "ts-node setkarma && ng test --env=mock-test --watch=false --cc",
     "lint": "ng lint",
-    "e2e": "ts-node setproct && ng e2e --env=mock-proc",
-    "sonar": "ts-node setkarma && ng test --env=mock-test --watch=false --cc"
+    "e2e": "ts-node setproct && ng e2e --env=mock-proc"
   },
   "dependencies": {
     "@angular/animations": "^5.2.0",

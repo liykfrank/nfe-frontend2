@@ -45,20 +45,20 @@ pipeline {
             }
         }
 
-        //  stage('Test') {
+         stage('Test') {
 
-        //     agent {
-        //         label 'master'
-        //     }
+            agent {
+                label 'master'
+            }
 
-        //     steps {
+            steps {
 
-        //         nodejs('nodejs') {
-        //             sh 'npm run test'
-        //            // sh 'npm run e2e'
-        //         }
-		// 	}
-        // }
+                nodejs('nodejs') {
+                    sh 'npm run test'
+                   // sh 'npm run e2e'
+                }
+			}
+        }
 
         stage('Publish') {
 
@@ -79,17 +79,9 @@ pipeline {
             }
 
             steps {
-
                 configFileProvider([configFile(fileId: 'sonar-project.properties', targetLocation: '.')]) {
-
-                    sh 'npm rebuild node-sass --force'
-                    sh 'npm i -s'
-                    sh 'npm run sonar'
-
                     script {
-                        // requires SonarQube Scanner 2.8+
                         def scannerHome = tool 'sonarscanner3.2.0';
-
                         withSonarQubeEnv('a2lsonarq1') {
                             //    sh "sonar-scanner"
                             sh "${scannerHome}/bin/sonar-scanner"
@@ -118,11 +110,9 @@ pipeline {
             }
 
             steps {
-
                 dir('dist') {
                     unstash 'nfe-frontend'
                 }
-
                 sh './deploy-docker.sh'
 			}
         }
