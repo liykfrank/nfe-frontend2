@@ -10,10 +10,6 @@ pipeline {
 
     agent none
 
-    // tools {
-    //     tool name: 'sonarscanner3.2.0', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-    // }
-
     stages {
 
         stage('Build') {
@@ -82,7 +78,6 @@ pipeline {
                     script {
                         def scannerHome = tool 'sonarscanner3.2.0';
                         withSonarQubeEnv('a2lsonarq1') {
-                            //    sh "sonar-scanner"
                             sh "${scannerHome}/bin/sonar-scanner"
                         }
                     }
@@ -117,4 +112,3 @@ pipeline {
         }
   	}
 }
-
