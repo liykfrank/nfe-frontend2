@@ -2,16 +2,13 @@
 
 pipeline {
 
-    agent none
+    agent {
+        label 'master'
+    }
 
     stages {
 
         stage('Build') {
-
-            agent {
-                label 'master'
-            }
-
             steps {
                 checkout poll: false, scm: [
 					$class: 'GitSCM',
@@ -25,53 +22,30 @@ pipeline {
 					]]]
 
                 nodejs('nodejs') {
-                    sh 'npm --prefix ./$JOB_BASE_NAME install ./$JOB_BASE_NAME'
-                    //sh 'npm rebuild node-sass --force --prefix ./$JOB_BASE_NAME'
+                    sh 'npm install --prefix ./$JOB_BASE_NAME'
                     sh 'npm run build --prefix ./$JOB_BASE_NAME'
                 }
             }
         }
 
          stage('Test') {
-
-            agent {
-                label 'master'
-            }
-
             steps {
                 nodejs('nodejs') {
-
-                //TODO - pq necesitamos hacer un npm install otra vez???
-                sh 'npm install --prefix ./$JOB_BASE_NAME'
-
                 sh 'npm run test --prefix ./$JOB_BASE_NAME'
                 // sh 'npm run e2e'
                 }
 			}
         }
 
-        stage('Publish') {
-
-            agent {
-                label 'master'
-            }
-
+        stage('Nexus') {
             steps {
-
-                dir('nfe-frontend'){
-                    sh 'npm publish --registry=http://nexus.nfedev.accelya.com/repository/nfe-frontend/'
-                }   
+                sh 'npm publish ./$JOB_BASE_NAME --registry=http://nexus.nfedev.accelya.com/repository/nfe-frontend/'
 	        }
 	  	}
 
         stage('SonarQube') {
-
-            agent {
-                label 'master'
-            }
-
             steps {
-                dir('nfe-frontend') {
+                dir("${JOB_BASE_NAME}") {
                     configFileProvider([configFile(fileId: 'sonar-project.properties', targetLocation: '.')]) {
                         script {
                             def scannerHome = tool 'sonarscanner3.2.0';
@@ -85,5 +59,3 @@ pipeline {
 	  	}
   	}
 }
-
-
