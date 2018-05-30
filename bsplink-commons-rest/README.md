@@ -132,7 +132,7 @@ repositories {
     // ... other repositories
 
 	maven {
-	   url 'http://nexus.nfedev.accelya.com/repository/maven-public'
+	   url 'http://nexusinterno.nfedev.accelya.com/repository/maven-public'
 	}
 }
 
@@ -140,7 +140,7 @@ dependencies {
 
     // ... other dependencies
 
-    compile('org.iata.bsplink:bsplink-commons-rest:0.0.1')
+    compile('org.iata.bsplink:bsplink-commons-rest:0.0.3')
 }
 
 ```
