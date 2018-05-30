@@ -24,15 +24,10 @@ pipeline {
 							url: "git@bitbucket.org:iatacoe/nfe.git"
 					]]]
 
-                dir('$JOB_BASE_NAME') {
-                    nodejs('nodejs') {
-                        sh 'npm install'
-                        sh 'npm run build'
-                    }
-                }
-
-                dir('dist') {
-                    stash name: 'nfe-frontend'
+                nodejs('nodejs') {
+                    sh 'npm --prefix ./$JOB_BASE_NAME install ./$JOB_BASE_NAME'
+                    //sh 'npm rebuild node-sass --force --prefix ./$JOB_BASE_NAME'
+                    sh 'npm run build --prefix ./$JOB_BASE_NAME'
                 }
             }
         }
@@ -44,11 +39,13 @@ pipeline {
             }
 
             steps {
-                dir('$JOB_BASE_NAME') {
-                    nodejs('nodejs') {
-                        sh 'npm run test'
-                    // sh 'npm run e2e'
-                    }
+                nodejs('nodejs') {
+
+                //TODO - pq necesitamos hacer un npm install otra vez???
+                sh 'npm install --prefix ./$JOB_BASE_NAME'
+
+                sh 'npm run test --prefix ./$JOB_BASE_NAME'
+                // sh 'npm run e2e'
                 }
 			}
         }
@@ -60,10 +57,10 @@ pipeline {
             }
 
             steps {
-                dir('$JOB_BASE_NAME') {
-            	    // sh 'npm login --registry=http://nexus.nfedev.accelya.com/repository/nfe-frontend/'
+
+                dir('nfe-frontend'){
                     sh 'npm publish --registry=http://nexus.nfedev.accelya.com/repository/nfe-frontend/'
-                }
+                }   
 	        }
 	  	}
 
@@ -74,7 +71,7 @@ pipeline {
             }
 
             steps {
-                dir('$JOB_BASE_NAME') {
+                dir('nfe-frontend') {
                     configFileProvider([configFile(fileId: 'sonar-project.properties', targetLocation: '.')]) {
                         script {
                             def scannerHome = tool 'sonarscanner3.2.0';
