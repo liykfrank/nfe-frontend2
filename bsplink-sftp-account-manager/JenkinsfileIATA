@@ -33,7 +33,7 @@ pipeline {
             }
         }
         
-    	stage('Publish')  {
+    	stage('Nexus')  {
 			steps {
 				sh './gradlew -b $JOB_BASE_NAME/build.gradle uploadArchives'
 			}

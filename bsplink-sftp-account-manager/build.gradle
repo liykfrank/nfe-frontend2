@@ -29,38 +29,12 @@ sourceCompatibility = 1.8
 repositories {
 	mavenCentral()
 	maven {
-	   url 'http://nexusinterno.nfedev.accelya.com/repository/maven-public'
+	   url nexusPublicRepositoryUrl
 	}
 }
 
 checkstyle {
     toolVersion = '8.0'
-}
-
-jacoco {
-    toolVersion = "0.8.1"
-}
-
-jacocoTestReport {
-
-    reports {
-        html.enabled = true
-    }
-
-    executionData += files("${buildDir}/jacoco/itest.exec")
-}
-
-jacocoTestCoverageVerification {
-
-	//force Jacoco test coverage task to execute first
-	dependsOn jacocoTestReport
-
-    executionData += jacocoTestReport.executionData
-}
-
-// to run Jacoco test coverage during the build
-check {
-	dependsOn jacocoTestCoverageVerification
 }
 
 dependencies {
@@ -81,36 +55,7 @@ dependencies {
 	testCompile('pl.pragmatists:JUnitParams:1.1.1')
 }
 
-// Integration tests
-// See: http://buransky.com/programming/integration-testing-with-gradle/
-configurations {
-    itestCompile.extendsFrom testCompile
-    itestRuntime.extendsFrom testRuntime
-}
-
-sourceSets {
-    itest {
-        compileClasspath += main.output + test.output
-        runtimeClasspath += main.output + test.output
-        java.srcDir file('src/itest/java')
-    }
-}
-
-task itest(type: Test) {
-    testClassesDir = sourceSets.itest.output.classesDir
-    classpath = sourceSets.itest.runtimeClasspath
-}
-
-check.dependsOn itest
-itest.mustRunAfter test
-
-// End of Integration tests
-
-sonarqube {
-    properties {
-        property "sonar.jacoco.reportPath", "build/jacoco/test.exec"
-        property "sonar.jacoco.itReportPath", "build/jacoco/itest.exec"
-    }
-}
-
-tasks.sonarqube.dependsOn tasks.withType(Test)
+apply from: 'gradle/scripts/itest.gradle'
+apply from: 'gradle/scripts/jacoco.gradle'
+apply from: 'gradle/scripts/sonarqube.gradle'
+apply from: 'gradle/scripts/publish.gradle'
