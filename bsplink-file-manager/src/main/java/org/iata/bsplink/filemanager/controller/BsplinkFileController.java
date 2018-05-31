@@ -6,11 +6,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -41,7 +39,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -99,7 +96,7 @@ public class BsplinkFileController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "File found"),
             @ApiResponse(code = 400, message = "Invalid ID supplied"),
             @ApiResponse(code = 404, message = "File not found")})
-    public ResponseEntity<?> downloadFile(@PathVariable("id") BsplinkFile bsFile,
+    public ResponseEntity<Object> downloadFile(@PathVariable("id") BsplinkFile bsFile,
             HttpServletResponse response) {
 
         if (bsFile == null) {
@@ -137,7 +134,7 @@ public class BsplinkFileController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Files founded"),
             @ApiResponse(code = 400, message = "Invalid ids supplied"),
             @ApiResponse(code = 404, message = "File not found")})
-    public ResponseEntity<?> downloadZip(@RequestParam("id") List<BsplinkFile> bsFileList,
+    public ResponseEntity<Object> downloadZip(@RequestParam("id") List<BsplinkFile> bsFileList,
             HttpServletResponse response) {
 
         if (!bsplinkFileUtils.checkIfListIsNotEmpty(bsFileList)) {
@@ -220,15 +217,12 @@ public class BsplinkFileController {
     public ResponseEntity<List<SimpleResponse>> send(
             @RequestParam("file") List<MultipartFile> files, WebRequest webRequest) {
 
-
-        HttpServletRequest request = ((ServletWebRequest) webRequest).getRequest();
-
         if (files.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.emptyList());
         }
 
         return ResponseEntity.status(HttpStatus.MULTI_STATUS)
-                .body(multipartFileSaveService.saveFiles(request.getRequestURI(), files));
+                .body(multipartFileSaveService.saveFiles(files));
     }
 
     /**

@@ -3,6 +3,7 @@ package org.iata.bsplink.filemanager.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.iata.bsplink.filemanager.exception.BsplinkFileManagerException;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFile;
 import org.iata.bsplink.filemanager.pojo.BsplinkFileSearchCriteria;
 import org.iata.bsplink.filemanager.response.EntityActionResponse;
@@ -25,7 +26,7 @@ public interface BsplinkFileService {
     public Page<BsplinkFile> find(BsplinkFileSearchCriteria searchCriteria, Pageable pageable,
             Sort sort);
 
-    public void deleteOneFile(BsplinkFile file) throws Exception;
+    public void deleteOneFile(BsplinkFile file) throws BsplinkFileManagerException;
 
     public List<EntityActionResponse<Long>> deleteMultipleFiles(List<Long> ids);
 }

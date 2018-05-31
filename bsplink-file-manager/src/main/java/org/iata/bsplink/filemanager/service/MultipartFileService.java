@@ -52,7 +52,7 @@ public class MultipartFileService {
     /**
      * Save MultipartFiles in FS.
      */
-    public List<SimpleResponse> saveFiles(String path, List<MultipartFile> files) {
+    public List<SimpleResponse> saveFiles(List<MultipartFile> files) {
         List<SimpleResponse> simpleResponses = new ArrayList<>(files.size());
         BsplinkFileBasicConfig cfg = bsplinkFileConfigService.find();
 
@@ -112,10 +112,9 @@ public class MultipartFileService {
                 Paths.get(applicationConfiguration.getLocalUploadedFilesDirectory());
 
         File dirUploadedFiles = new File(uploadedFilesDirectory.toString());
-        if (!dirUploadedFiles.exists()) {
-            if (dirUploadedFiles.mkdir()) {
-                log.info("Directory " + dirUploadedFiles + " created.");
-            }
+        
+        if (!dirUploadedFiles.exists() && dirUploadedFiles.mkdir()) {
+            log.info("Directory " + dirUploadedFiles + " created.");
         }
 
         Path path = uploadedFilesDirectory.resolve(fileName);
@@ -134,7 +133,7 @@ public class MultipartFileService {
 
         // If files with the same name exist then will be updated. Status not equals to DELETED and
         // TRASHED
-        if (listFiles.size() > 0) {
+        if (!listFiles.isEmpty()) {
 
             List<BsplinkFile> filterList = listFiles.stream()
                     .filter(f -> !f.getStatus().equals(BsplinkFileStatus.DELETED)

@@ -99,11 +99,11 @@ public class BsplinkFileControllerTrashTest {
 
         mockMvc.perform(delete("/v1/files/" + id2)).andExpect(status().isOk());
 
-        assertEquals(bsplinkFileRepository.findById(id1).get().getStatus(),
-                BsplinkFileStatus.TRASHED);
+        assertEquals(BsplinkFileStatus.TRASHED,
+                bsplinkFileRepository.findById(id1).get().getStatus());
 
-        assertEquals(bsplinkFileRepository.findById(id2).get().getStatus(),
-                BsplinkFileStatus.DELETED);
+        assertEquals(BsplinkFileStatus.DELETED,
+                bsplinkFileRepository.findById(id2).get().getStatus());
     }
 
     @Test
@@ -127,8 +127,8 @@ public class BsplinkFileControllerTrashTest {
         int id2 = (int) bsplinkFile2.getId().longValue();
 
         mockMvc.perform(get("/v1/files")).andExpect(status().isOk())
-            .andExpect(jsonPath("$.content", hasSize(1)))
-            .andExpect(jsonPath("$.content[0].id", equalTo(id2)));
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].id", equalTo(id2)));
     }
 
 }

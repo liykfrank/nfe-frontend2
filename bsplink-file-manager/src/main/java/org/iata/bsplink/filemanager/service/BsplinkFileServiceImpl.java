@@ -1,6 +1,5 @@
 package org.iata.bsplink.filemanager.service;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +7,7 @@ import java.util.stream.Collectors;
 
 import lombok.extern.apachecommons.CommonsLog;
 
+import org.iata.bsplink.filemanager.exception.BsplinkFileManagerException;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFile;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFileStatus;
 import org.iata.bsplink.filemanager.model.repository.BsplinkFileRepository;
@@ -42,7 +42,7 @@ public class BsplinkFileServiceImpl implements BsplinkFileService {
 
         List<BsplinkFile> files = bsplinkFileRepository.findByName(file.getName());
 
-        if (files.size() > 0) {
+        if (!files.isEmpty()) {
 
             List<BsplinkFile> filterList = files.stream()
                     .filter(f -> !f.getStatus().equals(BsplinkFileStatus.DELETED)
@@ -52,7 +52,7 @@ public class BsplinkFileServiceImpl implements BsplinkFileService {
             filterList.forEach(f -> f.setStatus(BsplinkFileStatus.TRASHED));
 
             filterList.forEach(f -> bsplinkFileRepository.save(f));
-            
+
             return bsplinkFileRepository.findByName(file.getName());
 
         }
@@ -69,7 +69,7 @@ public class BsplinkFileServiceImpl implements BsplinkFileService {
     public BsplinkFile save(BsplinkFile file) {
         return bsplinkFileRepository.save(file);
     }
-    
+
     @Override
     public BsplinkFile updateStatusToDownloaded(BsplinkFile file) {
         if (file.getStatus() == BsplinkFileStatus.NOT_DOWNLOADED) {
@@ -87,8 +87,12 @@ public class BsplinkFileServiceImpl implements BsplinkFileService {
     }
 
     @Override
-    public void deleteOneFile(BsplinkFile file) throws Exception {
-        bsplinkFileUtils.moveFileToEliminated(file.getName());
+    public void deleteOneFile(BsplinkFile file) throws BsplinkFileManagerException {
+        try {
+            bsplinkFileUtils.moveFileToEliminated(file.getName());
+        } catch (Exception e) {
+            throw new BsplinkFileManagerException(e);
+        }
         List<BsplinkFile> deletedFiles = bsplinkFileRepository.findByNameAndStatus(file.getName(),
                 BsplinkFileStatus.DELETED);
         deletedFiles.forEach(bsFile -> bsFile.setStatus(BsplinkFileStatus.TRASHED));
@@ -134,6 +138,6 @@ public class BsplinkFileServiceImpl implements BsplinkFileService {
         }
 
         return result;
-    }   
+    }
 
 }

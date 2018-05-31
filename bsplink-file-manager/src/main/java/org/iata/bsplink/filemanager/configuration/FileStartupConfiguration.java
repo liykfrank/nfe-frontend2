@@ -22,7 +22,7 @@ public class FileStartupConfiguration {
     private String yadeOutbox;
 
     @Autowired
-    private Environment env;
+    private Environment environment;
 
     /**
      * Creates files when local profile is activated.
@@ -31,26 +31,27 @@ public class FileStartupConfiguration {
      */
     @PostConstruct
     public void createFilesForLocalProfile() throws IOException {
-        if (Arrays.stream(env.getActiveProfiles())
+        if (Arrays.stream(environment.getActiveProfiles())
                 .anyMatch(env -> (env.equalsIgnoreCase("test")))) {
 
             Path uploadedFilesDirectory = Paths.get(yadeOutbox);
 
             File dirUploadedFiles = new File(uploadedFilesDirectory.toString());
-            if (!dirUploadedFiles.exists()) {
-                if (dirUploadedFiles.mkdir()) {
 
-                    log.info("Directory " + dirUploadedFiles + " created.");
+            if (!dirUploadedFiles.exists() && dirUploadedFiles.mkdir()) {
 
-                    for (int i = 1; i <= 10; i++) {
+                log.info("Directory " + dirUploadedFiles + " created.");
 
-                        File f = new File(uploadedFilesDirectory + File.separator + "file" + i);
-                        f.getParentFile().mkdirs();
-                        f.createNewFile();
+                for (int i = 1; i <= 10; i++) {
 
+                    File f = new File(uploadedFilesDirectory + File.separator + "file" + i);
+                    f.getParentFile().mkdirs();
+
+                    if (f.createNewFile()) {
                         log.info("File: " + "file" + i + " created.");
                     }
                 }
+
             }
         }
     }

@@ -119,7 +119,7 @@ public class BsplinkFileControllerTest {
                 .andExpect(jsonPath("$[0].subject", equalTo(fileName)))
                 .andExpect(jsonPath("$[0].status", equalTo(HttpStatus.OK.value())));
 
-        assertEquals(Files.exists(path), true);
+        assertEquals(true, Files.exists(path));
 
         assertEquals(Files.size(path), fileContent.length);
     }
@@ -168,9 +168,9 @@ public class BsplinkFileControllerTest {
                 .andExpect(jsonPath("$[2].message", equalTo(HttpStatus.BAD_REQUEST.name() + ": "
                         + MultipartFileService.BAD_REQUEST_MSG_EMPTY)));
 
-        assertEquals(Files.exists(path.resolve(fileNames[0])), true);
-        assertEquals(Files.exists(path.resolve(fileNames[1])), false);
-        assertEquals(Files.exists(path.resolve(fileNames[2])), false);
+        assertEquals(true, Files.exists(path.resolve(fileNames[0])));
+        assertEquals(false, Files.exists(path.resolve(fileNames[1])));
+        assertEquals(false, Files.exists(path.resolve(fileNames[2])));
 
         assertEquals(Files.size(path.resolve(fileNames[0])), fileTextContents[0].getBytes().length);
     }
@@ -322,7 +322,7 @@ public class BsplinkFileControllerTest {
 
         List<BsplinkFile> bsplinkFileContainer = bsplinkFileRepository.findByName(name);
 
-        assertEquals(bsplinkFileContainer.size() == 1, true);
+        assertEquals(true, bsplinkFileContainer.size() == 1);
 
         BsplinkFile bsplinkFile = bsplinkFileContainer.get(0);
         assertEquals(bsplinkFile.getBytes(), bytes);

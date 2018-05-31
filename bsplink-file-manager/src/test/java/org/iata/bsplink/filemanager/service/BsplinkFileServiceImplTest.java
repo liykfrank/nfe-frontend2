@@ -43,7 +43,7 @@ public class BsplinkFileServiceImplTest {
         when(bsplinkFileRepository.findByName(file.getName()))
                 .thenReturn(getList());
         List<BsplinkFile> fileUpdates = bsplinkFileService.updateStatusToTrashed(file);
-        assertEquals(fileUpdates.get(0).getStatus(), BsplinkFileStatus.TRASHED);
+        assertEquals(BsplinkFileStatus.TRASHED, fileUpdates.get(0).getStatus());
     }
 
     @Test

@@ -3,7 +3,9 @@ package org.iata.bsplink.filemanager.utils;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URLConnection;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -139,7 +141,7 @@ public class BsplinkFileUtils {
             }
         }
 
-        if (errors.size() > 0) {
+        if (!errors.isEmpty()) {
             throw new BsplinkValidationException(errors);
         }
     }
@@ -176,18 +178,19 @@ public class BsplinkFileUtils {
 
             File file = new File(localDownloadedFilesDirectory + File.separator + bsFile.getName());
 
-            FileInputStream fin = new FileInputStream(file);
+            try (FileInputStream fin = new FileInputStream(file)) {
 
-            zout.putNextEntry(new ZipEntry(bsFile.getName()));
+                zout.putNextEntry(new ZipEntry(bsFile.getName()));
 
-            IOUtils.copy(fin, zout);
+                IOUtils.copy(fin, zout);
 
-            zout.closeEntry();
+                zout.closeEntry();                      
 
-            fin.close();
-
-            if (!file.delete()) {
-                log.error("Delete operation for file: " + file.getName() + " is failed.");
+            } catch (IOException e) {
+                log.error("Error creating FileInputStream " + e.getMessage());
+                throw e;
+            } finally {
+                Files.delete(file.toPath());
             }
         }
 
@@ -215,12 +218,15 @@ public class BsplinkFileUtils {
 
         File file = new File(localDownloadedFilesDirectory + File.separator + bsFile.getName());
 
-        FileInputStream input = new FileInputStream(file);
+        try (FileInputStream input = new FileInputStream(file)) {
 
-        FileCopyUtils.copy(input, response.getOutputStream());
+            FileCopyUtils.copy(input, response.getOutputStream());
 
-        if (!file.delete()) {
-            log.error("Delete operation for file: " + file.getName() + " is failed.");
+            Files.delete(file.toPath());
+
+        } catch (IOException e) {
+            log.error("Error creating FileInputStream " + e.getMessage());
+            throw e;
         }
     }
 
@@ -246,10 +252,8 @@ public class BsplinkFileUtils {
         Path uploadedFilesDirectory = Paths.get(localDownloadedFilesDirectory);
         File dirUploadedFiles = new File(uploadedFilesDirectory.toString());
 
-        if (!dirUploadedFiles.exists()) {
-            if (dirUploadedFiles.mkdir()) {
-                log.info("Directory " + dirUploadedFiles + " created.");
-            }
+        if (!dirUploadedFiles.exists() && dirUploadedFiles.mkdir()) {
+            log.info("Directory " + dirUploadedFiles + " created.");
         }
 
         // Creates the local destination source where the files will be saved
@@ -316,7 +320,7 @@ public class BsplinkFileUtils {
      * @return Returns true if list is not empty.
      */
     public boolean checkIfListIsNotEmpty(List<BsplinkFile> bsFileList) {
-        return bsFileList.stream().anyMatch(f -> f != null);
+        return bsFileList.stream().anyMatch(Objects::nonNull);
     }
 
 

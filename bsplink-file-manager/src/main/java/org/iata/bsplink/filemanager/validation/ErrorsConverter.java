@@ -16,7 +16,7 @@ public class ErrorsConverter {
     @Override
     public String toString() {
 
-        String errorMessage = "";
+        StringBuilder errorMessage = new StringBuilder("");
 
         for (ObjectError error : errors.getAllErrors()) {
 
@@ -26,22 +26,21 @@ public class ErrorsConverter {
 
                 if (fieldError.isBindingFailure()) {
 
-                    errorMessage += fieldError.getField() + " has an invalid value";
+                    errorMessage.append(fieldError.getField() + " has an invalid value");
                 } else {
 
-                    errorMessage += error.getDefaultMessage();
+                    errorMessage.append(error.getDefaultMessage());
                 }
 
 
             } else {
 
-                errorMessage += error.getDefaultMessage();
+                errorMessage.append(error.getDefaultMessage());
             }
 
-            errorMessage += ", ";
+            errorMessage.append(", ");
         }
-
-        return errorMessage.replaceAll(",\\s$",  "");
+        return errorMessage.toString().replaceAll(",\\s$", "");
     }
 
 }

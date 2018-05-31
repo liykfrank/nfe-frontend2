@@ -124,7 +124,7 @@ public class BsplinkFileUtilsTest {
         boolean result =
                 bsplinkFileUtils.uploadSingleFileFromLocalToRemote("ILei8385_20180128_file1");
 
-        assertEquals(result, true);
+        assertEquals(true, result);
 
     }
 

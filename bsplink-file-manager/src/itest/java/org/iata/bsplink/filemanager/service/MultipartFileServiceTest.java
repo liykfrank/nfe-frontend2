@@ -86,7 +86,7 @@ public class MultipartFileServiceTest {
         String requestPathPrefix = "/xxx/files";
 
         List<SimpleResponse> simpleResponses =
-                multipartFileService.saveFiles(requestPathPrefix, multipartFiles);
+                multipartFileService.saveFiles(multipartFiles);
 
         assertEquals(3, simpleResponses.size());
 
@@ -112,14 +112,14 @@ public class MultipartFileServiceTest {
 
         Path path = Paths.get(applicationConfiguration.getLocalUploadedFilesDirectory());
 
-        assertEquals(Files.exists(path.resolve(fileNames[0])), true);
-        assertEquals(Files.exists(path.resolve(fileNames[1])), false);
-        assertEquals(Files.exists(path.resolve(fileNames[2])), false);
+        assertEquals(true, Files.exists(path.resolve(fileNames[0])));
+        assertEquals(false, Files.exists(path.resolve(fileNames[1])));
+        assertEquals(false, Files.exists(path.resolve(fileNames[2])));
 
         assertEquals(Files.size(path.resolve(fileNames[0])), fileTextContents[0].getBytes().length);
 
         List<SimpleResponse> simpleResponsesAlreadySaved =
-                multipartFileService.saveFiles(requestPathPrefix, multipartFiles);
+                multipartFileService.saveFiles(multipartFiles);
 
         assertEquals(Integer.valueOf(HttpStatus.OK.value()),
                 simpleResponsesAlreadySaved.get(0).getStatus());
@@ -138,9 +138,9 @@ public class MultipartFileServiceTest {
                 Arrays.asList(new MockMultipartFile("file", fileName, "text/plain", fileContent));
 
         List<SimpleResponse> simpleResponses =
-                multipartFileService.saveFiles("xxx", multipartFiles);
+                multipartFileService.saveFiles(multipartFiles);
 
-        assertEquals(simpleResponses.size(), 1);
+        assertEquals(1, simpleResponses.size());
 
         assertNull(simpleResponses.get(0).getId());
         assertEquals(simpleResponses.get(0).getSubject(), fileName);
@@ -162,9 +162,9 @@ public class MultipartFileServiceTest {
             .collect(Collectors.toList());
 
         List<SimpleResponse> simpleResponses =
-                multipartFileService.saveFiles("xxx", multipartFiles);
+                multipartFileService.saveFiles(multipartFiles);
 
-        assertEquals(simpleResponses.size(), 1);
+        assertEquals(1, simpleResponses.size());
         assertNull(simpleResponses.get(0).getId());
 
         assertEquals(simpleResponses.get(0).getStatus(),
@@ -186,7 +186,7 @@ public class MultipartFileServiceTest {
             i -> new MockMultipartFile("file", "file" + i + ".txt", "text/plain", fileContent))
             .collect(Collectors.toList());
 
-        List<SimpleResponse> responses = multipartFileService.saveFiles("xxx", multipartFile);
+        List<SimpleResponse> responses = multipartFileService.saveFiles(multipartFile);
         assertEquals(responses.size(), multipartFile.size());
 
         assertTrue(responses.stream().allMatch(r -> r.getStatus().equals(HttpStatus.OK.value())));
@@ -203,9 +203,9 @@ public class MultipartFileServiceTest {
         when(multipartFile.getInputStream()).thenThrow(new IOException());
         when(multipartFile.getBytes()).thenThrow(new IOException());
         List<SimpleResponse> simpleResponses =
-                multipartFileService.saveFiles("xxx", Arrays.asList(multipartFile));
+                multipartFileService.saveFiles(Arrays.asList(multipartFile));
 
-        assertEquals(simpleResponses.size(), 1);
+        assertEquals(1, simpleResponses.size());
 
         SimpleResponse simpleResponse = simpleResponses.get(0);
 

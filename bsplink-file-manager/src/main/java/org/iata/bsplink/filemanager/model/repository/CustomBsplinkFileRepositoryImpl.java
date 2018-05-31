@@ -86,7 +86,7 @@ public class CustomBsplinkFileRepositoryImpl implements CustomBsplinkFileReposit
 
             List<BsplinkFileStatus> status = (List<BsplinkFileStatus>) value;
 
-            if (status.size() > 0) {
+            if (!status.isEmpty()) {
                 conditions.add(criteriaBuilder.in(path).value(status));
             }
 

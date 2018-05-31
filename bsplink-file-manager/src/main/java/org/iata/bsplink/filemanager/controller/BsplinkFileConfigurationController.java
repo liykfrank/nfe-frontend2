@@ -57,7 +57,7 @@ public class BsplinkFileConfigurationController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "Error message")})
     @PutMapping()
-    public ResponseEntity<?> updateConfig(@ApiParam(name = "fileConfiguration",
+    public ResponseEntity<Object> updateConfig(@ApiParam(name = "fileConfiguration",
             value = "the new File Configuration including all configuration attributes",
             required = true) @Valid @RequestBody BsplinkFileConfiguration bsplinkFileConfiguration,
             Errors errors) {
