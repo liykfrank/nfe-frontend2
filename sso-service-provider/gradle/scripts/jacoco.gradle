@@ -1,0 +1,28 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = '0.8.1'
+}
+
+jacocoTestReport {
+
+    reports {
+        html.enabled = true
+    }
+
+    executionData = files("${buildDir}/jacoco/itest.exec")
+}
+
+jacocoTestCoverageVerification {
+
+	//force Jacoco test coverage task to execute first
+	dependsOn jacocoTestReport
+
+    executionData = jacocoTestReport.executionData
+}
+
+// to run Jacoco test coverage during the build (and fail when appropriate)
+check {
+
+	dependsOn jacocoTestCoverageVerification
+}
