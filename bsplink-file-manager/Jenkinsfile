@@ -6,9 +6,6 @@ env.gitlabRepositoryUrl = env.gitlabSourceRepoHttpUrl ?: 'http://gitlab.nfedev.a
 echo "[INFO] Source Branch: ${env.sourceBranch}"
 echo "[INFO] Source Repository URL: ${env.gitlabRepositoryUrl}"
 
-script {
-    currentBuild.description = 'Source Branch: ' + env.sourceBranch
-}
 
 pipeline {
 
@@ -19,6 +16,16 @@ pipeline {
         gitLabConnection('A2LGIT1')
         gitlabCommitStatus(name: 'jenkins')
     }
+    
+    post {
+        always {
+            script {
+                // add source branch to description
+                def sourceBranch = "Source Branch: " + env.sourceBranch
+                currentBuild.description = currentBuild.description ? currentBuild.description + "\n${sourceBranch}" : sourceBranch
+            }
+        }
+	}
     
     stages {
         stage('Build') {
