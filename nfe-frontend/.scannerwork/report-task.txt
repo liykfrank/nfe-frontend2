@@ -1,6 +1,0 @@
-projectKey=nfe-frontend
-serverUrl=http://sonarinterno.nfedev.accelya.com
-serverVersion=7.0.0.36138
-dashboardUrl=http://sonarinterno.nfedev.accelya.com/dashboard/index/nfe-frontend
-ceTaskId=AWOxnaPcajdu4JIiBguN
-ceTaskUrl=http://sonarinterno.nfedev.accelya.com/api/ce/task?id=AWOxnaPcajdu4JIiBguN
