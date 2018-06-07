@@ -23,6 +23,10 @@ which already exists.
 
 An specialized exception with the error result of a model validation. It can be used hassle free using the validation object `Errors`.
 
+##### ApplicationInternalServerError
+
+Specialized application internal server error.
+
 Example:
 
 ```java
