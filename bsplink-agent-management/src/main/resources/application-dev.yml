@@ -1,0 +1,24 @@
+spring:
+      
+  flyway:
+    locations: classpath:/db/migration,/db/data/dev 
+
+  jpa:
+    generate-ddl: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        ddl-auto: none
+
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
+
+        

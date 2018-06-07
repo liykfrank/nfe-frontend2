@@ -1,0 +1,11 @@
+# Rename this file cutting out the ".example" suffix.
+#
+# Configure the database replacing the ${db*} values or using properties,
+# e.g: -Ddbhost=myDbHost -Ddbname=myDbname -Ddbuser=myDbuser -Ddbpassword=myDbpassword
+# 
+spring:
+  datasource:
+    url: jdbc:postgresql://${dbhost:localhost}:5432/${dbname}
+    username: ${dbuser}
+    password: ${dbpassword}
+    
