@@ -1,0 +1,130 @@
+buildscript {
+	ext {
+		springBootVersion = '2.0.0.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+plugins {
+  id "io.franzbecker.gradle-lombok" version "1.12"
+  id "org.sonarqube" version "2.6"
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'checkstyle'
+apply plugin: 'jacoco'
+apply plugin: 'maven'
+
+group = 'org.iata.bsplink'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+    mavenLocal()
+    maven {
+       url 'http://nexusinterno.nfedev.accelya.com/repository/maven-public'
+    }
+}
+
+checkstyle {
+    toolVersion = '8.0'
+}
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.boot:spring-boot-devtools')
+	compile('io.springfox:springfox-swagger2:2.8.0')
+	compile('io.springfox:springfox-swagger-ui:2.8.0')
+	compile('org.flywaydb:flyway-core:5.0.7')
+	compile('commons-io:commons-io:2.4')
+	compile('commons-lang:commons-lang:2.6')
+	compile('org.iata.bsplink:bsplink-commons-rest:0.0.3')
+	runtime('com.h2database:h2')
+	runtime('org.postgresql:postgresql')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('commons-io:commons-io:2.6')
+    testCompile('pl.pragmatists:JUnitParams:1.1.1')
+    testCompile('commons-beanutils:commons-beanutils:1.9.3')
+    testCompile('nl.jqno.equalsverifier:equalsverifier:2.4.6')
+}
+
+// Integration tests
+// See: http://buransky.com/programming/integration-testing-with-gradle/
+configurations {
+    itestCompile.extendsFrom testCompile
+    itestRuntime.extendsFrom testRuntime
+}
+
+sourceSets {
+    itest {
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+        java.srcDir file('src/itest/java')
+    }
+}
+
+task itest(type: Test) {
+    testClassesDir = sourceSets.itest.output.classesDir
+    classpath = sourceSets.itest.runtimeClasspath
+}
+
+check.dependsOn itest
+itest.mustRunAfter test
+
+// End of integration tests
+
+jacoco {
+    toolVersion = "0.8.1"
+}
+
+jacocoTestReport {
+
+    reports {
+        html.destination "${buildDir}/reports/coverage"
+    }
+    executionData += files("${buildDir}/jacoco/itest.exec")
+}
+
+jacocoTestCoverageVerification {
+
+	//force Jacoco test coverage task to execute first
+	dependsOn jacocoTestReport
+
+    executionData += jacocoTestReport.executionData
+}
+
+// to run Jacoco test coverage during the build (and fail when appropriate)
+check {
+	dependsOn jacocoTestCoverageVerification
+}
+
+
+// maven plugin configuration for uploading the generated artifact to Nexus
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: nexusSnapshotsRepositoryUrl){
+                 authentication(userName: nexusUsername, password: nexusPassword)
+            }
+        }
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.jacoco.reportPath", "build/jacoco/test.exec"
+        property "sonar.jacoco.itReportPath", "build/jacoco/itest.exec"
+    }
+}
+
+tasks.sonarqube.dependsOn tasks.withType(Test)
