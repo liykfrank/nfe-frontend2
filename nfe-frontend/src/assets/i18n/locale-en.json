@@ -1,15 +1,160 @@
 {
-    "Title": "Angular localization",
-    "Subtitle": "It's a small world",
-    "Change language": "Change language",
-    "Greeting": "Hi!",
-    "YearFilter": "Year",
-    "MonthFilter": "Month",
-    "DatesFilter": "Dates(From/To)",
-    "FileType": "File Type",
-    "StatusFilter": "File Status",
-    "ResetFilter": "Reset",
-    "File": "File",
-    "Size": "Size",
-    "Date": "Date"
+  "Title": "Angular localization",
+  "Subtitle": "It's a small world",
+  "ChangeLanguage": "Change language",
+  "Greeting": "Hi!",
+  "YearFilter": "Year",
+  "MonthFilter": "Month",
+  "DatesFilter": "Dates(From/To)",
+  "FileType": "File Type",
+  "StatusFilter": "File Status",
+  "ResetFilter": "Reset",
+  "File": "File",
+  "Size": "Size",
+  "Date": "Date",
+
+  "clear": "Clear",
+  "total": "Total",
+  "search_button": "Search",
+
+  "ADM_ACM": {
+    "ADMTitle": "ADM Issue",
+    "ACMTitle": "ACM Issue",
+    "expand": "Expand All",
+    "collapse": "Collapse All",
+
+    "RESUME": {
+      "status": "Stastus",
+      "bsp": "BSP",
+      "agent_code": "Agent Code",
+      "spdr": "(var) SPDR for",
+      "issue_date": "Issue Date",
+      "amount": "Amount" 
+    },
+
+    "BASIC_INFO": {
+      "title": "Basic Information",
+      "amount": "Amount",
+      "details": "Details",
+      "billingPeriod": "Billing Period",
+      "agentCode": "Agent Code",
+      "type": "Type",
+      "number": "Number",
+      "airlineCode": "Airline Code",
+      "nr": "NR",
+      "more": "More details",
+      "airlineVAT": "Airline VAT Nº",
+      "agentVAT": "Agent VAT Nº",
+      "companyReg": "Company Registration Number",
+      "airlineContactName": "Airline Contact Name",
+      "airlineContactNumber": "Airline Contact Telephone/Fax",
+      "airlineContactEmail": "Airline Contact Email",
+
+      "SPDRCombo": {
+        "label": "SPDR for",
+        "I": "Issue",
+        "R": "Refund",
+        "X": "Exchange",
+        "E": "EMD"
+      },
+
+      "TOCACombo": {
+        "label": "TOCA Type"
+      },
+
+      "currencyCombo": {
+        "label": "Currency"
+      },
+
+      "statCombo": {
+        "label": "Stat"
+      },
+
+      "BSP": {
+        "label": "BSP"
+      }
+    },
+
+    "AMOUNT": {
+      "title": "Amount",
+      "adm_amount": "Amount due to Airline",
+      "acm_amount": "Amount due to Agent",
+      "agentInput": "Agent Input",
+      "airlineInput": "Airline Input",
+      "difference": "Difference",
+      "taxcode": "TAX Code",
+      "addTax": "Tax",
+      "clear": "Clear",
+      "populate": "Populate",
+      "fare" : "Fare",
+      "tfc" : "TFC",
+      "tfc_toggle": "Tax, fees and charges",
+      "comission" : "Comission",
+      "spam" : "Spam",
+      "toca" : "TOCA",
+      "CP": "CP",
+      "RF": "RF",
+      "CA": "CA",
+      "TY": "TY",
+      "YQ": "YQ",
+      "DE": "DE"
+    },
+
+    "DETAILS": {
+      "title": "Details",
+      "ticketIssueDate": "Related Document Issue Date",
+      "passenger": "Passenger",
+      "documents": "Related Documents",
+      "addDocument": "Document",
+      "reasonIssue": "Reason for Issue",
+      "topTen": "",
+      "reasonMemo": "Reason for Memo",
+      "error": {
+        "wrongCheck": "Invalid check digit"
+      }
+    },
+
+    "MULTITABS": {
+      "comments": "Comments"
+    },
+
+    "DOCS": {
+      "title": "Documents",
+      "recent": "Recent documents"
+    }
+
+  },
+
+  "FILES": {
+    "upload": "Upload files"
+  },
+
+  "SFTP_ACCOUNT": {
+    "modify": {
+      "title": "Change password sftp account",
+      "err": "Problems calling service"
+    }
+  },
+
+  "MONTHS": {
+    "1": "January",
+    "2": "February" ,
+    "3": "March",
+    "4": "April",
+    "5": "May",
+    "6": "June",
+    "7": "July",
+    "8": "August",
+    "9": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December"
+  },
+
+
+  "combo": {
+    "placeholder": "Choose"
+  }
+
+
 }

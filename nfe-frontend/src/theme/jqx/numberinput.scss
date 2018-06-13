@@ -1,0 +1,20 @@
+%jqx-numberinput-table-custom {
+    border: 1px solid #E2E3E5;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 0 11px !important;
+    
+    .jqx-input-content-table-custom {
+        color: #1989CF;
+        font-size: 14px;
+    }
+}
+
+.jqx-numberinput-table-custom {
+    @extend %jqx-numberinput-table-custom;
+}
+
+.jqx-numberinput-table-custom-float-left {
+    @extend %jqx-numberinput-table-custom;
+    float: left;
+}

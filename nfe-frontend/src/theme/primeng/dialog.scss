@@ -1,0 +1,8 @@
+.custom.ui-dialog {
+  z-index: 2000;
+  position: fixed;
+  .ui-dialog-titlebar {
+    background: white;
+    display: flex;
+  }
+}

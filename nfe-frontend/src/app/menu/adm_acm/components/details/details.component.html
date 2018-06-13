@@ -1,0 +1,113 @@
+<form #myform="ngForm">
+  <div class="sub-form">
+    <div class="form-entry">
+      <label l10nTranslate>ADM_ACM.DETAILS.ticketIssueDate</label>
+      <div class="input-content">
+        <jqxDateTimeInput
+        [height]="40"
+        [theme]="'custom'"
+        #ticketIssueDate>
+        </jqxDateTimeInput>
+      </div>
+    </div>
+
+    <div class="form-entry">
+      <label l10nTranslate>ADM_ACM.DETAILS.passenger</label>
+      <div class="input-content">
+        <jqxInput
+        [width]="'70%'"
+        [theme]="'custom'"
+        #passenger>
+				</jqxInput>
+      </div>
+    </div>
+
+    <div class="form-entry">
+      <label l10nTranslate>ADM_ACM.DETAILS.documents</label>
+
+      <div class="input-content">
+        <input appNumbersOnly
+          #documentNumberInput="ngModel"
+          class="jqx-input-custom jqx-widget float-left"
+          id="documentNumber"
+          name="documentNumber"
+          [(ngModel)]="documentNumber"
+          (input)="onDocumentNumberInput($event)"
+          required="true"
+          maxLength="maxLengthDocumentNumber"
+        >
+
+        <jqxDropDownList
+          #digit
+          [valueMember]="''"
+          [theme]="'custom float-left'"
+          [width]="'10%'"
+          [height]="40"
+          [source]='checkDigitList'
+          [selectedIndex]="0"
+          [autoDropDownHeight]="true"
+          [placeHolder]="translation.translate('combo.placeholder')"
+          (onClose)="onCheckDigitSelected($event)"
+        >
+        </jqxDropDownList>
+
+        <jqxButton l10nTranslate
+          [disabled]="!checkDigitIsValid || documentNumber.length == 0 || selectedCheckDigit.length == 0"
+          (onClick)="addDocument()"
+          [theme]="'add float-left'"
+          [height]="40">
+          <span class="small-font-awesome fa-stack">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-plus inverse-color fa-stack-1x"></i>
+          </span>
+          ADM_ACM.DETAILS.addDocument
+        </jqxButton>
+
+        <div l10nTranslate
+          [hidden]="(documentNumberInput.valid && checkDigitIsValid) || documentNumber.length == 0 || selectedCheckDigit.length == 0"
+          class="simple-error-msg-div">
+          ADM_ACM.DETAILS.error.wrongCheck
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-form">
+    <div class="form-entry">
+      <label l10nTranslate>ADM_ACM.DETAILS.reasonIssue</label>
+      <div class="input-content">
+        <jqxInput
+        [theme]="'custom'"
+        #reason>
+				</jqxInput>
+      </div>
+    </div>
+
+    <div *ngIf="topTenList.length > 0" >
+      <label l10nTranslate>ADM_ACM.DETAILS.topTen</label>
+      <div class="input-content">
+        <jqxDropDownList #topTen
+          [source]='topTenList'
+          [theme]="'custom'"
+          [height]="40"
+          [autoDropDownHeight]="true"
+          >
+        </jqxDropDownList>
+      </div>
+    </div>
+
+    <div class="form-entry">
+      <label l10nTranslate>ADM_ACM.DETAILS.reasonMemo</label>
+      <div class="input-content">
+        <jqxTextArea #textArea
+          [theme]="'custom'"
+          [source]="generateSource"
+          [source]="source"
+          [placeHolder]="'Enter a sentence'"
+          [width]="'50%'" [height]="120"
+          >
+        </jqxTextArea>
+      </div>
+    </div>
+  </div>
+</form>

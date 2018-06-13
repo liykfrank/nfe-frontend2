@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="21px" viewBox="0 0 22 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>C29863D5-2F5B-4C31-BD11-D6BAB8F4DAB6</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <rect id="path-1" x="20" y="243" width="1240" height="904"></rect>
+        <filter x="-0.8%" y="-0.8%" width="101.7%" height="102.3%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="3" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.15 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-3" x="0" y="39" width="295" height="500" rx="4"></rect>
+        <filter x="-3.6%" y="-1.5%" width="107.1%" height="104.2%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="0" dy="3" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.15 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Refund-RA" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="RA_Form_Payment-1280" transform="translate(-1183.000000, -880.000000)">
+            <g id="background-content">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <g id="Selection-comments" transform="translate(945.000000, 387.000000)">
+                <g id="fondo-pestañas">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-3"></use>
+                </g>
+                <g id="forms/ID010_messages" transform="translate(18.000000, 488.000000)">
+                    <rect id="Rectangle" stroke="#E2E3E5" stroke-width="1" fill="#FFFFFF" fill-rule="evenodd" x="0.5" y="0.5" width="259" height="29" rx="14.5"></rect>
+                    <g id="icon/send-message-button" transform="translate(220.041667, 5.000000)" fill="#152C5A" fill-rule="evenodd" stroke-width="1">
+                        <g id="send-message-button">
+                            <path d="M19.7141538,0.459230769 L0.570230769,10.02 C-0.217269231,10.4130769 -0.184961538,10.9892308 0.641307692,11.3007692 L3.08538462,12.2207692 C3.91003846,12.5315385 5.16034615,12.3630769 5.86142308,11.8407692 L16.4761154,3.86923077 C17.1739615,3.34538462 17.2490769,3.42307692 16.6425,4.04153846 L8.25057692,12.5976923 C7.64238462,13.2138462 7.82330769,13.9692308 8.65038462,14.2761538 L8.93630769,14.3830769 C9.76338462,14.6876923 11.1154615,15.2 11.9385,15.52 L14.6491154,16.5707692 C15.4729615,16.89 16.1465769,17.1546154 16.1465769,17.1592308 C16.1465769,17.1638462 16.1514231,17.1784615 16.1554615,17.1792308 C16.1595,17.1807692 16.3541538,16.5146154 16.5867692,15.6976923 L20.7205385,1.23076923 C20.9531538,0.413076923 20.5016538,0.0669230769 19.7141538,0.459230769 Z" id="Shape" fill-rule="nonzero"></path>
+                            <path d="M8.33861538,15.2461538 L6.46315385,14.5153846 C5.64092308,14.1946154 5.24676923,14.5707692 5.58761538,15.3530769 C5.58842308,15.3530769 7.329,19.3484615 7.28053846,19.4892308 C7.23046154,19.6292308 8.95084615,17.1184615 8.95084615,17.1184615 C9.43707692,16.4092308 9.16084615,15.5669231 8.33861538,15.2461538 Z" id="Shape" fill-rule="nonzero"></path>
+                        </g>
+                    </g>
+                    <text id="label" opacity="0.494698661" font-family="Roboto-Regular, Roboto" font-size="12" font-weight="normal" fill="#002A51">
+                        <tspan x="10" y="19">Write your message here</tspan>
+                    </text>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

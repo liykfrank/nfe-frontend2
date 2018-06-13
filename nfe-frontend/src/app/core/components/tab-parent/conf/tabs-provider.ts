@@ -1,13 +1,15 @@
 import { ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
 
-import { FilesDownloadComponent } from '../../../../files/components/files-download/files-download.component';
-import { FilesUploadComponent } from '../../../../files/components/files-upload/files-upload.component';
-import { MonitorUrlComponent } from '../../../../monitor/monitor-url/monitor-url.component';
-import { SftpAccountComponent } from '../../../../sftp-accounts/components/sftp-account/sftp-account.component';
+import { FilesDownloadComponent } from '../../../../menu/files/components/files-download/files-download.component';
+import { FilesUploadComponent } from '../../../../menu/files/components/files-upload/files-upload.component';
+import { MonitorUrlComponent } from '../../../../menu/monitor/monitor-url/monitor-url.component';
+import { SftpAccountComponent } from '../../../../menu/sftp-accounts/components/sftp-account/sftp-account.component';
 import { ActionsEnum } from '../../../../shared/models/actions-enum.enum';
 import { EmptyComponent } from '../../empty/empty.component';
 import { DashboardComponent } from './../../dashboard/dashboard.component';
 import { ItabAction } from './itab-action.model';
+import { AdmAcmComponent } from '../../../../menu/adm_acm/components/adm-acm/adm-acm.component';
+import { ScreenType } from '../../../../shared/models/screen-type.enum';
 
 export class TabsProvider {
   tabDashboard: ItabAction<DashboardComponent> = {
@@ -181,9 +183,39 @@ export class TabsProvider {
     }
   };
 
+  tabDisputeADM: ItabAction<AdmAcmComponent> = {
+    action: ActionsEnum.DISPUTE_ADM,
+    title: 'ADM Issue',
+    getComp: (
+      cfResolver: ComponentFactoryResolver,
+      vcRef: ViewContainerRef
+    ) => {
+      const f = cfResolver.resolveComponentFactory(AdmAcmComponent);
+      let screen = vcRef.createComponent(f);
+      screen.instance.isAdm = true;
+      screen.instance.modelView = ScreenType.CREATE;
+      return screen;
+    }
+  };
+
+  tabDisputeACM: ItabAction<AdmAcmComponent> = {
+    action: ActionsEnum.DISPUTE_ACM,
+    title: 'ACM Issue',
+    getComp: (
+      cfResolver: ComponentFactoryResolver,
+      vcRef: ViewContainerRef
+    ) => {
+      const f = cfResolver.resolveComponentFactory(AdmAcmComponent);
+      let screen = vcRef.createComponent(f);
+      screen.instance.isAdm = false;
+      screen.instance.modelView = ScreenType.CREATE;
+      return screen;
+    }
+  };
+
   confTabs: Array<ItabAction<any>> = [
     this.tabDashboard,
-    this.tabADM_ACM,
+    /* this.tabADM_ACM, */
     this.tabRefunds,
     this.tabReports,
     this.tabDocuments,
@@ -195,7 +227,9 @@ export class TabsProvider {
     this.tabQueryFilesReadOnly,
     this.tabUploadFiles,
     this.tabMonitor,
-    this.tabSftpAccounts
+    this.tabSftpAccounts,
+    this.tabDisputeADM,
+    this.tabDisputeACM
   ];
 
   public getTabProv(action: ActionsEnum): ItabAction<any> {

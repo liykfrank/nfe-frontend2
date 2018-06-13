@@ -8,7 +8,7 @@ const { SpecReporter } = require('jasmine-spec-reporter');
 console.log('path '+process.cwd());
 mkdir(process.cwd()+'/e2e/resources/downloads');
 exports.config = {
-  allScriptsTimeout: 11000,
+  allScriptsTimeout: 25000,
   specs: [
     './e2e/**/*.e2e-spec.ts'
   ],
@@ -16,7 +16,7 @@ exports.config = {
   capabilities: {
     'browserName': 'chrome',
     'chromeOptions': {
-      args: ['--no-sandbox', '--test-type=browser'],
+      args: ['--headless', '--disable-gpu', '--test-type=browser --headless'],
       // Set download path and avoid prompting for download even though
       // this is already the default on Chrome but for completeness
       prefs: {
@@ -35,6 +35,13 @@ exports.config = {
     showColors: true,
     defaultTimeoutInterval: 30000,
     print: function() {}
+  },
+  onComplete() {
+    var globals = require('protractor');
+    var browser = globals.browser;
+    browser.ignoreSynchronization = true;
+    browser.close().then(()=>console.log('brwser closeddd***'));
+    console.log('cpmleteee ******')
   },
   onPrepare() {
     require('ts-node').register({

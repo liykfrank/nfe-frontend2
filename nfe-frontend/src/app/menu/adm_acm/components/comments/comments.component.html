@@ -1,0 +1,28 @@
+<div class="tab-content-header">
+  <div class="title" l10nTranslate>
+    <span class="color-bullet"></span> ADM_ACM.MULTITABS.comments
+  </div>
+  <div class="subtitle">
+
+  </div>
+</div> 
+
+<div class='comments-component'>
+  <div class="messages-container">
+    <p-scrollPanel [style]="{width: '100%', height: '350px'}" styleClass="custom">
+      <div class="message" *ngFor="let item of ['a', 'b', 'c']; let last = last" [ngClass]="{'last': last }">
+        Comment text
+      </div> 
+    </p-scrollPanel>
+  </div>
+
+  <div class="message-input">
+    <jqxInput 
+      [placeHolder]="'Write your message here'"
+      [theme]="'tab-comment'"
+      [width]="'auto'"
+      [height]="30">
+    </jqxInput>
+    <img class="image-button" src="assets/images/utils/ico-send.svg">
+  </div>
+</div>

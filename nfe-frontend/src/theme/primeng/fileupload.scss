@@ -1,0 +1,31 @@
+.custom.ui-fileupload {
+    
+    .ui-fileupload-buttonbar {
+        padding: 0px;
+        border: none;
+
+        .ui-button {
+            display: none;
+        }
+
+        .ui-fileupload-choose {
+            display: block;
+            background-color: #FFFFFF;
+            border: 1px solid #152C5A;
+            border-radius: 2px;
+
+            .ui-button-icon-left {
+                display: none;
+            }
+
+            .ui-button-text {
+                padding: 8px 0px;
+                color: #152C5A;
+            }
+        }
+    }
+
+    .ui-fileupload-content {
+        display: none;
+    }
+}

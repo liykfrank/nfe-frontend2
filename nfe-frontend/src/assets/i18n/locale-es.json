@@ -1,11 +1,19 @@
 {
     "Title": "Angular localizacion.......",
     "Subtitle": "It's a small world",
-    "Change language": "Change language",
+    "ChangeLanguage": "Change language",
     "Greeting": "Holaaa!",
     "YearFilter": "Año",
     "MonthFilter": "Mes",
     "FileType": "Tipo de fichero",
     "StatusFilter": "Estado",
-    "ResetFilter": "Restaurar"
+    "ResetFilter": "Restaurar",
+    "File": "Fichero",
+    "Size": "Tamaño",
+    "Date": "Fecha",
+    
+    "ADM_ACM": {
+      "countries": "",
+      "billingPeriod": "es000000000000000000"
+    }
 }

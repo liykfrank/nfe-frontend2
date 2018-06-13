@@ -45,3 +45,23 @@
     }
   }
 }
+.table-pagination-nums-dropdown-size {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.table-pagination-nums {
+  display: flex;
+  flex-grow: 9;
+  margin: 2px;
+}
+
+.dropdown-size {
+  display: flex;
+  flex-grow: 0;
+  align-self: right;
+  margin: 2px;
+}

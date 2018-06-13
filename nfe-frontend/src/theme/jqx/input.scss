@@ -1,3 +1,33 @@
 .jqx-input {
   border: 1px solid #002A51;
 }
+
+.jqx-input-custom {
+  height: 40px;
+  border: 1px solid #BDC3C9;
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  padding: 0 5px;
+}
+
+.jqx-input-table-custom {
+  height: 40px;
+  border: 1px solid #E2E3E5;
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  padding: 12px 11px !important;
+  color: #152C5A;
+  font-size: 14px;
+}
+
+.jqx-input .div-jqx-input {
+  border: 0px solid #FFFFFF;
+}
+
+.jqx-input-tab-comment {
+  border-radius: 100px;
+  border: 1px solid #E2E3E5;
+  background-color: #FFFFFF;
+  color: #002A51;
+  font-size: 12px;
+} 

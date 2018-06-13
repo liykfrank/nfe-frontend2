@@ -1,30 +1,87 @@
-jqxtabs {
+.jqx-tabs-master-parent {
+    border: 0px;
+}
 
-  .jqx-tabs{
-      border: 0px;
-  }
+.jqx-tabs-header-master-parent {
+    background-color: #E3E3E3 !important;
+    padding-top: 30px;
+    border: #FFFFFF;
+}
 
-  .jqx-tabs-header {
-    background: #E3E3E3;
-  }
+.jqx-tabs-title-master-parent {
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19px;	
+    text-align: center;
+    padding-top: 16px;
+    padding-bottom: 15px;
+    border: none;
+    border-bottom: 1px solid #B1B8BF;
+    border-radius: 6px 6px 0 0;
+    background-color: #B1B8BF;
+    // min-width: 188px;
 
-  .jqx-tabs-headerWrapper{
-      padding-top: 30px;
-  }
+    .jqx-tabs-titleContentWrapper {
+        margin: 0 auto;
+    }
 
-  .jqx-tabs-jqx-tabs-titleWrapper{
-      // display: flex;
-      justify-content: center;
-  }
+    .jqx-tabs-close-button-master-parent {
+        margin-top: -10px !important;
+        color: #FFFFFF;
+    }
+}
 
-  .jqx-tabs-titleContentWrapper{
-      line-height: 40px;
-      color: #4B5C79;
-      font-weight: bold;
-  }
+.jqx-tabs-title-selected-top-master-parent {
+    color: #00A3E0;
+    padding-top: 24px;
+    background-color: #FFFFFF;
+    margin-top: -8px;
+    border-bottom: 2px solid #FFFFFF;
 
-  .jqx-tabs-close-button{
-      line-height: 40px;
-  }
+    .jqx-tabs-close-button-master-parent {
+        margin-top: -15px !important;
+    }
+}
 
+// ----------------------------------------------------
+
+.jqx-tabs-custom {
+    border: 0px;
+}
+
+.jqx-tabs-title-custom {
+    background-color: #EFF0F2;
+    border-color: #EFF0F2;
+    padding: 7px 8px;
+}
+
+.jqx-tabs-title-selected-top-custom {
+    background-color: #FFFFFF;
+    border-bottom: none;
+    padding-bottom: 8px;
+}
+
+.jqx-tabs-title-container-custom {
+    margin-left: 15px; 
+    margin-right: 15px;
+    border: none;
+    margin-bottom: -1px;
+}
+
+.jqx-tabs-header-custom {
+    background-color: #FFFFFF !important;
+    padding: 0px;
+    border: 0px;
+}
+
+.jqx-tabs-content-element-custom {
+    height: 99%;
+    margin: -1px 6px 0 6px;
+    border-radius: 4px;
+    box-shadow: 0 3px 6px 0 rgba(0,0,0,0.15);
+}
+
+.jqx-tabs-content-custom {
+    width: auto !important;
 }

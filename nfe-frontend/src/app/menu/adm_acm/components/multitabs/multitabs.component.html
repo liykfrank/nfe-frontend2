@@ -1,0 +1,31 @@
+<jqxTabs #tabsReference
+  [width]='"100%"'
+  [height]='540'
+  [position]='"top"'
+  [theme]="'custom'">
+  <ul>
+    <li><img src="assets/images/utils/ico-history_grey.svg"></li>
+    <li>
+      <img src="assets/images/utils/ico-documents_grey.svg">
+      <span class='badge'> 3 </span>
+    </li>
+    <li><img src="assets/images/utils/ico-files_grey.svg"></li>
+    <li><img src="assets/images/utils/ico-comments_grey.svg"></li>
+    <li><img src="assets/images/utils/ico-chat_grey.svg"></li>
+  </ul>
+  <div>
+
+  </div>
+  <div>
+    <app-documents [notice]="noticeDocuments"></app-documents>
+  </div>
+  <div>
+    <app-files></app-files>
+  </div>
+  <div>
+    <app-comments></app-comments>
+  </div>
+  <div>
+
+  </div>
+</jqxTabs>

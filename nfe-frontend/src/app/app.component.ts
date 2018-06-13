@@ -10,6 +10,6 @@ export class AppComponent {
   ionic = false;
 
   ngOnInit(): void {
-    this.ionic= environment.ionic;
+    this.ionic = environment.ionic;
   }
 }

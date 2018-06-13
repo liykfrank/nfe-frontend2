@@ -18,10 +18,10 @@
   },
   "include": [
     "src/**/*"
- ],
+  ],
   "files": [
     // For all widgets used, add the relevant .ts file.
-    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid.ts",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxtabs",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxcheckbox",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxmenu",
@@ -33,6 +33,13 @@
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput",
-    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxnotification"
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxnotification",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdatatable",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxtextarea",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxexpander",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxfileupload",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxpopover",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttongroup",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdocking"
  ]
 }

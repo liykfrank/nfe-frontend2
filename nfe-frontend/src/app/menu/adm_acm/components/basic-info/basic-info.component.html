@@ -1,0 +1,395 @@
+<form ng-form="basicInfoForm">
+
+    <div class="form-page" >
+
+      <div class="sub-form">
+				<div class="form-entry">
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.BSP.label</label>
+          <div class="input-content">
+            <jqxDropDownList
+              [theme]="'custom'"
+              [width]="'50%'"
+              [height]="40"
+              [source]='countries'
+              [autoDropDownHeight]="true"
+              [displayMember]="'description'"
+              [valueMember]="'code'"
+              (onSelect)="selectCountry($event)"
+              [(ngModel)]="basicInfo.isoCountryCode"
+              [ngModelOptions]="{standalone: true}"
+              [placeHolder]="translation.translate('combo.placeholder')"
+            >
+            </jqxDropDownList>
+          </div>
+        </div>
+
+				<div class="form-entry">
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.billingPeriod</label>
+          <div class="input-content-flex">
+            <jqxDropDownList #billingPeriodDay
+              [theme]="'custom-float'"
+              [width]="'20%'"
+              [height]="40"
+              [source]='periodList'
+              [autoDropDownHeight]="true"
+              (onSelect)="getBillingPeriod()"
+              [placeHolder]="translation.translate('combo.placeholder')"
+              ></jqxDropDownList>
+            <jqxDropDownList #billingPeriodMonth
+              [theme]="'custom-float'"
+              [width]="'40%'"
+              [height]="40"
+              [source]='periodMonthList'
+              [displayMember]="'description'"
+              [valueMember]="'code'"
+              [autoDropDownHeight]="true"
+              (onSelect)="getBillingPeriod()"
+              [placeHolder]="translation.translate('combo.placeholder')"
+              ></jqxDropDownList>
+              <jqxDropDownList #billingPeriodYear
+              [theme]="'custom-float'"
+              [width]="'20%'"
+              [height]="40"
+              [source]='periodYearList'
+              [autoDropDownHeight]="true"
+              (onSelect)="getBillingPeriod()"
+              [placeHolder]="translation.translate('combo.placeholder')"
+              ></jqxDropDownList>
+          </div>
+        </div>
+
+				<div class="form-entry">
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.agentCode</label>
+          <div class="input-content">
+            <jqxInput #agentCode
+              [theme]="'custom'"
+              [width]="'45%'"
+              (onChange)="register()"
+              ></jqxInput>
+
+              <jqxPopover #popoverAgent
+                [isModal]="true"
+                [title]="'Agent information'"
+                [selector]="'#agentdetails'"
+                [theme]="'custom'"
+                [width]="430"
+                [showArrow]="false">
+                <div>
+                  <table>
+                      <tbody>
+                        <tr>
+                          <th>Address</th>
+                          <td>Av. des Champs Elysées, 35</td>
+                        </tr>
+                        <tr>
+                          <th>Postcode</th>
+                          <td>75008</td>
+                        </tr>
+                        <tr>
+                          <th>City</th>
+                          <td>Paris</td>
+                        </tr>
+                        <tr>
+                          <th>Country/Territory</th>
+                          <td>France</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <jqxButton l10nTranslate
+                    [height]="40"
+                    [theme]="'primary-right'"
+                    (click)="closeAgent()"
+                  >close</jqxButton>
+                </div>
+              </jqxPopover>
+
+              <jqxButton id="agentdetails" l10nTranslate
+                [height]="22"
+                [theme]="'default'"
+                [width]="120"
+              >ADM_ACM.BASIC_INFO.more</jqxButton>
+          </div>
+        </div>
+
+				<div class="form-entry" *ngIf="configuration.agentVatNumberEnabled">
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.agentVAT</label>
+          <div class="input-content">
+            <jqxInput
+              [theme]="'custom'"
+              [width]="'80%'"
+              TODO
+              ></jqxInput>
+          </div>
+        </div>
+
+        <div class="form-entry" *ngIf="configuration.companyRegistrationNumberEnabled">
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.companyReg</label>
+          <div class="input-content">
+            <jqxInput
+              [theme]="'custom'"
+              [width]="'80%'"
+              ></jqxInput>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="sub-form">
+        <div class="form-entry">
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.type</label>
+          <div class="input-content">
+              <jqxDropDownList
+                [theme]="'custom'"
+                [width]="'50%'"
+                [height]="40"
+                [source]='admSubTipeList'
+                [displayMember]="'description'"
+                [valueMember]="'code'"
+                [autoDropDownHeight]="true"
+                (onSelect)="selectSubtype($event)"
+                [(ngModel)]="basicInfo.transactionCode"
+                [ngModelOptions]="{standalone: true}"
+                [placeHolder]="translation.translate('combo.placeholder')"
+                >
+            </jqxDropDownList>
+          </div>
+        </div>
+
+
+        <div class="form-entry">
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.number</label>
+          <div class="input-content">
+            <jqxInput
+              [theme]="'custom'"
+              [width]="'50%'"
+              [disabled]="true"
+              [(ngModel)]="basicInfo.id"
+              [ngModelOptions]="{standalone: true}"
+              ></jqxInput>
+          </div>
+        </div>
+
+        <div class="form-entry">
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.airlineCode</label>
+          <div class="input-content">
+            <jqxInput #airlineCode
+              [theme]="'custom'"
+              [width]="'45%'"
+              (onChange)="register()"
+            ></jqxInput>
+
+            <jqxPopover #popoverAirline
+            [isModal]="true"
+            [title]="'Airline information'"
+            [selector]="'#airlinedetails'"
+            [theme]="'custom'"
+            [showArrow]="false"
+            [width]="430">
+            <div>
+              <table>
+                <tbody>
+                  <tr>
+                    <th>Address</th>
+                    <td>Av. des Champs Elysées, 35</td>
+                  </tr>
+                  <tr>
+                    <th>Postcode</th>
+                    <td>75008</td>
+                  </tr>
+                  <tr>
+                    <th>City</th>
+                    <td>Paris</td>
+                  </tr>
+                  <tr>
+                    <th>Country/Territory</th>
+                    <td>France</td>
+                  </tr>
+                </tbody>
+              </table>
+              <jqxButton l10nTranslate
+                [height]="40"
+                [theme]="'primary-right'"
+                (click)="closeAirline()"
+              >close</jqxButton>
+            </div>
+          </jqxPopover>
+
+          <jqxButton id="airlinedetails" l10nTranslate
+            [height]="22"
+            [theme]="'default'"
+            [width]="120"
+          >ADM_ACM.BASIC_INFO.more</jqxButton>
+
+          </div>
+        </div>
+
+        <div class="form-entry" *ngIf="configuration.airlineVatNumberEnabled" >
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.airlineVAT</label>
+          <div class="input-content">
+            <jqxInput
+              [theme]="'custom'"
+              [width]="'80%'"
+              ></jqxInput>
+          </div>
+        </div>
+
+        <div class="form-entry" *ngIf="configuration.companyRegistrationNumberEnabled">
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.companyReg</label>
+          <div class="input-content">
+            <jqxInput
+              [theme]="'custom'"
+              [width]="'80%'"
+              ></jqxInput>
+          </div>
+        </div>
+
+        <div class="form-entry">
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.airlineContactName</label>
+          <div class="input-content">
+            <jqxInput
+              [theme]="'custom'"
+              [width]="'80%'"
+              [(ngModel)]="basicInfo.airlineContact.contactName"
+              [ngModelOptions]="{standalone: true}"
+              (onChange)="register()"
+              >
+            </jqxInput>
+          </div>
+        </div>
+
+        <div class="form-entry">
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.airlineContactNumber</label>
+          <div class="input-content">
+            <jqxInput
+              [theme]="'custom'"
+              [width]="'80%'"
+              [(ngModel)]="basicInfo.airlineContact.phoneFaxNumber"
+              [ngModelOptions]="{standalone: true}"
+              (onChange)="register()"
+              >
+            </jqxInput>
+          </div>
+        </div>
+
+        <div class="form-entry">
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.airlineContactEmail</label>
+          <div class="input-content">
+            <jqxInput
+              [theme]="'custom'"
+              [width]="'80%'"
+              [(ngModel)]="basicInfo.airlineContact.email"
+              [ngModelOptions]="{standalone: true}"
+              (onChange)="register()"
+              >
+            </jqxInput>
+          </div>
+        </div>
+      </div>
+
+  </div>
+
+  <div class="form-page settings">
+    <div class="form-entry-inline">
+      <label l10nTranslate>ADM_ACM.BASIC_INFO.SPDRCombo.label</label>
+      <div class="input-content">
+        <jqxDropDownList
+          [source]='forList'
+          [displayMember]="'description'"
+          [valueMember]="'code'"
+          [theme]="'custom'"
+          [width]="'50%'"
+          [height]="40"
+          [autoDropDownHeight]="true"
+          [selectedIndex]="0"
+          (onSelect)="selectConcernsIndicator($event)"
+          [(ngModel)]="basicInfo.concernsIndicator"
+          [ngModelOptions]="{standalone: true}"
+          [placeHolder]="translation.translate('combo.placeholder')"
+          >
+        </jqxDropDownList>
+      </div>
+    </div>
+
+    <div class="form-entry-inline">
+      <label l10nTranslate>ADM_ACM.BASIC_INFO.TOCACombo.label</label>
+      <div class="input-content">
+        <jqxDropDownList
+          [theme]="'custom'"
+          [width]="'50%'"
+          [height]="40"
+          [source]='tocaTypeList'
+          [displayMember]="'description'"
+          [valueMember]="'code'"
+          [autoDropDownHeight]="true"
+          [(ngModel)]="basicInfo.tocaType"
+          [ngModelOptions]="{standalone: true}"
+          [placeHolder]="translation.translate('combo.placeholder')"
+          >
+        </jqxDropDownList>
+      </div>
+    </div>
+
+    <div class="form-entry-inline">
+      <label l10nTranslate>ADM_ACM.BASIC_INFO.currencyCombo.label</label>
+      <div class="input-content">
+        <jqxDropDownList
+          [theme]="'custom'"
+          [width]="'50%'"
+          [height]="40"
+          [source]='currencyList'
+          [displayMember]="'description'"
+          [valueMember]="'code'"
+          [autoDropDownHeight]="true"
+          (onSelect)="selectCurrency($event)"
+          [placeHolder]="translation.translate('combo.placeholder')"
+          >
+        </jqxDropDownList>
+      </div>
+    </div>
+
+    <div class="form-entry-inline">
+      <label l10nTranslate>ADM_ACM.BASIC_INFO.statCombo.label</label>
+      <div class="input-content">
+        <jqxDropDownList *ngIf="configuration.freeStat"
+          [theme]="'custom'"
+          [width]="'50%'"
+          [height]="40"
+          [source]='statList'
+          [autoDropDownHeight]="true"
+          [(ngModel)]="basicInfo.stat"
+          [ngModelOptions]="{standalone: true}"
+          [placeHolder]="translation.translate('combo.placeholder')"
+          >
+        </jqxDropDownList>
+
+        <jqxInput  *ngIf="!configuration.freeStat"
+            [theme]="'custom'"
+            [width]="'50%'"
+            [(ngModel)]="basicInfo.stat"
+            [ngModelOptions]="{standalone: true}"
+            (onChange)="register()"
+            >
+          </jqxInput>
+      </div>
+    </div>
+
+    <div class="form-entry-inline" *ngIf="configuration.nridAndSpamEnabled">
+      <label></label>
+      <div class="input-content">
+        <input
+          type="checkbox"
+          [(ngModel)]="basicInfo.netReporting"
+          [ngModelOptions]="{standalone: true}"
+          (change)="setNetReporting(basicInfo.netReporting)"
+          [(ngModel)]="basicInfo.netReporting"
+          >
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.nr</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modificar y añadir a los estilos -->
+  <div style="clear:both;"></div>
+
+</form>
+
