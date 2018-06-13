@@ -4,8 +4,8 @@ apply plugin: 'maven'
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: nexusSnapshotsRepositoryUrl){
-                 authentication(userName: nexusUsername, password: nexusPassword)
+            repository(url: project.findProperty('nexusSnapshotsRepositoryUrl')){
+                 authentication(userName: project.findProperty('nexusUsername'), password: project.findProperty('nexusPassword'))
             }
         }
     }

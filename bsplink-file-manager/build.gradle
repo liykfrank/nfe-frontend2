@@ -28,8 +28,8 @@ sourceCompatibility = 1.8
 repositories {
 	mavenCentral()
 	maven {
-        url nexusPublicRepositoryUrl
-    }
+    	url project.hasProperty('nexusPublicRepositoryUrl') ? nexusPublicRepositoryUrl : 'http://nexusinterno.nfedev.accelya.com/repository/maven-public'
+	}
 }
 
 checkstyle {

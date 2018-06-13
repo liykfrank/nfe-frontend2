@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-env.sourceBranch = env.gitlabSourceBranch ?: 'master'
+env.sourceBranch = env.gitlabSourceBranch ?: 'develop'
 env.gitlabRepositoryUrl = env.gitlabSourceRepoHttpUrl ?: 'http://gitlab.nfedev.accelya.com/bsplink/bsplink-file-manager.git'
 
 echo "[INFO] Source Branch: ${env.sourceBranch}"
