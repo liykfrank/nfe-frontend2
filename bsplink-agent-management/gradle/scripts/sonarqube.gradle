@@ -1,0 +1,8 @@
+sonarqube {
+    properties {
+        //property "sonar.jacoco.reportPath", "build/jacoco/test.exec"
+        property "sonar.jacoco.itReportPath", "build/jacoco/itest.exec"
+    }
+}
+
+tasks.sonarqube.dependsOn tasks.withType(Test)

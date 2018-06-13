@@ -147,6 +147,19 @@ public class AgentControllerTest {
     }
 
     @Test
+    public void testValidatesAgentsRecursively() throws Exception {
+
+        Agent agent = agents.get(0);
+        agent.getFormOfPayment().get(0).setStatus(null);;
+
+        String agentJson = mapper.writeValueAsString(agents);
+
+        mockMvc.perform(post(BASE_URI).content(agentJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", equalTo("Validation error")));
+    }
+
+    @Test
     public void testDeletesAgent() throws Exception {
 
         createAgents();

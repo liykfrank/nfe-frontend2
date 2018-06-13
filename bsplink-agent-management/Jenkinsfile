@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-env.sourceBranch = env.gitlabSourceBranch ?: 'master'
+env.sourceBranch = env.gitlabSourceBranch ?: 'develop'
 env.gitlabRepositoryUrl = env.gitlabSourceRepoHttpUrl ?: 'http://a2lgit1/bsplink/bsplink-agent-management.git'
 
 echo "[INFO] Source Branch: ${env.sourceBranch}"
@@ -34,12 +34,17 @@ pipeline {
 					]]]
 
 				configFileProvider([configFile(fileId: 'gradle.properties', targetLocation: '.')]) {
-                	sh './gradlew clean build'
+                	sh './gradlew clean build -x test -x itest'
                 }
             }
-
+        }
+        
+        stage('Test') {
+            steps {
+		    	sh './gradlew test itest'
+            }
             //publish unit tests and unit test coverage reports
-            post {
+         	post {
                 always {
                     junit '**/test-results/**/*.xml'
                     step([$class: 'JacocoPublisher'])
