@@ -34,12 +34,17 @@ pipeline {
 					]]]
 
 				configFileProvider([configFile(fileId: 'gradle.properties', targetLocation: '.')]) {
-                	sh './gradlew clean build'
+                	sh './gradlew clean build -x test -x itest'
                 }
             }
-
+        }
+        
+        stage('Test') {
+            steps {
+		    	sh './gradlew test itest'
+            }
             //publish unit tests and unit test coverage reports
-            post {
+         	post {
                 always {
                     junit '**/test-results/**/*.xml'
                     step([$class: 'JacocoPublisher'])
@@ -47,13 +52,7 @@ pipeline {
             }
         }
         
-    	stage('Publish')  {
-			steps {
-				sh './gradlew uploadArchives'
-			}
-		}
-		
-		stage('SonarQube') {
+  		stage('SonarQube') {
             steps {
             	withSonarQubeEnv('a2lsonarq1') {
                 	sh './gradlew sonarqube'
@@ -61,7 +60,7 @@ pipeline {
             }
         }
         
-     	stage('Nexus')  {
+    	stage('Nexus')  {
     		when{
 				expression{
 					return env.sourceBranch == 'master' || env.sourceBranch == 'develop'

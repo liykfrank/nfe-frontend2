@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -29,6 +30,7 @@ public class Airline {
     @EmbeddedId
     @NotNull
     @JsonUnwrapped
+    @Valid
     private AirlinePk airlinePk;
 
     @ApiModelProperty(value = "Airline  designator code.", required = true)
@@ -52,13 +54,16 @@ public class Airline {
 
     @Embedded
     @JsonUnwrapped
+    @Valid
     private LocalAddress localAddress;
 
     @Embedded
     @JsonUnwrapped
+    @Valid
     private LocalContact localContact;
 
     @Embedded
     @JsonUnwrapped
+    @Valid
     private TaxInfo taxInfo;
 }

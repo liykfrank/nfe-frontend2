@@ -109,6 +109,19 @@ public class AirlineControllerTest {
     }
 
     @Test
+    public void testValidatesAirlinesRecursively() throws Exception {
+
+        airlines.get(0).getAirlinePk().setIsoCountryCode("INCORRECT_ISO_COUNTRY_CODE");
+
+        String airlinesJson = mapper.writeValueAsString(airlines);
+
+        mockMvc.perform(
+                post(BASE_URI).content(airlinesJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", equalTo("Validation error")));
+    }
+
+    @Test
     public void testGetAirlines() throws Exception {
 
         createAirlines();
