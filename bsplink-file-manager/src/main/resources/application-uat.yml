@@ -1,0 +1,42 @@
+spring:
+      
+  flyway:
+    locations: classpath:/db/migration,/db/data/dev 
+
+  jpa:
+    generate-ddl: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        ddl-auto: none
+
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
+app:
+  yade:
+    inbox: /data/nfe/jobscheduler_inbox
+    outbox: /data/nfe/jobscheduler_outbox
+    host:
+      sftp:
+        name: 10.5.0.40
+        user: sftpuatadmin
+        password: Adm1n
+        directory: /data/nfe/jobscheduler_inbox
+        protocol: sftp
+        port: 22
+      local:
+        name: localhost
+        user: 
+        password: 
+        directory: /data/nfe/jobscheduler_outbox
+        protocol: local
+        port:
+        
