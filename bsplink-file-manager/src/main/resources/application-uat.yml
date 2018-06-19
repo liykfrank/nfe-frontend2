@@ -26,12 +26,12 @@ app:
     outbox: /data/nfe/jobscheduler_outbox
     host:
       sftp:
-        name: 10.5.0.40
+        name: sftp.nfedev.accelya.com
         user: sftpuatadmin
         password: Adm1n
         directory: /data/nfe/jobscheduler_inbox
         protocol: sftp
-        port: 22
+        port: 2225
       local:
         name: localhost
         user: 
