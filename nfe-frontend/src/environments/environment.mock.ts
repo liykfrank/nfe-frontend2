@@ -3,12 +3,6 @@ export const environment = {
   basePath: 'http://localhost:4200/',
   production: false,
   mock: true,
-  room: {
-    api: {
-      persons: 'testPersons.json'
-    },
-    basePath: 'assets/mocks/'
-  },
   files: {
     api: {
       listFiles: 'listfiles.json',

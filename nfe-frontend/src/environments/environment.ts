@@ -8,12 +8,6 @@ export const environment = {
   basePath: '',
   production: false,
   mock: false,
-  room: {
-    api: {
-      persons: 'testPersons'
-    },
-     basePath: ''
-  },
   files: {
     api: {
       listFiles: 'v1/files',

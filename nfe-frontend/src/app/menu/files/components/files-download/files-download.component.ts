@@ -192,11 +192,12 @@ export class FilesDownloadComponent extends NwAbstractComponent
   loadDataTable(filter: ListFilesFilter,sort:boolean=false) {
     //const filter = new ListFilesFilter();
     // filter.minUploadDate = new Date();
-    this.log.info("load table data ***");
+    console.log('on loadDataTable');
+    console.log(filter);
     this.listFilesServ.listFilesData(filter).subscribe(data => {
       this.dataFiles = data.listData;
       this.sourceArray.localdata = data.listData;
-      this.tablePagination.updatePaginationData(data,filter.numberPage,sort);
+      this.tablePagination.updatePaginationData(data, filter.numberPage, sort);
     });
   }
 
@@ -213,12 +214,16 @@ export class FilesDownloadComponent extends NwAbstractComponent
    * @param page number
    */
   pageChange(page){
-    this.log.info('page change download '+page);
+    console.log('page change download ' + page);
     //update filters with new page
-    this.dataFilterCurrent.numberPage=page;
-    this.dataFilterLoad.numberPage=page;
+    this.dataFilterCurrent.numberPage = page;
+    this.dataFilterLoad.numberPage = page;
+
+    console.log(this.dataFilterCurrent);
+    console.log(this.dataFilterLoad);
+
     //reload table with new page
-    this.loadDataTable(this.dataFilterCurrent,true);
+    this.loadDataTable(this.dataFilterCurrent, true);
   }
 
   /**
@@ -245,24 +250,35 @@ export class FilesDownloadComponent extends NwAbstractComponent
   download() {
     console.log('on download');
     const files = this.getFilesSelected();
-    if (files.length == 0) return;
+
+    if (files.length == 0) {
+      return;
+    }
+
     if (files.length == 1) {
        const nameFile= files[0].name;
         this.listFilesServ.downloadFile(files[0]).subscribe(data => {
-        if (data.type == "text/xml") saveAs(data, nameFile+ '.txt');
-        //save or open
-        else {
-          saveAs(data, nameFile);
-        }
-        this.refreshQuery();
-      });
+          if (data.type == "text/xml") {
+            saveAs(data, nameFile + '.txt');
+          }
+          //save or open
+          else {
+            saveAs(data, nameFile);
+          }
+
+          this.tablePagination.clearselection();
+          this.pageChange(this.dataFilterLoad.numberPage);
+        });
       return;
     }
+
     if (files.length > 1) {
       this.listFilesServ.downloadFiles(files).subscribe(data => {
         //save or open
         saveAs(data, "allfiles");
-        this.refreshQuery();
+
+        this.tablePagination.clearselection();
+        this.pageChange(this.dataFilterLoad.numberPage);
       });
       return;
     }
@@ -273,7 +289,10 @@ export class FilesDownloadComponent extends NwAbstractComponent
   remove() {
     console.log("remove calledddddd");
     const files = this.getFilesSelected();
-    if (files.length == 0) return;
+    if (files.length == 0) {
+      return;
+    }
+
     if (files.length == 1) {
       this.listFilesServ.removeFile(files[0]).subscribe(data => {
         this.messageService.add({
@@ -281,7 +300,9 @@ export class FilesDownloadComponent extends NwAbstractComponent
           summary: "File deleted:",
           detail: ""
         });
-        this.refreshQuery();
+
+        this.tablePagination.clearselection();
+        this.pageChange(this.dataFilterLoad.numberPage);
       });
       return;
     }
@@ -296,7 +317,9 @@ export class FilesDownloadComponent extends NwAbstractComponent
               detail: "status: " + data.status.toString()
             });
           });
-          this.refreshQuery();
+
+          this.tablePagination.clearselection();
+          this.pageChange(this.dataFilterLoad.numberPage);
         });
       return;
     }

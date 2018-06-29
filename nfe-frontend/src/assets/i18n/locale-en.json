@@ -29,7 +29,7 @@
       "agent_code": "Agent Code",
       "spdr": "(var) SPDR for",
       "issue_date": "Issue Date",
-      "amount": "Amount" 
+      "amount": "Amount"
     },
 
     "BASIC_INFO": {
@@ -126,7 +126,9 @@
   },
 
   "FILES": {
-    "upload": "Upload files"
+    "upload": "Upload files",
+    "download": "Download",
+    "delete": "Delete"
   },
 
   "SFTP_ACCOUNT": {

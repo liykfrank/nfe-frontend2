@@ -1,31 +1,20 @@
-// The file contents for the current environment will overwrite these during build.
-// The build system defaults to the dev environment which uses `environment.ts`, but if you do
-// `ng build --env=prod` then `environment.prod.ts` will be used instead.
-// The list of which env maps to which file can be found in `.angular-cli.json`.
-
 export const environment = {
+  environment: 'uat',
+  basePath: 'http://servicesuat.nfedev.accelya.com',
   ionic: false,
-  basePath: "",
   production: false,
   mock: false,
-  room: { api: { persons: "testPersons" }, basePath: "" },
   files: {
     api: {
-      listFiles: "v1/files",
-      downloadFile: "v1/files",
-      downloadFiles: "v1/files/zip",
-      removeFile: "v1/files",
-      removeFiles: "v1/files",
-      apiConfiguration: "v1/configurations",
-      apiUpload: "v1/files"
+      listFiles: '/v1/files',
+      downloadFile: '/v1/files',
+      downloadFiles: '/v1/files/zip',
+      removeFile: '/v1/files',
+      removeFiles: '/v1/files',
+      apiConfiguration: '/v1/configurations',
+      apiUpload: '/v1/files'
     },
-    basePath: 'http://servicesuat.nfedev.accelya.com/'
-  },
-  accounts: {
-    api: {
-      accounts: 'v1/accounts'
-    },
-    basePath: 'http://servicesuat.nfedev.accelya.com/'
+    basePath: '/files'
   },
   sftAccount: {
     api: {
@@ -36,15 +25,17 @@ export const environment = {
   },
   adm_acm: {
     api: {
-      configuration: '',
-      company: '',
-      agent: '',
-      country: '',
-      toca: '',
-      currency: '',
-      period: ''
+      acdm: '/v1/acdms', // post: save | /{id} | /{id}/files
+      configuration: '/v1/configurations',
+      company: '/v1/airlines', // /{isoCountryCode}/{airlineCode}
+      agent: '/v1/agents', // {code}
+      country: '/v1/countries', // creo v1/configurations/isocs ¿?¿?
+      toca: '/v1/tctps', // {isoc} | {isoc}/{code}: remove
+      currency: '/v1/general-info/currencies', // {isoc}
+      period: '/v1/general-info/periods', // {isoc}
+      reasons: '/v1/reasons'
     },
-    basePath: 'http://www.nfedev.accelya.com:8081/'
+    basePath: '/agencymemo'
   },
   monitorUrl: 'http://yade.nfedev.accelya.com'
 };
