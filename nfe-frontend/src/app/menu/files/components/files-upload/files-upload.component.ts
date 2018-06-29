@@ -7,7 +7,7 @@ import { Message } from 'primeng/components/common/api';
 import { any } from 'codelyzer/util/function';
 
 const API_URL = environment.files.api.apiUpload;
-const BASE_URL = environment.files.basePath;
+const BASE_URL = environment.basePath + environment.files.basePath;
 
 @Component({
   selector: 'app-files-upload',
