@@ -1,0 +1,47 @@
+buildscript {
+	ext {
+		springBootVersion = '2.0.3.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+plugins {
+    id "io.franzbecker.gradle-lombok" version "1.12"
+    id "org.sonarqube" version "2.6"
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'checkstyle'
+
+group = 'org.iata.bsplink'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+checkstyle {
+    toolVersion = '8.0'
+}
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-batch')
+    runtime('com.h2database:h2')
+    runtime('org.postgresql:postgresql')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('org.springframework.batch:spring-batch-test')
+}
+
+apply from: 'gradle/scripts/itest.gradle'
+//apply from: 'gradle/scripts/jacoco.gradle'
+apply from: 'gradle/scripts/sonarqube.gradle'
+apply from: 'gradle/scripts/publish.gradle'
