@@ -10,6 +10,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class RefundLoaderApplicationTests {
 
     @Test
-    public void contextLoads() {}
+    public void contextLoads() {
+        // tests the context load
+    }
 
 }
