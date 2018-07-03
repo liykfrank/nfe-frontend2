@@ -6,7 +6,7 @@
 			"type": "fileType1",
 			"bytes": 1001,
 			"uploadDateTime": "2018-01-01T00:00:00Z",
-			"status": "UNREAD"
+			"status": "NOT_DOWNLOADED"
 		},
 		{
 			"id": 2,
@@ -14,7 +14,7 @@
 			"type": "fileType2",
 			"bytes": 1002,
 			"uploadDateTime": "2018-01-02T00:00:00Z",
-			"status": "UNREAD"
+			"status": "NOT_DOWNLOADED"
 		},
 		{
 			"id": 3,
@@ -38,7 +38,7 @@
 			"type": "fileType5",
 			"bytes": 1005,
 			"uploadDateTime": "2018-01-05T00:00:00Z",
-			"status": "UNREAD"
+			"status": "NOT_DOWNLOADED"
 		},
 		{
 			"id": 6,
@@ -46,7 +46,7 @@
 			"type": "fileType6",
 			"bytes": 1006,
 			"uploadDateTime": "2018-01-06T00:00:00Z",
-			"status": "UNREAD"
+			"status": "NOT_DOWNLOADED"
 		},
 		{
 			"id": 7,
@@ -54,7 +54,7 @@
 			"type": "fileType7",
 			"bytes": 1007,
 			"uploadDateTime": "2018-01-07T00:00:00Z",
-			"status": "UNREAD"
+			"status": "NOT_DOWNLOADED"
 		},
 		{
 			"id": 8,
@@ -78,7 +78,7 @@
 			"type": "fileType10",
 			"bytes": 1010,
 			"uploadDateTime": "2018-01-10T00:00:00Z",
-			"status": "UNREAD"
+			"status": "NOT_DOWNLOADED"
 		},
 		{
 			"id": 11,
@@ -86,7 +86,7 @@
 			"type": "fileType11",
 			"bytes": 1020,
 			"uploadDateTime": "2018-01-10T00:00:00Z",
-			"status": "UNREAD"
+			"status": "NOT_DOWNLOADED"
 		},
 		{
 			"id": 12,
@@ -102,7 +102,7 @@
 			"type": "fileType13",
 			"bytes": 1020,
 			"uploadDateTime": "2018-01-10T00:00:00Z",
-			"status": "UNREAD"
+			"status": "NOT_DOWNLOADED"
 		},
 		{
 			"id": 14,
@@ -110,7 +110,7 @@
 			"type": "fileType14",
 			"bytes": 1020,
 			"uploadDateTime": "2018-01-10T00:00:00Z",
-			"status": "UNREAD"
+			"status": "NOT_DOWNLOADED"
 		},
 		{
 			"id": 15,
@@ -118,7 +118,7 @@
 			"type": "fileType15",
 			"bytes": 1020,
 			"uploadDateTime": "2018-01-10T00:00:00Z",
-			"status": "UNREAD"
+			"status": "NOT_DOWNLOADED"
 		}
 	],
 	"pageable": {

@@ -27,11 +27,11 @@ app:
     host:
       sftp:
         name: sftp.nfedev.accelya.com
-        user: jobsch
-        password: Scheduler.18
+        user: sftpuatadmin
+        password: Adm1n
         directory: /data/nfe/jobscheduler_inbox
         protocol: sftp
-        port: 22
+        port: 2225
       local:
         name: localhost
         user: 

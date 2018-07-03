@@ -58,7 +58,7 @@ public class BsplinkFileControllerDownloadTest {
 
     @Autowired
     private BsplinkFileConfigService bsplinkFileConfigurationService;
-    
+
     @MockBean
     private YadeUtils yadeUtils;
 
@@ -68,7 +68,7 @@ public class BsplinkFileControllerDownloadTest {
     private Path uploadedFilesDirectory;
 
     private static File dirUploadedFiles;
-    
+
     @Before
     public void setUp() throws IOException, BsplinkValidationException {
         File uploadFolder = new File(applicationConfiguration.getLocalUploadedFilesDirectory());
@@ -85,7 +85,7 @@ public class BsplinkFileControllerDownloadTest {
         File uploadFolder = new File(applicationConfiguration.getLocalUploadedFilesDirectory());
         FileUtils.forceDelete(uploadFolder);
     }
-    
+
     @Before
     public void seetUpForFiles() throws IOException {
 
@@ -186,7 +186,7 @@ public class BsplinkFileControllerDownloadTest {
     @Test
     public void testDownloadZipFileThrowsException() throws Exception {
 
-        mockMvc.perform(get("/v1/files/zip?id=15")).andExpect(status().isInternalServerError());
+        mockMvc.perform(get("/v1/files/zip?id=15666")).andExpect(status().isNotFound());
 
     }
 
@@ -248,7 +248,7 @@ public class BsplinkFileControllerDownloadTest {
 
         return cfg;
     }
-    
+
     private List<BsplinkFile> getFilesSftp() {
 
         BsplinkFile file1 = new BsplinkFile();
@@ -262,19 +262,19 @@ public class BsplinkFileControllerDownloadTest {
         BsplinkFile file2 = new BsplinkFile();
         file2.setId(2L);
         file2.setName("ILei8385_20180128_file2");
-        file2.setStatus(BsplinkFileStatus.UNREAD);
+        file2.setStatus(BsplinkFileStatus.NOT_DOWNLOADED);
         file2.setType("fileType2");
         file2.setUploadDateTime(Instant.parse("2018-01-02T00:00:00Z"));
         file2.setBytes(1002L);
-        
+
         BsplinkFile file3 = new BsplinkFile();
         file3.setId(3L);
         file3.setName("ILei8385_20180128_file3");
-        file3.setStatus(BsplinkFileStatus.UNREAD);
+        file3.setStatus(BsplinkFileStatus.NOT_DOWNLOADED);
         file3.setType("fileType2");
         file3.setUploadDateTime(Instant.parse("2018-01-02T00:00:00Z"));
         file3.setBytes(1003L);
-        
+
         BsplinkFile file4 = new BsplinkFile();
         file4.setId(4L);
         file4.setName("ILei8385_20180128_file4");
@@ -282,7 +282,7 @@ public class BsplinkFileControllerDownloadTest {
         file4.setType("fileType4");
         file4.setUploadDateTime(Instant.parse("2018-01-02T00:00:00Z"));
         file4.setBytes(1004L);
-        
+
         List<BsplinkFile> listbsplinkFiles = new ArrayList<>();
         listbsplinkFiles.add(file1);
         listbsplinkFiles.add(file2);

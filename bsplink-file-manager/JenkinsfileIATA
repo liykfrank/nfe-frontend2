@@ -18,9 +18,9 @@ pipeline {
 							credentialsId: env.bitbucketCredentialsId,
 							url: "git@bitbucket.org:iatacoe/nfe.git"
 					]]]
-
-				configFileProvider([configFile(fileId: 'gradle-iata.properties', targetLocation: '.')]) {
-                	sh './gradlew clean build'
+				
+					configFileProvider([configFile(fileId: 'gradle-iata.properties', targetLocation: '$JOB_BASE_NAME')]) {
+                	    sh './gradlew -b $JOB_BASE_NAME/build.gradle clean build'
                 }
             }
             
@@ -33,20 +33,16 @@ pipeline {
             }
         }
         
-    	stage('Publish')  {
+    	stage('Nexus')  {
 			steps {
-				sh './gradlew uploadArchives'
+				sh './gradlew -b $JOB_BASE_NAME/build.gradle uploadArchives'
 			}
 		}
     
     	stage('SonarQube') {
             steps {
             	withSonarQubeEnv('a2lsonarq1 - IATA') {
-            	    dir('bsplink-file-manager') {
-            	        configFileProvider([configFile(fileId: 'gradle-iata.properties', targetLocation: '.')]) {
-	            	        sh './gradlew sonarqube'
-            	        }
-            	    }
+	            	sh './gradlew -b $JOB_BASE_NAME/build.gradle sonarqube'
 	            }
 	        }
 	  	}

@@ -47,5 +47,5 @@ public class BsplinkFile {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private BsplinkFileStatus status = BsplinkFileStatus.UNREAD;
+    private BsplinkFileStatus status = BsplinkFileStatus.NOT_DOWNLOADED;
 }

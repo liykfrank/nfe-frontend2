@@ -3,20 +3,25 @@ package org.iata.bsplink.filemanager.utils;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URLConnection;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import lombok.Data;
 import lombok.extern.apachecommons.CommonsLog;
+
 import org.apache.commons.io.IOUtils;
 import org.iata.bsplink.filemanager.configuration.BsplinkFileBasicConfig;
 import org.iata.bsplink.filemanager.exception.BsplinkValidationException;
@@ -137,7 +142,7 @@ public class BsplinkFileUtils {
             }
         }
 
-        if (errors.size() > 0) {
+        if (!errors.isEmpty()) {
             throw new BsplinkValidationException(errors);
         }
     }
@@ -163,24 +168,33 @@ public class BsplinkFileUtils {
 
         bsFileList.removeAll(Collections.singleton(null));
 
-        for (BsplinkFile bsFile : bsFileList) {
+        // All files with trashed status are deleted from list.
+        List<BsplinkFile> bsFileListWihoutTrashedFiles =
+                bsFileList.stream().filter(f -> !f.getStatus().equals(BsplinkFileStatus.TRASHED))
+                        .collect(Collectors.toList());
+
+        for (BsplinkFile bsFile : bsFileListWihoutTrashedFiles) {
 
             yadeGetFileFromRemoteHost(bsFile);
 
             File file = new File(localDownloadedFilesDirectory + File.separator + bsFile.getName());
 
-            FileInputStream fin = new FileInputStream(file);
+            try (FileInputStream fin = new FileInputStream(file)) {
 
-            zout.putNextEntry(new ZipEntry(bsFile.getName()));
+                zout.putNextEntry(new ZipEntry(bsFile.getName()));
 
-            IOUtils.copy(fin, zout);
+                IOUtils.copy(fin, zout);
 
-            zout.closeEntry();
+                zout.closeEntry();
 
-            fin.close();
-
-            if (!file.delete()) {
-                log.error("Delete operation for file: " + file.getName() + " is failed.");
+            } catch (IOException e) {
+                log.error("Error creating FileInputStream " + e.getMessage());
+                throw e;
+            } finally {
+                if (null != response.getOutputStream()) {
+                    zout.closeEntry();
+                }
+                Files.delete(file.toPath());
             }
         }
 
@@ -208,12 +222,16 @@ public class BsplinkFileUtils {
 
         File file = new File(localDownloadedFilesDirectory + File.separator + bsFile.getName());
 
-        FileInputStream input = new FileInputStream(file);
+        try (FileInputStream input = new FileInputStream(file);
+                ServletOutputStream sos = response.getOutputStream()) {
 
-        FileCopyUtils.copy(input, response.getOutputStream());
+            FileCopyUtils.copy(input, sos);
 
-        if (!file.delete()) {
-            log.error("Delete operation for file: " + file.getName() + " is failed.");
+            Files.delete(file.toPath());
+
+        } catch (IOException e) {
+            log.error("Error creating FileInputStream " + e.getMessage());
+            throw e;
         }
     }
 
@@ -239,10 +257,8 @@ public class BsplinkFileUtils {
         Path uploadedFilesDirectory = Paths.get(localDownloadedFilesDirectory);
         File dirUploadedFiles = new File(uploadedFilesDirectory.toString());
 
-        if (!dirUploadedFiles.exists()) {
-            if (dirUploadedFiles.mkdir()) {
-                log.info("Directory " + dirUploadedFiles + " created.");
-            }
+        if (!dirUploadedFiles.exists() && dirUploadedFiles.mkdir()) {
+            log.info("Directory " + dirUploadedFiles + " created.");
         }
 
         // Creates the local destination source where the files will be saved
@@ -280,6 +296,27 @@ public class BsplinkFileUtils {
         return yadeUtils.transfer(sourceHost, targetHost, YadeOperation.MOVE, fileName);
     }
 
+    /**
+     * Moves a file to a yade-utils from outbox to outbox/eliminated.
+     *
+     * @param fileName name of file to move.
+     * @throws Exception Yade throws exceptions.
+     * 
+     */
+    public void moveFileToEliminated(String fileName) throws Exception {
+        String sourceDirectory = getOutboxPathFromFileName(fileName);
+        String targetDirectory = getOutboxEliminatedPathFromFileName(fileName);
+
+        YadeHost sourceHost = new YadeHost(yadeHostSftpName, yadeHostSftpUser, yadeHostSftpPassword,
+                sourceDirectory, YadeProtocol.valueOf(yadeHostSftpProtocol.toUpperCase()),
+                yadeHostSftpPort);
+
+        YadeHost targetHost = new YadeHost(yadeHostSftpName, yadeHostSftpUser, yadeHostSftpPassword,
+                targetDirectory, YadeProtocol.valueOf(yadeHostSftpProtocol.toUpperCase()),
+                yadeHostSftpPort);
+
+        yadeUtils.transfer(sourceHost, targetHost, YadeOperation.MOVE, fileName);
+    }
 
     /**
      * Checks if list is not empty.
@@ -288,29 +325,29 @@ public class BsplinkFileUtils {
      * @return Returns true if list is not empty.
      */
     public boolean checkIfListIsNotEmpty(List<BsplinkFile> bsFileList) {
-        return bsFileList.stream().anyMatch(f -> f != null);
+        return bsFileList.stream().anyMatch(Objects::nonNull);
     }
 
 
     /**
      * Obtains the user outbox path from BsplinkFile.
-     * 
+     *
      * @param file Information of the file.
      * @return String with path to file.
      */
     public String getOutboxPathFromBsplinkFile(BsplinkFile file) {
 
         if (file.getStatus() == BsplinkFileStatus.DELETED) {
-            return file.getName().replaceFirst(fileNameRex, fileNameEliminatedReplacement);
+            return getOutboxEliminatedPathFromFileName(file.getName());
         }
 
-        return file.getName().replaceFirst(fileNameRex, fileNameOutboxReplacement);
+        return getOutboxPathFromFileName(file.getName());
     }
 
 
     /**
      * Obtains the user outbox path from file name.
-     * 
+     *
      * @param fileName Information of the file.
      * @return String with path to file.
      */
@@ -318,10 +355,19 @@ public class BsplinkFileUtils {
         return fileName.replaceFirst(fileNameRex, fileNameOutboxReplacement);
     }
 
+    /**
+     * Obtains the user outbox eliminated path from file name.
+     *
+     * @param fileName Information of the file.
+     * @return String with path to file.
+     */
+    public String getOutboxEliminatedPathFromFileName(String fileName) {
+        return fileName.replaceFirst(fileNameRex, fileNameEliminatedReplacement);
+    }
 
     /**
      * Obtains the file type.
-     * 
+     *
      * @param fileName The file Name.
      * @return String with path to file.
      */

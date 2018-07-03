@@ -12,6 +12,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.iata.bsplink.filemanager.model.entity.BsplinkFile;
+import org.iata.bsplink.filemanager.model.entity.BsplinkFileStatus;
 import org.iata.bsplink.filemanager.pojo.BsplinkFileSearchCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -50,9 +51,7 @@ public class CustomBsplinkFileRepositoryImpl implements CustomBsplinkFileReposit
         addSearchConditions(criteriaQuery, searchCriteria, root);
         criteriaQuery.select(criteriaBuilder.count(root));
 
-        return entityManager
-                .createQuery(criteriaQuery)
-                .getSingleResult();
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
     private void addSearchConditions(CriteriaQuery<?> criteriaQuery,
@@ -60,17 +59,17 @@ public class CustomBsplinkFileRepositoryImpl implements CustomBsplinkFileReposit
 
         List<Predicate> conditions = new ArrayList<>();
 
-        addEqualConditionIfValueIsPresent(searchCriteria.getId(), root.get("id"),
-                conditions);
+        addEqualConditionIfValueIsPresent(searchCriteria.getId(), root.get("id"), conditions);
 
-        addEqualConditionIfValueIsPresent(searchCriteria.getName(), root.get("name"),
-                conditions);
+        addEqualConditionIfValueIsPresent(searchCriteria.getName(), root.get("name"), conditions);
 
         addEqualConditionIfValueIsPresent(searchCriteria.getStatus(), root.get("status"),
                 conditions);
 
-        addEqualConditionIfValueIsPresent(searchCriteria.getType(), root.get("type"),
-                conditions);
+        addNotEqualConditionIfValueIsNotPresent(searchCriteria.getStatus(), root.get("status"),
+                conditions, BsplinkFileStatus.TRASHED);
+
+        addEqualConditionIfValueIsPresent(searchCriteria.getType(), root.get("type"), conditions);
 
         addUloadDateConditionsIfValuesArePresent(searchCriteria, root, conditions);
         addBytesConditionIfValuesArePresent(searchCriteria, root, conditions);
@@ -83,9 +82,26 @@ public class CustomBsplinkFileRepositoryImpl implements CustomBsplinkFileReposit
     private void addEqualConditionIfValueIsPresent(Object value, Path<Object> path,
             List<Predicate> conditions) {
 
-        if (value != null) {
+        if (value != null && value instanceof List) {
+
+            List<BsplinkFileStatus> status = (List<BsplinkFileStatus>) value;
+
+            if (!status.isEmpty()) {
+                conditions.add(criteriaBuilder.in(path).value(status));
+            }
+
+        } else if (value != null) {
 
             conditions.add(criteriaBuilder.equal(path, value));
+        }
+    }
+
+    private void addNotEqualConditionIfValueIsNotPresent(Object value, Path<Object> path,
+            List<Predicate> conditions, Object notEqualToValue) {
+
+        if (value == null) {
+
+            conditions.add(criteriaBuilder.notEqual(path, notEqualToValue));
         }
     }
 
@@ -129,11 +145,8 @@ public class CustomBsplinkFileRepositoryImpl implements CustomBsplinkFileReposit
         int firstResult = pageable.getPageNumber() * pageable.getPageSize();
         int maxResults = pageable.getPageSize();
 
-        return entityManager
-                .createQuery(criteriaQuery)
-                .setFirstResult(firstResult)
-                .setMaxResults(maxResults)
-                .getResultList();
+        return entityManager.createQuery(criteriaQuery).setFirstResult(firstResult)
+                .setMaxResults(maxResults).getResultList();
     }
 
     private void addOrder(CriteriaQuery<BsplinkFile> criteriaQuery, Root<BsplinkFile> root,

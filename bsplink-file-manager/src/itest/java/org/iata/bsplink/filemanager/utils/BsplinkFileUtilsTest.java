@@ -12,10 +12,13 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
@@ -85,19 +88,30 @@ public class BsplinkFileUtilsTest {
     @Test
     public void testGenerateZipFile() throws Exception {
 
-        HttpServletResponse response = mock(HttpServletResponse.class);
-
         String[] files = dirUploadedFiles.list();
-        String[] filesToDownload =
-            {getFilesSftp().get(0).getName(), getFilesSftp().get(1).getName()};
+        String[] filesToDownload = {getFilesSftp().get(0).getName(),
+                getFilesSftp().get(1).getName(), getFilesSftp().get(2).getName()};
+
+        Arrays.sort(files);
+        Arrays.sort(filesToDownload);
 
         assertArrayEquals(files, filesToDownload);
+        
+        HttpServletResponse response = mock(HttpServletResponse.class);
 
         bsplinkFileUtils.generateZipFileInResponse(response, getFilesSftp());
 
         String[] filesVoid = dirUploadedFiles.list();
 
         assertThat(filesVoid.length, is(0));
+    }
+
+
+    @Test
+    public void testDeletePathFileFromPattern() throws Exception {
+        String pathgDelete = "8385/IL/outbox/ei/eliminated";
+        assertEquals(pathgDelete,
+                bsplinkFileUtils.getOutboxPathFromBsplinkFile(getFilesSftp().get(2)));
     }
 
     @Test
@@ -124,7 +138,7 @@ public class BsplinkFileUtilsTest {
         boolean result =
                 bsplinkFileUtils.uploadSingleFileFromLocalToRemote("ILei8385_20180128_file1");
 
-        assertEquals(result, true);
+        assertEquals(true, result);
 
     }
 
@@ -133,7 +147,7 @@ public class BsplinkFileUtilsTest {
         BsplinkFile file1 = new BsplinkFile();
         file1.setId(1L);
         file1.setName("ILei8385_20180128_file1");
-        file1.setStatus(BsplinkFileStatus.UNREAD);
+        file1.setStatus(BsplinkFileStatus.NOT_DOWNLOADED);
         file1.setType("fileType1");
         file1.setUploadDateTime(Instant.parse("2018-01-01T00:00:00Z"));
         file1.setBytes(1001L);
@@ -141,15 +155,24 @@ public class BsplinkFileUtilsTest {
         BsplinkFile file2 = new BsplinkFile();
         file2.setId(2L);
         file2.setName("ILei8385_20180128_file2");
-        file2.setStatus(BsplinkFileStatus.UNREAD);
+        file2.setStatus(BsplinkFileStatus.NOT_DOWNLOADED);
         file2.setType("fileType2");
         file2.setUploadDateTime(Instant.parse("2018-01-02T00:00:00Z"));
         file2.setBytes(1002L);
+
+        BsplinkFile file12 = new BsplinkFile();
+        file12.setId(12L);
+        file12.setName("ILei8385_20180128_604");
+        file12.setStatus(BsplinkFileStatus.DELETED);
+        file12.setType("fileType12");
+        file12.setUploadDateTime(Instant.parse("2018-01-10T00:00:00Z"));
+        file12.setBytes(1020L);
 
 
         List<BsplinkFile> listbsplinkFiles = new ArrayList<>();
         listbsplinkFiles.add(file1);
         listbsplinkFiles.add(file2);
+        listbsplinkFiles.add(file12);
 
         return listbsplinkFiles;
     }

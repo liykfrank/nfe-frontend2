@@ -35,14 +35,16 @@ public class BsplinkFileConfigService {
     public BsplinkFileBasicConfig find() {
         Optional<BsplinkConfig> fileConfiguration =
                 fileConfigurationRepository.findById(FILE_CONFIGURATION_ID);
-        return fileConfiguration.get().getConfig();
+        if (fileConfiguration.isPresent()) {
+            return fileConfiguration.get().getConfig();
+        }
+        return null;
     }
 
     /**
      * Updates BSPlink File Configurations.
      *
-     * @throws BsplinkValidationException Exception validating new BSPlink File
-     *         Configurations.
+     * @throws BsplinkValidationException Exception validating new BSPlink File Configurations.
      */
     public ResponseEntity<String> update(BsplinkFileBasicConfig newFileConfiguration)
             throws BsplinkValidationException {

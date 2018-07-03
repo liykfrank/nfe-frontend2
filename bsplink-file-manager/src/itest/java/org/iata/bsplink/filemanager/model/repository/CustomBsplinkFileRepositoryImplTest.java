@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.mock;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.iata.bsplink.filemanager.model.entity.BsplinkFile;
@@ -89,7 +90,10 @@ public class CustomBsplinkFileRepositoryImplTest {
     @Test
     public void testFindsFilesFilteredByFileStatus() {
 
-        searchCriteria.setStatus(BsplinkFileStatus.DELETED);
+        List<BsplinkFileStatus> status = new ArrayList<>();
+        status.add(BsplinkFileStatus.DELETED);
+        
+        searchCriteria.setStatus(status);
 
         List<BsplinkFile> files = repository.find(searchCriteria, pageable, sort).getContent();
 

@@ -20,8 +20,6 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'checkstyle'
-apply plugin: 'jacoco'
-apply plugin: 'maven'
 
 group = 'org.iata.bsplink'
 version = '0.0.1-SNAPSHOT'
@@ -30,8 +28,8 @@ sourceCompatibility = 1.8
 repositories {
 	mavenCentral()
 	maven {
-        url nexusPublicRepositoryUrl
-    }
+    	url project.hasProperty('nexusPublicRepositoryUrl') ? nexusPublicRepositoryUrl : 'http://nexusinterno.nfedev.accelya.com/repository/maven-public'
+	}
 }
 
 checkstyle {
@@ -54,65 +52,7 @@ dependencies {
     testCompile('commons-io:commons-io:2.6')
 }
 
-// Integration tests
-// See: http://buransky.com/programming/integration-testing-with-gradle/
-configurations {
-    itestCompile.extendsFrom testCompile
-    itestRuntime.extendsFrom testRuntime
-}
-
-sourceSets {
-    itest {
-        compileClasspath += main.output + test.output
-        runtimeClasspath += main.output + test.output
-        java.srcDir file('src/itest/java')
-    }
-}
-
-task itest(type: Test) {
-    testClassesDir = sourceSets.itest.output.classesDir
-    classpath = sourceSets.itest.runtimeClasspath
-}
-
-check.dependsOn itest
-itest.mustRunAfter test
-
-jacoco {
-    toolVersion = "0.8.1"
-}
-
-jacocoTestReport {
-	
-    reports {
-        html.destination "${buildDir}/reports/coverage"
-    }   
-    executionData += files("${buildDir}/jacoco/itest.exec")
-}
-
-jacocoTestCoverageVerification {
-	
-	//force Jacoco test coverage task to execute first 
-	dependsOn jacocoTestReport
-    
-    //TODO - duplicated
-    executionData += files("${buildDir}/jacoco/itest.exec")
-}
-
-// to run Jacoco test coverage during the build (and fail when appropriate)
-check {
-//	dependsOn itest
-	dependsOn jacocoTestCoverageVerification
-}
-
-// End of integration tests
-
-// maven plugin configuration for uploading the generated artifact to Nexus
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: nexusSnapshotsRepositoryUrl){
-                 authentication(userName: nexusUsername, password: nexusPassword)
-            }
-        }
-    }
-}
+apply from: 'gradle/scripts/itest.gradle'
+apply from: 'gradle/scripts/jacoco.gradle'
+apply from: 'gradle/scripts/sonarqube.gradle'
+apply from: 'gradle/scripts/publish.gradle'

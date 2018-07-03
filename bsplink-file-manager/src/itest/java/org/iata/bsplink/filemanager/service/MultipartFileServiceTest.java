@@ -20,6 +20,7 @@ import org.apache.commons.io.FileUtils;
 import org.iata.bsplink.filemanager.configuration.ApplicationConfiguration;
 import org.iata.bsplink.filemanager.configuration.BsplinkFileBasicConfig;
 import org.iata.bsplink.filemanager.exception.BsplinkValidationException;
+import org.iata.bsplink.filemanager.model.entity.BsplinkFileStatus;
 import org.iata.bsplink.filemanager.response.SimpleResponse;
 import org.iata.bsplink.yadeutils.YadeUtils;
 import org.junit.After;
@@ -50,7 +51,7 @@ public class MultipartFileServiceTest {
 
     @Autowired
     private BsplinkFileConfigService bsplinkFileConfigurationService;
-    
+
     @MockBean
     private YadeUtils yadeUtils;
 
@@ -85,13 +86,12 @@ public class MultipartFileServiceTest {
         String requestPathPrefix = "/xxx/files";
 
         List<SimpleResponse> simpleResponses =
-                multipartFileService.saveFiles(requestPathPrefix, multipartFiles);
+                multipartFileService.saveFiles(multipartFiles);
 
         assertEquals(3, simpleResponses.size());
 
         assertEquals(simpleResponses.get(0).getSubject(), fileNames[0]);
-        assertEquals(simpleResponses.get(0).getStatus(),
-                Integer.valueOf(HttpStatus.OK.value()));
+        assertEquals(simpleResponses.get(0).getStatus(), Integer.valueOf(HttpStatus.OK.value()));
         assertEquals(simpleResponses.get(0).getMessage(), HttpStatus.OK.name());
 
         assertNull(simpleResponses.get(1).getId());
@@ -107,16 +107,23 @@ public class MultipartFileServiceTest {
         assertNull(simpleResponses.get(2).getPath());
         assertEquals(simpleResponses.get(2).getStatus(),
                 Integer.valueOf(HttpStatus.BAD_REQUEST.value()));
-        assertEquals(simpleResponses.get(2).getMessage(), HttpStatus.BAD_REQUEST.name() + ": "
-                + MultipartFileService.BAD_REQUEST_MSG_EMPTY);
+        assertEquals(simpleResponses.get(2).getMessage(),
+                HttpStatus.BAD_REQUEST.name() + ": " + MultipartFileService.BAD_REQUEST_MSG_EMPTY);
 
         Path path = Paths.get(applicationConfiguration.getLocalUploadedFilesDirectory());
 
-        assertEquals(Files.exists(path.resolve(fileNames[0])), true);
-        assertEquals(Files.exists(path.resolve(fileNames[1])), false);
-        assertEquals(Files.exists(path.resolve(fileNames[2])), false);
+        assertEquals(true, Files.exists(path.resolve(fileNames[0])));
+        assertEquals(false, Files.exists(path.resolve(fileNames[1])));
+        assertEquals(false, Files.exists(path.resolve(fileNames[2])));
 
         assertEquals(Files.size(path.resolve(fileNames[0])), fileTextContents[0].getBytes().length);
+
+        List<SimpleResponse> simpleResponsesAlreadySaved =
+                multipartFileService.saveFiles(multipartFiles);
+
+        assertEquals(Integer.valueOf(HttpStatus.OK.value()),
+                simpleResponsesAlreadySaved.get(0).getStatus());
+
     }
 
     @Test
@@ -131,9 +138,9 @@ public class MultipartFileServiceTest {
                 Arrays.asList(new MockMultipartFile("file", fileName, "text/plain", fileContent));
 
         List<SimpleResponse> simpleResponses =
-                multipartFileService.saveFiles("xxx", multipartFiles);
+                multipartFileService.saveFiles(multipartFiles);
 
-        assertEquals(simpleResponses.size(), 1);
+        assertEquals(1, simpleResponses.size());
 
         assertNull(simpleResponses.get(0).getId());
         assertEquals(simpleResponses.get(0).getSubject(), fileName);
@@ -155,15 +162,15 @@ public class MultipartFileServiceTest {
             .collect(Collectors.toList());
 
         List<SimpleResponse> simpleResponses =
-                multipartFileService.saveFiles("xxx", multipartFiles);
+                multipartFileService.saveFiles(multipartFiles);
 
-        assertEquals(simpleResponses.size(), 1);
+        assertEquals(1, simpleResponses.size());
         assertNull(simpleResponses.get(0).getId());
 
         assertEquals(simpleResponses.get(0).getStatus(),
                 Integer.valueOf(HttpStatus.BAD_REQUEST.value()));
-        assertEquals(simpleResponses.get(0).getMessage(), HttpStatus.BAD_REQUEST.name() + ": "
-                + MultipartFileService.BAD_REQUEST_MSG_COUNT);
+        assertEquals(simpleResponses.get(0).getMessage(),
+                HttpStatus.BAD_REQUEST.name() + ": " + MultipartFileService.BAD_REQUEST_MSG_COUNT);
     }
 
     @Test
@@ -179,7 +186,7 @@ public class MultipartFileServiceTest {
             i -> new MockMultipartFile("file", "file" + i + ".txt", "text/plain", fileContent))
             .collect(Collectors.toList());
 
-        List<SimpleResponse> responses = multipartFileService.saveFiles("xxx", multipartFile);
+        List<SimpleResponse> responses = multipartFileService.saveFiles(multipartFile);
         assertEquals(responses.size(), multipartFile.size());
 
         assertTrue(responses.stream().allMatch(r -> r.getStatus().equals(HttpStatus.OK.value())));
@@ -196,9 +203,9 @@ public class MultipartFileServiceTest {
         when(multipartFile.getInputStream()).thenThrow(new IOException());
         when(multipartFile.getBytes()).thenThrow(new IOException());
         List<SimpleResponse> simpleResponses =
-                multipartFileService.saveFiles("xxx", Arrays.asList(multipartFile));
+                multipartFileService.saveFiles(Arrays.asList(multipartFile));
 
-        assertEquals(simpleResponses.size(), 1);
+        assertEquals(1, simpleResponses.size());
 
         SimpleResponse simpleResponse = simpleResponses.get(0);
 

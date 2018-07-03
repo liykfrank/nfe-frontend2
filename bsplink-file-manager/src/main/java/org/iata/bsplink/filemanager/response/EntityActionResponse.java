@@ -7,10 +7,10 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 @Data
-public class EntityActionResponse<IdT> {
+public class EntityActionResponse<I> {
 
     @ApiModelProperty(value = "Resource identifier")
-    private IdT id;
+    private I id;
     @ApiModelProperty(value = "HTTP status code that represents the action's result")
     private Integer status;
     @ApiModelProperty(value = "Result description")
@@ -19,7 +19,7 @@ public class EntityActionResponse<IdT> {
     /**
      * Creates a new response using the given HTTP status.
      */
-    public EntityActionResponse(IdT id, HttpStatus httpStatus) {
+    public EntityActionResponse(I id, HttpStatus httpStatus) {
 
         this(id, httpStatus, httpStatus.name());
     }
@@ -27,7 +27,7 @@ public class EntityActionResponse<IdT> {
     /**
      * Creates a new response with a specific message.
      */
-    public EntityActionResponse(IdT id, HttpStatus httpStatus, String message) {
+    public EntityActionResponse(I id, HttpStatus httpStatus, String message) {
 
         this.id = id;
         this.status = httpStatus.value();

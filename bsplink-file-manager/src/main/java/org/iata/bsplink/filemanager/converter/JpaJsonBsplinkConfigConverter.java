@@ -9,10 +9,12 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 import org.iata.bsplink.filemanager.configuration.BsplinkFileBasicConfig;
+import org.iata.bsplink.filemanager.exception.BsplinkFileManagerRuntimeException;
 
 @Converter
-public class JpaJsonBsplinkConfigConverter implements
-        AttributeConverter<BsplinkFileBasicConfig, String> {
+public class JpaJsonBsplinkConfigConverter
+        implements AttributeConverter<BsplinkFileBasicConfig, String> {
+
 
     @Override
     public String convertToDatabaseColumn(BsplinkFileBasicConfig meta) {
@@ -20,7 +22,7 @@ public class JpaJsonBsplinkConfigConverter implements
         try {
             return objectMapper.writeValueAsString(meta);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new BsplinkFileManagerRuntimeException(e);
         }
     }
 
@@ -28,10 +30,9 @@ public class JpaJsonBsplinkConfigConverter implements
     public BsplinkFileBasicConfig convertToEntityAttribute(String dbData) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(dbData,
-                    BsplinkFileBasicConfig.class);
+            return objectMapper.readValue(dbData, BsplinkFileBasicConfig.class);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new BsplinkFileManagerRuntimeException(e);
         }
     }
 }

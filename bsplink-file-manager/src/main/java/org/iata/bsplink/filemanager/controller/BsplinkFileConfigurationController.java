@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
 @RequestMapping("/v1/configurations")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*")
 public class BsplinkFileConfigurationController {
 
     @Autowired
@@ -41,8 +41,7 @@ public class BsplinkFileConfigurationController {
      * BSPlink file configurations.
      */
     @ApiOperation(value = "Configurations for Filemanager")
-    @ApiResponses(value = {@ApiResponse(code = 200,
-            message = "Congiguration attributes")})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Congiguration attributes")})
     @GetMapping()
     public ResponseEntity<BsplinkFileConfiguration> getConfig() {
         BsplinkFileConfiguration cfg = new BsplinkFileConfiguration();
@@ -58,11 +57,10 @@ public class BsplinkFileConfigurationController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "Error message")})
     @PutMapping()
-    public ResponseEntity<?> updateConfig(
-            @ApiParam(name = "fileConfiguration",
-                    value = "the new File Configuration including all configuration attributes",
-                    required = true)
-            @Valid @RequestBody BsplinkFileConfiguration bsplinkFileConfiguration, Errors errors) {
+    public ResponseEntity<Object> updateConfig(@ApiParam(name = "fileConfiguration",
+            value = "the new File Configuration including all configuration attributes",
+            required = true) @Valid @RequestBody BsplinkFileConfiguration bsplinkFileConfiguration,
+            Errors errors) {
 
         if (errors.hasErrors()) {
             Map<String, String> error = new HashMap<>();

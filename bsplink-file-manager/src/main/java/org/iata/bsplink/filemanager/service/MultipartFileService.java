@@ -8,6 +8,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.extern.apachecommons.CommonsLog;
 
@@ -44,14 +45,14 @@ public class MultipartFileService {
 
     @Autowired
     private BsplinkFileUtils bsplinkFileUtils;
-    
+
     @Autowired
     private BsplinkFileRepository bsplinkFileRepository;
 
     /**
      * Save MultipartFiles in FS.
      */
-    public List<SimpleResponse> saveFiles(String path, List<MultipartFile> files) {
+    public List<SimpleResponse> saveFiles(List<MultipartFile> files) {
         List<SimpleResponse> simpleResponses = new ArrayList<>(files.size());
         BsplinkFileBasicConfig cfg = bsplinkFileConfigService.find();
 
@@ -111,26 +112,42 @@ public class MultipartFileService {
                 Paths.get(applicationConfiguration.getLocalUploadedFilesDirectory());
 
         File dirUploadedFiles = new File(uploadedFilesDirectory.toString());
-        if (!dirUploadedFiles.exists()) {
-            if (dirUploadedFiles.mkdir()) {
-                log.info("Directory " + dirUploadedFiles + " created.");
-            }
+        
+        if (!dirUploadedFiles.exists() && dirUploadedFiles.mkdir()) {
+            log.info("Directory " + dirUploadedFiles + " created.");
         }
 
         Path path = uploadedFilesDirectory.resolve(fileName);
         Files.deleteIfExists(path);
         Files.write(path, file.getBytes(), StandardOpenOption.CREATE_NEW);
-        
+
         // TEMPORARILY THE FILE WILL BE SAVED IN BBDD
         BsplinkFile bsplinkFile = new BsplinkFile();
         bsplinkFile.setName(file.getOriginalFilename());
         bsplinkFile.setBytes(file.getSize());
-        bsplinkFile.setStatus(BsplinkFileStatus.SENT);
+        bsplinkFile.setStatus(BsplinkFileStatus.NOT_DOWNLOADED);
         bsplinkFile.setType(bsplinkFileUtils.getFileType(file.getOriginalFilename()));
         bsplinkFile.setUploadDateTime(Instant.now());
+
+        List<BsplinkFile> listFiles = bsplinkFileRepository.findByName(bsplinkFile.getName());
+
+        // If files with the same name exist then will be updated. Status not equals to DELETED and
+        // TRASHED
+        if (!listFiles.isEmpty()) {
+
+            List<BsplinkFile> filterList = listFiles.stream()
+                    .filter(f -> !f.getStatus().equals(BsplinkFileStatus.DELETED)
+                            && !f.getStatus().equals(BsplinkFileStatus.TRASHED))
+                    .collect(Collectors.toList());
+
+            filterList.forEach(f -> f.setStatus(BsplinkFileStatus.TRASHED));
+
+            filterList.forEach(f -> bsplinkFileRepository.save(f));
+
+        }
+
         bsplinkFileRepository.save(bsplinkFile);
 
-        
         bsplinkFileUtils.uploadSingleFileFromLocalToRemote(file.getOriginalFilename());
     }
 }
