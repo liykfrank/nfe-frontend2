@@ -1,28 +1,16 @@
 CREATE SCHEMA IF NOT EXISTS agencymemo;
     
     drop table agencymemo.acdm if exists;
-
     
     drop table agencymemo.acdm_related_ticket_documents if exists;
-
     
     drop table agencymemo.acdm_tax_miscellaneous_fees if exists;
-
-    
-    drop table agencymemo.agent_calculations if exists;
-
-    
-    drop table agencymemo.airline_calculations if exists;
-
     
     drop table agencymemo.calculations if exists;
-
     
     drop table agencymemo.config if exists;
-
     
     drop table agencymemo.tax_on_commission_type if exists;
-
     
     drop sequence if exists agencymemo.hibernate_sequence;
     
@@ -45,8 +33,8 @@ CREATE SCHEMA IF NOT EXISTS agencymemo;
         phone_fax_number varchar(30),
         amount_paid_by_customer decimal(20,9) not null,
         billing_period integer not null check (billing_period<=9999999 AND billing_period>=1000000),
-        concerns_indicator varchar(255),
-        currency_code varchar(255),
+        concerns_indicator char(1),
+        currency_code char(3),
         currency_decimals integer,
         date_of_issue date not null,
         date_of_issue_related_document date,
@@ -58,7 +46,7 @@ CREATE SCHEMA IF NOT EXISTS agencymemo;
         regularized boolean not null,
         statistical_code varchar(3),
         tax_on_commission_type varchar(6),
-        transaction_code varchar(255) not null,
+        transaction_code char(4) not null,
         agent_calculations_id bigint not null,
         airline_calculations_id bigint not null,
         agent_vat_number varchar(30),
@@ -71,7 +59,6 @@ CREATE SCHEMA IF NOT EXISTS agencymemo;
     
     create table agencymemo.acdm_related_ticket_documents (
        acdm_id bigint not null,
-        check_digit integer,
         related_ticket_document_number varchar(13),
         order_nr integer not null,
         primary key (acdm_id, order_nr)
@@ -87,29 +74,6 @@ CREATE SCHEMA IF NOT EXISTS agencymemo;
         primary key (acdm_id, order_nr)
     );
 
-    
-    create table agencymemo.agent_calculations (
-       id bigint not null,
-        commission decimal(20,9) not null,
-        fare decimal(20,9) not null,
-        spam decimal(20,9) not null,
-        tax decimal(20,9) not null,
-        tax_on_commission decimal(20,9) not null,
-        primary key (id)
-    );
-
-    
-    create table agencymemo.airline_calculations (
-       id bigint not null,
-        commission decimal(20,9) not null,
-        fare decimal(20,9) not null,
-        spam decimal(20,9) not null,
-        tax decimal(20,9) not null,
-        tax_on_commission decimal(20,9) not null,
-        primary key (id)
-    );
-
-    
     create table agencymemo.calculations (
        id bigint not null,
         commission decimal(20,9) not null,
@@ -120,15 +84,15 @@ CREATE SCHEMA IF NOT EXISTS agencymemo;
         primary key (id)
     );
 
-    
     create table agencymemo.config (
-       iso_country_code varchar(255) not null,
+       iso_country_code varchar(2) not null,
         agent_vat_number_enabled boolean not null,
         airline_vat_number_enabled boolean not null,
         company_registration_number_enabled boolean not null,
         cp_permitted_for_concerning_issue boolean not null,
         cp_permitted_for_concerning_refund boolean not null,
-        default_stat varchar(255) not null,
+        default_currency varchar(3),
+        default_stat varchar(3) not null,
         free_stat boolean not null,
         max_number_of_related_documents integer not null,
         mf_permitted_for_concerning_issue boolean not null,
@@ -165,19 +129,16 @@ CREATE SCHEMA IF NOT EXISTS agencymemo;
 		PRIMARY KEY (id)
 	);    
 
-    
-    alter table agencymemo.acdm 
-       add constraint FKhckr66u21a2as6oi5sogyq18t 
+    alter table agencymemo.acdm
+       add constraint FKbwttnt214a9vl7ei6lubeokxe 
        foreign key (agent_calculations_id) 
-       references agencymemo.agent_calculations;
+       references agencymemo.calculations;
 
-    
-    alter table agencymemo.acdm 
-       add constraint FKtbxft4gqqjph4jn64tyjn2940 
+    alter table agencymemo.acdm
+       add constraint FK8v2byqssxjirsgx222y75gjee 
        foreign key (airline_calculations_id) 
-       references agencymemo.airline_calculations;
+       references agencymemo.calculations;
 
-    
     alter table agencymemo.acdm_related_ticket_documents 
        add constraint FK4mjl7dkt42dxef7c2o358w02e 
        foreign key (acdm_id) 

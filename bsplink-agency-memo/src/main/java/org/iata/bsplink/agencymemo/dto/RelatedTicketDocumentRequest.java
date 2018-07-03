@@ -11,8 +11,6 @@ import javax.validation.constraints.Size;
 
 import lombok.Data;
 
-import org.iata.bsplink.agencymemo.validation.constraints.CheckDigitConstraint;
-
 @Data
 public class RelatedTicketDocumentRequest {
 
@@ -24,12 +22,4 @@ public class RelatedTicketDocumentRequest {
     @NotNull(message = NON_NULL_MESSAGE)
     @Pattern(regexp = "^[A-Z0-9]{3}[0-9]*$")
     private String relatedTicketDocumentNumber;
-
-    @ApiModelProperty(
-            value = "Check-Digit, check digit for Related Ticket/Document Number",
-            allowableValues = "0, 1, 2, 3, 4, 5, 6, 9",
-            required = false)
-    @NotNull(message = NON_NULL_MESSAGE)
-    @CheckDigitConstraint
-    private Integer checkDigit = 9;
 }

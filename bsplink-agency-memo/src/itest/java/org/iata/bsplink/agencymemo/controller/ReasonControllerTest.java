@@ -16,6 +16,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -120,6 +121,26 @@ public class ReasonControllerTest {
         List<Reason> actual = mapper.readValue(responseBody, new TypeReference<List<Reason>>() {});
 
         assertThat(actual, equalTo(reasons));
+    }
+
+    @Test
+    public void testListsReasonsByIsoCountryCode() throws Exception {
+
+        createReasons();
+
+        String isoc = reasons.get(0).getIsoCountryCode();
+
+        String responseBody = mockMvc.perform(
+                get(BASE_URI + "?isoCountryCode=" + isoc).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        List<Reason> actual = mapper.readValue(responseBody, new TypeReference<List<Reason>>() {});
+
+        List<Reason> filteredReasons = reasons.stream()
+                .filter(r -> isoc.equals(r.getIsoCountryCode()))
+                .collect(Collectors.toList());
+        assertThat(actual, equalTo(filteredReasons));
     }
 
     private List<Reason> createReasons() {

@@ -20,6 +20,12 @@ import org.iata.bsplink.agencymemo.validation.constraints.AcdmConstraint;
 public class CalculationsValidator
         implements ConstraintValidator<AcdmConstraint, AcdmRequest> {
 
+    public static final String INCORRECT_TOTAL_MSG = "The Total Amount is incorrect.";
+    public static final String INCORRECT_TAX_SUM_MSG = "The Tax Total is incorrect.";
+    public static final String NO_NR_PERMITTED_MSG = "NetReporting is not permitted.";
+    public static final String NO_SPAM_PERMITTED_MSG = "SPAM is not permitted.";
+    public static final String SPAM_ONLY_IN_NR_MSG = "SPAM only permitted in Net Reporting.";
+    public static final String TOCA_NOT_PERMITTED_MSG = "Tax on Commission is not permitted";
     public static final String INCORRECT_TOTAL_ADM_ISSUE_MSG =
             "The remittance data is inconsistent for an ADM concerning an issue.";
     public static final String INCORRECT_TOTAL_ACM_RFND_MSG =
@@ -28,18 +34,12 @@ public class CalculationsValidator
             "The remittance data is inconsistent for an ACM concerning an issue.";
     public static final String INCORRECT_TOTAL_ADM_RFND_MSG =
             "The remittance data is inconsistent for an ADM concerning a refund.";
-    public static final String INCORRECT_TOTAL_MSG = "The Total Amount is incorrect.";
     public static final String REGULARIZED_MSG =
             "You reported both positive and negative amounts in the differences, therefore,"
             + " only the total net difference will be reported to the DPC and will be"
             + " included in the net billing.";
     public static final String NO_REGULARIZED_MSG =
             "You have not reported both positive and negative amounts in the differences.";
-    public static final String INCORRECT_TAX_SUM_MSG = "The Tax Total is incorrect.";
-    public static final String NO_NR_PERMITTED_MSG = "NetReporting is not permitted.";
-    public static final String NO_SPAM_PERMITTED_MSG = "SPAM is not permitted.";
-    public static final String SPAM_ONLY_IN_NR_MSG = "SPAM only permitted in Net Reporting.";
-    public static final String TOCA_NOT_PERMITTED_MSG = "Tax on Commission is not permitted";
     public static final String TCTP_MISSING_MSG =
             "Tax on Commission Type for the reported Tax on Commission Amount is missing.";
     public static final String TCTP_NOT_PERMITTED_MSG =
@@ -48,16 +48,12 @@ public class CalculationsValidator
             "For an ACMD/ ADMD a Fare Amount has to be reported.";
     public static final String ACDMD_NO_AMOUNT_PERMITTED_MSG =
             "For an ACMD/ ADMD the Amount is not permitted.";
-    public static final String ACDMD_NO_TAX_PERMITTED_MSG =
-            "For an ACMD/ ADMD no Tax is permitted.";
-
 
     private ConfigService configService;
 
     public CalculationsValidator(ConfigService configService) {
         this.configService = configService;
     }
-
 
     @Override
     public boolean isValid(AcdmRequest acdm,
@@ -133,11 +129,6 @@ public class CalculationsValidator
             result = false;
         }
         if (!isValidAcdmd(acdm.getAgentCalculations(), "agentCalculations", context)) {
-            result = false;
-        }
-
-        if (acdm.getTaxMiscellaneousFees() != null && !acdm.getTaxMiscellaneousFees().isEmpty()) {
-            addToContext(context, "taxMiscellaneousFees", ACDMD_NO_TAX_PERMITTED_MSG);
             result = false;
         }
 
@@ -339,7 +330,7 @@ public class CalculationsValidator
     }
 
 
-    private boolean isToRegularizeTaxAndFareZero(boolean tocaIsPositive, int acdmSignum,
+    private boolean isToRegularizeTaxAndFareZero(int acdmSignum,
             Calculations calc, boolean totalCommissionsAreDifferent) {
         if (hasSameSignum(acdmSignum, calc.getCommission())) {
             return true;
@@ -347,21 +338,9 @@ public class CalculationsValidator
         if (hasSameSignum(acdmSignum, calc.getSpam())) {
             return true;
         }
-        if (hasSameSignum(acdmSignum,  calc.getTaxOnCommission())
-                && totalCommissionsAreDifferent) {
-            return true;
-        }
-        if (isZero(calc.getCommission()) && isZero(calc.getSpam())) {
-            if (tocaIsPositive
-                    && hasOppositeSignum(acdmSignum, calc.getTaxOnCommission())) {
-                return true;
-            }
-            if (!tocaIsPositive
-                    && hasSameSignum(acdmSignum, calc.getTaxOnCommission())) {
-                return true;
-            }
-        }
-        return false;
+
+        return hasSameSignum(acdmSignum, calc.getTaxOnCommission())
+                && totalCommissionsAreDifferent;
     }
 
 
@@ -379,7 +358,7 @@ public class CalculationsValidator
             return true;
         }
         if (!tocaIsPositive && hasSameSignum(acdmSignum, calc.getTaxOnCommission())
-                && hasOppositeSignum(acdmSignum, calc.getTaxOnCommission())) {
+                && hasOppositeSignum(acdmSignum, calc.getCommission())) {
             return true;
         }
         return tocaIsPositive && hasOppositeSignum(acdmSignum, calc.getCommission())
@@ -402,7 +381,7 @@ public class CalculationsValidator
         boolean tocaIsPositive = BigDecimal.valueOf(cfg.getTaxOnCommissionSign()).signum() > 0;
 
         if (isZero(calc.getFare()) && isZero(calc.getTax())) {
-            return isToRegularizeTaxAndFareZero(tocaIsPositive, acdmSignum, calc,
+            return isToRegularizeTaxAndFareZero(acdmSignum, calc,
                     totalCommissionsAreDifferent(acdm));
         }
 

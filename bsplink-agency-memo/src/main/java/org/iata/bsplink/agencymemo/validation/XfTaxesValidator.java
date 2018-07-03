@@ -9,11 +9,11 @@ import javax.validation.ConstraintValidatorContext;
 
 import org.iata.bsplink.agencymemo.dto.AcdmRequest;
 import org.iata.bsplink.agencymemo.dto.TaxMiscellaneousFeeRequest;
-import org.iata.bsplink.agencymemo.validation.constraints.AgentConstraint;
+import org.iata.bsplink.agencymemo.validation.constraints.XfTaxesConstraint;
 
 
 public class XfTaxesValidator
-        implements ConstraintValidator<AgentConstraint, AcdmRequest> {
+        implements ConstraintValidator<XfTaxesConstraint, AcdmRequest> {
     public static final String ONLY_ONE_XF_MSG = "Only one XF tax permitted.";
     public static final String XF_FIRST_MSG = "'XF' tax should be reported first.";
     public static final String CONSECUTIVE_MSG = "XF-taxes should be reported one after the other.";

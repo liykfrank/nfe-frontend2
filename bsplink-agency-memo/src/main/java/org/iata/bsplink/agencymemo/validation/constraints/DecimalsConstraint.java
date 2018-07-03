@@ -11,7 +11,7 @@ import javax.validation.Payload;
 import org.iata.bsplink.agencymemo.validation.DecimalsValidator;
 
 /**
- * Checks the Agent.
+ * Checks the Decimals.
  */
 @Constraint(validatedBy = DecimalsValidator.class)
 @Target({ElementType.TYPE})

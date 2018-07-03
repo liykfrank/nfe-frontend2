@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -46,6 +47,16 @@ public class ReasonController {
     public ResponseEntity<List<Reason>> getReasons() {
 
         return ResponseEntity.status(HttpStatus.OK).body(reasonService.findAll());
+    }
+
+    /**
+     * Returns Reasons defined in the indicated country.
+     */
+    @GetMapping(params = "isoCountryCode")
+    public ResponseEntity<List<Reason>> getReasonsByIsoc(@RequestParam String isoCountryCode) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                reasonService.findByIsoCountryCode(isoCountryCode));
     }
 
     /**

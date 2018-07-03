@@ -35,7 +35,8 @@ public class CommentServiceTest {
 
         when(commentRepository.save(any())).thenReturn(commentToSave);
 
-        Comment commentSaved = commentService.save(getCommentsRequest().get(0));
+        Comment commentSaved =
+                commentService.save(getCommentsRequest().get(0), commentToSave.getAcdmId());
 
         assertThat(commentToSave.getId(), equalTo(commentSaved.getId()));
         assertThat(commentToSave.getAcdmId(), equalTo(commentSaved.getAcdmId()));
@@ -48,9 +49,9 @@ public class CommentServiceTest {
         List<Comment> listToFind = getComments();
 
         when(commentRepository.findByAcdmId(1L)).thenReturn(listToFind);
-        
+
         List<Comment> listFound = commentService.findByAcdmId(1L);
-        
+
         assertThat(listFound.size(), equalTo(listToFind.size()));
         assertThat(listFound.get(0), equalTo(listToFind.get(0)));
         assertThat(listFound.get(1), equalTo(listToFind.get(1)));
@@ -93,14 +94,12 @@ public class CommentServiceTest {
     public List<CommentRequest> getCommentsRequest() {
 
         CommentRequest requestOne = new CommentRequest();
-        requestOne.setAcdmId(98798798L);
         requestOne.setText("Text one");
 
         List<CommentRequest> listComments = new ArrayList<>();
         listComments.add(requestOne);
 
         CommentRequest requestTwo = new CommentRequest();
-        requestTwo.setAcdmId(98798798L);
         requestTwo.setText("Text one");
         listComments.add(requestTwo);
 

@@ -11,8 +11,6 @@ import lombok.NonNull;
 public class CommentRequest {
     
     @NonNull
-    private Long acdmId;
-    @NonNull
     private String text;
     
 }

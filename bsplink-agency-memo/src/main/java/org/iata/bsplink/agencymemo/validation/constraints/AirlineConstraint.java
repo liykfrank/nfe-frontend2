@@ -11,7 +11,7 @@ import javax.validation.Payload;
 import org.iata.bsplink.agencymemo.validation.AirlineValidator;
 
 /**
- * Checks the Agent.
+ * Checks the Airline.
  */
 @Constraint(validatedBy = AirlineValidator.class)
 @Target({ElementType.TYPE})

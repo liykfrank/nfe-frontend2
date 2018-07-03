@@ -24,10 +24,12 @@ public class TaxMiscellaneousFee {
     @ApiModelProperty(value = "Airline Tax/Miscellaneous Fee Amount", required = true)
     @NotNull
     @PositiveOrZero
+    @Column(precision = 20, scale = 9)
     private BigDecimal airlineAmount = BigDecimal.ZERO;
 
     @ApiModelProperty(value = "Agent Tax/Miscellaneous Fee Amount", required = true)
     @NotNull
     @PositiveOrZero
+    @Column(precision = 20, scale = 9)
     private BigDecimal agentAmount = BigDecimal.ZERO;
 }

@@ -40,17 +40,15 @@ public class AcdmFixtures {
         acdm1.getAirlineCalculations().setTax(BigDecimal.valueOf(10D));
         acdm1.getAgentCalculations().setTax(BigDecimal.valueOf(10D));
         acdm1.setIsoCountryCode("AA");
-        acdm1.setStatisticalCode("INT");
+        acdm1.setStatisticalCode("I");
         acdm1.setTransactionCode(TransactionCode.ADMA);
 
         RelatedTicketDocument relatedTicketDocument1 = new RelatedTicketDocument();
         relatedTicketDocument1.setRelatedTicketDocumentNumber("2201234567890");
-        relatedTicketDocument1.setCheckDigit(6);
         acdm1.getRelatedTicketDocuments().add(relatedTicketDocument1);
 
         RelatedTicketDocument relatedTicketDocument2 = new RelatedTicketDocument();
         relatedTicketDocument2.setRelatedTicketDocumentNumber("2201234567891");
-        relatedTicketDocument2.setCheckDigit(3);
         acdm1.getRelatedTicketDocuments().add(relatedTicketDocument2);
 
         TaxMiscellaneousFee taxMiscellaneousFee = new TaxMiscellaneousFee();
@@ -80,7 +78,7 @@ public class AcdmFixtures {
         acdm2.setDateOfIssue(LocalDate.of(2010, 10, 27));
         acdm2.getAirlineCalculations().setFare(BigDecimal.valueOf(15D));
         acdm2.setIsoCountryCode("AA");
-        acdm2.setStatisticalCode("DOM");
+        acdm2.setStatisticalCode("D");
         acdm2.setTransactionCode(TransactionCode.ACMA);
 
         return Arrays.asList(acdm1, acdm2);

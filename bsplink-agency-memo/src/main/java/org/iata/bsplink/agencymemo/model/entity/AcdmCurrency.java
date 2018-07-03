@@ -17,10 +17,9 @@ public class AcdmCurrency {
     @ApiModelProperty(
             value = "Currency Code, three letter code",
             required = true)
-    @Size(
-            min = 3, max = 3)
+    @Size(min = 3, max = 3)
     @NotNull
-    @Column(name = "currency_code")
+    @Column(name = "currency_code", length = 3)
     private String code;
 
     @ApiModelProperty(

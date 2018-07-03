@@ -21,11 +21,4 @@ public class RelatedTicketDocument {
     @NotNull
     @Column(length = 13)
     private String relatedTicketDocumentNumber;
-
-    @ApiModelProperty(
-            value = "Check-Digit, check digit for Related Ticket/Document Number",
-            allowableValues = "0, 1, 2, 3, 4, 5, 6, 9",
-            required = false)
-    @NotNull
-    private Integer checkDigit = 9;
 }

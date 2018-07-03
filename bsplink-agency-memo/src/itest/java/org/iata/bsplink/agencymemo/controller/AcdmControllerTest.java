@@ -35,6 +35,7 @@ import org.iata.bsplink.agencymemo.service.AgentService;
 import org.iata.bsplink.agencymemo.service.AirlineService;
 import org.iata.bsplink.agencymemo.service.CommentService;
 import org.iata.bsplink.agencymemo.service.ConfigService;
+import org.iata.bsplink.agencymemo.validation.FreeStatValidator;
 import org.iata.bsplink.yadeutils.YadeUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -88,7 +89,7 @@ public class AcdmControllerTest {
     private Acdm acdm;
     private String acdmJson;
     private String countryCodeNotFound = "NX";
-
+    private Config config;
 
     @Before
     public void setUp() throws Exception {
@@ -112,7 +113,7 @@ public class AcdmControllerTest {
         when(airlineService.findAirline(countryCodeNotFound, airline.getAirlineCode()))
                 .thenReturn(null);
 
-        Config config = new Config();
+        config = new Config();
         config.setIsoCountryCode(acdm.getIsoCountryCode());
         config.setMaxNumberOfRelatedDocuments(-1);
 
@@ -151,6 +152,40 @@ public class AcdmControllerTest {
 
         List<Acdm> findAll = acdmRepository.findAll();
         assertTrue(findAll.isEmpty());
+    }
+
+    @Test
+    public void testCreatesAcdmBadRequestIncorrectStatisticalCode() throws Exception {
+        config.setFreeStat(false);
+        acdm.setStatisticalCode("IXT");
+        String json = mapper.writeValueAsString(acdm);
+
+        mockMvc.perform(post(BASE_URI).content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", equalTo("Validation error")))
+                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("statisticalCode")))
+                .andExpect(jsonPath("$.validationErrors[0].message",
+                        equalTo(FreeStatValidator.INCORRECT_VALUE_MSG)));
+        List<Acdm> findAll = acdmRepository.findAll();
+        assertTrue(findAll.isEmpty());
+    }
+
+    @Test
+    public void testCreatesAcdmCorrectStatisticalCode() throws Exception {
+        config.setFreeStat(false);
+        acdm.setStatisticalCode("D");
+        String json = mapper.writeValueAsString(acdm);
+        mockMvc.perform(post(BASE_URI).content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void testCreatesAcdmCorrectStatisticalCodeWithFreeStatEnabled() throws Exception {
+        config.setFreeStat(true);
+        acdm.setStatisticalCode("I 8");
+        String json = mapper.writeValueAsString(acdm);
+        mockMvc.perform(post(BASE_URI).content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -236,7 +271,7 @@ public class AcdmControllerTest {
 
         Acdm acdm = acdmRepository.save(acdms.get(0));
 
-        mockMvc.perform(multipart(BASE_URI + "/files?acdm=" + acdm.getId()).file(multipartFiles[0])
+        mockMvc.perform(multipart(BASE_URI + "/" + acdm.getId() + "/files").file(multipartFiles[0])
                 .file(multipartFiles[1]).file(multipartFiles[2])).andExpect(status().isOk());
     }
 
@@ -246,7 +281,7 @@ public class AcdmControllerTest {
         MockMultipartFile[] multipartFiles =
             {new MockMultipartFile("file", "fileOne.txt", "text/plain", "Text".getBytes())};
 
-        mockMvc.perform(multipart(BASE_URI + "/files?acdm=9666").file(multipartFiles[0]))
+        mockMvc.perform(multipart(BASE_URI + "/9666/files").file(multipartFiles[0]))
                 .andExpect(status().isBadRequest());
     }
 
@@ -261,7 +296,7 @@ public class AcdmControllerTest {
 
         Acdm acdm = acdmRepository.save(acdms.get(0));
 
-        mockMvc.perform(multipart(BASE_URI + "/files?acdm=" + acdm.getId()).file(multipartFiles[0]))
+        mockMvc.perform(multipart(BASE_URI + "/" + acdm.getId() + "/files").file(multipartFiles[0]))
                 .andExpect(status().isInternalServerError());
     }
 
@@ -269,9 +304,9 @@ public class AcdmControllerTest {
     public void testSaveComments() throws Exception {
 
         Acdm acdm = acdmRepository.save(acdms.get(0));
-        String commentJson = mapper.writeValueAsString(getCommentsRequest(acdm).get(0));
+        String commentJson = mapper.writeValueAsString(getCommentsRequest().get(0));
 
-        mockMvc.perform(post(BASE_URI + "/comments").content(commentJson)
+        mockMvc.perform(post(BASE_URI + "/" + acdm.getId() + "/comments").content(commentJson)
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
     }
 
@@ -279,18 +314,18 @@ public class AcdmControllerTest {
     public void testSaveCommentsNoText() throws Exception {
 
         Acdm acdm = acdmRepository.save(acdms.get(0));
-        String commentJson = "{\"acdmId\":" + acdm.getId() + ",\"text\":\null\"}";
+        String commentJson = "{\"text\":\null\"}";
 
-        mockMvc.perform(post(BASE_URI + "/comments").content(commentJson)
+        mockMvc.perform(post(BASE_URI + "/" + acdm.getId() + "/comments").content(commentJson)
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
     }
 
     @Test
     public void testSaveCommentsNoAcdmId() throws Exception {
 
-        String commentJson = "{\"acdmId\":null,\"text\":\"Text one\"}";
+        String commentJson = "{\"text\":\"Text one\"}";
 
-        mockMvc.perform(post(BASE_URI + "/comments").content(commentJson)
+        mockMvc.perform(post(BASE_URI + "/0/comments").content(commentJson)
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
     }
 
@@ -298,9 +333,9 @@ public class AcdmControllerTest {
     @Test
     public void testSaveCommentsNoAcdmFound() throws Exception {
 
-        String commentJson = "{\"acdmId\":98798798897,\"text\":\"Text one\"}";
+        String commentJson = "{\"text\":\"Text one\"}";
 
-        mockMvc.perform(post(BASE_URI + "/comments").content(commentJson)
+        mockMvc.perform(post(BASE_URI + "/98798798897/comments").content(commentJson)
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
     }
 
@@ -308,12 +343,12 @@ public class AcdmControllerTest {
     public void testSaveCommentsThorwsException() throws Exception {
 
         Acdm acdm = acdmRepository.save(acdms.get(0));
-        String commentJson = mapper.writeValueAsString(getCommentsRequest(acdm).get(0));
+        String commentJson = mapper.writeValueAsString(getCommentsRequest().get(0));
 
-        when(commentService.save(getCommentsRequest(acdm).get(0)))
+        when(commentService.save(getCommentsRequest().get(0), acdm.getId()))
                 .thenThrow(new IllegalAccessException());
 
-        mockMvc.perform(post(BASE_URI + "/comments").content(commentJson)
+        mockMvc.perform(post(BASE_URI + "/" + acdm.getId() + "/comments").content(commentJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());
     }
@@ -332,21 +367,18 @@ public class AcdmControllerTest {
 
     /**
      * Returns a list of comments to save.
-     * 
-     * @param acdm Acdm to save.
+     *
      * @return CommentRequest
      */
-    public List<CommentRequest> getCommentsRequest(Acdm acdm) {
+    public List<CommentRequest> getCommentsRequest() {
 
         CommentRequest requestOne = new CommentRequest();
-        requestOne.setAcdmId(acdm.getId());
         requestOne.setText("Text one");
 
         List<CommentRequest> listComments = new ArrayList<>();
         listComments.add(requestOne);
 
         CommentRequest requestTwo = new CommentRequest();
-        requestTwo.setAcdmId(acdm.getId());
         requestTwo.setText("Text one");
         listComments.add(requestTwo);
 
@@ -397,10 +429,4 @@ public class AcdmControllerTest {
         return bskplinkFileRepository.saveAll(fileList);
     }
 
-    @Test
-    public void testValidation() throws Exception {
-        // String json = "[{\r\n \"code\": \"7820010\",\r\n \"name\": null\r\n }]";
-        // mockMvc.perform(post(BASE_URI).content(json).contentType(MediaType.APPLICATION_JSON))
-        // .andExpect(status().isBadRequest());
-    }
 }

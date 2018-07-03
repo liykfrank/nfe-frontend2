@@ -11,7 +11,7 @@ import javax.validation.Payload;
 import org.iata.bsplink.agencymemo.validation.CountryValidator;
 
 /**
- * Checks the Agent.
+ * Checks the Country.
  */
 @Constraint(validatedBy = CountryValidator.class)
 @Target({ElementType.FIELD})

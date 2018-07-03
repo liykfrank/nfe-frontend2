@@ -21,6 +21,7 @@ import org.iata.bsplink.agencymemo.response.SimpleResponse;
 import org.iata.bsplink.agencymemo.service.AcdmService;
 import org.iata.bsplink.agencymemo.service.BsplinkFileService;
 import org.iata.bsplink.agencymemo.service.CommentService;
+import org.iata.bsplink.agencymemo.validation.FreeStatValidator;
 import org.iata.bsplink.commons.rest.exception.ApplicationException;
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController()
 @RequestMapping("/v1/acdms")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*")
 public class AcdmController {
 
     @Autowired
@@ -50,6 +51,9 @@ public class AcdmController {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private FreeStatValidator freeStatValidator;
 
     /**
      * Get an ACDM.
@@ -82,6 +86,8 @@ public class AcdmController {
     public ResponseEntity<Acdm> save(@Valid @RequestBody(required = true) AcdmRequest acdm,
             Errors errors) {
 
+        freeStatValidator.validate(acdm, errors);
+
         if (errors.hasErrors()) {
             throw new ApplicationValidationException(errors);
         }
@@ -111,11 +117,13 @@ public class AcdmController {
      * Save ADM/ACM's files.
      */
     @ApiOperation(value = "Save ADM/ACM's files")
-    @PostMapping(value = "/files", consumes = {"multipart/form-data"})
+    @PostMapping(value = "/{id}/files", consumes = {"multipart/form-data"})
     @ApiResponses(value = {@ApiResponse(code = 207,
             message = "An array with an HTTP status code per file representing the upload "
                     + "result.")})
-    public ResponseEntity<List<SimpleResponse>> saveFiles(@RequestParam("acdm") Acdm acdm,
+    @ApiImplicitParam(name = "id", value = "The identificator of the Acdm", required = true,
+            type = "Long")
+    public ResponseEntity<List<SimpleResponse>> saveFiles(@PathVariable("id") Acdm acdm,
             @RequestParam("file") List<MultipartFile> files) {
 
         List<SimpleResponse> responses = new ArrayList<>();
@@ -136,10 +144,10 @@ public class AcdmController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responses);
         }
     }
-    
+
     /**
      * Returns all comments for Acdm.
-     * 
+     *
      * @param acdm The acdm identificador.
      * @return Comment
      */
@@ -158,28 +166,32 @@ public class AcdmController {
 
     /**
      * Save comments for Acdm.
-     * 
+     *
      * @param commentRequest Request to save.
      * @return Comment
      */
     @ApiOperation(value = "Save ADM/ACM's comments")
-    @PostMapping(value = "/comments")
-    @ApiImplicitParams({@ApiImplicitParam(name = "body", value = "The comment to save.",
-            paramType = "body", required = true, dataType = "CommentRequest")})
+    @PostMapping(value = "/{id}/comments")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "body", value = "The comment to save.", paramType = "body",
+                    required = true, dataType = "CommentRequest"),
+            @ApiImplicitParam(name = "id", value = "The identificator of the Acdm", required = true,
+                    type = "Long")})
     public ResponseEntity<Comment> saveComment(
-            @Valid @RequestBody(required = true) CommentRequest commentRequest) {       
-        
-        if (!acdmService.findById(commentRequest.getAcdmId()).isPresent()) {
+            @Valid @RequestBody(required = true) CommentRequest commentRequest,
+            @PathVariable(value = "id", required = true) Long id) {
+
+        if (!acdmService.findById(id).isPresent()) {
             return ResponseEntity.badRequest().build();
         }
         try {
 
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(commentService.save(commentRequest));
+                    .body(commentService.save(commentRequest, id));
 
         } catch (Exception e) {
             throw new ApplicationException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }   
+    }
 
 }

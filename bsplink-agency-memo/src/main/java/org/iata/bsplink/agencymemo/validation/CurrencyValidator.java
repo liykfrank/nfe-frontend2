@@ -10,10 +10,10 @@ import org.iata.bsplink.agencymemo.dto.AcdmRequest;
 import org.iata.bsplink.agencymemo.fake.Country;
 import org.iata.bsplink.agencymemo.fake.Currency;
 import org.iata.bsplink.agencymemo.fake.IsocCurrencies;
-import org.iata.bsplink.agencymemo.validation.constraints.CountryConstraint;
+import org.iata.bsplink.agencymemo.validation.constraints.CurrencyConstraint;
 
 
-public class CurrencyValidator implements ConstraintValidator<CountryConstraint, AcdmRequest> {
+public class CurrencyValidator implements ConstraintValidator<CurrencyConstraint, AcdmRequest> {
 
     public static final String NOT_FOUND_MSG = "The currency was not found.";
     public static final String EXPIRED_MSG = "The currency has expired.";

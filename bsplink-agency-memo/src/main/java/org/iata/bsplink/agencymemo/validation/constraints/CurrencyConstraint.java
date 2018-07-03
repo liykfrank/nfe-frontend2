@@ -11,7 +11,7 @@ import javax.validation.Payload;
 import org.iata.bsplink.agencymemo.validation.CurrencyValidator;
 
 /**
- * Checks the Agent.
+ * Checks the Currency.
  */
 @Constraint(validatedBy = CurrencyValidator.class)
 @Target({ElementType.TYPE})

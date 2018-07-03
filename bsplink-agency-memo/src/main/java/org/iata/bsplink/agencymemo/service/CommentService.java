@@ -28,10 +28,11 @@ public class CommentService {
      * @throws IllegalAccessException Cannot access to property.
      * @throws InvocationTargetException Cannot access to target.
      */
-    public Comment save(CommentRequest commentRequest)
+    public Comment save(CommentRequest commentRequest, Long acdmId)
             throws IllegalAccessException, InvocationTargetException {
 
         Comment comment = new Comment();
+        comment.setAcdmId(acdmId);
         comment.setInsertDateTime(Instant.now());
         BeanUtils.copyProperties(comment, commentRequest);
 

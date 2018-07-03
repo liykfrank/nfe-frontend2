@@ -32,37 +32,26 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
     private CalculationsValidator validator;
     private AcdmRequest acdm;
 
-    private String isoc1;
-    private String isoc2;
-    private Config config1;
-    private Config config2;
+    private String isoc;
+    private Config config;
 
     @Override
     @Before
     public void setUp() {
         super.setUp();
-        isoc1 = "AA";
-        isoc2 = "BB";
+        isoc = "AA";
 
-        config1 = new Config();
-        config1.setIsoCountryCode(isoc1);
-        config1.setTaxOnCommissionEnabled(true);
-        config1.setTaxOnCommissionSign(1);
-        config1.setNridAndSpamEnabled(true);
-
-        config2 = new Config();
-        config2.setIsoCountryCode(isoc2);
-        config2.setTaxOnCommissionEnabled(true);
-        config2.setTaxOnCommissionSign(2);
-        config2.setNridAndSpamEnabled(true);
-
+        config = new Config();
+        config.setIsoCountryCode(isoc);
+        config.setTaxOnCommissionEnabled(true);
+        config.setTaxOnCommissionSign(1);
+        config.setNridAndSpamEnabled(true);
 
         configService = mock(ConfigService.class);
-        when(configService.find(isoc1)).thenReturn(config1);
-        when(configService.find(isoc2)).thenReturn(config2);
+        when(configService.find(isoc)).thenReturn(config);
 
         acdm = new AcdmRequest();
-        acdm.setIsoCountryCode(isoc1);
+        acdm.setIsoCountryCode(isoc);
         acdm.setTransactionCode(TransactionCode.ADMA);
         acdm.setConcernsIndicator(ConcernsIndicator.I);
         validator = new CalculationsValidator(configService);
@@ -115,7 +104,7 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
 
     @Test
     public void testIsValidNetRemitEnabled() {
-        config1.setNridAndSpamEnabled(true);
+        config.setNridAndSpamEnabled(true);
         acdm.setNetReporting(true);
         setAirlineSpam();
         assertTrue(validator.isValid(acdm, context));
@@ -123,7 +112,7 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
 
     @Test
     public void testIsNotValidNetRemitDisabled() {
-        config1.setNridAndSpamEnabled(false);
+        config.setNridAndSpamEnabled(false);
         acdm.setNetReporting(true);
         setAirlineSpam();
         assertFalse(validator.isValid(acdm, context));
@@ -132,7 +121,7 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
 
     @Test
     public void testIsNotValidNetRemitDisabledWithAirlineSpam() {
-        config1.setNridAndSpamEnabled(false);
+        config.setNridAndSpamEnabled(false);
         acdm.setNetReporting(false);
         setAirlineSpam();
         assertFalse(validator.isValid(acdm, context));
@@ -142,7 +131,7 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
 
     @Test
     public void testIsNotValidNetRemitDisabledWithAgentSpam() {
-        config1.setNridAndSpamEnabled(false);
+        config.setNridAndSpamEnabled(false);
         setAgentSpam();
         assertFalse(validator.isValid(acdm, context));
         verifyConstraintViolation("agentCalculations.spam",
@@ -151,7 +140,7 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
 
     @Test
     public void testIsNotValidNetRemitEnabledNoNetReportingAirline() {
-        config1.setNridAndSpamEnabled(true);
+        config.setNridAndSpamEnabled(true);
         acdm.setNetReporting(false);
         setAirlineSpam();
         assertFalse(validator.isValid(acdm, context));
@@ -161,7 +150,7 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
 
     @Test
     public void testIsNotValidNetRemitEnabledNoNetReportingAgent() {
-        config1.setNridAndSpamEnabled(true);
+        config.setNridAndSpamEnabled(true);
         setAgentSpam();
         assertFalse(validator.isValid(acdm, context));
         verifyConstraintViolation("agentCalculations.spam",
@@ -185,7 +174,7 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
 
     @Test
     public void testIsNotValidTocaDisabledAirline() {
-        config1.setTaxOnCommissionEnabled(false);
+        config.setTaxOnCommissionEnabled(false);
         setAirlineToca();
         assertFalse(validator.isValid(acdm, context));
         verifyConstraintViolation("airlineCalculations.taxOnCommission",
@@ -194,7 +183,7 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
 
     @Test
     public void testIsNotValidTocaDisabledAgent() {
-        config1.setTaxOnCommissionEnabled(false);
+        config.setTaxOnCommissionEnabled(false);
         setAgentToca();
         assertFalse(validator.isValid(acdm, context));
         verifyConstraintViolation("agentCalculations.taxOnCommission",
@@ -203,7 +192,7 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
 
     @Test
     public void testIsNotValidTocaEnabledAirline() {
-        config1.setTaxOnCommissionEnabled(true);
+        config.setTaxOnCommissionEnabled(true);
         setAirlineToca();
         acdm.setTaxOnCommissionType(null);
         assertFalse(validator.isValid(acdm, context));
@@ -213,7 +202,7 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
 
     @Test
     public void testIsNotValidTocaEnabledAgent() {
-        config1.setTaxOnCommissionEnabled(true);
+        config.setTaxOnCommissionEnabled(true);
         setAgentToca();
         acdm.setTaxOnCommissionType("");
         assertFalse(validator.isValid(acdm, context));
@@ -223,7 +212,7 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
 
     @Test
     public void testIsNotValidTctpAirline() {
-        config1.setTaxOnCommissionEnabled(true);
+        config.setTaxOnCommissionEnabled(true);
         acdm.setTaxOnCommissionType("TCTP");
         assertFalse(validator.isValid(acdm, context));
         verifyConstraintViolation("taxOnCommissionType",
@@ -232,7 +221,7 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
 
     @Test
     public void testIsNotValidTctpAgent() {
-        config1.setTaxOnCommissionEnabled(true);
+        config.setTaxOnCommissionEnabled(true);
         acdm.setTaxOnCommissionType("TCTP");
         assertFalse(validator.isValid(acdm, context));
         verifyConstraintViolation("taxOnCommissionType",
@@ -289,16 +278,14 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
                 CalculationsValidator.ACDMD_NO_AMOUNT_PERMITTED_MSG);
     }
 
-    @Test
-    @Parameters
-    public void testIsValidTotal(int taxOnCommissionSign, ConcernsIndicator concernsIndicator,
+    private void setAcdmValues(int taxOnCommissionSign, ConcernsIndicator concernsIndicator,
             TransactionCode transactionCode,  int amountPaidByCustomer,
             int airlineFare, int agentFare, int airlineTax, int agentTax,
             int airlineCommission, int agentCommission, int airlineSpam, int agentSpam,
-            int airlineTaxOnCommission, int agentTaxOnCommission) throws Exception {
-        config1.setTaxOnCommissionSign(taxOnCommissionSign);
-        config1.setTaxOnCommissionEnabled(true);
-        config1.setNridAndSpamEnabled(true);
+            int airlineTaxOnCommission, int agentTaxOnCommission, boolean regularized) {
+        config.setTaxOnCommissionSign(taxOnCommissionSign);
+        config.setTaxOnCommissionEnabled(true);
+        config.setNridAndSpamEnabled(true);
         acdm.setConcernsIndicator(concernsIndicator);
         acdm.setTransactionCode(transactionCode);
         acdm.setAmountPaidByCustomer(BigDecimal.valueOf(amountPaidByCustomer));
@@ -320,9 +307,22 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
         tax.setAgentAmount(BigDecimal.valueOf(agentTax));
         acdm.getTaxMiscellaneousFees().add(tax);
         acdm.setNetReporting(airlineSpam + agentSpam > 0);
+        acdm.setRegularized(regularized);
         if (airlineTaxOnCommission + agentTaxOnCommission > 0) {
             acdm.setTaxOnCommissionType("TCPT");
         }
+    }
+
+    @Test
+    @Parameters
+    public void testIsValidTotal(int taxOnCommissionSign, ConcernsIndicator concernsIndicator,
+            TransactionCode transactionCode,  int amountPaidByCustomer,
+            int airlineFare, int agentFare, int airlineTax, int agentTax,
+            int airlineCommission, int agentCommission, int airlineSpam, int agentSpam,
+            int airlineTaxOnCommission, int agentTaxOnCommission) throws Exception {
+        setAcdmValues(taxOnCommissionSign, concernsIndicator, transactionCode, amountPaidByCustomer,
+                airlineFare, agentFare, airlineTax, agentTax, airlineCommission, agentCommission,
+                airlineSpam, agentSpam, airlineTaxOnCommission, agentTaxOnCommission, false);
         assertTrue(validator.isValid(acdm, context));
     }
 
@@ -337,36 +337,110 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
             int airlineCommission, int agentCommission, int airlineSpam, int agentSpam,
             int airlineTaxOnCommission, int agentTaxOnCommission, String message)
                     throws Exception {
-        config1.setTaxOnCommissionSign(taxOnCommissionSign);
-        config1.setTaxOnCommissionEnabled(true);
-        config1.setNridAndSpamEnabled(true);
-        acdm.setConcernsIndicator(concernsIndicator);
-        acdm.setTransactionCode(transactionCode);
-        acdm.setAmountPaidByCustomer(BigDecimal.valueOf(amountPaidByCustomer));
-        CalculationsRequest air = acdm.getAirlineCalculations();
-        air.setCommission(BigDecimal.valueOf(airlineCommission));
-        air.setFare(BigDecimal.valueOf(airlineFare));
-        air.setSpam(BigDecimal.valueOf(airlineSpam));
-        air.setTax(BigDecimal.valueOf(airlineTax));
-        air.setTaxOnCommission(BigDecimal.valueOf(airlineTaxOnCommission));
-        CalculationsRequest agn = acdm.getAgentCalculations();
-        agn.setCommission(BigDecimal.valueOf(agentCommission));
-        agn.setFare(BigDecimal.valueOf(agentFare));
-        agn.setSpam(BigDecimal.valueOf(agentSpam));
-        agn.setTax(BigDecimal.valueOf(agentTax));
-        agn.setTaxOnCommission(BigDecimal.valueOf(agentTaxOnCommission));
-        TaxMiscellaneousFeeRequest tax = new TaxMiscellaneousFeeRequest();
-        tax.setType("TX");
-        tax.setAirlineAmount(BigDecimal.valueOf(airlineTax));
-        tax.setAgentAmount(BigDecimal.valueOf(agentTax));
-        acdm.getTaxMiscellaneousFees().add(tax);
-        acdm.setNetReporting(airlineSpam + agentSpam > 0);
-        if (airlineTaxOnCommission + agentTaxOnCommission > 0) {
-            acdm.setTaxOnCommissionType("TCPT");
-        }
+        setAcdmValues(taxOnCommissionSign, concernsIndicator, transactionCode, amountPaidByCustomer,
+                airlineFare, agentFare, airlineTax, agentTax, airlineCommission, agentCommission,
+                airlineSpam, agentSpam, airlineTaxOnCommission, agentTaxOnCommission, false);
         assertFalse(validator.isValid(acdm, context));
         verifyConstraintViolation("amountPaidByCustomer", message);
     }
+
+    /**
+     * Test for valid regularized.
+     */
+    @Test
+    @Parameters
+    public void testIsValidRegularized(int taxOnCommissionSign,
+            ConcernsIndicator concernsIndicator, TransactionCode transactionCode,
+            int amountPaidByCustomer, int airlineFare, int agentFare, int airlineTax, int agentTax,
+            int airlineCommission, int agentCommission, int airlineSpam, int agentSpam,
+            int airlineTaxOnCommission, int agentTaxOnCommission, boolean regularized,
+            String message)
+                    throws Exception {
+        setAcdmValues(taxOnCommissionSign, concernsIndicator, transactionCode, amountPaidByCustomer,
+                airlineFare, agentFare, airlineTax, agentTax, airlineCommission, agentCommission,
+                airlineSpam, agentSpam, airlineTaxOnCommission, agentTaxOnCommission, !regularized);
+        assertTrue(validator.isValid(acdm, context));
+    }
+
+    /**
+     * Test for not valid regularized.
+     */
+    @Test
+    @Parameters
+    public void testIsNotValidRegularized(int taxOnCommissionSign,
+            ConcernsIndicator concernsIndicator, TransactionCode transactionCode,
+            int amountPaidByCustomer, int airlineFare, int agentFare, int airlineTax, int agentTax,
+            int airlineCommission, int agentCommission, int airlineSpam, int agentSpam,
+            int airlineTaxOnCommission, int agentTaxOnCommission, boolean regularized,
+            String message)
+                    throws Exception {
+        setAcdmValues(taxOnCommissionSign, concernsIndicator, transactionCode, amountPaidByCustomer,
+                airlineFare, agentFare, airlineTax, agentTax, airlineCommission, agentCommission,
+                airlineSpam, agentSpam, airlineTaxOnCommission, agentTaxOnCommission, regularized);
+        assertFalse(validator.isValid(acdm, context));
+        verifyConstraintViolation("regularized", message);
+    }
+
+    /**
+     * Test for not tax valid regularized.
+     */
+    @Test
+    public void testIsNotValidNullTaxRegularized()
+                    throws Exception {
+        setAcdmValues(1, ConcernsIndicator.I, TransactionCode.ADMA,
+            800, 1000, 200, 0, 0, 0, 0, 0, 0, 0, 0, true);
+        acdm.setTaxMiscellaneousFees(null);
+        assertFalse(validator.isValid(acdm, context));
+        verifyConstraintViolation("regularized", CalculationsValidator.NO_REGULARIZED_MSG);
+    }
+
+    /**
+     * Test for tax sum.
+     */
+    @Test
+    public void testIsNotValidAirlineSumTax()
+                    throws Exception {
+        setAcdmValues(1, ConcernsIndicator.I, TransactionCode.ADMA,
+            900, 1000, 200, 100, 0, 0, 0, 0, 0, 0, 0, false);
+        TaxMiscellaneousFeeRequest tax = new TaxMiscellaneousFeeRequest();
+        tax.setType("XY");
+        tax.setAirlineAmount(BigDecimal.valueOf(1));
+        acdm.getTaxMiscellaneousFees().add(tax);
+        assertFalse(validator.isValid(acdm, context));
+        verifyConstraintViolation("airlineCalculations.tax",
+                CalculationsValidator.INCORRECT_TAX_SUM_MSG);
+    }
+
+    /**
+     * Test for tax sum.
+     */
+    @Test
+    public void testIsNotValidAgentSumTax()
+                    throws Exception {
+        setAcdmValues(1, ConcernsIndicator.I, TransactionCode.ADMA,
+            900, 1000, 200, 110, 10, 0, 0, 0, 0, 0, 0, true);
+        TaxMiscellaneousFeeRequest tax = new TaxMiscellaneousFeeRequest();
+        tax.setType("XY");
+        tax.setAgentAmount(BigDecimal.valueOf(1));
+        acdm.getTaxMiscellaneousFees().add(tax);
+        assertFalse(validator.isValid(acdm, context));
+        verifyConstraintViolation("agentCalculations.tax",
+                CalculationsValidator.INCORRECT_TAX_SUM_MSG);
+    }
+
+
+    /**
+     * Test for toca.
+     */
+    @Test
+    public void testIsValidTocaIfTocaDisabled()
+                    throws Exception {
+        setAcdmValues(1, ConcernsIndicator.I, TransactionCode.ADMA,
+            900, 1000, 200, 110, 10, 0, 0, 0, 0, 0, 0, false);
+        config.setTaxOnCommissionEnabled(false);
+        assertTrue(validator.isValid(acdm, context));
+    }
+
 
     /**
      * Test Parameters.
@@ -489,5 +563,125 @@ public class CalculationsValidatorTest extends CustomConstraintValidatorTestCase
                 200, 20, 218, 2, 12, 8, 18, 1, 2, 0, 1,
                 CalculationsValidator.INCORRECT_TOTAL_ACM_RFND_MSG }
         };
+    }
+
+    /**
+     * Test Parameters:
+     * taxOnCommissionSign, concernsIndicator, transactionCode, amountPaidByCustomer
+     * airlineFare, agentFare, airlineTax, agentTax, airlineCommission, agentCommission,
+     * airlineSpam, agentSpam, airlineTaxOnCommission, agentTaxOnCommission, regularized,
+     * message.
+     */
+    public Object[][] parametersForTestIsNotValidRegularized() {
+        return new Object[][] {
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                800, 100, 200, 1000, 100, 0, 0, 0, 0, 0, 0, false,
+                CalculationsValidator.REGULARIZED_MSG },
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                710, 1000, 200, 10, 100, 0, 0, 0, 0, 0, 0, false,
+                CalculationsValidator.REGULARIZED_MSG },
+            { "1", ConcernsIndicator.R, TransactionCode.ACMA,
+                800, 100, 200, 1000, 100, 0, 0, 0, 0, 0, 0, false,
+                CalculationsValidator.REGULARIZED_MSG },
+            { "1", ConcernsIndicator.R, TransactionCode.ACMA,
+                710, 1000, 200, 10, 100, 0, 0, 0, 0, 0, 0, false,
+                CalculationsValidator.REGULARIZED_MSG },
+
+            { "1", ConcernsIndicator.R, TransactionCode.ADMA,
+                800, 200, 100, 100, 1000, 0, 0, 0, 0, 0, 0, false,
+                CalculationsValidator.REGULARIZED_MSG },
+            { "1", ConcernsIndicator.R, TransactionCode.ADMA,
+                710, 200, 1000, 100, 10, 0, 0, 0, 0, 0, 0, false,
+                CalculationsValidator.REGULARIZED_MSG },
+            { "1", ConcernsIndicator.I, TransactionCode.ACMA,
+                800, 200, 100, 100, 1000, 0, 0, 0, 0, 0, 0, false,
+                CalculationsValidator.REGULARIZED_MSG },
+            { "1", ConcernsIndicator.I, TransactionCode.ACMA,
+                710, 200, 1000, 100, 10, 0, 0, 0, 0, 0, 0, false,
+                CalculationsValidator.REGULARIZED_MSG },
+
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                892, 1000, 200, 100, 10, 3, 5, 0, 0, 0, 0, true,
+                CalculationsValidator.NO_REGULARIZED_MSG },
+
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                888, 1000, 200, 100, 10, 5, 3, 0, 0, 0, 0, true,
+                CalculationsValidator.NO_REGULARIZED_MSG },
+
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                891, 1000, 200, 100, 10, 0, 0, 2, 3, 0, 0, false,
+                CalculationsValidator.REGULARIZED_MSG },
+
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                5, 0, 0, 0, 0, 5, 10, 0, 0, 0, 0, true,
+                CalculationsValidator.NO_REGULARIZED_MSG },
+
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                9, 0, 0, 0, 0, 0, 0, 0, 0, 10, 1, true,
+                CalculationsValidator.NO_REGULARIZED_MSG },
+
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                100, 0, 0, 0, 0, 9, 100, 0, 0, 10, 1, false,
+                CalculationsValidator.REGULARIZED_MSG },
+
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                100, 0, 0, 0, 0, 0, 0, 9, 100, 10, 1, false,
+                CalculationsValidator.REGULARIZED_MSG },
+
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                82, 0, 0, 0, 0, 0, 0, 9, 100, 1, 10, true,
+                CalculationsValidator.NO_REGULARIZED_MSG },
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                89, 0, 0, 0, 0, 10, 0, 1, 100, 0, 0, false,
+                CalculationsValidator.REGULARIZED_MSG },
+
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                9, 0, 0, 0, 0, 0, 10, 2, 1, 0, 0, false,
+                CalculationsValidator.REGULARIZED_MSG },
+
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                99, 0, 0, 0, 0, 0, 0, 0, 0, 100, 1, true,
+                CalculationsValidator.NO_REGULARIZED_MSG },
+
+            { "-1", ConcernsIndicator.I, TransactionCode.ADMA,
+                11, 0, 0, 0, 0, 0, 0, 0, 0, 10, 21, true,
+                CalculationsValidator.NO_REGULARIZED_MSG },
+
+            { "-1", ConcernsIndicator.I, TransactionCode.ADMA,
+                101, 100, 0, 0, 0, 0, 0, 0, 0, 1, 2, false,
+                CalculationsValidator.REGULARIZED_MSG },
+
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                99, 100, 0, 0, 0, 0, 0, 0, 0, 1, 2, false,
+                CalculationsValidator.REGULARIZED_MSG },
+
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                89, 100, 0, 0, 0, 10, 0, 0, 0, 1, 2, false,
+                CalculationsValidator.REGULARIZED_MSG },
+
+            { "-1", ConcernsIndicator.I, TransactionCode.ADMA,
+                97, 100, 0, 0, 0, 2, 7, 0, 0, 10, 2, false,
+                CalculationsValidator.REGULARIZED_MSG },
+
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                109, 100, 0, 0, 0, 2, 10, 0, 0, 2, 1, true,
+                CalculationsValidator.NO_REGULARIZED_MSG },
+
+            { "1", ConcernsIndicator.I, TransactionCode.ADMA,
+                107, 100, 0, 0, 0, 2, 10, 0, 0, 1, 2, false,
+                CalculationsValidator.REGULARIZED_MSG }
+
+        };
+    }
+
+    /**
+     * Test Parameters:
+     * taxOnCommissionSign, concernsIndicator, transactionCode, amountPaidByCustomer
+     * airlineFare, agentFare, airlineTax, agentTax, airlineCommission, agentCommission,
+     * airlineSpam, agentSpam, airlineTaxOnCommission, agentTaxOnCommission, not regularized,
+     * message.
+     */
+    public Object[][] parametersForTestIsValidRegularized() {
+        return parametersForTestIsNotValidRegularized();
     }
 }

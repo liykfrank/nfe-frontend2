@@ -10,10 +10,10 @@ import javax.validation.ConstraintValidatorContext;
 import org.iata.bsplink.agencymemo.dto.AcdmRequest;
 import org.iata.bsplink.agencymemo.dto.CalculationsRequest;
 import org.iata.bsplink.agencymemo.dto.TaxMiscellaneousFeeRequest;
-import org.iata.bsplink.agencymemo.validation.constraints.CountryConstraint;
+import org.iata.bsplink.agencymemo.validation.constraints.DecimalsConstraint;
 
 
-public class DecimalsValidator implements ConstraintValidator<CountryConstraint, AcdmRequest> {
+public class DecimalsValidator implements ConstraintValidator<DecimalsConstraint, AcdmRequest> {
 
     public static final String DECIMALS_MSG =
             "Incorrect number of amount's decimals for the specified currency.";

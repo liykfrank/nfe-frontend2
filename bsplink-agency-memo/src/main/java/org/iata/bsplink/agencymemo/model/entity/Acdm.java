@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -84,6 +85,7 @@ public class Acdm {
             required = true)
     @Enumerated(EnumType.STRING)
     @NotNull
+    @Column(length = 4)
     private TransactionCode transactionCode;
 
     @ApiModelProperty(
@@ -136,6 +138,7 @@ public class Acdm {
             required = false)
     @NotNull
     @PositiveOrZero
+    @Column(precision = 20, scale = 9)
     private BigDecimal amountPaidByCustomer = BigDecimal.ZERO;
 
     @ApiModelProperty(
@@ -149,19 +152,20 @@ public class Acdm {
             value = "Airline Calculations, airline amount data",
             required = true)
     @NotNull
-    private AirlineCalculations airlineCalculations = new AirlineCalculations();
+    private Calculations airlineCalculations = new Calculations();
 
     @OneToOne(cascade = CascadeType.ALL)
     @ApiModelProperty(
             value = "Agent Calculations, agent amount data",
             required = true)
     @NotNull
-    private AgentCalculations agentCalculations = new AgentCalculations();
+    private Calculations agentCalculations = new Calculations();
 
     @ApiModelProperty(
             value = "Concerns Indicator",
             required = false)
     @Enumerated(EnumType.STRING)
+    @Column(length = 1)
     private ConcernsIndicator concernsIndicator;
 
     @ApiModelProperty(
@@ -211,7 +215,7 @@ public class Acdm {
     @JoinColumn(name = "acdm_id")
     @ApiModelProperty(value = "Attached files", required = false)
     private List<BsplinkFile> attachedFiles;
-    
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "acdm_id")
     @ApiModelProperty(value = "Comments", required = false)

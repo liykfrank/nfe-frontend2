@@ -3,25 +3,29 @@ package org.iata.bsplink.agencymemo.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModelProperty;
+
 import java.time.Instant;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import lombok.Data;
+
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.Setter;
 
-
-@Data
+@Getter
+@Setter
 @Entity
 @Embeddable
 @NoArgsConstructor
 @Table(name = "bsplink_file")
 public class BsplinkFile {
-    
+
     @Id
     @GeneratedValue
     @ApiModelProperty(value = "Identificator")

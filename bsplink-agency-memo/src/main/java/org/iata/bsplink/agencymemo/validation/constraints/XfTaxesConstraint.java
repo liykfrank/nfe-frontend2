@@ -11,7 +11,7 @@ import javax.validation.Payload;
 import org.iata.bsplink.agencymemo.validation.XfTaxesValidator;
 
 /**
- * Checks the Agent.
+ * Checks the XF Taxes.
  */
 @Constraint(validatedBy = XfTaxesValidator.class)
 @Target({ElementType.TYPE})

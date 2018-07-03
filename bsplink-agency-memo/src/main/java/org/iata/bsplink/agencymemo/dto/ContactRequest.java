@@ -6,6 +6,7 @@ import static org.iata.bsplink.agencymemo.validation.ValidationMessages.NON_NULL
 
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -32,5 +33,6 @@ public class ContactRequest {
     @Size(max = 100, message = INCORRECT_SIZE + "max 100")
     @NotNull(message = NON_NULL_MESSAGE)
     @Pattern(regexp = PATTERN, message = INCORRECT_FORMAT)
+    @Email
     private String email;
 }

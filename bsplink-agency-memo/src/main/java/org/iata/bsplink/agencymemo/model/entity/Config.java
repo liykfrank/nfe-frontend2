@@ -10,6 +10,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +29,7 @@ public class Config {
     @Id
     @NonNull
     @Column(nullable = false)
+    @Size(min = 2, max = 2)
     private String isoCountryCode;
 
     @ApiModelProperty(
@@ -90,10 +93,16 @@ public class Config {
             value = "By default STAT for ADMs/ACMs is defined as International or Domestic.")
     @Enumerated(EnumType.STRING)
     @NotNull(message = NON_NULL_MESSAGE)
+    @Column(length = 3)
     private Stat defaultStat = Stat.INT;
 
     @ApiModelProperty(
             value = "Free STAT value (any STAT value is accepted)")
     @NotNull(message = NON_NULL_MESSAGE)
     private Boolean freeStat = false;
+
+    @ApiModelProperty(value = "Default Currency")
+    @Pattern(regexp = "^[A-Z]{3}$")
+    @Size(min = 3, max = 3)
+    private String defaultCurrency;
 }

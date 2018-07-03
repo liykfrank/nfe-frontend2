@@ -10,7 +10,7 @@ jacocoTestReport {
         html.enabled = true
     }
 
-    executionData = files("${buildDir}/jacoco/itest.exec")
+    executionData += files("${buildDir}/jacoco/itest.exec")
 }
 
 jacocoTestCoverageVerification {
@@ -18,7 +18,7 @@ jacocoTestCoverageVerification {
 	//force Jacoco test coverage task to execute first
 	dependsOn jacocoTestReport
 
-    executionData = jacocoTestReport.executionData
+    executionData += jacocoTestReport.executionData
 }
 
 // to run Jacoco test coverage during the build (and fail when appropriate)

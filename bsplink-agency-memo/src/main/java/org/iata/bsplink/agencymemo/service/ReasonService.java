@@ -27,6 +27,11 @@ public class ReasonService {
         return reasonRepository.findAll();
     }
 
+    public List<Reason> findByIsoCountryCode(String isoCountryCode) {
+
+        return reasonRepository.findByIsoCountryCode(isoCountryCode);
+    }
+
     public void delete(Reason reason) {
 
         reasonRepository.delete(reason);

@@ -56,6 +56,16 @@ public class ReasonServiceTest {
     }
 
     @Test
+    public void testFindByIsoCountryCode() {
+        String isoc = "ES";
+        List<Reason> reasons = new ArrayList<>();
+        when(reasonRepository.findByIsoCountryCode(isoc)).thenReturn(reasons);
+
+        assertThat(reasonService.findByIsoCountryCode(isoc), sameInstance(reasons));
+        verify(reasonRepository).findByIsoCountryCode(isoc);
+    }
+
+    @Test
     public void testDelete() {
 
         reasonService.delete(reason);

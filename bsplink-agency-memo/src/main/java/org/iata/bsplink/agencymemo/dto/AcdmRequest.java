@@ -75,7 +75,7 @@ public class AcdmRequest {
             required = false)
     @Size(max = 3, message = INCORRECT_SIZE + "max 3")
     @Pattern(
-            regexp = "[ID][ A-Z]{2}",
+            regexp = "^( +)|([ID][ A-Z0-9]{0,2})?$",
             message = INCORRECT_FORMAT)
     private String statisticalCode;
 
