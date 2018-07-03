@@ -186,7 +186,7 @@ public class BsplinkFileControllerDownloadTest {
     @Test
     public void testDownloadZipFileThrowsException() throws Exception {
 
-        mockMvc.perform(get("/v1/files/zip?id=15")).andExpect(status().isInternalServerError());
+        mockMvc.perform(get("/v1/files/zip?id=15666")).andExpect(status().isNotFound());
 
     }
 

@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import lombok.Data;
@@ -184,12 +185,15 @@ public class BsplinkFileUtils {
 
                 IOUtils.copy(fin, zout);
 
-                zout.closeEntry();                      
+                zout.closeEntry();
 
             } catch (IOException e) {
                 log.error("Error creating FileInputStream " + e.getMessage());
                 throw e;
             } finally {
+                if (null != response.getOutputStream()) {
+                    zout.closeEntry();
+                }
                 Files.delete(file.toPath());
             }
         }
@@ -218,9 +222,10 @@ public class BsplinkFileUtils {
 
         File file = new File(localDownloadedFilesDirectory + File.separator + bsFile.getName());
 
-        try (FileInputStream input = new FileInputStream(file)) {
+        try (FileInputStream input = new FileInputStream(file);
+                ServletOutputStream sos = response.getOutputStream()) {
 
-            FileCopyUtils.copy(input, response.getOutputStream());
+            FileCopyUtils.copy(input, sos);
 
             Files.delete(file.toPath());
 
