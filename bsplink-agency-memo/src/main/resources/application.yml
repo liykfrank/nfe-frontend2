@@ -12,9 +12,9 @@ spring:
 
 feign:
   agents:
-    url: http://localhost:8082
+    url: ${SERVICE_MASTERDATA_AGENT_URL}
   airlines:
-    url: http://localhost:8083
+    url: ${SERVICE_MASTERDATA_AIRLINE_URL}
     
     
 app:

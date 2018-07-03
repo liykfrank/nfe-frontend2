@@ -2,6 +2,8 @@
 
 env.sourceBranch = env.gitlabSourceBranch ?: 'develop'
 env.gitlabRepositoryUrl = env.gitlabSourceRepoHttpUrl ?: 'http://a2lgit1/bsplink/bsplink-agency-memo.git'
+env.SERVICE_MASTERDATA_AGENT_URL='http://localhost:8082'
+env.SERVICE_MASTERDATA_AIRLINE_URL='http://localhost:8083'
 
 echo "[INFO] Source Branch: ${env.sourceBranch}"
 echo "[INFO] Source Repository URL: ${env.gitlabRepositoryUrl}"
