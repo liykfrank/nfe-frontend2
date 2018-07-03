@@ -80,6 +80,7 @@ pipeline {
             steps {
             	// this shell script is located in <JENKINS_HOME>/bin folder and the PATH is configured through jenkins
                 sh 'push_to_iata.bash $WORKSPACE $JOB_BASE_NAME'
+                sh 'push_to_iata2.bash $WORKSPACE $JOB_BASE_NAME'
 			}
         }
 
