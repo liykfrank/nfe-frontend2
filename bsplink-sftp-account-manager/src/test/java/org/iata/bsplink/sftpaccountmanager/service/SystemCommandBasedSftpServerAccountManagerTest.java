@@ -2,7 +2,7 @@ package org.iata.bsplink.sftpaccountmanager.service;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
-import static org.iata.bsplink.sftpaccountmanager.service.SftpServerAccountManagerError.INCORRECT_PUBLIC_KEY_EXIT;
+import static org.iata.bsplink.sftpaccountmanager.service.SftpServerAccountManager.INCORRECT_PUBLIC_KEY_EXIT;
 import static org.iata.bsplink.sftpaccountmanager.system.command.AccountManagementCommandBuilder.SCRIPT_PUBLIC_KEY_ADD_UPDATE;
 import static org.iata.bsplink.sftpaccountmanager.system.command.AccountManagementCommandBuilder.SCRIPT_PUBLIC_KEY_CHECK;
 import static org.iata.bsplink.sftpaccountmanager.system.command.AccountManagementCommandBuilder.SCRIPT_PUBLIC_KEY_DELETE;
