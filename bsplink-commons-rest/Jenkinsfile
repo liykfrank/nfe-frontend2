@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-env.sourceBranch = env.gitlabSourceBranch ?: 'master'
+env.sourceBranch = env.gitlabSourceBranch ?: 'develop'
 env.gitlabRepositoryUrl = env.gitlabSourceRepoHttpUrl ?: 'http://gitlab.nfedev.accelya.com/bsplink/bsplink-commons-rest.git'
 
 echo "[INFO] Source Branch: ${env.sourceBranch}"
@@ -72,14 +72,15 @@ pipeline {
 		}
         
 		stage('Push to IATA repository') {
-			when{
-				expression{
-					return env.sourceBranch == 'master'
-				}
-  			}
+			//when{
+			//	expression{
+			//		return env.sourceBranch == 'master'
+			//	}
+  			//}
             steps {
             	// this shell script is located in <JENKINS_HOME>/bin folder and the PATH is configured through jenkins
                 sh 'push_to_iata.bash $WORKSPACE $JOB_BASE_NAME'
+                sh 'push_to_iata2.bash $WORKSPACE $JOB_BASE_NAME'
 			}
         }
   	}
