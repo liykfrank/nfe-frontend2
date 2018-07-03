@@ -1,0 +1,12 @@
+apply plugin: 'maven'
+
+// maven plugin configuration for uploading the generated artifact to Nexus
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: project.findProperty('nexusSnapshotsRepositoryUrl')){
+                 authentication(userName: project.findProperty('nexusUsername'), password: project.findProperty('nexusPassword'))
+            }
+        }
+    }
+}
