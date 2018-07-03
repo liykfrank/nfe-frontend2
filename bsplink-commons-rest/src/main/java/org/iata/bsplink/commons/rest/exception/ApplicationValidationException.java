@@ -12,7 +12,7 @@ public class ApplicationValidationException extends ApplicationException {
 
     private static final long serialVersionUID = 1L;
 
-    private Errors errors;
+    private final transient Errors errors;
 
     /**
      * Creates the exception with an Errors.

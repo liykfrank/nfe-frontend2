@@ -17,6 +17,15 @@ public class ApplicationException extends RuntimeException {
         this.status = status;
     }
 
+    /**
+     * Application exception with associated HTTP status code and a cause.
+     */
+    public ApplicationException(String message, HttpStatus status, Throwable cause) {
+
+        super(message, cause);
+        this.status = status;
+    }
+
     public HttpStatus getStatus() {
 
         return status;

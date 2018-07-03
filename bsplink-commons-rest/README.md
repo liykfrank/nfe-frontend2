@@ -23,6 +23,10 @@ which already exists.
 
 An specialized exception with the error result of a model validation. It can be used hassle free using the validation object `Errors`.
 
+##### ApplicationInternalServerError
+
+Specialized application internal server error.
+
 Example:
 
 ```java
@@ -132,7 +136,7 @@ repositories {
     // ... other repositories
 
 	maven {
-	   url 'http://nexus.nfedev.accelya.com/repository/maven-public'
+	   url 'http://nexusinterno.nfedev.accelya.com/repository/maven-public'
 	}
 }
 
@@ -140,7 +144,7 @@ dependencies {
 
     // ... other dependencies
 
-    compile('org.iata.bsplink:bsplink-commons-rest:0.0.1')
+    compile('org.iata.bsplink:bsplink-commons-rest:0.0.3')
 }
 
 ```
