@@ -35,7 +35,7 @@ CREATE TABLE agentmanagement.agent (
 CREATE TABLE agentmanagement.form_of_payment (
     id bigint NOT NULL,
     iata_code VARCHAR(8) REFERENCES AGENT,
-    status INTEGER,
-    type INTEGER,
+    status varchar(255) not null,
+    type varchar(255) not null,
     PRIMARY KEY (id)
 );
