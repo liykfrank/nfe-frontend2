@@ -28,6 +28,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Value("${server.ssl.key-store}")
     private String keyStoreFilePath;
+    
+    @Value("${service-provider.hostname}")
+    private String serviceProviderHostName;
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
@@ -45,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .keyPassword(this.password)
                         .and()
                     .protocol("http")
-                    .hostname(String.format("%s:%s", "localhost", this.port))
+                    .hostname(String.format("%s:%s", serviceProviderHostName, this.port))
                     .basePath("/")
                     .and()
                 .identityProvider()
