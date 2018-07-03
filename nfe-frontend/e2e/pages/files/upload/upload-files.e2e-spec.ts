@@ -1,4 +1,4 @@
-import { by, element, browser } from "protractor";
+import { by, element, browser, protractor } from "protractor";
 import { UtilsElement } from "../../../utils/utils.element";
 import { UtilsMenu } from "../../../utils/utils.menu";
 import { UtilsProc } from "../../../utils/utils-poc";
@@ -11,6 +11,13 @@ describe("nw-front Page Upload Files", () => {
 
   const UPLOAD_PATH = process.cwd() + "/e2e/resources/upload/";
 
+
+  const FILENAME1 = "A0aaAAA0_20180521.txt";
+  const FILENAME2 = "B0aaAAA0_20180521.txt";
+  const FILENAME3 = "C0aaAAA0_20180521.txt";
+  const FILENAME4 = "D0aaAAA0_20180521.txt";
+  const FILENAME_FOO = "foo.txt";
+
   beforeEach(() => {
     browser.waitForAngularEnabled(false);
     _UTILSMENU.navigateToHome();
@@ -19,14 +26,12 @@ describe("nw-front Page Upload Files", () => {
 
   it("should select a valid file", function() {
     const EL = _UTILSELEMENT.findByCSS(".files-upload");
-
     _UTILSPROC
       .waitElemDisp(EL, "Waiting for the element on the screen")
       .then(() => {
-        const FILENAME = "SAec20180101.txt";
 
         const FILE = _UTILSELEMENT.findByCSS('input[type="file"]');
-        FILE.sendKeys(UPLOAD_PATH + FILENAME);
+        FILE.sendKeys(UPLOAD_PATH + FILENAME1);
 
         const LIST = _UTILSELEMENT.findByCSS(".ui-fileupload-row");
         expect(LIST).toBeTruthy();
@@ -35,7 +40,7 @@ describe("nw-front Page Upload Files", () => {
           .findByCSS(".fa-upload")
           .click()
           .then(() => {
-            expect(element(by.linkText(FILENAME))).toBeTruthy();
+            expect(element(by.linkText(FILENAME1))).toBeTruthy();
           });
       });
   });
@@ -46,10 +51,9 @@ describe("nw-front Page Upload Files", () => {
     _UTILSPROC
       .waitElemDisp(EL, "Waiting for the element on the screen")
       .then(() => {
-        const FILENAME = "foo.txt";
 
         const FILE = _UTILSELEMENT.findByCSS('input[type="file"]');
-        FILE.sendKeys(UPLOAD_PATH + FILENAME);
+        FILE.sendKeys(UPLOAD_PATH + FILENAME_FOO);
 
         const MSG = _UTILSELEMENT.findByCSS(".ui-messages-error");
         expect(MSG).toBeTruthy();
@@ -62,10 +66,6 @@ describe("nw-front Page Upload Files", () => {
     _UTILSPROC
       .waitElemDisp(EL, "Waiting for the element on the screen")
       .then(() => {
-        const FILENAME1 = "SAec20180101.txt";
-        const FILENAME2 = "SBec20180101.txt";
-        const FILENAME3 = "SCec20180101.txt";
-        const FILENAME4 = "SDec20180101.txt";
 
         const FILE = _UTILSELEMENT.findByCSS('input[type="file"]');
         FILE.sendKeys(UPLOAD_PATH + FILENAME1);
@@ -84,10 +84,9 @@ describe("nw-front Page Upload Files", () => {
     _UTILSPROC
       .waitElemDisp(EL, "Waiting for the element on the screen")
       .then(() => {
-        const FILENAME = "SAec20180101.txt";
 
         const FILE = _UTILSELEMENT.findByCSS('input[type="file"]');
-        FILE.sendKeys(UPLOAD_PATH + FILENAME);
+        FILE.sendKeys(UPLOAD_PATH + FILENAME1);
 
         const EL = _UTILSELEMENT.findByCSS(".ui-fileupload-row");
         expect(EL).toBeTruthy();

@@ -10,9 +10,7 @@ export class PersonsService extends NwRepositoryAbstract<Person[], Object> {
   constructor(private http: HttpClient, injector: Injector) {
     super(
       http,
-      environment.basePath +
-        environment.room.basePath +
-        environment.room.api.persons,
+      environment.basePath,
       injector
     );
   }

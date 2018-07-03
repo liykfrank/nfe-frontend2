@@ -1,0 +1,17 @@
+%jqx-dropdownlist-state-normal {
+    height: 40px;
+    border: 1px solid #BDC3C9;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    padding: 0 5px; 
+}
+
+.jqx-dropdownlist-state-normal-custom {
+    @extend %jqx-dropdownlist-state-normal;
+}
+
+.jqx-dropdownlist-state-normal-custom-float {
+    @extend %jqx-dropdownlist-state-normal;
+    margin-right: 2%;
+    float: left;
+}

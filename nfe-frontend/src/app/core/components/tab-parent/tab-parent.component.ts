@@ -46,6 +46,7 @@ export class TabParentComponent extends NwAbstractComponent
   ngAfterViewInit() {
     this.loadTab(ActionsEnum.DASHBOARD);
     this.myTabs.removeFirst(); //close Init tab, the init tab is necessary for component
+    this.myTabs.hideCloseButtonAt(0);
   }
 
   loadTab(action: ActionsEnum) {
@@ -81,25 +82,14 @@ export class TabParentComponent extends NwAbstractComponent
     const indexTab = this.getIndexNode(el.parentNode);
     console.log("position tab " + this.getIndexNode(el.parentNode));
     this.myTabs.ensureVisible(indexTab);
-    //this.myTabs.enableAt(indexTab);
     this.myTabs.select(indexTab);
   }
 
-  /* getTi() {
-    const el: HTMLElement = document.getElementById("2");
-
-    console.log("position tab "+ this.getIndexNode(el.parentNode))
-    const tabs = this.myTabs.length();
-    for (var i = 0; i < tabs; i++) {
-      const titleTab = this.myTabs.getTitleAt(i);
-      console.log(titleTab);
-    }
-    //this.myTabs.elementRef.nativeElement.
-  }
- */
   getIndexNode(el): number {
     var i = 0;
-    while ((el = el.previousSibling) != null) i++;
+    while ((el = el.previousSibling) != null) {
+      i++;
+    }
     return i;
   }
 
@@ -113,5 +103,9 @@ export class TabParentComponent extends NwAbstractComponent
     const m = this.myTabs.length();
     this.myTabs.ensureVisible(m - 1);
     console.log($event);
+  }
+
+  getCfResolver(): ComponentFactoryResolver {
+    return this.cfResolver;
   }
 }

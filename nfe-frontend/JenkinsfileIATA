@@ -1,0 +1,61 @@
+#!/usr/bin/env groovy
+
+pipeline {
+
+    agent {
+        label 'master'
+    }
+
+    stages {
+
+        stage('Build') {
+            steps {
+                checkout poll: false, scm: [
+					$class: 'GitSCM',
+					branches: [[name: "**/UAT" ]],
+					doGenerateSubmoduleConfigurations: false,
+						extensions: [],
+						submoduleCfg: [],
+						userRemoteConfigs: [[
+							credentialsId: env.bitbucketCredentialsId,
+							url: "git@bitbucket.org:iatacoe/nfe.git"
+					]]]
+
+                nodejs('nodejs') {
+                    sh 'npm install --prefix ./$JOB_BASE_NAME'
+                    sh 'npm run build --prefix ./$JOB_BASE_NAME'
+                }
+            }
+        }
+
+         stage('Test') {
+            steps {
+                nodejs('nodejs') {
+                sh 'npm run test --prefix ./$JOB_BASE_NAME'
+                // sh 'npm run e2e'
+                }
+			}
+        }
+
+        stage('Nexus') {
+            steps {
+                sh 'npm publish ./$JOB_BASE_NAME --registry=http://nexus.nfedev.accelya.com/repository/nfe-frontend/'
+	        }
+	  	}
+
+        stage('SonarQube') {
+            steps {
+                dir("${JOB_BASE_NAME}") {
+                    configFileProvider([configFile(fileId: 'sonar-project.properties', targetLocation: '.')]) {
+                        script {
+                            def scannerHome = tool 'sonarscanner3.2.0';
+                            withSonarQubeEnv('a2lsonarq1 - IATA') {
+                                sh "${scannerHome}/bin/sonar-scanner"
+                            }
+                        }
+                    }
+                }
+	        }
+	  	}
+  	}
+}

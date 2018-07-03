@@ -11,8 +11,6 @@ import { ShowInternatComponent } from "./pages/show-internat/show-internat.compo
 import { TranslationModule } from "angular-l10n";
 import { ShowPersonsComponent } from "./pages/show-persons/show-persons.component";
 import { PersonsService } from "./resources/persons.service";
-import { ShowNewGridComponent } from './pages/show-new-grid/show-new-grid.component';
-import { ShowPageTableComponent } from './pages/show-page-table/show-page-table.component';
 import { ShowPrimesComponent } from './pages/show-primes/show-primes.component';
 import { FormsModule } from "@angular/forms";
 
@@ -25,8 +23,6 @@ import { FormsModule } from "@angular/forms";
     ShowTabsComponent,
     ShowInternatComponent,
     ShowPersonsComponent,
-    ShowNewGridComponent,
-    ShowPageTableComponent,
     ShowPrimesComponent
   ],
   providers: [PersonsService]

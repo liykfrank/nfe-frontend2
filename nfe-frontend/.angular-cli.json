@@ -19,10 +19,10 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "theme/ionic/variables.scss",
         "styles.scss",
         "../node_modules/jqwidgets-scripts/jqwidgets/styles/jqx.base.css",
         "theme/jqx/index.scss",
+        "theme/primeng/index.scss",
         "../node_modules/font-awesome/css/font-awesome.min.css",
         "../node_modules/primeng/resources/themes/omega/theme.css",
         "../node_modules/primeng/resources/primeng.min.css"
@@ -42,8 +42,9 @@
         "prod": "environments/environment.prod.ts",
         "mock": "environments/environment.mock.ts",
         "mock-test": "environments/environment.test.mock.ts",
-        "demo": "environments/environment.demo.ts"
-
+        "demo": "environments/environment.demo.ts",
+        "mock-proc": "environments/environment.proc.mock.ts",
+        "uat": "environments/environment.uat.ts"
       }
     }
   ],

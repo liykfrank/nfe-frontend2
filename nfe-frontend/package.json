@@ -6,12 +6,12 @@
     "ng": "ng",
     "start": "ng serve",
     "start-mock": "ng serve --env=mock",
-    "build": "ng build",
-    "test": "ts-node setkarma --env=demo && ng test --env=mock-test",
+    "build": "ng build --env=demo",
+    "build-uat": "ng build --env=uat",
+    "test": "ts-node setkarma && ng test --env=mock-test --watch=false --cc",
     "lint": "ng lint",
-    "e2e": "ts-node setproct --env=demo && ng e2e --env=demo"
+    "e2e": "ts-node setproct && ng e2e --env=mock-proc"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "^5.2.0",
     "@angular/common": "^5.2.0",
@@ -41,12 +41,12 @@
     "ionic-angular": "3.9.2",
     "ionicons": "3.0.0",
     "jquery": "^3.3.1",
-    "jqwidgets-scripts": "5.5.0",
+    "jqwidgets-scripts": "5.7.2",
     "ng2-logger": "1.0.4",
     "ngx-cookie-service": "^1.0.10",
     "primeng": "^5.2.4",
     "rxjs": "^5.5.6",
-    "yarn": "^1.6.0",
+    "yarn": "^1.7.0",
     "zone.js": "^0.8.19"
   },
   "devDependencies": {
@@ -69,7 +69,6 @@
     "ts-node": "~4.1.0",
     "tslint": "~5.9.1",
     "typescript": "~2.5.3"
-
   },
   "cordova": {
     "plugins": {

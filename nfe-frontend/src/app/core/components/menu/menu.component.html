@@ -1,66 +1,35 @@
 <jqxMenu class="menu" [autoOpen]="true">
-    <ul>
-        <li>
-            <a (click)="openTab('dashboard')">DASHBOARD</a>
-        </li>
-        <li>
-            <a (click)="openTab('adm_acm')">ADM/ACM</a>
-            <ul>
-                <li>
-                    <a (click)="openTab('query_adm')">Query ADM</a>
-                </li>
-                <li>
-                    <a (click)="openTab('query_acm')">Query ACM</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a (click)="openTab('refunds')">REFUNDS</a>
-        </li>
-        <li>
-            <a (click)="openTab('reports')">REPORTS</a>
-        </li>
-        <li>
-            <a [id]="_utilsService.wrapperMenuID(actions.FILES)">FILES</a>
-            <ul>
-              <li>
-                  <a [id]="_utilsService.wrapperMenuID(actions.QUERY_FILES)" (click)="openTab('query_files')">Query Files</a>
-              </li>
-              <li>
-                  <a [id]="_utilsService.wrapperMenuID(actions.QUERY_FILES_READ_ONLY)" (click)="openTab('query_files/readOnly')">Query Files Read Only</a>
-              </li>
-              <li>
-                  <a [id]="_utilsService.wrapperMenuID(actions.UPLOAD_FILES)"(click)="openTab('upload_files')">Upload Files</a>
-              </li>
-          </ul>
-        </li>
+  <ul>
+    <li (click)="openTab('dashboard')">DASHBOARD</li>
+    <li (click)="openTab('adm_acm')">ADM/ACM
+        <ul>
+            <li (click)="openTab('adm_acm')">Query ADM</li>
 
-        <li>
-            <a (click)="openTab('sftp_accounts')">SFTP Accounts</a>
-            <ul>
-              <li>
-                  <a (click)="openTab('query_sftp_accounts')">Query SFTP Accounts</a>
-              </li>
-              <li>
-                  <a (click)="openTab('create_sftp_account')">Create SFTP Account</a>
-              </li>
-          </ul>
-        </li>
+            <li [id]="_utilsService.wrapperMenuID(actions.DISPUTE_ADM)" (click)="openTab('dispute_adm')" l10nTranslate>ADM_ACM.ADMTitle</li>
+            <li [id]="_utilsService.wrapperMenuID(actions.DISPUTE_ACM)" (click)="openTab('dispute_acm')" l10nTranslate>ADM_ACM.ACMTitle</li>
+        </ul>
+    </li>
+    <li (click)="openTab('refunds')">REFUNDS</li>
+    <li (click)="openTab('reports')">REPORTS</li>
+    <li [id]="_utilsService.wrapperMenuID(actions.FILES)">FILES
+        <ul>
+          <li [id]="_utilsService.wrapperMenuID(actions.QUERY_FILES)" (click)="openTab('query_files')">Query Files</li>
+          <li [id]="_utilsService.wrapperMenuID(actions.QUERY_FILES_READ_ONLY)" (click)="openTab('query_files/readOnly')">Query Files Read Only</li>
+          <li [id]="_utilsService.wrapperMenuID(actions.UPLOAD_FILES)" (click)="openTab('upload_files')">Upload Files</li>
+      </ul>
+    </li>
 
-        <li>
-            <a (click)="openTab('ticketing')">TICKETING</a>
-        </li>
-        <li>
-            <a (click)="openTab('general_info')">GENERAL INFO</a>
-        </li>
-        <li>
-            <a (click)="openTab('self_service')">SELF SERVICE</a>
-        </li>
-        <li>
-            <a (click)="openTab('admin')">ADMIN</a>
-        </li>
-        <li>
-          <a (click)="openTab('monitor')">MONITOR</a>
-      </li>
-    </ul>
+    <li [id]="_utilsService.wrapperMenuID(actions.SFTP_ACCOUNTS)">SFTP Accounts
+        <ul>
+          <li [id]="_utilsService.wrapperMenuID(actions.CREATE_SFTP_ACCOUNT)" (click)="openTab('sftp_accounts')">Create Account</li>
+          <li (click)="sftpModifyPass()">Modify Pass</li>
+        </ul>
+    </li>
+
+    <li (click)="openTab('ticketing')">TICKETING</li>
+    <li (click)="openTab('general_info')">GENERAL INFO</li>
+    <li (click)="openTab('self_service')">SELF SERVICE</li>
+    <li (click)="openTab('admin')">ADMIN</li>
+    <li (click)="openTab('monitor')">MONITOR</li>
+  </ul>
 </jqxMenu>

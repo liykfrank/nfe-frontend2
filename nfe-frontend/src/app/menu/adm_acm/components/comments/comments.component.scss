@@ -1,0 +1,43 @@
+.tab-content-header {
+  padding: 21px;
+  font-size: 20px;
+  line-height: 24px;
+  color: #002A51;
+
+  .color-bullet {
+    height: 18px;
+    border-left: 6px solid #EF8540;
+    border-right: 6px solid #EF8540;
+    margin-right: 3px;
+  }
+
+  border-bottom: 2px solid #EF8540;
+}
+
+.comments-component {
+  text-align: center;
+
+  .messages-container {
+    background-color: #ffffff;
+
+    .message {
+      padding: 20px 15px;
+      margin: 10px 30px;
+      border: 1px solid #1989cf;
+      border-radius: 3px;
+
+    }
+
+    .last {
+      margin-bottom: 30px;
+    }
+  }
+
+  .message-input {
+    padding: 20px 18px;
+
+    .image-button {
+      vertical-align: middle;
+    }
+  }
+}

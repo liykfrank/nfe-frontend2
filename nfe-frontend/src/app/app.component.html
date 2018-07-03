@@ -3,10 +3,11 @@
 <!--support mobile- <ion-app *ngIf="ionic"></ion-app> -->
 <!-- OUTLET -->
  <div *ngIf="!ionic" class="content">
-   <app-header class="header"></app-header>
-   <div class="section">
-     <router-outlet  ></router-outlet>
-   </div>
-   <app-footer></app-footer>
+  <app-header class="header"></app-header>
+  <app-notifications></app-notifications> 
+  <div class="section">
+    <router-outlet  ></router-outlet>
+  </div>
+  <app-footer></app-footer>
  </div>
 

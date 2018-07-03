@@ -1,0 +1,37 @@
+.jqx-expander-custom {
+   margin: 10px 0; 
+}
+
+.jqx-expander-header-custom {
+    padding: 10px 5px;
+    border-radius: 5px;  
+    color: #152C5A;
+    font-family: Roboto;
+    font-size: 18px;	
+    letter-spacing: -0.6px;	
+    line-height: 21px;
+    background-color: #F4F0F0;
+    border: #F4F0F0;
+
+    .fa-stack {
+        margin-right: 10px;
+        font-size: 12px;
+        float: right;
+    }
+}
+
+.jqx-expander-header-content-custom {
+    width: 100%;
+}
+
+.jqx-expander-header-expanded-custom {
+    border-bottom-left-radius: 0; 
+    border-bottom-right-radius: 0;
+}
+
+.jqx-expander-content-custom {
+    border: #F4F0F0;
+    border-bottom-left-radius: 0; 
+    border-bottom-right-radius: 0;
+    background-color: #F4F0F0;
+}

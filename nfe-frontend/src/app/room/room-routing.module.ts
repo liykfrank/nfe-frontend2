@@ -1,4 +1,4 @@
-import { ShowNewGridComponent } from './pages/show-new-grid/show-new-grid.component';
+
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ShowTableComponent } from './pages/show-table/show-table.component';
@@ -7,7 +7,6 @@ import { ShowFilterComponent } from './pages/show-filter/show-filter.component';
 import { ShowTabsComponent } from './pages/show-tabs/show-tabs.component';
 import { ShowInternatComponent } from './pages/show-internat/show-internat.component';
 import { ShowPersonsComponent } from './pages/show-persons/show-persons.component';
-import { ShowPageTableComponent } from './pages/show-page-table/show-page-table.component';
 import { ShowPrimesComponent } from './pages/show-primes/show-primes.component';
 
 const routes: Routes = [
@@ -19,8 +18,6 @@ const routes: Routes = [
       { path: 'tabs', component: ShowTabsComponent },
       { path: 'internat', component: ShowInternatComponent },
       { path: 'persons', component: ShowPersonsComponent },
-      { path: 'new-table', component: ShowNewGridComponent },
-      { path: 'table-pagination', component: ShowPageTableComponent },
       { path: 'primes-comp', component: ShowPrimesComponent }
     ]
   }

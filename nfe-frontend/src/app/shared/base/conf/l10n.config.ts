@@ -5,15 +5,18 @@ export const l10nConfig: L10nConfig = {
     languages: [
         { code: 'en', dir: 'ltr' },
         { code: 'it', dir: 'ltr' },
-    ],
-    language: 'en'
-   // storage: StorageStrategy.Cookie
-},
-translation: {
-    providers: [
-        { type: ProviderType.Static, prefix: './assets/i18n/locale-' }
-    ],
-    caching: true,
-    missingValue: 'No key'
-}
+      ],
+      defaultLocale: { languageCode: 'en', countryCode: 'US' },
+      currency: 'USD'
+      /* ,
+      storage: StorageStrategy.Cookie */
+  },
+  translation: {
+      providers: [
+          { type: ProviderType.Static, prefix: './assets/i18n/locale-'}
+      ],
+      caching: true,
+      composedKeySeparator: '.',
+      missingValue: 'No key'
+  }
 };

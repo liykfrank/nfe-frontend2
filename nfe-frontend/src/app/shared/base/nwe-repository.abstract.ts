@@ -1,5 +1,5 @@
 import { environment } from './../../../environments/environment';
-import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Type, Injector } from '@angular/core';
@@ -30,15 +30,34 @@ export abstract class NwRepositoryAbstract<T, K> extends NwBaseAbstract {
   }*/
 
   get<J = K>(params?: HttpParams, search?: Array<URLSearchParams>): Observable<T> {
-    return this.httpService.get<T>(this.url,{params:params});
+    return this.httpService.get<T>(this.url, {params: params});
+  }
+
+  getXML() {
+    return this.httpService.get(this.url, {responseType: 'text'});
   }
 
   post<J = K>(body: K, params?: Array<URLSearchParams>, search?: Array<URLSearchParams>): Observable<T> {
     return this.httpService.post<T>(this.url, JSON.stringify(body), { headers: { 'Content-Type': 'application/json' } });
   }
 
+  postXML<J = K>(body: K, params?: Array<URLSearchParams>, search?: Array<URLSearchParams>) {
+    return this.httpService.post(this.url, body);
+  }
+
+  /*postXML<J = K>(body: K, params?: Array<URLSearchParams>, search?: Array<URLSearchParams>): Observable<T> {
+    return this.httpService.post<T>(this.url, JSON.stringify(body)/* ,
+      {
+        headers: new HttpHeaders()
+        .set('Content-Type', 'text/xml')
+        //.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS')
+        //.append('Access-Control-Allow-Origin', '*')
+        //.append('Access-Control-Allow-Headers', "Access-Control-Allow-Headers, Access-Control-Request-Method")
+        } );
+  }*/
+
   delete<J = K>(params?: HttpParams): Observable<T> {
-    return this.httpService.delete<T>(this.url,{params});
+    return this.httpService.delete<T>(this.url, {params});
   }
 
   put<J = K>(body?: K, params?: Array<any>, search?: Array<any>): Observable<T> {
@@ -47,15 +66,14 @@ export abstract class NwRepositoryAbstract<T, K> extends NwBaseAbstract {
   configureUrl(url: string): void {
     this.url = url;
   }
-  getUrl(pathVariables?:string[]){
+  getUrl(pathVariables?: string[]) {
     console.log('enter get uel' );
-    let urlEnd:string=this.url;
-    if(environment.mock){
+    let urlEnd: string = this.url;
+    if (environment.mock) {
       return this.url;
     }
-    if(pathVariables){
-        urlEnd+='/';
-        pathVariables.forEach((pathv) => urlEnd+=pathv);
+    if (pathVariables) {
+        pathVariables.forEach((pathv) => urlEnd += '/' + pathv);
     }
     return urlEnd;
   }

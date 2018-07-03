@@ -1,0 +1,54 @@
+.files-download-container{
+  height: 60vh;
+  padding: 10px;
+.top_buttons{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  app-buttons{
+    margin: 15px 15px 5px 5px;
+  }
+}
+
+.filter-download{
+  background: #E5FAF5;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  .top_menu{
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .tags {
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+
+    p {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #014E81;
+      margin: 0px 5px 5px 0px;
+      border-radius: 5px;
+      color: white;
+      width: 75px;
+      height: 30px;
+    }
+
+  }
+}
+
+.bottom_buttons{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
+  jqxButton{
+    margin: 5px 15px 5px 5px;
+  }
+}
+}

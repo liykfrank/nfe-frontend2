@@ -15,6 +15,7 @@ describe("nw-front Page Query Files", () => {
     page.navigateToQueryFiles();
   });
 
+
   it("should display tab download files", () => {
     page.waitFirstRow().then(() => {
       console.log("first row showed");
@@ -53,7 +54,7 @@ describe("nw-front Page Query Files", () => {
     });
   });
 
-  it("select Donloaded files", () => {
+  it("select Downloaded files", () => {
     page.waitFirstRow().then(() => {
       page.clickExpand();
       page.selectDownloadedItem();
@@ -62,7 +63,7 @@ describe("nw-front Page Query Files", () => {
     });
   });
 
-  it("select Donloaded files xx", () => {
+  it("select Downloaded files xx", () => {
     page.waitFirstRow().then(() => {
       page.clickExpand();
       page.selectItemList("DOWNLOADED");
@@ -76,7 +77,7 @@ describe("nw-front Page Query Files", () => {
       page.clickExpand();
       page.setTypeFile("xxx");
       page.search();
-      browser.sleep(5000);
+      browser.sleep(3000);
       page.checkNotData();
     });
   });
@@ -84,5 +85,10 @@ describe("nw-front Page Query Files", () => {
   it('Try to open upload page ', () => {
     page.openUploadPage();
   });
-
+  it('Navigate to second page ', () => {
+    page.waitFirstRow().then(() => {
+      page.goToSecondPage();
+      page.checkSecondPage();
+    });
+  });
 });

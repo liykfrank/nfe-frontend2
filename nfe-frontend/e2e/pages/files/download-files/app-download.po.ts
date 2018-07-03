@@ -1,6 +1,6 @@
 import { UtilsMenu } from "../../../utils/utils.menu";
 import { ElementsProviderDown } from "./elements-provider";
-import { browser, by, element, ElementFinder, promise } from "protractor";
+import { browser, by, element, ElementFinder, promise, protractor } from "protractor";
 import { UtilsProc } from "../../../utils/utils-poc";
 import { ActionsEnum } from "../../../utils/utils.models";
 
@@ -53,8 +53,8 @@ export class AppPageDownloadFiles {
       .wait(
         () => {
           return (
-            this.utils.existFile(this.path + "filenew.txt") ||
-            this.utils.existFile(this.path + "filenew.zip")
+            this.utils.existFile(this.path + "file1.txt") ||
+            this.utils.existFile(this.path + "allfiles.zip")
           );
         },
         7000,
@@ -62,7 +62,11 @@ export class AppPageDownloadFiles {
       )
       .then(() => {
         console.log("file downloaded");
-      });
+      },
+      (error) => {
+        console.log("file not downloaded -- "+error);
+      }
+    );
     return;
   }
 
@@ -112,12 +116,33 @@ export class AppPageDownloadFiles {
   }
 
   checkNotData() {
-    browser.wait(this.elProv.getNotDataTable().isPresent(), 3000);
+    this.utils.waitElemDisp(this.elProv.getNotDataTable()).then(()=>
+      {
+        this.elProv.getNotDataTable().getText().then(tx=>expect(tx).toBe('No data to display'))
+      }
+    );
   }
 
   openUploadPage() {
     this.utils.waitElemClEnable(element(by.id("uploadFiles"))).then(() => {
       expect(element(by.css(".files-upload"))).toBeTruthy();
     });
+  }
+
+  goToSecondPage(){
+    this.utils.waitElemClEnable(this.elProv.getSecondPageTable());
+    this.elProv.getSecondPageTable().click();
+  }
+
+  checkSecondPage(){
+    const cell=this.elProv.getCellTable(2,0);
+    let EC = protractor.ExpectedConditions;
+    browser.waitForAngular();
+    const expect =EC.textToBePresentInElement(cell,'file6');
+    browser.wait(expect,10000,'waitting file6 element');
+    cell.getText().then(t=>{
+      console.log('text cell==='+ t);
+    })
+
   }
 }
