@@ -16,7 +16,9 @@ public class RefundConsoleWriter implements ItemWriter<Refund> {
 
         for (Refund item : items) {
 
-            log.info(item.toString());
+            if (log.isInfoEnabled()) {
+                log.info(item.toString());
+            }
         }
     }
 

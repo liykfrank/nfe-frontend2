@@ -126,30 +126,33 @@ public class BatchConfiguration {
     @Bean
     public LineMapper<Record> lineMapper(Map<String, FieldSetMapper<Record>> fieldSetMappers) {
 
+        RecordIt01Layout recordIt01Layout = new RecordIt01Layout();
+        RecordIt02Layout recordIt02Layout = new RecordIt02Layout();
+        RecordRawLineLayout recordRawLineLayout = new RecordRawLineLayout();
+
         Map<String, LineTokenizer> tokenizers = new HashMap<>();
 
-        tokenizers.put(RecordIt01Layout.getRecordLayout().getPattern(),
-                getTokenizer(RecordIt01Layout.getRecordLayout()));
-        tokenizers.put(RecordIt02Layout.getRecordLayout().getPattern(),
-                getTokenizer(RecordIt02Layout.getRecordLayout()));
-        tokenizers.put(RecordRawLineLayout.getRecordLayout().getPattern(),
-                getTokenizer(RecordRawLineLayout.getRecordLayout()));
+        tokenizers.put(recordIt01Layout.getPattern(), getTokenizer(recordIt01Layout));
+        tokenizers.put(recordIt02Layout.getPattern(), getTokenizer(recordIt02Layout));
+        tokenizers.put(recordRawLineLayout.getPattern(), getTokenizer(recordRawLineLayout));
 
         // TODO: the prototype bean names of fieldSetMappers should be passed in a better way
         // because right now it is completely hardcoded and repeated in three places (having in
         // mind the bean creation).
-        fieldSetMappers.put(RecordIt01Layout.getRecordLayout().getPattern(),
+        Map<String, FieldSetMapper<Record>> mappers = new HashMap<>();
+
+        mappers.put(recordIt01Layout.getPattern(),
                 fieldSetMappers.get(RECORD_IT01_BEAN_NAME));
-        fieldSetMappers.put(RecordIt02Layout.getRecordLayout().getPattern(),
+        mappers.put(recordIt02Layout.getPattern(),
                 fieldSetMappers.get(RECORD_IT02_BEAN_NAME));
-        fieldSetMappers.put(RecordRawLineLayout.getRecordLayout().getPattern(),
+        mappers.put(recordRawLineLayout.getPattern(),
                 fieldSetMappers.get(RECORD_RAWLINE_BEAN_NAME));
 
         PatternMatchingCompositeLineMapper<Record> mapper =
                 new PatternMatchingCompositeLineMapper<>();
 
         mapper.setTokenizers(tokenizers);
-        mapper.setFieldSetMappers(fieldSetMappers);
+        mapper.setFieldSetMappers(mappers);
 
         return mapper;
     }
