@@ -8,6 +8,9 @@ body{
   //display: flex;
   //flex-direction: row;
 
+  * {
+    font-family: Roboto;
+  }
 }
 @import './theme/content';
 @import './theme/general'

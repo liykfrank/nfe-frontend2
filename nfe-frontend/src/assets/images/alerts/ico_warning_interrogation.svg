@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="55px" height="51px" viewBox="0 0 55 51" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>BE4646FC-E4D4-4251-B69A-E96A0DE52DDA</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <rect id="path-1" x="0.996563574" y="0" width="289.003436" height="215" rx="6"></rect>
+        <filter x="-3.5%" y="-3.7%" width="106.9%" height="109.3%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.15 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <polygon id="path-3" points="9.333 0.933 8.4 0 4.667 3.733 0.933 0 0 0.933 3.733 4.666 0 8.4 0.933 9.333 4.667 5.6 8.4 9.333 9.333 8.4 5.6 4.667"></polygon>
+    </defs>
+    <g id="components" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Alerts" transform="translate(-1081.000000, -172.000000)">
+            <g id="message_info_cta" transform="translate(963.000000, 134.000000)">
+                <g id="alert/NOT01---Alert_-modal_modify_two_button">
+                    <g id="Rectangle">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                        <rect stroke="#AD5A00" stroke-width="1" stroke-linejoin="square" fill="#FFFFFF" fill-rule="evenodd" x="1.49656357" y="0.5" width="288.003436" height="214" rx="6"></rect>
+                    </g>
+                    <g id="close_blue" transform="translate(249.000000, 0.000000)" fill-rule="evenodd" stroke-width="1">
+                        <g id="icons/close-tab" transform="translate(15.000000, 15.000000)">
+                            <g id="background">
+                                <mask id="mask-4" fill="white">
+                                    <use xlink:href="#path-3"></use>
+                                </mask>
+                                <use id="Mask" fill="#757575" fill-rule="nonzero" xlink:href="#path-3"></use>
+                                <g id="backgrounds/grey" mask="url(#mask-4)" fill="#757575">
+                                    <rect id="Rectangle-3" x="0" y="0" width="10" height="10"></rect>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                    <g id="icons/ico-modify" transform="translate(120.584192, 39.000000)" fill="#AD5A00" fill-rule="evenodd" stroke-width="1">
+                        <g id="ico-modify" transform="translate(0.000000, 0.961538)">
+                            <path d="M24.7323529,-1.70803347e-16 C11.0730516,-1.0948507e-13 -5.43264539e-15,10.8601083 -7.10542736e-15,24.2567308 C-8.77820933e-15,37.6533533 11.0730516,48.5134615 24.7323529,48.5134615 C38.3916543,48.5134615 49.4647059,37.6533533 49.4647059,24.2567308 C49.4688709,17.8221944 46.8644859,11.6500263 42.2253668,7.10012102 C37.5862477,2.55021577 31.2930567,-0.00408493488 24.7323529,1.09143464e-13 Z M24.7323529,2.69230769 C36.8731883,2.69390083 46.7142667,12.3474498 46.7137253,24.2548076 C46.7131838,36.1621654 36.8712274,45.8148534 24.730392,45.8153844 C12.5895566,45.8159154 2.74672241,36.1640885 2.74509804,24.2567308 C2.7380623,18.5353775 5.05231057,13.046372 9.17724687,9.00076136 C13.3021832,4.95515075 18.8988163,2.68540725 24.7323529,2.69230769 Z M24.7323529,10.7778846 C20.2050608,10.8384098 16.5499473,14.4232327 16.4882353,18.8634615 C16.4882353,19.6069218 17.1027464,20.2096154 17.8607843,20.2096154 C18.6188222,20.2096154 19.2333333,19.6069218 19.2333333,18.8634615 L19.2333333,18.7961538 C19.3385452,15.8629316 21.7386754,13.5089578 24.7294118,13.4057692 C27.7201481,13.5089578 30.1202783,15.8629316 30.2254902,18.7961538 C30.2254902,21.1548077 28.9892157,22.3673077 27.2715686,23.85 C26.3398701,24.6189104 25.4883082,25.4766426 24.7294118,26.4105769 C23.8720039,27.4918097 23.390911,28.814313 23.3568627,30.1836538 L23.3568627,30.925 C23.3568627,31.6684602 23.9713739,32.2711538 24.7294118,32.2711538 C25.4874497,32.2711538 26.1019608,31.6684602 26.1019608,30.925 L26.1019608,30.1163462 C26.0924785,29.3219545 26.3866266,28.5528727 26.9264706,27.9605769 C27.5885032,27.1758872 28.324434,26.4541089 29.1245098,25.8048077 C30.8421569,24.2548077 33.0401961,22.1663462 32.9715686,18.7298077 C32.8733951,14.3289338 29.2205259,10.8047152 24.7323529,10.7807692 L24.7323529,10.7778846 Z M24.7323529,34.3605769 C23.5952961,34.3605769 22.6735294,35.2646173 22.6735294,36.3798077 C22.6735294,37.4949981 23.5952961,38.3990385 24.7323529,38.3990385 C25.8694098,38.3990385 26.7911765,37.4949981 26.7911765,36.3798077 C26.7997549,35.8420018 26.5855027,35.3237917 26.1974353,34.943731 C25.809368,34.5636702 25.2806912,34.3542793 24.7323529,34.3634615 L24.7323529,34.3605769 Z" id="Path_20370" fill-rule="nonzero"></path>
+                        </g>
+                    </g>
+                    <g id="buttons" stroke-width="1" fill-rule="evenodd" transform="translate(60.790378, 164.000000)">
+                        <g id="buttons/BUTT02_alert_modify" transform="translate(89.690722, 0.000000)">
+                            <g id="Group">
+                                <rect id="Rectangle-2" fill="#AD5A00" x="0" y="0" width="80" height="30" rx="2"></rect>
+                                <text id="label" font-family="Roboto-Regular, Roboto" font-size="14" font-weight="normal" fill="#FFFFFF">
+                                    <tspan x="18.5078125" y="20.4285714">Modify</tspan>
+                                </text>
+                            </g>
+                        </g>
+                        <g id="buttons/BUTT02_CTAS_tertiary-1024">
+                            <rect id="Rectangle-2" stroke="#00A3E0" stroke-width="1" fill="#FFFFFF" fill-rule="evenodd" x="0.5" y="0.5" width="79" height="29" rx="2"></rect>
+                            <text id="label" font-family="Roboto-Regular, Roboto" font-size="14" font-weight="normal" fill="#00A3E0">
+                                <tspan x="14.1293945" y="20.4285714">Go Back</tspan>
+                            </text>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

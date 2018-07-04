@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 
 import { Card } from './../../models/card.model';
 import { DashboardService } from './../../services/dashboard.service';
+import { AlertsService } from './../../services/alerts.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -39,6 +40,9 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     });
   }
 
+  checkDashboard() {
+    return this.dashboard && this.dashboard.length > 0;
+  }
 
   ngAfterViewInit(): void {
 

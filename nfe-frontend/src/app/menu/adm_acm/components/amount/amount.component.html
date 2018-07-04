@@ -2,22 +2,18 @@
   <label> {{subType}} </label>
   <label l10nTranslate *ngIf="isADM" >ADM_ACM.AMOUNT.adm_amount</label>
   <label l10nTranslate *ngIf="!isADM">ADM_ACM.AMOUNT.acm_amount</label>
-  <span>{{total | number}}</span>
+  <span>{{total | decimalsFormatter:decimals }}</span>
 </div>
 
 <div *ngIf="typeSimpleView">
   <div class="form-entry">
     <label l10nTranslate>ADM_ACM.BASIC_INFO.fare</label>
     <div class="input-content">
-      <jqxNumberInput
-        [min]="0"
-        [width]="117"
-        [height]="40"
-        [theme]="'table-custom'"
-        [inputMode]="'simple'"
-        [decimalDigits]="decimals"
-        (onChange)="simpleCalculateFare($event)">
-      </jqxNumberInput>
+      <input
+        class='input-custom-number amount-table'
+        min='0'
+        type='number'
+        (change)="simpleCalculateFare($event)"/>
     </div>
   </div>
 </div>
@@ -35,50 +31,37 @@
       </thead>
       <tbody>
         <tr>
-          <td l10nTranslate>ADM_ACM.AMOUNT.fare</td>
+          <td class="title" l10nTranslate>ADM_ACM.AMOUNT.fare</td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [theme]="'table-custom'"
-              [(ngModel)]="agentCalculations.fare"
-              value="agentCalculations.fare"
-              [inputMode]="'simple'"
-              [decimalDigits]="decimals"
-              (onChange)="calculateTotalOnAmount()">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type="text"
+              [ngModel]="agentCalculations.fare"
+              (ngModelChange)="agentCalculations.fare = assignData($event)"
+              decimalsFormatterDirective
+              [decimals]="decimals"
+              (blur)="calculateTotalOnAmount()"/>
           </td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [theme]="'table-custom'"
-              [(ngModel)]="airlineCalculations.fare"
-              value="airlineCalculations.fare"
-              [inputMode]="'simple'"
-              [decimalDigits]="decimals"
-              (onChange)="calculateTotalOnAmount()">
-            </jqxNumberInput>
+              <input
+              class='input-custom-number amount-table'
+              type='text'
+              [ngModel]="airlineCalculations.fare"
+              (ngModelChange)="airlineCalculations.fare = assignData($event)"
+              decimalsFormatterDirective
+              [decimals]="decimals"
+              (blur)="calculateTotalOnAmount()"/>
           </td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [theme]="'table-custom'"
-              [(ngModel)]="totalCalculations.fare"
-              value="totalCalculations.fare"
-              [inputMode]="'simple'"
-              [decimalDigits]="decimals"
-              (onChange)="calculateTotalOnAmount()"
-              [readOnly]="true">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type='text'
+              [value]="totalCalculations.fare | abs | decimalsFormatter:decimals"
+              readonly="true"/>
           </td>
         </tr>
         <tr>
-          <td l10nTranslate>ADM_ACM.AMOUNT.tfc
+          <td class="title" l10nTranslate>ADM_ACM.AMOUNT.tfc
             <i
               class="fa fa-question-circle"
               alt="alternative text"
@@ -86,182 +69,142 @@
             </i>
           </td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [theme]="'table-custom'"
-              [(ngModel)]="agentCalculations.tax"
-              value="agentCalculations.tax"
-              [inputMode]="'simple'"
-              [decimalDigits]="decimals"
-              (onChange)="calculateTotalOnAmount()">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type='text'
+              [ngModel]="agentCalculations.tax"
+              (ngModelChange)="agentCalculations.tax = assignData($event)"
+               decimalsFormatterDirective 
+               [decimals]="decimals"
+              (blur)="calculateTotalOnAmount()"
+            />
           </td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [theme]="'table-custom'"
-              [(ngModel)]="airlineCalculations.tax"
-              value="airlineCalculations.tax"
-              [inputMode]="'simple'"
-              [decimalDigits]="decimals"
-              (onChange)="calculateTotalOnAmount()">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type='text'
+              [ngModel]="airlineCalculations.tax"
+              (ngModelChange)="airlineCalculations.tax = assignData($event)"
+              decimalsFormatterDirective 
+              [decimals]="decimals"
+              (blur)="calculateTotalOnAmount()"
+              />
           </td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [theme]="'table-custom'"
-              [(ngModel)]="totalCalculations.tax"
-              value="totalCalculations.tax"
-              [inputMode]="'simple'"
-              [decimalDigits]="decimals"
-              (onChange)="calculateTotalOnAmount()"
-              [readOnly]="true">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type='text'
+              [value]="totalCalculations.tax | abs | decimalsFormatter:decimals"
+              readonly="true"
+            />
           </td>
         </tr>
         <tr>
-          <td l10nTranslate>ADM_ACM.AMOUNT.comission</td>
+          <td class="title" l10nTranslate>ADM_ACM.AMOUNT.comission</td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [theme]="'table-custom'"
-              [(ngModel)]="agentCalculations.commission"
-              value="agentCalculations.commission"
-              [inputMode]="'simple'"
-              [decimalDigits]="decimals"
-              (onChange)="calculateTotalOnAmount()">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type='text'
+              [ngModel]="agentCalculations.commission"
+              (ngModelChange)="agentCalculations.commission = assignData($event)"
+              decimalsFormatterDirective 
+              [decimals]="decimals"
+              (blur)="calculateTotalOnAmount()"
+            />
           </td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [theme]="'table-custom'"
-              [(ngModel)]="airlineCalculations.commission"
-              value="airlineCalculations.commission"
-              [inputMode]="'simple'"
-              [decimalDigits]="decimals"
-              (onChange)="calculateTotalOnAmount()">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type='text'
+              [ngModel]="airlineCalculations.commission" 
+              (ngModelChange)="airlineCalculations.commission = assignData($event)"
+              decimalsFormatterDirective 
+              [decimals]="decimals"
+              (blur)="calculateTotalOnAmount()"
+            />
           </td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [theme]="'table-custom'"
-              [(ngModel)]="totalCalculations.commission"
-              value="totalCalculations.commission"
-              [inputMode]="'simple'"
-              [decimalDigits]="decimals"
-              (onChange)="calculateTotalOnAmount()"
-              [readOnly]="true">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type='text'
+              [value]="totalCalculations.commission | abs | decimalsFormatter:decimals"
+              readonly="true"
+            />
           </td>
         </tr>
         <tr *ngIf="showSpam">
-          <td l10nTranslate>ADM_ACM.AMOUNT.spam</td>
+          <td class="title" l10nTranslate>ADM_ACM.AMOUNT.spam</td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [theme]="'table-custom'"
-              [(ngModel)]="agentCalculations.spam"
-              value="agentCalculations.spam"
-              [inputMode]="'simple'"
-              [decimalDigits]="decimals"
-              (onChange)="calculateTotalOnAmount()">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type='text'
+              [ngModel]="agentCalculations.spam"
+              (ngModelChange)="agentCalculations.spam = assignData($event)"
+              decimalsFormatterDirective
+              [decimals]="decimals"
+              (blur)="calculateTotalOnAmount()"
+            />
           </td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [theme]="'table-custom'"
-              [(ngModel)]="airlineCalculations.spam"
-              value="airlineCalculations.spam"
-              [inputMode]="'simple'"
-              [decimalDigits]="decimals"
-              (onChange)="calculateTotalOnAmount()">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type='text'
+              [ngModel]="airlineCalculations.spam"
+              (ngModelChange)="airlineCalculations.spam = assignData($event)"
+              decimalsFormatterDirective
+              [decimals]="decimals"
+              (blur)="calculateTotalOnAmount()"
+            />
           </td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [theme]="'table-custom'"
-              [(ngModel)]="totalCalculations.spam"
-              value="totalCalculations.spam"
-              [inputMode]="'simple'"
-              [decimalDigits]="decimals"
-              (onChange)="calculateTotalOnAmount()"
-              [readOnly]="true">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type='text'
+              [value]="totalCalculations.spam | abs | decimalsFormatter:decimals"
+              readonly="true"
+            />
           </td>
         </tr>
         <tr *ngIf="showTOCA">
-          <td l10nTranslate>ADM_ACM.AMOUNT.toca</td>
+          <td class="title" l10nTranslate>ADM_ACM.AMOUNT.toca</td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [theme]="'table-custom'"
-              [(ngModel)]="agentCalculations.taxOnCommission"
-              value="agentCalculations.taxOnCommission"
-              [inputMode]="'simple'"
-              [decimalDigits]="decimals"
-              (onChange)="calculateTotalOnAmount()">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type='text'
+              [ngModel]="agentCalculations.taxOnCommission"
+              (ngModelChange)="agentCalculations.taxOnCommission = assignData($event)"
+              decimalsFormatterDirective
+              [decimals]="decimals"
+              (blur)="calculateTotalOnAmount()"
+            />
           </td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [theme]="'table-custom'"
-              [(ngModel)]="airlineCalculations.taxOnCommission"
-              value="airlineCalculations.taxOnCommission"
-              [inputMode]="'simple'"
-              [decimalDigits]="decimals"
-              (onChange)="calculateTotalOnAmount()">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type='text'
+              [ngModel]="airlineCalculations.taxOnCommission"
+              (ngModelChange)="airlineCalculations.taxOnCommission = assignData($event)"
+              decimalsFormatterDirective
+              [decimals]="decimals"
+              (blur)="calculateTotalOnAmount()"
+            />
           </td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [theme]="'table-custom'"
-              [(ngModel)]="totalCalculations.taxOnCommission"
-              value="totalCalculations.taxOnCommission"
-              [inputMode]="'simple'"
-              [decimalDigits]="decimals"
-              (onChange)="calculateTotalOnAmount()"
-              [readOnly]="true">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type='text'
+              [value]="totalCalculations.taxOnCommission | abs | decimalsFormatter:decimals"
+              readonly="true"
+            />
           </td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
           <td l10nTranslate>total </td>
-          <td> {{totalAmount.agentValue | number: '.' + decimals}} </td>
-          <td> {{totalAmount.airlineValue | number: '.' + decimals}} </td>
-          <td> {{totalAmount.dif | number: '.' + decimals}} </td>
+          <td> {{totalAmount.agentValue | abs | decimalsFormatter:decimals}} </td>
+          <td> {{totalAmount.airlineValue | abs  | decimalsFormatter:decimals}} </td>
+          <td> {{totalAmount.dif | decimalsFormatter:decimals}} </td>
         </tr>
       </tfoot>
     </table>
@@ -280,63 +223,50 @@
       <tbody>
         <tr *ngFor="let item of taxes; let i=index" >
           <td>
-            <jqxInput
-                [width]="113.1"
-                [theme]="'table-custom'"
-                [(ngModel)]="item.name"
-                value="{{item.name}}"
-                pattern="^(([A-WY-Z][A-Z])|([A-Z][A-SU-Z])|(O[ABC][A-Z0-9 ./-]{0,6})|(XF[A-Z]{3}[0-9]*[1-9][0-9]*(\\.[0-9]+)?)|(XF[A-Z]{3}[0-9]+(\\.[0-9]*[1-9][0-9]*)?))$"
-                (onChange)="validateName(i)"
-              >
-            </jqxInput>
+            <input
+              class='input-custom'
+              [(ngModel)]="item.name"
+              pattern="^(([A-WY-Z][A-Z])|([A-Z][A-SU-Z])|(O[ABC][A-Z0-9 ./-]{0,6})|(XF[A-Z]{3}[0-9]*[1-9][0-9]*(\\.[0-9]+)?)|(XF[A-Z]{3}[0-9]+(\\.[0-9]*[1-9][0-9]*)?))$"
+              (change)="validateName(i)"
+            />
           </td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [decimalDigits]="decimals"
-              [theme]="'table-custom'"
-              [(ngModel)]="item.agentValue"
-              value="{{item.agentValue}}"
-              [inputMode]="'simple'"
-              (onChange)="calculateOnTax()">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type='text'
+              [ngModel]="item.agentValue"
+              (ngModelChange)="item.agentValue = assignData($event)"
+              decimalsFormatterDirective
+              [decimals]="decimals"
+              (change)="calculateOnTax()"
+            />
           </td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [decimalDigits]="decimals"
-              [theme]="'table-custom'"
-              [(ngModel)]="item.airlineValue"
-              value="{{item.airlineValue}}"
-               [inputMode]="'simple'"
-               (onChange)="calculateOnTax()">
-            </jqxNumberInput>
+            <input
+              class='input-custom-number amount-table'
+              type='text'
+              [ngModel]="item.airlineValue"
+              (ngModelChange)="item.airlineValue = assignData($event)"
+              decimalsFormatterDirective
+              [decimals]="decimals"
+              (change)="calculateOnTax()"
+            />
           </td>
           <td>
-            <jqxNumberInput
-              [min]="0"
-              [width]="117"
-              [height]="40"
-              [decimalDigits]="decimals"
-              [theme]="'table-custom-float-left'"
-              value="{{item.dif}}"
-              [inputMode]="'simple'"
-              [readOnly]="true">
-            </jqxNumberInput>
 
-            <jqxButton l10nTranslate
-              [height]="40"
-              (onClick)="removeTax(i)"
-              [theme]="'bin-float-left'"
-              >
-              <span class="small-font-awesome fa-stack">
-                  <i class="fa fa-trash-o"></i>
+            <input
+              class='input-custom-number-float-left amount-table'
+              type='text'
+              [value]="item.dif | abs | decimalsFormatter:decimals"
+              readonly="true"
+            />
+
+            <button class="button-bin-float-right">
+              <span class="small-font-awesome fa-stack"
+                 (click)="removeTax(i)">
+                <i class="fa fa-trash-o"></i>
               </span>
-            </jqxButton>
+            </button>
           </td>
         </tr>
       </tbody>
@@ -345,37 +275,34 @@
           <td colspan="4">
             <!-- TODO: cambiar la forma de hacer flotantes los divs -->
             <div class="float-left">
-              <jqxButton l10nTranslate
-              (onClick)="addTax()"
-              [height]="40"
-                [theme]="'add'"
-                >
-                <span class="small-font-awesome fa-stack">
-                  <i class="fa fa-circle fa-stack-2x"></i>
-                  <i class="fa fa-plus inverse-color fa-stack-1x"></i>
-                </span>
-                ADM_ACM.AMOUNT.addTax
-              </jqxButton>
+              <button l10nTranslate
+                  class="button-add"
+                  (click)="addTax()"
+                  >
+                  <span class="small-font-awesome fa-stack">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-plus inverse-color fa-stack-1x"></i>
+                  </span>
+                  ADM_ACM.AMOUNT.addTax
+              </button>
             </div>
-            
+
             <div class="float-right">
-              <jqxButton l10nTranslate
-              (onClick)="clean()"
-              [theme]="'default'"
-              [height]="40"
-              >
-              clear
-              </jqxButton>
-              <jqxButton l10nTranslate
-                (onClick)="populate()"
-                [disabled]="true"
-                [theme]="'primary'"
-                [height]="40"
-              >
-                ADM_ACM.AMOUNT.populate
-              </jqxButton>
+
+              <button l10nTranslate
+                  class="button-default"
+                  (click)="clean()">
+                clear
+              </button>
+
+              <button l10nTranslate
+                  class="button-primary"
+                  (click)="populate()"
+                  [disabled]="true">
+                  ADM_ACM.AMOUNT.populate
+              </button>
             </div>
-          
+
           </td>
         </tr>
       </tfoot>

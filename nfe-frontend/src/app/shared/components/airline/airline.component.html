@@ -1,0 +1,66 @@
+
+<div class="form-entry-row">
+  <div class="form-group"
+   forceWidth [setWidth]="'15%'">
+    <label l10nTranslate>AIRLINE.code</label>
+    <input
+      ownPattern
+      [typingPattern]="'[A-Z0-9]{3}$'"
+      (patternOnBlur)="changeAirline()"
+      [ngClass]="{'error': style == 'error' && (!airlineCode || airlineCode.length == 0)}"
+
+      class="input-custom form-control"
+      [disabled]="disabled"
+      [(ngModel)]="airlineCode"
+    />
+  </div>
+  <div class="form-group" >
+    <label></label>
+    <button l10nTranslate *ngIf="showMoreDetails"
+      class="form-control button-default details-button"
+      [disabled]="disabled || !airlineCode || airlineCode.length != 3"
+      (click)="clickMoreDetails()">
+      AIRLINE.more
+    </button>
+  </div>
+</div>
+
+<div class="form-entry-row" *ngIf="showVat" >
+  <div class="form-group">
+    <label l10nTranslate>AIRLINE.airlineVAT</label>
+    <input
+      [ngClass]="{'error': style == 'error' && (!vatNumber || vatNumber.length == 0)}"
+      class="input-custom form-control"
+      maxlength="15"
+      [disabled]="disabled || (!airlineCode || airlineCode.length == 0)"
+      [(ngModel)]="vatNumber"
+      (onChange)="changeVatNumber()"
+    />
+  </div>
+</div>
+
+<div class="form-entry-row" *ngIf="showCompanyReg">
+  <div class="form-group">
+    <label l10nTranslate>AIRLINE.companyReg</label>
+    <input
+      [ngClass]="{'error': style == 'error' && (!companyReg || companyReg.length == 0)}"
+      class="input-custom form-control"
+      maxlength="20"
+      [disabled]="disabled || (!airlineCode || airlineCode.length == 0)"
+      [(ngModel)]="companyReg"
+      (onChange)="changeCompanyReg()"
+    />
+  </div>
+</div>
+
+<div *ngIf="showContact">
+  <app-contact
+    [style]="(style == 'error' && airlineCode && airlineCode.length > 0) ? 'error' : '' "
+    [disabled]="disabled || (!airlineCode || airlineCode.length == 0)"
+    [(name)]="name"
+    [(telephone)]="telephone"
+    [(email)]="email"
+    (onChange)="changeContact($event)"
+    >
+  </app-contact>
+</div>

@@ -1,0 +1,72 @@
+<div class="form-entry-row">
+  <div class="form-group"
+      forceWidth
+      [setWidth]="'40%'">
+    <label l10nTranslate>AGENT.code</label>
+    <input class="form-control input-custom"
+      ownPattern
+      [typingPattern]="'[0-9]{7}$'"
+      (patternOnBlur)="onValueChanged()"
+
+      [ngClass]="{'error': setStyle(agentCode)}"
+      maxlength="7"
+      [(ngModel)]="agentCode"/>
+  </div>
+
+  <div class="form-group"
+      forceWidth
+      [setWidth]="'10%'">
+    <label></label>
+    <input
+      ownPattern
+      [typingPattern]="'[0-9]{1}$'"
+      (patternOnBlur)="onValueChanged()"
+
+      maxlength="1"
+      class="form-control input-custom"
+      [(ngModel)]="agentCheckDigit"
+    />
+  </div>
+
+  <div class="form-group">
+    <label></label>
+    <button *ngIf="showMoreDetails" class="form-control button-default details-button"
+      [disabled]="checkDisableShowDetails()"
+      (click)="clickMoreDetails()"
+      l10nTranslate>
+      AGENT.more
+    </button>
+  </div>
+</div>
+
+<div class="form-entry-row" *ngIf="showVat">
+  <div class="form-group">
+    <label l10nTranslate>AGENT.agentVAT</label>
+    <input class="form-control input-custom"
+      [ngClass]="{'error': setStyle(vatNumber)}"
+      maxlength="15"
+      [(ngModel)]="vatNumber"
+      (change)="changeVatNumber()"/>
+  </div>
+</div>
+
+<div class="form-entry-row" *ngIf="showCompanyReg">
+  <div class="form-group">
+    <label l10nTranslate>AGENT.companyReg</label>
+    <input class="form-control input-custom"
+      [ngClass]="{'error': setStyle(companyReg)}"
+      maxlength="20"
+      [(ngModel)]="companyReg"
+      (change)="changeCompanyReg()"/>
+  </div>
+</div>
+
+<div *ngIf="showContact">
+  <app-contact
+    [style]="(setStyle(agentCode)) ? 'error' : '' "
+    [(name)]="name"
+    [(telephone)]="telephone"
+    [(email)]="email"
+    (onChange)="changeContact($event)">
+  </app-contact>
+</div>

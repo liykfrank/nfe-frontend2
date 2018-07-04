@@ -85,7 +85,8 @@ describe("nw-front Page Query Files", () => {
   it('Try to open upload page ', () => {
     page.openUploadPage();
   });
-  it('Navigate to second page ', () => {
+
+  xit('Navigate to second page ', () => {
     page.waitFirstRow().then(() => {
       page.goToSecondPage();
       page.checkSecondPage();

@@ -1,3 +1,5 @@
+$theme-color: #55AD58;
+
 .tab-content-header {
   padding: 21px;
   font-size: 20px;
@@ -6,8 +8,8 @@
 
   .color-bullet {
     height: 18px;
-    border-left: 6px solid #55AD58;
-    border-right: 6px solid #55AD58;
+    border-left: 6px solid $theme-color;
+    border-right: 6px solid $theme-color;
     margin-right: 3px;
   }
 }
@@ -20,13 +22,13 @@
       height: 16px;
       width: 119px;
       color: #152C5A;
-      font-family: Roboto;
       font-size: 14px;
       font-weight: bold;
       line-height: 16px;
       text-align: center;
     }
-    border-bottom: 2px solid #55AD58;
+    
+    border-bottom: 2px solid $theme-color;
   }
 
   .table-amount {

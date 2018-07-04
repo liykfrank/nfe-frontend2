@@ -1,6 +1,6 @@
-$left-side: 70.63%;
-$space: 1.64%;
-$right-side: 25.9%;
+$left-side: 79.63%;
+$space: 1.09%;
+$right-side: 18.1%;
 
 .container {
   padding: 20px;
@@ -8,7 +8,11 @@ $right-side: 25.9%;
 
 %sticky {
   position: fixed;
-  z-index: 2000;
+  z-index: 21000;
+}
+
+.hidden-box {
+  min-height: 114px;
 }
 
 %resume-bar-id {
@@ -36,16 +40,16 @@ $right-side: 25.9%;
 
 %tabs-container-id {
   @extend %sticky;
-  top: 100px;
+  top: 150px;
   right: 0px;
-  left: 72.27%;
+  left: 79.72%;
   margin-right: 62.5px;
   width: auto;
 }
 
-#tabs-container-ADM-create.sticky, 
-#tabs-container-ADM-detail.sticky, 
-#tabs-container-ACM-create.sticky, 
+#tabs-container-ADM-create.sticky,
+#tabs-container-ADM-detail.sticky,
+#tabs-container-ACM-create.sticky,
 #tabs-container-ACM-detail.sticky {
   @extend %tabs-container-id;
 }
@@ -54,7 +58,7 @@ $right-side: 25.9%;
   @extend %sticky;
   top: 90px;
   left: 0px;
-  right: 30.7%;
+  right: 22.3%;
   padding-left: 20px;
   margin-top: 0;
   margin-left: 42.5px;
@@ -62,9 +66,9 @@ $right-side: 25.9%;
   width: auto;
 }
 
-#link-bar-ADM-create.sticky, 
-#link-bar-ADM-detail.sticky, 
-#link-bar-ACM-create.sticky, 
+#link-bar-ADM-create.sticky,
+#link-bar-ADM-detail.sticky,
+#link-bar-ACM-create.sticky,
 #link-bar-ACM-detail.sticky {
   @extend %link-bar-container-id;
 }
@@ -100,7 +104,8 @@ $right-side: 25.9%;
   color: #FFFFFF;
   display: flex;
   width: 100%;
-  
+  margin-bottom: 21px;
+
   .resume-info {
     margin-right: auto;
   }
@@ -112,12 +117,11 @@ $right-side: 25.9%;
   }
 }
 
-
-
 .link-bar {
   min-height: 30px;
   height: auto;
   background-color: #FFFFFF;
+  padding-right: 20.5%;
 
   .pills-links {
     float: left;
@@ -131,7 +135,7 @@ $right-side: 25.9%;
 
 %pill {
   cursor: pointer;
-  width: 123px;
+  min-width: 123px;
   color: #1989CF;
   border: solid 1px #1989CF;
   background-color: #FFFFFF;
@@ -142,6 +146,15 @@ $right-side: 25.9%;
   border-radius: 0;
   margin-left: -3px;
   margin-right: -3px;
+}
+
+%pill.active {
+  background-color: #1989CF;
+  color: #FFFFFF;
+}
+
+%pill:focus{
+  outline: none;
 }
 
 .pills-links {

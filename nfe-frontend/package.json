@@ -6,8 +6,11 @@
     "ng": "ng",
     "start": "ng serve",
     "start-mock": "ng serve --env=mock",
-    "build": "ng build --env=demo",
+    "build": "ng build --env=dev",
+    "build-dev": "ng build --env=dev",
+    "build-qai": "ng build --env=qai",
     "build-uat": "ng build --env=uat",
+    "build-qaia": "ng build --env=qaia",
     "test": "ts-node setkarma && ng test --env=mock-test --watch=false --cc",
     "lint": "ng lint",
     "e2e": "ts-node setproct && ng e2e --env=mock-proc"

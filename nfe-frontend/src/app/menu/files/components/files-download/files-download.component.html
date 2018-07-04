@@ -29,7 +29,7 @@
   <div class="bottom_buttons" *ngIf="!readOnly">
     <!-- <app-buttons id="downloadFiles" [title]="'Download'" (clickBut)="download()" [disabled]="isSelected()" ></app-buttons> -->
     <jqxButton l10nTranslate id="downloadFiles" [theme]="'primary'" (click)="download()" [disabled]="isSelected()">FILES.download</jqxButton>
-    <app-buttons [title]="'Print'" [hidden]="true"></app-buttons>
+    <jqxButton [hidden]="true">Print</jqxButton>
     <jqxButton l10nTranslate id="deleteFiles" [theme]="'primary'" (click)="remove()" [disabled]="isSelected()">FILES.delete</jqxButton>
     <!-- <app-buttons id="deleteFiles" [title]="'Delete'" (clickBut)="remove()" [disabled]="isSelected()"></app-buttons> -->
   </div>

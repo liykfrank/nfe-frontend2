@@ -3,11 +3,16 @@
     border: 1px solid #BDC3C9;
     border-radius: 4px;
     background-color: #FFFFFF;
-    padding: 0 5px; 
+    padding: 0 5px;
 }
 
 .jqx-dropdownlist-state-normal-custom {
     @extend %jqx-dropdownlist-state-normal;
+}
+
+.jqx-dropdownlist-state-normal-custom-error {
+  @extend %jqx-dropdownlist-state-normal;
+  border-color: red;
 }
 
 .jqx-dropdownlist-state-normal-custom-float {

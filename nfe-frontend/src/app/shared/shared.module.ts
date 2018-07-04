@@ -1,5 +1,3 @@
-
-
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -26,6 +24,7 @@ import { jqxExpanderComponent }       from 'jqwidgets-scripts/jqwidgets-ts/angul
 import { jqxPopoverComponent }        from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxpopover';
 import { jqxButtonGroupComponent }    from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttongroup';
 import { jqxDockingComponent }        from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdocking';
+import { jqxMaskedInputComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxmaskedinput';
 
 import { CodeHighlighterModule } from 'primeng/codehighlighter';
 import { GrowlModule } from 'primeng/growl';
@@ -35,24 +34,25 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { FileUploadModule } from 'primeng/fileupload';
+import { CalendarModule } from 'primeng/calendar';
 
 import { l10nConfig } from './base/conf/l10n.config';
-import { ButtonsComponent } from './components/buttons/buttons.component';
-import { CalendarComponent } from './components/calendar/calendar.component';
-import { CheckboxComponent } from './components/checkbox/checkbox.component';
 import { FilterCrumbsComponent } from './components/filter-crumbs/filter-crumbs.component';
-import { GridComponent } from './components/grid/grid.component';
-import { InputComponent } from './components/input/input.component';
 import { JqxNwComboComponent } from './components/jqx-nw-combo/jqx-nw-combo.component';
-import { ListComponent } from './components/list/list.component';
-import { NumberComponent } from './components/number/number.component';
-import { SafeUrlPipe } from './components/pipes/safe-url.pipe';
-import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
+import { SafeUrlPipe } from './directives/safe-url.pipe';
 import { TablePaginationComponent } from './components/table-pagination/table-pagination.component';
 import { UtilsService } from './services/utils.service';
 
 import { DivCollapsableComponent } from './components/div-collapsable/div-collapsable.component';
-import { NumbersOnlyDirective } from './directives/numbers-only.directive';
+import { ContactComponent } from './components/contact/contact.component';
+import { AirlineComponent } from './components/airline/airline.component';
+import { AgentComponent } from './components/agent/agent.component';
+import { AbsolutePipe } from './directives/absolute.pipe';
+import { PatternDirective } from './directives/pattern.directive';
+import { ForceWidthDirective } from './directives/force-width.directive';
+import { DecimalsFormatterPipe } from './directives/decimals-formatter.pipe';
+import { DecimalsFormatterDirectiveDirective } from './directives/decimals-formatter-directive.directive';
+// import { InputStatusStyleDirective } from './directives/input-status-style.directive';
 
 
 @NgModule({
@@ -62,8 +62,8 @@ import { NumbersOnlyDirective } from './directives/numbers-only.directive';
     FormsModule,
     LocalizationModule,
     TranslationModule.forRoot(l10nConfig),
-    FormsModule,
     FileUploadModule,
+    CalendarModule,
     InputTextModule,
     PasswordModule,
     ScrollPanelModule,
@@ -87,14 +87,6 @@ import { NumbersOnlyDirective } from './directives/numbers-only.directive';
     jqxProgressBarComponent,
     jqxButtonComponent,
     jqxDropDownListComponent,
-    GridComponent,
-    CheckboxComponent,
-    InputComponent,
-    NumberComponent,
-    CalendarComponent,
-    ProgressBarComponent,
-    ButtonsComponent,
-    ListComponent,
     FilterCrumbsComponent,
     JqxNwComboComponent,
     jqxNotificationComponent,
@@ -107,14 +99,20 @@ import { NumbersOnlyDirective } from './directives/numbers-only.directive';
     jqxExpanderComponent,
     jqxPopoverComponent,
     jqxButtonGroupComponent,
-    NumbersOnlyDirective,
-    jqxDockingComponent
+    jqxDockingComponent,
+    jqxMaskedInputComponent,
+    AgentComponent,
+    ContactComponent,
+    AirlineComponent,
+    AbsolutePipe,
+    PatternDirective,
+    ForceWidthDirective,
+    DecimalsFormatterPipe,
+    DecimalsFormatterDirectiveDirective
   ],
   exports: [
     CommonModule,
     FormsModule,
-    GridComponent,
-    CheckboxComponent,
     jqxTabsComponent,
     jqxInputComponent,
     jqxCheckBoxComponent,
@@ -123,7 +121,6 @@ import { NumbersOnlyDirective } from './directives/numbers-only.directive';
     TranslationModule,
     LocalizationModule,
     HttpClientModule,
-    FormsModule,
     jqxNumberInputComponent,
     jqxCalendarComponent,
     jqxRadioButtonComponent,
@@ -131,15 +128,10 @@ import { NumbersOnlyDirective } from './directives/numbers-only.directive';
     jqxDropDownListComponent,
     jqxDateTimeInputComponent,
     jqxFileUploadComponent,
-    InputComponent,
-    NumberComponent,
-    CalendarComponent,
-    ProgressBarComponent,
     jqxButtonComponent,
-    ButtonsComponent,
-    ListComponent,
     FilterCrumbsComponent,
     FileUploadModule,
+    CalendarModule,
     InputTextModule,
     PasswordModule,
     ScrollPanelModule,
@@ -157,13 +149,23 @@ import { NumbersOnlyDirective } from './directives/numbers-only.directive';
     jqxExpanderComponent,
     jqxPopoverComponent,
     jqxButtonGroupComponent,
-    NumbersOnlyDirective,
     ScrollPanelModule,
     DialogModule,
-    jqxDockingComponent
+    jqxDockingComponent,
+    jqxMaskedInputComponent,
+    AgentComponent,
+    ContactComponent,
+    AirlineComponent,
+    AbsolutePipe,
+    PatternDirective,
+    ForceWidthDirective,
+    DecimalsFormatterPipe,
+    DecimalsFormatterDirectiveDirective
   ],
   providers: [
-    UtilsService
+    UtilsService,
+    DecimalsFormatterPipe,
+    DecimalsFormatterDirectiveDirective
   ]
 })
 export class SharedModule {}

@@ -1,0 +1,14 @@
+
+%textarea-custom {
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  padding: 0 5px;
+  border: 1px solid #BDC3C9;
+  outline: none;
+  overflow: auto;
+}
+
+.textarea-custom {
+  @extend %textarea-custom;
+  resize: none !important;
+}

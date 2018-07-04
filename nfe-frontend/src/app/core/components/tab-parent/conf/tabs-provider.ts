@@ -215,7 +215,7 @@ export class TabsProvider {
 
   confTabs: Array<ItabAction<any>> = [
     this.tabDashboard,
-    /* this.tabADM_ACM, */
+    this.tabADM_ACM,
     this.tabRefunds,
     this.tabReports,
     this.tabDocuments,

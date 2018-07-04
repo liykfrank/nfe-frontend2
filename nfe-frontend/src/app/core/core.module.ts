@@ -1,5 +1,5 @@
 import { TabsStateService } from './services/tabs-state.service';
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WebComponent } from './components/web/web.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -20,8 +20,11 @@ import { EmptyComponent } from './components/empty/empty.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SftpModifyPasswordService } from './services/sftp-modify-password.service';
 import { NotificationsComponent } from './components/notifications/notifications.component';
+import { MessageService } from 'primeng/components/common/messageservice';
 
 import { DashboardService } from './services/dashboard.service';
+import { AlertsComponent } from './components/alerts/alerts.component';
+import { AlertsService } from './services/alerts.service';
 
 @NgModule({
   imports: [HttpClientModule, CoreRoutingModule, SharedModule],
@@ -33,14 +36,16 @@ import { DashboardService } from './services/dashboard.service';
     FooterComponent,
     EmptyComponent,
     DashboardComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    AlertsComponent
   ],
   exports: [
     HeaderComponent,
     RouterModule,
     MenuComponent,
     FooterComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    AlertsComponent
   ],
   entryComponents: [EmptyComponent, DashboardComponent],
   providers: [
@@ -55,8 +60,19 @@ import { DashboardService } from './services/dashboard.service';
     SftpModifyPasswordService
   ]
 })
+
 export class CoreModule {
   constructor(public l10nLoader: L10nLoader) {
     this.l10nLoader.load();
+  }
+
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: CoreModule,
+      providers: [
+        AlertsService,
+        MessageService
+      ]
+    };
   }
 }

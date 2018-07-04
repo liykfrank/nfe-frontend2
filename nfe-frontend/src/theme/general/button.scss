@@ -1,0 +1,130 @@
+%button-custom {
+  background: #014E81;
+  color: white;
+  width: 83px;
+  height: 40px;
+  border-radius: 5px;
+  cursor: pointer !important ;
+  font-size: 16px;
+  border-style: none;
+}
+
+%button-custom[disabled] {
+  // background-color: #013E66;
+}
+
+.button-custom {
+  @extend %button-custom;
+}
+
+.button-add {
+  @extend %button-custom;
+  background-color: #1989CF;
+  width: 120px;
+
+  .inverse-color {
+      color: #1989CF;
+  }
+
+  .small-font-awesome {
+      font-size: 0.4em;
+  }
+}
+
+%button-default {
+  @extend %button-custom;
+  line-height: 0px;
+  background-color: #FFFFFF;
+  color: #152C5A;
+  border: 1px solid #152C5A;
+}
+
+%button-default[disabled] {
+  // background-color: #CECECE;
+}
+
+.button-default {
+  @extend %button-default;
+}
+
+.button-default.details-button {
+  @extend %button-default;
+  height: 22px;
+  width: 120px;
+  margin-top: 18px;
+}
+
+%button-primary {
+  @extend %button-custom;
+  line-height: 0px;
+  background-color: #152C5A;
+  color: #FFFFFF;
+  border: 1px solid #152C5A;
+}
+
+.button-primary {
+  @extend %button-primary;
+}
+
+.button-primary[disabled] {
+  @extend %button-primary;
+  opacity: 0.5;
+}
+
+.button-primary-right {
+  @extend %button-primary;
+  float: right;
+}
+
+.button-switch-pill {
+  min-width: 123px;
+  color: #1989CF;
+  border: solid 1px #1989CF;
+  background-color: #FFFFFF;
+  font-size: 14px;
+  border-radius: 100px;
+  text-align: right;
+  padding: 0 4px;
+  margin-top: 4px;
+  height: 26px;
+
+  .button-title {
+    text-align: center;
+    margin-top: 4px;
+    padding-right: 4px;
+  }
+
+  .icon-fa-custom {
+    font-size: 10px;
+    float: left;
+    margin-right: 5px;
+  }
+}
+
+.button-switch-pill:focus {
+  outline: none;
+}
+
+%button-bin {
+  border: none;
+  cursor: pointer;
+}
+
+.button-bin {
+  @extend %button-bin;
+}
+
+.button-bin:disabled {
+  @extend %button-bin;
+  opacity: 0.5;
+}
+
+.button-bin-float-right {
+  @extend %button-bin;
+  float: right;
+  height: 40px; 
+  width: 40px;
+  background-color: transparent;
+}
+
+

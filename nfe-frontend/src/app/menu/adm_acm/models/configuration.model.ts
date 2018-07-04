@@ -6,7 +6,7 @@ export class Configuration {
   cpPermittedForConcerningRefund: boolean;
   defaultStat: string;
   freeStat: boolean;
-  isoc: string;
+  isoCountryCode: string;
   maxNumberOfRelatedDocuments: number;
   mfPermittedForConcerningIssue: boolean;
   mfPermittedForConcerningRefund: boolean;

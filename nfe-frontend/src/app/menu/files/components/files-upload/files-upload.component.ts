@@ -1,11 +1,14 @@
+
 import { forEach } from '@angular/router/src/utils/collection';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ConfigurationService } from '../../services/configuration.service';
 import { Configuration } from '../../models/configuration';
-import { environment } from '../../../../../environments/environment';
+
 import { Message } from 'primeng/components/common/api';
 import { any } from 'codelyzer/util/function';
+import { environment } from '../../../../../environments/environment';
 
+console.log(environment)
 const API_URL = environment.files.api.apiUpload;
 const BASE_URL = environment.basePath + environment.files.basePath;
 
@@ -24,6 +27,7 @@ export class FilesUploadComponent implements OnInit, AfterViewInit {
   chooseLabel: string;
   customUpload: boolean;
   uploadedFiles: any[];
+
 
   // TODO: revisar este sistema de mensajes Toast y acondicionarlo al actual.
   msgs: Message[];

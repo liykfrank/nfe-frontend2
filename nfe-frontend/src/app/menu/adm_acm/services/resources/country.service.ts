@@ -12,6 +12,7 @@ export class CountryService extends NwRepositoryAbstract<Country[], Object> {
   constructor(private http: HttpClient, injector: Injector) {
     super(
       http,
+      environment.basePath +
       environment.adm_acm.basePath +
         environment.adm_acm.api.country,
       injector

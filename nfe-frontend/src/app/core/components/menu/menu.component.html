@@ -1,7 +1,7 @@
 <jqxMenu class="menu" [autoOpen]="true">
   <ul>
     <li (click)="openTab('dashboard')">DASHBOARD</li>
-    <li (click)="openTab('adm_acm')">ADM/ACM
+    <li [id]="_utilsService.wrapperMenuID(actions.ACDM)">ADM/ACM
         <ul>
             <li (click)="openTab('adm_acm')">Query ADM</li>
 

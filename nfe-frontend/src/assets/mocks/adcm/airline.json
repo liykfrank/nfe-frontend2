@@ -1,0 +1,11 @@
+{
+  "address1": "mi dirección 1",
+  "airlineCode": "ABC",
+  "city": "Ciudad1",
+  "country": "Pais1",
+  "globalName": "Name",
+  "isoCountryCode": "NA",
+  "postalCode": "12345",
+  "taxNumber": "taxNumber",
+  "toDate": "Date"
+}
