@@ -21,6 +21,9 @@
   "close_button": "Close",
   "error": "Error",
 
+  "privacy": "Privacy",
+  "terms": "Terms & Conditions",
+
   "ADM_ACM": {
     "ADMTitle": "ADM Issue",
     "ACMTitle": "ACM Issue",
@@ -179,6 +182,7 @@
   },
 
   "FILES": {
+    "upload_file": "Drag and Drop files here",
     "upload": "Upload files",
     "download": "Download",
     "delete": "Delete"

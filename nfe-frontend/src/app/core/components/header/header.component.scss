@@ -1,80 +1,65 @@
+.navigation {
+    display: inline-flex;
+    width: 100%;
+    
+    .left-side {
+        margin: 25px 0;
+        float: left;
+        display: flex;
+        width: 80%;
+        padding: 0 20px;
+        align-items: center;
+        
+        .logo { 
+            width: auto;
+            .header-logo {
+                height: 45px;
+                width: auto;
+            }
+        }
 
-    header{
-      background: #002A51;
-      flex: 0 0 100px;
-      flex-direction: row;
-      align-items: center;
+        .brand {
+            width: 7%;
+            font-size: 22px;
+            color: #033E78;
+        }
+        
+        .combos {
+            width: 60%;
+            .special-selector {
+                padding: 3px 14px;
+                border: 1px solid #022F5B;
+                border-radius: 15px;
+                background-color: #FFFFFF;
+                color: #022F5B;
+                font-size: 14px;
+                line-height: 16px;
+            }
+        }
+        
+        .actions {
+            width: 25%;
+            .single-action {
+                float: left;
+                padding: 0 8px;
+            }
+        }
+    }
 
-          .lvl1{
-              display: flex;
-              align-items: center;
-              height: 60px;
-              img {
-                  width: 70px;
-                  height: 25px;
-                  padding: 3px;
-              }
-              background: #F6F6F6;
-              flex: 0 0 60px;
-              p {
-                  margin: 0px;
-                  padding: 0px;
-              }
+    .divisor {
+        width: 4px;
+        float: left;
+        background-color: #C6C6C6;
+    }
 
-              .principal-nav{
-                  display: flex;
-                  justify-content: flex-end;
-                  width: 100%;
+    .right-side {
+        margin: 25px 0;
+        width: auto;
+        padding: 0 20px;
+        float: left;
+    }
+}
 
-                  .principal-buttons {
-                      display: flex;
-                      flex-direction: row;
-                      .button{
-                          display: flex;
-                          flex-direction: column;
-                          justify-content: center;
-                          align-items: center
-                      }
-
-                  }
-                  .user{
-                      display: flex;
-                      flex-direction: column;
-                      justify-content: center;
-                      color: white;
-                      background: #16E7C1;
-                      font-size: 12px;
-                      padding: 0px 60px 0px 10px;
-
-                  }
-                  .country{
-                      display: flex;
-                      flex-direction: column;
-                      justify-content: center;
-                      padding: 0px 60px 0px 20px;
-                      border-right: 1px solid gray;
-                  }
-                  .user-account{
-                      display: flex;
-                      flex-direction: row;
-                      justify-content: center;
-                      align-items: center;
-                      padding: 0px 60px 0px 20px;
-                      border-right: 1px solid gray;
-                  }
-                  .notifications{
-                      display:flex;
-                      flex-direction: column;
-                      justify-content: center;
-                  }
-
-              }
-
-          }
-
-          .lvl2{
-              background: #002A51;
-              height: 40px;
-              flex: 0 0 auto;
-          }
+.clear {
+    clear: both;
 }

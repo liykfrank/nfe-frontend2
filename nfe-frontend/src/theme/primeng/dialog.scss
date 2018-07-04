@@ -139,6 +139,30 @@
   }
 }
 
+.alert-confirm.ui-dialog {
+  @extend %alert;
+  color: #AD5A00 !important;
+  border-color: #AD5A00;
+
+  .ui-dialog-content {
+    color: #AD5A00;
+  }
+
+  .ui-dialog-footer {
+    .button-accept {
+      background-color: #AD5A00;
+      border-color: #AD5A00;
+      color: #FFFFFF;
+    }
+    
+    .button-cancel {
+      background-color: #FFFFFF;
+      border-color: #AD5A00;
+      color: #AD5A00;
+    }
+  }
+}
+
 .alert-error.ui-dialog {
   @extend %alert;
   color: #B20101 !important;

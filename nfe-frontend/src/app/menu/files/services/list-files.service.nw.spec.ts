@@ -20,7 +20,7 @@ import { RemoveFilesResource } from "./resources/removefiles.resource";
 import { RemoveFileResource } from "./resources/removefile.resource";
 import { SortType } from '../models/sort-type.enum';
 
-describe("ListFilesService", () => {
+xdescribe("ListFilesService", () => {
   var timeOut;
   beforeEach(() => {
     // timeOut = jasmine.DEFAULT_TIMEOUT_INTERVAL;

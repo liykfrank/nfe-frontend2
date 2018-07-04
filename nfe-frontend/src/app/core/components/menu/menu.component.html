@@ -1,6 +1,8 @@
-<jqxMenu class="menu" [autoOpen]="true">
+<jqxMenu class="menu"
+  [theme]="'custom'"
+  [showTopLevelArrows]="true" 
+  [autoOpen]="true">
   <ul>
-    <li (click)="openTab('dashboard')">DASHBOARD</li>
     <li [id]="_utilsService.wrapperMenuID(actions.ACDM)">ADM/ACM
         <ul>
             <li (click)="openTab('adm_acm')">Query ADM</li>
@@ -10,26 +12,31 @@
         </ul>
     </li>
     <li (click)="openTab('refunds')">REFUNDS</li>
-    <li (click)="openTab('reports')">REPORTS</li>
-    <li [id]="_utilsService.wrapperMenuID(actions.FILES)">FILES
-        <ul>
-          <li [id]="_utilsService.wrapperMenuID(actions.QUERY_FILES)" (click)="openTab('query_files')">Query Files</li>
-          <li [id]="_utilsService.wrapperMenuID(actions.QUERY_FILES_READ_ONLY)" (click)="openTab('query_files/readOnly')">Query Files Read Only</li>
-          <li [id]="_utilsService.wrapperMenuID(actions.UPLOAD_FILES)" (click)="openTab('upload_files')">Upload Files</li>
+    <li (click)="openTab('reports')">REPORTS
+      <ul>
+        <li [id]="_utilsService.wrapperMenuID(actions.FILES)">FILES
+          <ul>
+            <li [id]="_utilsService.wrapperMenuID(actions.QUERY_FILES)" (click)="openTab('query_files')">Query Files</li>
+            <li [id]="_utilsService.wrapperMenuID(actions.QUERY_FILES_READ_ONLY)" (click)="openTab('query_files/readOnly')">Query Files Read Only</li>
+            <li [id]="_utilsService.wrapperMenuID(actions.UPLOAD_FILES)" (click)="openTab('upload_files')">Upload Files</li>
+          </ul>
+        </li>
+        <li [id]="_utilsService.wrapperMenuID(actions.SFTP_ACCOUNTS)">SFTP Accounts
+          <ul>
+            <li [id]="_utilsService.wrapperMenuID(actions.CREATE_SFTP_ACCOUNT)" (click)="openTab('sftp_accounts')">Create Account</li>
+            <li (click)="sftpModifyPass()">Modify Pass</li>
+          </ul>
+        </li>
       </ul>
-    </li>
-
-    <li [id]="_utilsService.wrapperMenuID(actions.SFTP_ACCOUNTS)">SFTP Accounts
-        <ul>
-          <li [id]="_utilsService.wrapperMenuID(actions.CREATE_SFTP_ACCOUNT)" (click)="openTab('sftp_accounts')">Create Account</li>
-          <li (click)="sftpModifyPass()">Modify Pass</li>
-        </ul>
     </li>
 
     <li (click)="openTab('ticketing')">TICKETING</li>
     <li (click)="openTab('general_info')">GENERAL INFO</li>
     <li (click)="openTab('self_service')">SELF SERVICE</li>
-    <li (click)="openTab('admin')">ADMIN</li>
-    <li (click)="openTab('monitor')">MONITOR</li>
+    <li (click)="openTab('admin')">ADMIN
+      <ul>
+        <li (click)="openTab('monitor')">MONITOR</li>
+      </ul>
+    </li>
   </ul>
 </jqxMenu>
