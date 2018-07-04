@@ -1,4 +1,4 @@
-package org.iata.bsplink.refund.loader.job.writer;
+package org.iata.bsplink.refund.loader.job;
 
 import java.util.List;
 

@@ -16,4 +16,9 @@ public enum RecordIdentifier {
 
         return identifier;
     }
+
+    public boolean matches(String value) {
+
+        return identifier.equals(value);
+    }
 }

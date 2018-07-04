@@ -1,4 +1,4 @@
-package org.iata.bsplink.refund.loader.job.listener;
+package org.iata.bsplink.refund.loader.job;
 
 import lombok.extern.java.Log;
 

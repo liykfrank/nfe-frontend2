@@ -1,4 +1,4 @@
-package org.iata.bsplink.refund.loader.job.reader;
+package org.iata.bsplink.refund.loader.job;
 
 import lombok.extern.java.Log;
 
@@ -35,11 +35,11 @@ public class RefundReader implements ItemReader<RefundDocument> {
 
             String recordIdentifier = line.getRecordIdentifier();
 
-            if (RecordIdentifier.IT01.getIdentifier().equals(recordIdentifier)) {
+            if (RecordIdentifier.IT01.matches(recordIdentifier)) {
 
                 refund.setRecordIt01((RecordIt01) line);
 
-            } else if (RecordIdentifier.IT02.getIdentifier().equals(recordIdentifier)) {
+            } else if (RecordIdentifier.IT02.matches(recordIdentifier)) {
 
                 refund.setRecordIt02((RecordIt02) line);
 

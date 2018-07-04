@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.iata.bsplink.refund.loader.dto.Refund;
-import org.iata.bsplink.refund.loader.job.listener.JobCompletionNotificationListener;
+import org.iata.bsplink.refund.loader.job.JobCompletionNotificationListener;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.Record;
 import org.iata.bsplink.refund.loader.model.record.RecordIt01;
