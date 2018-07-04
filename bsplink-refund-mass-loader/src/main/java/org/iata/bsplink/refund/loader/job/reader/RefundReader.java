@@ -1,20 +1,19 @@
-package org.iata.bsplink.refund.loader.reader;
+package org.iata.bsplink.refund.loader.job.reader;
 
-import org.iata.bsplink.refund.loader.listener.JobCompletionNotificationListener;
-import org.iata.bsplink.refund.loader.model.Refund;
+import lombok.extern.java.Log;
+
+import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.Record;
 import org.iata.bsplink.refund.loader.model.record.RecordIdentifier;
 import org.iata.bsplink.refund.loader.model.record.RecordIt01;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02;
 import org.iata.bsplink.refund.loader.model.record.RecordRawLine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.stereotype.Component;
 
-public class RefundReader implements ItemReader<Refund> {
-
-    private static final Logger log =
-            LoggerFactory.getLogger(JobCompletionNotificationListener.class);
+@Component
+@Log
+public class RefundReader implements ItemReader<RefundDocument> {
 
     private ItemReader<Record> delegate;
 
@@ -24,14 +23,14 @@ public class RefundReader implements ItemReader<Refund> {
     }
 
     @Override
-    public Refund read() throws Exception {
+    public RefundDocument read() throws Exception {
 
-        Refund refund = null;
+        RefundDocument refund = null;
 
         for (Record line = null; (line = delegate.read()) != null;) {
 
             if (refund == null) {
-                refund = new Refund();
+                refund = new RefundDocument();
             }
 
             String recordIdentifier = line.getRecordIdentifier();
@@ -46,8 +45,7 @@ public class RefundReader implements ItemReader<Refund> {
 
             } else {
 
-                String rawLine = recordIdentifier + ((RecordRawLine) line).getLine();
-                log.info(rawLine);
+                log.info(recordIdentifier + ((RecordRawLine) line).getLine());
             }
         }
 

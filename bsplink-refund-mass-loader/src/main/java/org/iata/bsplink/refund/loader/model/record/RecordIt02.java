@@ -10,5 +10,7 @@ import lombok.ToString;
 public class RecordIt02 implements Record {
 
     private String recordIdentifier;
-    private String transactionNumber;
+    private String ticketDocumentNumber;
+    private String ticketingAirlineCodeNumber;
+    private String isoCountryCode;
 }
