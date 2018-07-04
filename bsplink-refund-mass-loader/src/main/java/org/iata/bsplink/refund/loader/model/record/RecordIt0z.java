@@ -10,4 +10,5 @@ import lombok.ToString;
 public class RecordIt0z implements Record {
 
     private String recordIdentifier;
+    private String reportRecordCounter;
 }
