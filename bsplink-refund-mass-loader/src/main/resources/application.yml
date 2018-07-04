@@ -1,0 +1,4 @@
+feign:
+  refund:
+    # URL of the refund management service
+    url: ${service.refund:http://localhost:8085/v1/refunds}

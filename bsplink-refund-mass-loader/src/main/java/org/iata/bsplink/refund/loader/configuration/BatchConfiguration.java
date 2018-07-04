@@ -6,8 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.iata.bsplink.refund.loader.listener.JobCompletionNotificationListener;
-import org.iata.bsplink.refund.loader.model.Refund;
+import org.iata.bsplink.refund.loader.dto.Refund;
+import org.iata.bsplink.refund.loader.job.listener.JobCompletionNotificationListener;
+import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.Record;
 import org.iata.bsplink.refund.loader.model.record.RecordIt01;
 import org.iata.bsplink.refund.loader.model.record.RecordIt01Layout;
@@ -16,14 +17,13 @@ import org.iata.bsplink.refund.loader.model.record.RecordIt02Layout;
 import org.iata.bsplink.refund.loader.model.record.RecordLayout;
 import org.iata.bsplink.refund.loader.model.record.RecordRawLine;
 import org.iata.bsplink.refund.loader.model.record.RecordRawLineLayout;
-import org.iata.bsplink.refund.loader.reader.RefundReader;
-import org.iata.bsplink.refund.loader.writer.RefundConsoleWriter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ExecutionContext;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
@@ -67,8 +67,9 @@ public class BatchConfiguration {
      * Flat file reader which will act as delegate of the refund reader.
      */
     @Bean
+    @StepScope
     public ItemReader<Record> recordReader(
-            @Value("classpath:fixtures/files/ESe9EARS_20160331_2203_107")
+            @Value("file:#{jobParameters[file]}")
             Resource resource, LineMapper<Record> lineMapper) {
 
         FlatFileItemReader<Record> reader = new FlatFileItemReader<>();
@@ -80,27 +81,17 @@ public class BatchConfiguration {
         return reader;
     }
 
-    @Bean
-    public ItemReader<Refund> refundReader(ItemReader<Record> recordReader) {
-
-        return new RefundReader(recordReader);
-    }
-
-    @Bean
-    public RefundConsoleWriter writer() {
-
-        return new RefundConsoleWriter();
-    }
-
     /**
      * Builds step1.
      */
     @Bean
-    public Step step1(ItemReader<Refund> reader, ItemWriter<Refund> writer) {
+    public Step step1(ItemReader<RefundDocument> reader,
+            ItemProcessor<RefundDocument, Refund> processor, ItemWriter<Refund> writer) {
 
         return stepBuilderFactory.get("step1")
-            .<Refund, Refund>chunk(STEP_CHUNK_SIZE)
+            .<RefundDocument, Refund>chunk(STEP_CHUNK_SIZE)
             .reader(reader)
+            .processor(processor)
             .writer(writer)
             .build();
     }
@@ -113,7 +104,6 @@ public class BatchConfiguration {
             JobCompletionNotificationListener jobCompletionNotificationListener, Step step1) {
 
         return jobBuilderFactory.get("refundMassLoaderJob")
-            .incrementer(new RunIdIncrementer())
             .listener(jobCompletionNotificationListener)
             .flow(step1)
             .end()

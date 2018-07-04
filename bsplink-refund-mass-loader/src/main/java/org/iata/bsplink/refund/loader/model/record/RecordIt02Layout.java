@@ -15,7 +15,9 @@ public class RecordIt02Layout extends RecordBaseLayout {
     protected void setFieldsLayout(Map<String, String> fieldsLayout) {
 
         fieldsLayout.put("recordIdentifier", "1-1");
-        fieldsLayout.put("transactionNumber", "2-7");
+        fieldsLayout.put("ticketDocumentNumber", "32-46");
+        fieldsLayout.put("ticketingAirlineCodeNumber", "68-72");
+        fieldsLayout.put("isoCountryCode", "247-248");
     }
 
 }
