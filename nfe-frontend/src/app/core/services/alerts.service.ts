@@ -10,6 +10,7 @@ import { NwBaseAbstract } from '../../shared/base/nw-base-abstract';
 export class AlertsService extends NwBaseAbstract {
 
   private alert = new BehaviorSubject<AlertModel>(null);
+  private onAccept = new BehaviorSubject<boolean>(null);
 
   constructor (injector: Injector) {
     super(injector);
@@ -18,9 +19,17 @@ export class AlertsService extends NwBaseAbstract {
   public getAlert(): Observable<AlertModel> {
     return this.alert.asObservable();
   }
-
+  
   public setAlert(elem: AlertModel): void {
     this.alert.next(elem);
+  }
+
+  public getAccept(): Observable<boolean> {
+    return this.onAccept.asObservable();
+  }
+
+  public setAccept(value: boolean) {
+    this.onAccept.next(value);
   }
 
   public setAlertTranslate(title: string, message: string, alert_type?: AlertType) {

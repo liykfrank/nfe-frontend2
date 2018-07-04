@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import { environment } from './../../../../environments/environment';
 
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 
 import { Configuration } from '../models/configuration.model';
 import { CompanyModel } from './../models/company.model';
@@ -152,7 +152,7 @@ export class AdmAcmService {
   }
   // Observables Basic Info
 
-  public issueACDM() {
+  public issueACDM(regularized?: boolean) {
     const errors = this._BasicInfoService.checkBasicInfo(this.$configuration.getValue());
 
     if (errors.length != 0) {
@@ -186,18 +186,50 @@ export class AdmAcmService {
 
     this._FilesService.copyToAdcm(this.acdm);
 
-    this._AcdmsService.postAcdm(this.acdm).subscribe(response => {
-      this.acdm = response;
-      // TODO: Alert Guardado
-      let alert = new AlertModel('ISSUE Successful', 'Issue ID: ' + response.id, AlertType.INFO);
-      this._AlertsService.setAlert(alert);
-      this.setACDM();
-    },
-    error => {
-      // console.log(error);
-      let alert = new AlertModel('ERROR', 'Check the wrong fields', AlertType.ERROR);
-      this._AlertsService.setAlert(alert);
-    });
+    if (regularized) {
+      this.acdm.regularized = true;
+    }
+
+    this._AcdmsService.postAcdm(this.acdm).subscribe(
+      response => {
+        this.acdm = response;
+        // TODO: Alert Guardado
+        let alert = new AlertModel('ISSUE Successful', 'Issue ID: ' + response.id, AlertType.INFO);
+        this._AlertsService.setAlert(alert);
+        this.setACDM();
+      },
+      response => {
+        if (this.checkRegularized(response.error)) {
+          let alert = new AlertModel('ISSUE Regularized', 'Regularize the issue?', AlertType.CONFIRM);
+          let subscription = this._AlertsService.getAccept().subscribe(acceptance => {
+            if (acceptance) {
+              this.sendRegularized();
+              subscription.unsubscribe();
+            }
+          });
+          this._AlertsService.setAlert(alert);
+        } else {
+          let alert = new AlertModel('ERROR', 'Check the wrong fields', AlertType.ERROR);
+          this._AlertsService.setAlert(alert);
+        }
+      });
+  }
+
+  checkRegularized(error) {
+    if (error.validationErrors) {
+      for (let i = 0; i < error.validationErrors.length; i++) {
+        if (error.validationErrors[i].fieldName === 'regularized') {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  sendRegularized() {
+    let regularized = true;
+    this.issueACDM(regularized);
   }
 
   public saveComment() {

@@ -15,7 +15,12 @@ describe('AlertsComponent', () => {
   let fixture: ComponentFixture<AlertsComponent>;
 
   const alert: AlertModel = new AlertModel('TEXT', 'TEXT', AlertType.ERROR);
-  const _AlertsService = jasmine.createSpyObj<AlertsService>('AlertsService', ['getAlert']);
+  const _AlertsService = jasmine.createSpyObj<AlertsService>('AlertsService',
+    [
+      'getAlert',
+      'setAccept',
+      'getAccept'
+    ]);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -29,6 +34,8 @@ describe('AlertsComponent', () => {
   }));
 
   _AlertsService.getAlert.and.returnValue(Observable.of(alert));
+  _AlertsService.setAccept.and.callThrough();
+  _AlertsService.getAccept.and.returnValue(Observable.of(true));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AlertsComponent);

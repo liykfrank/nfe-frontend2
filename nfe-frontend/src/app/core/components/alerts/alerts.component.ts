@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { AlertsService } from './../../services/alerts.service';
+import { AlertModel } from './../../models/alert.model';
 
 @Component({
   selector: 'app-alerts',
@@ -8,13 +9,11 @@ import { AlertsService } from './../../services/alerts.service';
 })
 export class AlertsComponent implements OnInit {
 
+  private alert: AlertModel;
   display = false;
-  title: string;
-  message: string;
-  alert_type: string;
-  show_accept_button: boolean;
-  show_cancel_button: boolean;
   private style_class = '';
+  private show_accept_button: boolean;
+  private show_cancel_button: boolean;
   image_type: string;
 
   constructor(
@@ -30,26 +29,30 @@ export class AlertsComponent implements OnInit {
   ngOnInit() {
     this._AlertsService.getAlert().subscribe(alert => {
       if (alert) {
-        this.title = alert.title;
-        this.message = alert.message;
-        this.alert_type = alert.alert_type;
+        this.alert = alert;
 
         this.style_class = 'alert-' + alert.alert_type;
+
+        this.show_accept_button = true;
+        this.show_cancel_button = false;
 
         switch (alert.alert_type) {
           case 'error':
             this.image_type = 'error';
             break;
+          case 'confirm':
+            this.image_type = 'confirm';
+            this.show_accept_button = true;
+            this.show_cancel_button = true;
+            break;
           case 'warning':
             this.image_type = 'warning_exclamation';
+            this.show_accept_button = true;
             break;
           case 'info':
             this.image_type = 'success';
             break;
         }
-
-        this.show_accept_button = true;
-        this.show_cancel_button = false;
 
         this.display = true;
       }
@@ -57,10 +60,12 @@ export class AlertsComponent implements OnInit {
   }
 
   onClickAccept() {
+    this._AlertsService.setAccept(true);
     this.display = false;
   }
 
   onClickCancel() {
+    this._AlertsService.setAccept(false);
     this.display = false;
   }
 

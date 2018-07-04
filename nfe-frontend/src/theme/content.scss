@@ -3,21 +3,12 @@
 .content{
     display: flex;
     flex-direction: column;
-    margin: 0px 34.5px 0px 34.5px;
-    height: 100vh;
-
-    .header {
-        flex: 0 0 100px;
-    }
+    //margin: 0px 34.5px 0px 34.5px;
+    //height: 100vh;
 
     .section {
         flex: 1 0 auto;
         background: white;
-    }
-
-    footer {
-        flex: 0 0 100px;
-        background: gray
     }
 }
 

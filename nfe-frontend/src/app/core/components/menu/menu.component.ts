@@ -9,7 +9,7 @@ import { Message } from 'primeng/components/common/api';
 import { HttpParams } from '@angular/common/http';
 
 @Component({
-    selector: 'menu',
+    selector: 'app-menu',
     templateUrl: './menu.component.html'
 })
 export class MenuComponent extends NwAbstractComponent {

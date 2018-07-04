@@ -1,21 +1,20 @@
-menu {
-    jqxmenu {
-        background: #002A51 !important;
-        ul {
-            background: #002A51 !important;
-            li  {
-                background: #002A51 !important;
-                color: white !important;
-            }
-        }
+.jqx-menu-custom {
+    background: #002A51 !important;
+    border-radius: 0;
+    
+    .jqx-menu-item-top-custom {
+        background-color: #002A51 !important;
+        padding: 15px 25px;
+        border: 0 !important;
+        color: #FFFFFF !important;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 19px;
+        text-align: right;
     }
-
-    .jqx-widget-header{
-        background: #002A51 !important;
-        border: 0px;
+    
+    .jqx-menu-item-arrow-down-custom {
+        color: #FFFFFF !important;
     }
-
-    .jqx-menu-item-top a:hover{
-        color: white;
-    }
+    
 }

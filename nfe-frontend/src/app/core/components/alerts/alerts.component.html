@@ -9,9 +9,9 @@
   [baseZIndex]="10000">
   <img src="assets/images/alerts/ico_{{image_type}}.svg">
   <p class="title">
-    {{ title }}
+    {{ alert?.title }}
   </p>
-  <p class="content-text">{{ message }}</p>
+  <p class="content-text">{{ alert?.message }}</p>
   <p-footer>
     <button class="button-accept" 
       *ngIf="checkAcceptButton()"  

@@ -25,8 +25,6 @@ $right-side: 18.1%;
   padding-top: 20px;
   padding-bottom: 10px;
   margin-top: 0;
-  margin-left: 42.5px;
-  margin-right: 42.5px;
   background-color: #FFFFFF;
   width: auto;
 }
@@ -42,8 +40,8 @@ $right-side: 18.1%;
   @extend %sticky;
   top: 150px;
   right: 0px;
-  left: 79.72%;
-  margin-right: 62.5px;
+  left: 81%;
+  margin-right: 20px;
   width: auto;
 }
 
@@ -61,7 +59,6 @@ $right-side: 18.1%;
   right: 22.3%;
   padding-left: 20px;
   margin-top: 0;
-  margin-left: 42.5px;
   padding-top: 10px;
   width: auto;
 }

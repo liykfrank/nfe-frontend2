@@ -4,7 +4,11 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { HeaderComponent } from './header.component';
+import { MenuComponent } from '../menu/menu.component';
 import { TabsStateService } from '../../services/tabs-state.service';
+import { SharedModule } from '../../../shared/shared.module';
+import { MessageService } from 'primeng/components/common/messageservice';
+import { SftpModifyPasswordService } from '../../services/sftp-modify-password.service';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -12,8 +16,18 @@ describe('HeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ],
-      providers: [TabsStateService]
+      imports: [
+        SharedModule
+      ],
+      declarations: [
+        HeaderComponent,
+        MenuComponent
+      ],
+      providers: [
+        TabsStateService,
+        MessageService,
+        SftpModifyPasswordService
+      ]
     })
     .compileComponents();
   }));

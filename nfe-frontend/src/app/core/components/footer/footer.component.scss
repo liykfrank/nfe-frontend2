@@ -1,27 +1,35 @@
-@import 'variables';
-
 .footer {
-  background: $color-footer;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  font-size: 14px;
-  .footer_logo{
-      flex: 0 0 auto;
-      transform: scale(0.5);
-  }
+    width: 100%;
+    display: inline-flex;
+    background-color: #152C5A;
+    color: #FFFFFF;
+    align-items: center;
 
-  .title {
-      padding: 0px 5px 0px 0px;
-  }
+    .left-footer {
+        width: 85%;
+        margin: 25px 0;
+        padding: 0 20px;
+        float: left;
+        display: flex;
+        align-items: center;
 
-  .title {
-      flex: 0 0 auto;
-  }
+        .logo {
+            width: auto;
+            .footer-logo {
+                height: 45px;
+                width: auto;
+            }
+        }
 
-  .terms_conditions{
-      flex: 0 0 auto;
-      color: red;
-  }
+        .brand {
+            margin-left: 5px;
+        }
+    }
+
+    .right-footer {
+        margin: 25px 0;
+        padding: 0 20px;    
+        width: 15%;
+        float: right;
+    }
 }
