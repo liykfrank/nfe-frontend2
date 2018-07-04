@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { MonitorUrlComponent } from "./monitor-url.component";
-import { SafeUrlPipe } from "../../../shared/components/pipes/safe-url.pipe";
+import { SafeUrlPipe } from "../../../shared/directives/safe-url.pipe";
 
 describe("MonitorUrlComponent", () => {
   let component: MonitorUrlComponent;

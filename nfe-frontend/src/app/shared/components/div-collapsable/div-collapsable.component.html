@@ -2,12 +2,11 @@
 <jqxExpander
   [theme]="'custom'"
   [showArrow]="false"
-  [expanded]="open"
->
+  [expanded]="checkOpen()">
   <div (click)="onShowHide()" l10nTranslate>{{title}} 
     <span class="fa-stack">
       <i class="fa fa-circle-thin fa-stack-2x"></i>
-      <i [ngClass]="{'fa-angle-down': !open, 'fa-angle-up': open}" class="fa fa-stack-1x"></i>
+      <i [ngClass]="{'fa-angle-down': !checkOpen(), 'fa-angle-up': checkOpen()}" class="fa fa-stack-1x"></i>
     </span>
   </div>
   <div class="content-container">

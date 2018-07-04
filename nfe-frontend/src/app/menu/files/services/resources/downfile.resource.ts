@@ -1,3 +1,4 @@
+
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
@@ -15,6 +16,9 @@ export class DownFileResource extends NwRepositoryAbstract<any, Object> {
         environment.files.api.downloadFile,
       injector
     );
+
+    console.log('CABRON')
+    console.log(environment)
   }
 
   public getFile(params?: HttpParams, idFile?:string): Observable<Blob> {

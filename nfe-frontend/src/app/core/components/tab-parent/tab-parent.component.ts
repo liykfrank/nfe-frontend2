@@ -80,13 +80,12 @@ export class TabParentComponent extends NwAbstractComponent
   showActionIncluded(action: ActionsEnum) {
     const el: HTMLElement = document.getElementById(this.ID_ACTION + action);
     const indexTab = this.getIndexNode(el.parentNode);
-    console.log("position tab " + this.getIndexNode(el.parentNode));
     this.myTabs.ensureVisible(indexTab);
     this.myTabs.select(indexTab);
   }
 
   getIndexNode(el): number {
-    var i = 0;
+    let i = 0;
     while ((el = el.previousSibling) != null) {
       i++;
     }

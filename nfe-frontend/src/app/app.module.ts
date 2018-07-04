@@ -12,26 +12,18 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { RoomModule } from './room/room.module';
-
 import { CoreModule } from './core/core.module';
 import { MenuModule } from './menu/menu.module';
-import { MessageService } from 'primeng/components/common/messageservice';
-
-
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    CoreModule,
-    RoomModule,
+    CoreModule.forRoot(),
     MenuModule
   ],
-  providers: [
-    MessageService
-  ],
+  providers: [],
   bootstrap: [
     AppComponent
   ]

@@ -38,13 +38,16 @@
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
-        "dev": "environments/environment.ts",
+        "local": "environments/environment.ts",
+        "dev": "environments/environment.dev.ts",
+        "qai": "environments/environment.qai.ts",
+        "uat": "environments/environment.uat.ts",
+        "qaia": "environments/environment.qaia.ts",
         "prod": "environments/environment.prod.ts",
         "mock": "environments/environment.mock.ts",
         "mock-test": "environments/environment.test.mock.ts",
         "demo": "environments/environment.demo.ts",
-        "mock-proc": "environments/environment.proc.mock.ts",
-        "uat": "environments/environment.uat.ts"
+        "mock-proc": "environments/environment.proc.mock.ts"
       }
     }
   ],

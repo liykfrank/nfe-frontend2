@@ -30,13 +30,15 @@ export const environment = {
   },
   adm_acm: {
     api: {
+      acdm: '',
       configuration: 'configuration.json',
-      company: '',
-      agent: '',
+      company: 'airline.json',
+      agent: 'agent.json',
       country: 'countries.json',
       toca: 'toca.json',
       currency: 'currency.json',
-      period: 'billingPeriod.json'
+      period: 'billingPeriod.json',
+      reasons: 'reasons.json'
     },
     basePath: 'assets/mocks/adcm/'
   },

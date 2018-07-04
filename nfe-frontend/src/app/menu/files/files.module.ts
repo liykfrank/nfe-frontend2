@@ -3,7 +3,6 @@ import { DownFilesResource } from './services/resources/downfiles.resource';
 import { FilesRoutingModule } from './files-routing.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FilesListComponent } from './components/files-list/files-list.component';
 import { TabsFileComponent } from './components/tabs-file/tabs-file.component';
 import { FilesUploadComponent } from './components/files-upload/files-upload.component';
 import { SharedModule } from '../../shared/shared.module';
@@ -25,14 +24,12 @@ utils.env=environment;
 @NgModule({
   imports: [CommonModule, FormsModule, SharedModule, FilesRoutingModule],
   declarations: [
-    FilesListComponent,
     TabsFileComponent,
     FilesUploadComponent,
     FilesDownloadComponent,
     FilesFilterComponent
   ],
   entryComponents: [
-    FilesListComponent,
     FilesUploadComponent,
     FilesDownloadComponent,
     FilesFilterComponent

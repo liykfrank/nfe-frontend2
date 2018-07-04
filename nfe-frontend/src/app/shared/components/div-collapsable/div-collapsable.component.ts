@@ -1,5 +1,5 @@
 
-import { Component, Injector, Input, ElementRef, ViewChild, HostBinding } from '@angular/core';
+import { Component, Injector, Input, Output, ElementRef, ViewChild, HostBinding, EventEmitter } from '@angular/core';
 /*
 import { jqxExpanderComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxExpander';
  */
@@ -15,17 +15,18 @@ export class DivCollapsableComponent extends NwAbstractComponent {
 
   @Input('open') open: boolean = true;
   @Input('title') title: string;
+  @Output() showHide: EventEmitter<boolean> = new EventEmitter(this.open);
 
   constructor(private _injector: Injector) {
     super(_injector);
   }
 
-  // TODO: Revisar esta función, el switch no se vincula bien con JQXExpander
-  //      "al hacer doble-click se acciona correctamente el Switch, 
-  //       pero el vinculo con la propiedad expanded no opera."
   onShowHide() {
-    console.log('onShowHide', this.title);
     this.open = !this.open;
-    console.log(this.open);
+    this.showHide.next(this.open);
+  }
+
+  checkOpen() {
+    return this.open;
   }
 }

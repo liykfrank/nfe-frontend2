@@ -40,8 +40,8 @@ exports.config = {
     var globals = require('protractor');
     var browser = globals.browser;
     browser.ignoreSynchronization = true;
-    browser.close().then(()=>console.log('brwser closeddd***'));
-    console.log('cpmleteee ******')
+    browser.close().then(()=>console.log('Browser closed'));
+    console.log('Complete');
   },
   onPrepare() {
     require('ts-node').register({

@@ -1,0 +1,32 @@
+<div class="form-entry-row">
+  <div class="form-group">
+    <label l10nTranslate>CONTACT.name</label>
+    <input class="form-control input-custom"
+      [ngClass]="{'error': style == 'error' && (!name || name.length == 0)}"
+      [(ngModel)]="name"
+      [disabled]="disabled"
+      (change)="change()"/>
+  </div>
+</div>
+
+<div class="form-entry-row">
+  <div class="form-group">
+    <label l10nTranslate>CONTACT.telephone</label>
+    <input class="form-control input-custom"
+      [ngClass]="{'error': style == 'error' && (!telephone || telephone.length == 0)}"
+      [(ngModel)]="telephone"
+      [disabled]="disabled"
+      (change)="change()"/>
+  </div>
+</div>
+  
+<div class="form-entry-row">
+  <div class="form-group">
+    <label l10nTranslate>CONTACT.email</label>
+    <input class="form-control input-custom"
+      [ngClass]="{'error': style == 'error' && (!email || email.length == 0)}"
+      [(ngModel)]="email"
+      [disabled]="disabled"
+      (change)="change()"/>
+  </div>
+</div>

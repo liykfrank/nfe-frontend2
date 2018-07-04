@@ -14,20 +14,27 @@
   "Date": "Date",
 
   "clear": "Clear",
+  "save": "Save",
+  "issue": "Issue",
   "total": "Total",
   "search_button": "Search",
+  "close_button": "Close",
+  "error": "Error",
 
   "ADM_ACM": {
     "ADMTitle": "ADM Issue",
     "ACMTitle": "ACM Issue",
+
     "expand": "Expand All",
     "collapse": "Collapse All",
+
+    "error": "Can not create ADM/ACM ",
 
     "RESUME": {
       "status": "Stastus",
       "bsp": "BSP",
       "agent_code": "Agent Code",
-      "spdr": "(var) SPDR for",
+      "for": " for",
       "issue_date": "Issue Date",
       "amount": "Amount"
     },
@@ -42,16 +49,28 @@
       "number": "Number",
       "airlineCode": "Airline Code",
       "nr": "NR",
-      "more": "More details",
-      "airlineVAT": "Airline VAT Nº",
-      "agentVAT": "Agent VAT Nº",
-      "companyReg": "Company Registration Number",
-      "airlineContactName": "Airline Contact Name",
-      "airlineContactNumber": "Airline Contact Telephone/Fax",
-      "airlineContactEmail": "Airline Contact Email",
+
+      "ADM": "ADM",
+      "ACM": "ACM",
+
+      "airline": {
+        "title": "Airline information",
+        "address": "Address",
+        "postcode": "Postcode",
+        "city": "City",
+        "country": "Country/Territory"
+      },
+
+      "agent": {
+        "title": "Agent information",
+        "address": "Address",
+        "postcode": "Postcode",
+        "city": "City",
+        "country": "Country/Territory"
+      },
 
       "SPDRCombo": {
-        "label": "SPDR for",
+        "label": " for",
         "I": "Issue",
         "R": "Refund",
         "X": "Exchange",
@@ -97,7 +116,10 @@
       "CA": "CA",
       "TY": "TY",
       "YQ": "YQ",
-      "DE": "DE"
+      "DE": "DE",
+      "tax_error": "There are error in tax table",
+      "total_error": "Total is wrong"
+
     },
 
     "DETAILS": {
@@ -107,15 +129,46 @@
       "documents": "Related Documents",
       "addDocument": "Document",
       "reasonIssue": "Reason for Issue",
-      "topTen": "",
+      "topTen": "Reasons",
       "reasonMemo": "Reason for Memo",
       "error": {
-        "wrongCheck": "Invalid check digit"
+        "wrongCheck": "Invalid check digit",
+        "tickets-title": "About related documents",
+        "detail-max-tickets": "Can not add more related documents",
+        "alredy-added": "This tickect is alredy added"
       }
     },
 
+    "SVCS": {
+      "COMPANY": {
+        "title": "Airline",
+        "desc": "Airline not found in this country"
+      },
+      "AGENT": {
+        "title": "Agent",
+        "desc": "Agent does not work in this country"
+      },
+      "CONF": {
+        "title": "Configuration",
+        "desc": "Does not exist configuration in this country",
+        "desc_wrong_iso": "Wrong ISO"
+      },
+      "TOCA": {
+        "title": "TOCA",
+        "desc": "Does not exist list of TOCA in this country"
+      },
+      "PERIOD": {
+        "title": "Period",
+        "desc": "Does not exist list periods in this country"
+      }
+
+    },
+
     "MULTITABS": {
-      "comments": "Comments"
+      "comments": "Comments",
+      "files": "Files",
+      "files_subtitle": "Recent files",
+      "attach_new_file": "Attach new file"
     },
 
     "DOCS": {
@@ -136,6 +189,28 @@
       "title": "Change password sftp account",
       "err": "Problems calling service"
     }
+  },
+
+  "CONTACT": {
+    "name": "Contact Name",
+    "telephone": "Contact Telephone/Fax",
+    "email": "Contact Email"
+  },
+
+  "AIRLINE": {
+    "code": "Airline Code",
+    "more": "More details",
+    "airlineVAT": "Airline VAT Nº",
+    "companyReg": "Company Registration Number"
+  },
+
+  "AGENT": {
+    "code": "Agent Code",
+    "more": "More details",
+    "agentVAT": "Agent VAT Nº",
+    "companyReg": "Company Registration Number",
+    "title_error": "Agent",
+    "check_digit_error": "Wrong check digit"
   },
 
   "MONTHS": {

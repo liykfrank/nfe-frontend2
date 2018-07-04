@@ -4,9 +4,11 @@
       <tr>
         <th l10nTranslate>ADM_ACM.RESUME.status</th>
         <th l10nTranslate>ADM_ACM.RESUME.bsp</th>
-         <!-- ??? -->
         <th l10nTranslate>ADM_ACM.RESUME.agent_code</th>
-        <th l10nTranslate>ADM_ACM.RESUME.spdr</th>
+        <th>
+          <span> {{ subtype }} </span>
+          <span l10nTranslate>ADM_ACM.RESUME.for</span>
+        </th>
         <th l10nTranslate>ADM_ACM.RESUME.issue_date</th>
         <th l10nTranslate>ADM_ACM.RESUME.amount</th>
       </tr>
@@ -14,11 +16,11 @@
     <tbody>
       <tr>
         <td>{{ status }}</td>
-        <td>BSP val</td>
+        <td>{{ bsp ? bsp.name : '-' }}</td>
         <td>{{ agent_code }}</td>
-        <td>{{ spdr }}</td>
+        <td>{{ concernsIndicator }}</td>
         <td>{{ issue_date | date:'dd/MM/yyyy' }}</td>
-        <td>{{ total_amount | number:amount_format }} EUR</td>
+        <td>{{ total_amount | decimalsFormatter:decimals }} {{ currency }}</td>
       </tr>
     </tbody>
   </table>

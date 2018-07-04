@@ -2,12 +2,25 @@
   border: 1px solid #002A51;
 }
 
-.jqx-input-custom {
+%jqx-input-custom {
   height: 40px;
-  border: 1px solid #BDC3C9;
   border-radius: 4px;
   background-color: #FFFFFF;
   padding: 0 5px;
+  border: 1px solid #BDC3C9;
+}
+
+.jqx-input-custom {
+  @extend %jqx-input-custom;
+}
+
+.jqx-input-custom-error {
+  @extend %jqx-input-custom;
+  border-color: red;
+}
+
+.input-custom-error {
+  border: 1px solid red;
 }
 
 .jqx-input-table-custom {
@@ -30,4 +43,6 @@
   background-color: #FFFFFF;
   color: #002A51;
   font-size: 12px;
+  padding-right: 10px !important;
+  padding-left: 10px !important;
 } 

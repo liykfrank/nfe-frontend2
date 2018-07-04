@@ -21,27 +21,27 @@ export abstract class NwRepositoryAbstract<T, K> extends NwBaseAbstract {
       });
   }
 
-  /*public postFile(params?: HttpParams): Observable<Blob> {
-    return this.httpService
-      .post(this.url, {
-        params: params,
-        responseType: "json"
-      });
-  }*/
-
-  get<J = K>(params?: HttpParams, search?: Array<URLSearchParams>): Observable<T> {
+  get(params?: HttpParams, search?: Array<URLSearchParams>): Observable<T> {
     return this.httpService.get<T>(this.url, {params: params});
+  }
+
+  getSingle<J>(params?: HttpParams): Observable<J> {
+    return this.httpService.get<J>(this.url, {params: params});
   }
 
   getXML() {
     return this.httpService.get(this.url, {responseType: 'text'});
   }
 
-  post<J = K>(body: K, params?: Array<URLSearchParams>, search?: Array<URLSearchParams>): Observable<T> {
+  post<K>(body: K, params?: Array<URLSearchParams>, search?: Array<URLSearchParams>): Observable<T> {
     return this.httpService.post<T>(this.url, JSON.stringify(body), { headers: { 'Content-Type': 'application/json' } });
   }
 
-  postXML<J = K>(body: K, params?: Array<URLSearchParams>, search?: Array<URLSearchParams>) {
+  postSingle<K>(body, headers?: HttpHeaders): Observable<K> {
+    return this.httpService.post<K>(this.url, body, {headers: headers});
+  }
+
+  postXML<K>(body: K, params?: Array<URLSearchParams>, search?: Array<URLSearchParams>) {
     return this.httpService.post(this.url, body);
   }
 
@@ -56,18 +56,19 @@ export abstract class NwRepositoryAbstract<T, K> extends NwBaseAbstract {
         } );
   }*/
 
-  delete<J = K>(params?: HttpParams): Observable<T> {
+  delete<K>(params?: HttpParams): Observable<T> {
     return this.httpService.delete<T>(this.url, {params});
   }
 
-  put<J = K>(body?: K, params?: Array<any>, search?: Array<any>): Observable<T> {
+  put<K>(body?: K, params?: Array<any>, search?: Array<any>): Observable<T> {
     return this.httpService.put<T>(this.url, body);
   }
+  
   configureUrl(url: string): void {
     this.url = url;
   }
+
   getUrl(pathVariables?: string[]) {
-    console.log('enter get uel' );
     let urlEnd: string = this.url;
     if (environment.mock) {
       return this.url;

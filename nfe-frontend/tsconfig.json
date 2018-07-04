@@ -40,6 +40,7 @@
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxfileupload",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxpopover",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttongroup",
-    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdocking"
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdocking",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxmaskedinput"
  ]
 }

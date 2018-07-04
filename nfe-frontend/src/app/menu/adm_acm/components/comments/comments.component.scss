@@ -27,8 +27,7 @@
       border-radius: 3px;
 
     }
-
-    .last {
+    .message:last-child {
       margin-bottom: 30px;
     }
   }
@@ -38,6 +37,7 @@
 
     .image-button {
       vertical-align: middle;
+      cursor: pointer;
     }
   }
 }

@@ -1,31 +1,34 @@
+import { CurrencyServer } from './currency-server.model';
 import { AgentModel } from "./agent.model";
 import { CompanyModel } from "./company.model";
-import { Contact } from "./contact.model";
+import { Contact } from "../../../shared/models/contact.model";
 
 export class BasicInfoModel {
-  id: number;//Number
+  id: number; // Number
+  ticketDocumentNumber: string;
 
-  transactionCode: string; //Type
+  transactionCode: string; // Type
 
-  billingPeriod: number; //tres campos
+  billingPeriod: number; // tres campos
 
-  airlineCode: string;
-  amountPaidByCustomer: number;
-  commissionType: string;
+  //commissionType: string;//¿?¿?¿?
 
   isoCountryCode: string;
-  concernsIndicator: string; //SPDR
+  concernsIndicator: string; // SPDR
   tocaType: string;
-  currency: {code: string, decimals: number};
   stat: string;
   netReporting: boolean;
-
+  
+  airlineRegistrationNumber: string;
+  airlineVatNumber: string;//on Company but you can modify
+  
+  agentRegistrationNumber: string;
+  agentVatNumber: string; //on Company but you can modify
+  
+  currency: CurrencyServer = new CurrencyServer();
   airlineContact: Contact = new Contact();
-  company: CompanyModel;
-  agent: AgentModel;
+  company: CompanyModel = new CompanyModel();
+  agent: AgentModel = new AgentModel();
 
-  constructor() {
-    this.agent = new AgentModel();
-    this.company = new CompanyModel();
-  }
+  constructor() { }
 }

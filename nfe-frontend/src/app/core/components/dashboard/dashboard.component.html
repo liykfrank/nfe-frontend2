@@ -1,4 +1,4 @@
-<div *ngIf="dashboard != undefined">
+<div *ngIf="checkDashboard()">
   <jqxDocking #myDocking (onDragEnd)="dragEnd($event)">
 
     <div>

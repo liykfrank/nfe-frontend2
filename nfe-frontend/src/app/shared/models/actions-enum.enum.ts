@@ -17,5 +17,6 @@ export enum ActionsEnum {
   QUERY_FILES_READ_ONLY = 16,
   FILES = 17,
   DISPUTE_ADM = 18,
-  DISPUTE_ACM = 19
+  DISPUTE_ACM = 19,
+  ACDM = 20
 }

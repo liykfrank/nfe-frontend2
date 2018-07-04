@@ -1,8 +1,164 @@
 .custom.ui-dialog {
   z-index: 2000;
   position: fixed;
+
   .ui-dialog-titlebar {
     background: white;
     display: flex;
+  }
+}
+
+.info-card.ui-dialog {
+  padding: 26px 30px;
+  background: white;
+    color: #033e78;
+    font-size: 16px;
+    line-height: 26px;
+
+  .ui-dialog-titlebar {
+    background: white;
+    color: #033e78;
+    text-align: left;
+    font-size: 24px;
+    line-height: 26px;
+  }
+
+  th {
+    text-align: left;
+    color: #000000;
+    font-weight: bold;
+  }
+}
+
+%alert.ui-dialog {
+  border: 1px solid transparent;
+  border-radius: 6px;
+
+  .ui-dialog-titlebar {
+    background: #FFFFFF; 
+    padding: 5px !important;
+    border-radius: 6px;
+    
+    .ui-dialog-titlebar-icon:hover {
+      border-color: transparent;
+      background: #FFFFFF;
+      color: #212121;
+    }
+  }
+
+  .ui-dialog-content {
+    text-align: center;
+
+    .title { 
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .content-text {
+        font-size: 12px;
+    }
+  }
+  
+  .ui-dialog-footer {
+    display: flex;
+    justify-content: center;
+    border: transparent;
+    border-radius: 6px;
+
+    .button-accept {
+      cursor: pointer;
+      padding: 5px 15px;
+      border-radius: 2px;
+      border: 1px solid transparent;
+      font-size: 14px;
+    }
+
+    .button-accept:focus {
+      outline: none;
+    }
+    
+    .button-cancel {
+      cursor: pointer;
+      padding: 5px 15px;
+      border-radius: 2px;
+      border: 1px solid transparent;
+      font-size: 14px;
+    }
+
+    .button-cancel:focus {
+      outline: none;
+    }
+  }
+}
+
+.alert-info.ui-dialog {
+  @extend %alert;
+  color: #1B6100 !important;
+  border-color: #1B6100;
+
+  .ui-dialog-content {
+    color: #1B6100;
+  }
+
+  .ui-dialog-footer{
+    .button-accept {
+      background-color: #1B6100;
+      border-color: #1B6100;
+      color: #FFFFFF;
+    }
+    
+    .button-cancel {
+      background-color: #FFFFFF;
+      border-color: #1B6100;
+      color: #1B6100;
+    }
+  }
+}
+
+.alert-warning.ui-dialog {
+  @extend %alert;
+  color: #AD5A00 !important;
+  border-color: #AD5A00;
+
+  .ui-dialog-content {
+    color: #AD5A00;
+  }
+
+  .ui-dialog-footer{
+    .button-accept {
+      background-color: #AD5A00;
+      border-color: #AD5A00;
+      color: #FFFFFF;
+    }
+    
+    .button-cancel {
+      background-color: #FFFFFF;
+      border-color: #AD5A00;
+      color: #AD5A00;
+    }
+  }
+}
+
+.alert-error.ui-dialog {
+  @extend %alert;
+  color: #B20101 !important;
+  border-color: #B20101;
+
+  .ui-dialog-content {
+    color: #B20101;
+  }
+
+  .ui-dialog-footer{
+    .button-accept {
+      background-color: #B20101;
+      border-color: #B20101;
+      color: #FFFFFF;
+    }
+    
+    .button-cancel {
+      background-color: #FFFFFF;
+      border-color: #B20101;
+      color: #B20101;
+    }
   }
 }
