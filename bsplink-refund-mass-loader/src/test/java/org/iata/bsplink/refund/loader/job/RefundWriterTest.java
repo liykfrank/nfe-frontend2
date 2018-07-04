@@ -1,17 +1,17 @@
-package org.iata.bsplink.refund.loader.job.writer;
+package org.iata.bsplink.refund.loader.job;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.AIRLINE_CODE;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.ID;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.ISO_COUNTRY_CODE;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.TICKET_DOCUMENT_NUMBER;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
 import org.iata.bsplink.refund.loader.dto.Refund;
+import org.iata.bsplink.refund.loader.job.RefundWriter;
 import org.iata.bsplink.refund.loader.restclient.RefundClient;
 import org.junit.Before;
 import org.junit.Ignore;
