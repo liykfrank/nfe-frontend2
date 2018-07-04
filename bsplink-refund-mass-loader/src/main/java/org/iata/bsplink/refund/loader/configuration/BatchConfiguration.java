@@ -14,6 +14,18 @@ import org.iata.bsplink.refund.loader.model.record.RecordIt01;
 import org.iata.bsplink.refund.loader.model.record.RecordIt01Layout;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02Layout;
+import org.iata.bsplink.refund.loader.model.record.RecordIt03;
+import org.iata.bsplink.refund.loader.model.record.RecordIt03Layout;
+import org.iata.bsplink.refund.loader.model.record.RecordIt05;
+import org.iata.bsplink.refund.loader.model.record.RecordIt05Layout;
+import org.iata.bsplink.refund.loader.model.record.RecordIt08;
+import org.iata.bsplink.refund.loader.model.record.RecordIt08Layout;
+import org.iata.bsplink.refund.loader.model.record.RecordIt0h;
+import org.iata.bsplink.refund.loader.model.record.RecordIt0hLayout;
+import org.iata.bsplink.refund.loader.model.record.RecordIt0y;
+import org.iata.bsplink.refund.loader.model.record.RecordIt0yLayout;
+import org.iata.bsplink.refund.loader.model.record.RecordIt0z;
+import org.iata.bsplink.refund.loader.model.record.RecordIt0zLayout;
 import org.iata.bsplink.refund.loader.model.record.RecordLayout;
 import org.iata.bsplink.refund.loader.model.record.RecordRawLine;
 import org.iata.bsplink.refund.loader.model.record.RecordRawLineLayout;
@@ -55,6 +67,12 @@ public class BatchConfiguration {
 
     private static final String RECORD_IT01_BEAN_NAME = "recordIt01";
     private static final String RECORD_IT02_BEAN_NAME = "recordIt02";
+    private static final String RECORD_IT03_BEAN_NAME = "recordIt03";
+    private static final String RECORD_IT05_BEAN_NAME = "recordIt05";
+    private static final String RECORD_IT08_BEAN_NAME = "recordIt08";
+    private static final String RECORD_IT0Y_BEAN_NAME = "recordIt0y";
+    private static final String RECORD_IT0H_BEAN_NAME = "recordIt0h";
+    private static final String RECORD_IT0Z_BEAN_NAME = "recordIt0z";
     private static final String RECORD_RAWLINE_BEAN_NAME = "recordRawLine";
 
     @Autowired
@@ -118,12 +136,24 @@ public class BatchConfiguration {
 
         RecordIt01Layout recordIt01Layout = new RecordIt01Layout();
         RecordIt02Layout recordIt02Layout = new RecordIt02Layout();
+        RecordIt03Layout recordIt03Layout = new RecordIt03Layout();
+        RecordIt05Layout recordIt05Layout = new RecordIt05Layout();
+        RecordIt08Layout recordIt08Layout = new RecordIt08Layout();
+        RecordIt0yLayout recordIt0yLayout = new RecordIt0yLayout();
+        RecordIt0hLayout recordIt0hLayout = new RecordIt0hLayout();
+        RecordIt0zLayout recordIt0zLayout = new RecordIt0zLayout();
         RecordRawLineLayout recordRawLineLayout = new RecordRawLineLayout();
 
         Map<String, LineTokenizer> tokenizers = new HashMap<>();
 
         tokenizers.put(recordIt01Layout.getPattern(), getTokenizer(recordIt01Layout));
         tokenizers.put(recordIt02Layout.getPattern(), getTokenizer(recordIt02Layout));
+        tokenizers.put(recordIt03Layout.getPattern(), getTokenizer(recordIt03Layout));
+        tokenizers.put(recordIt05Layout.getPattern(), getTokenizer(recordIt05Layout));
+        tokenizers.put(recordIt08Layout.getPattern(), getTokenizer(recordIt08Layout));
+        tokenizers.put(recordIt0yLayout.getPattern(), getTokenizer(recordIt0yLayout));
+        tokenizers.put(recordIt0hLayout.getPattern(), getTokenizer(recordIt0hLayout));
+        tokenizers.put(recordIt0zLayout.getPattern(), getTokenizer(recordIt0zLayout));
         tokenizers.put(recordRawLineLayout.getPattern(), getTokenizer(recordRawLineLayout));
 
         // TODO: the prototype bean names of fieldSetMappers should be passed in a better way
@@ -135,8 +165,21 @@ public class BatchConfiguration {
                 fieldSetMappers.get(RECORD_IT01_BEAN_NAME));
         mappers.put(recordIt02Layout.getPattern(),
                 fieldSetMappers.get(RECORD_IT02_BEAN_NAME));
+        mappers.put(recordIt03Layout.getPattern(),
+                fieldSetMappers.get(RECORD_IT03_BEAN_NAME));
+        mappers.put(recordIt05Layout.getPattern(),
+                fieldSetMappers.get(RECORD_IT05_BEAN_NAME));
+        mappers.put(recordIt08Layout.getPattern(),
+                fieldSetMappers.get(RECORD_IT08_BEAN_NAME));
+        mappers.put(recordIt0yLayout.getPattern(),
+                fieldSetMappers.get(RECORD_IT0Y_BEAN_NAME));
+        mappers.put(recordIt0hLayout.getPattern(),
+                fieldSetMappers.get(RECORD_IT0H_BEAN_NAME));
+        mappers.put(recordIt0zLayout.getPattern(),
+                fieldSetMappers.get(RECORD_IT0Z_BEAN_NAME));
         mappers.put(recordRawLineLayout.getPattern(),
                 fieldSetMappers.get(RECORD_RAWLINE_BEAN_NAME));
+
 
         PatternMatchingCompositeLineMapper<Record> mapper =
                 new PatternMatchingCompositeLineMapper<>();
@@ -178,6 +221,12 @@ public class BatchConfiguration {
         List<String> beanNames = Arrays.asList(
                 RECORD_IT01_BEAN_NAME,
                 RECORD_IT02_BEAN_NAME,
+                RECORD_IT03_BEAN_NAME,
+                RECORD_IT05_BEAN_NAME,
+                RECORD_IT08_BEAN_NAME,
+                RECORD_IT0Y_BEAN_NAME,
+                RECORD_IT0H_BEAN_NAME,
+                RECORD_IT0Z_BEAN_NAME,
                 RECORD_RAWLINE_BEAN_NAME);
 
         for (String beanName : beanNames) {
@@ -206,6 +255,54 @@ public class BatchConfiguration {
     public Record recordIt02() {
 
         return new RecordIt02();
+    }
+
+    @Bean
+    @Qualifier(RECORD_IT03_BEAN_NAME)
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public Record recordIt03() {
+
+        return new RecordIt03();
+    }
+
+    @Bean
+    @Qualifier(RECORD_IT05_BEAN_NAME)
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public Record recordIt05() {
+
+        return new RecordIt05();
+    }
+
+    @Bean
+    @Qualifier(RECORD_IT08_BEAN_NAME)
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public Record recordIt08() {
+
+        return new RecordIt08();
+    }
+
+    @Bean
+    @Qualifier(RECORD_IT0Y_BEAN_NAME)
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public Record recordIt0y() {
+
+        return new RecordIt0y();
+    }
+
+    @Bean
+    @Qualifier(RECORD_IT0H_BEAN_NAME)
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public Record recordIt0h() {
+
+        return new RecordIt0h();
+    }
+
+    @Bean
+    @Qualifier(RECORD_IT0Z_BEAN_NAME)
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public Record recordIt0z() {
+
+        return new RecordIt0z();
     }
 
     @Bean
