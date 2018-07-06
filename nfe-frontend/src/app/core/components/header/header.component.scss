@@ -1,7 +1,7 @@
 .navigation {
     display: inline-flex;
     width: 100%;
-    
+
     .left-side {
         margin: 25px 0;
         float: left;
@@ -9,8 +9,8 @@
         width: 80%;
         padding: 0 20px;
         align-items: center;
-        
-        .logo { 
+
+        .logo {
             width: 5%;
             margin-right: 20px;
             .header-logo {
@@ -24,9 +24,9 @@
             font-size: 22px;
             color: #033E78;
         }
-        
+
         .combos {
-            width: 65%;
+            width: 55%;
             .special-selector {
                 padding: 3px 14px;
                 border: 1px solid #022F5B;
@@ -37,9 +37,9 @@
                 line-height: 16px;
             }
         }
-        
+
         .actions {
-            width: 20%;
+            width: 30%;
             .single-action {
                 text-align: center;
                 float: left;
@@ -80,12 +80,12 @@
                 right: 35px;
             }
         }
-        
+
         .user-icon {
             padding: 0 10px;
-            
+
         }
-        
+
         .user {
             float: left;
             padding: 0 10px;
