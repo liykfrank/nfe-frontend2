@@ -2,7 +2,7 @@
     background: #002A51 !important;
     height: 60px;
     border-radius: 0;
-    
+
     .jqx-menu-item-top-custom {
         background-color: #002A51 !important;
         padding: 23px 25px;
@@ -21,11 +21,11 @@
             .search-input {
                 float: left;
                 height: 34px;
-                width: 360px;
+                /* width: 360px; */
                 padding: 0 15px;
                 font-style: italic;
             }
-            
+
             .search-button {
                 float: left;
                 width: 40px;
@@ -36,9 +36,9 @@
             }
         }
     }
-    
+
     .jqx-menu-item-arrow-down-custom {
         color: #FFFFFF !important;
     }
-    
+
 }
