@@ -25,7 +25,6 @@ public class RecordIt0hLayout extends RecordBaseLayout {
         fieldsLayout.put("reasonForMemoLineIdentifier3", "104-106");
         fieldsLayout.put("reasonForMemoLineIdentifier4", "152-154");
         fieldsLayout.put("reasonForMemoLineIdentifier5", "200-202");
-        fieldsLayout.put("recordIdentifier", "1-1");
         fieldsLayout.put("transactionNumber", "2-7");
     }
 

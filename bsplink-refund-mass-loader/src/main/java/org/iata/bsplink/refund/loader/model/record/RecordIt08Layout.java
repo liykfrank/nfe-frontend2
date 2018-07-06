@@ -40,7 +40,6 @@ public class RecordIt08Layout extends RecordBaseLayout {
         fieldsLayout.put("fopFormOfPaymentType2", "173-182");
         fieldsLayout.put("formOfPaymentTransactionIdentifier1", "95-119");
         fieldsLayout.put("formOfPaymentTransactionIdentifier2", "218-242");
-        fieldsLayout.put("recordIdentifier", "1-1");
         fieldsLayout.put("transactionNumber", "2-7");
     }
 

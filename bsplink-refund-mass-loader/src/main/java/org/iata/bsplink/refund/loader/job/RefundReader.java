@@ -1,5 +1,8 @@
 package org.iata.bsplink.refund.loader.job;
 
+import static org.iata.bsplink.refund.loader.model.record.RecordIdentifier.IT01;
+import static org.iata.bsplink.refund.loader.model.record.RecordIdentifier.IT0Z;
+
 import java.util.Optional;
 
 import lombok.extern.java.Log;
@@ -64,52 +67,56 @@ public class RefundReader implements ItemReader<RefundDocument> {
 
     private boolean isTransactionRecord(Record record) {
 
-        String recordIdentifier = record.getRecordIdentifier();
+        RecordIdentifier recordIdentifier = record.getRecordIdentifier();
 
-        return ! (RecordIdentifier.IT01.matches(recordIdentifier)
-                || RecordIdentifier.IT0Z.matches(recordIdentifier));
+        return ! (IT01.equals(recordIdentifier)
+                || IT0Z.equals(recordIdentifier));
     }
 
     private void readRecord(RefundDocument refund, Record line) {
 
-        String recordIdentifier = line.getRecordIdentifier();
+        RecordIdentifier recordIdentifier = line.getRecordIdentifier();
 
-        if (RecordIdentifier.IT02.matches(recordIdentifier)) {
+        switch (line.getRecordIdentifier()) {
 
-            if (readingTransaction) {
+            case IT02:
 
-                newTransaction = Optional.ofNullable((RecordIt02) line);
-                readingTransaction = false;
+                if (readingTransaction) {
 
-                return;
-            }
+                    newTransaction = Optional.ofNullable((RecordIt02) line);
+                    readingTransaction = false;
 
-            readingTransaction = true;
-            refund.setRecordIt02((RecordIt02) line);
+                    return;
+                }
 
-        } else if (RecordIdentifier.IT03.matches(recordIdentifier)) {
+                readingTransaction = true;
+                refund.setRecordIt02((RecordIt02) line);
 
-            refund.addrecordIt03(((RecordIt03) line));
+                break;
 
-        } else if (RecordIdentifier.IT05.matches(recordIdentifier)) {
+            case IT03:
+                refund.addrecordIt03(((RecordIt03) line));
+                break;
 
-            refund.addrecordIt05(((RecordIt05) line));
+            case IT05:
+                refund.addrecordIt05(((RecordIt05) line));
+                break;
 
-        } else if (RecordIdentifier.IT08.matches(recordIdentifier)) {
+            case IT08:
+                refund.addrecordIt08(((RecordIt08) line));
+                break;
 
-            refund.addrecordIt08(((RecordIt08) line));
+            case IT0Y:
+                refund.addrecordIt0y(((RecordIt0y) line));
+                break;
 
-        } else if (RecordIdentifier.IT0Y.matches(recordIdentifier)) {
+            case IT0H:
+                refund.addrecordIt0h(((RecordIt0h) line));
+                break;
 
-            refund.addrecordIt0y(((RecordIt0y) line));
-
-        } else if (RecordIdentifier.IT0H.matches(recordIdentifier)) {
-
-            refund.addrecordIt0h(((RecordIt0h) line));
-
-        } else {
-
-            log.info(recordIdentifier + ((RecordRawLine) line).getLine());
+            default:
+                log.info(recordIdentifier.toString() + ((RecordRawLine) line).getLine());
+                break;
         }
 
     }

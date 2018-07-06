@@ -9,7 +9,8 @@ public enum RecordIdentifier {
     IT08("8"),
     IT0Y("Y"),
     IT0H("H"),
-    IT0Z("Z");
+    IT0Z("Z"),
+    UNKNOWN("UNKNOWN");
 
     private String identifier;
 

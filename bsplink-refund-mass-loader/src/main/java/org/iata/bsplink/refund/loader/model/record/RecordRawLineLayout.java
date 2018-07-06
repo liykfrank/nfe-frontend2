@@ -17,8 +17,7 @@ public class RecordRawLineLayout extends RecordBaseLayout {
     @Override
     protected void setFieldsLayout(Map<String, String> fieldsLayout) {
 
-        fieldsLayout.put("recordIdentifier", "1-1");
-        fieldsLayout.put("line", "2-253");
+        fieldsLayout.put("line", "1-254");
     }
 
 }

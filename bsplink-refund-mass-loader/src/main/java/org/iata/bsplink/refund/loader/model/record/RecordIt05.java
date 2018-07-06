@@ -1,5 +1,6 @@
 package org.iata.bsplink.refund.loader.model.record;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,6 +9,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class RecordIt05 implements Record {
+
+    @Setter(AccessLevel.NONE)
+    private RecordIdentifier recordIdentifier = RecordIdentifier.IT05;
 
     private String amountEnteredByAgent;
     private String amountPaidByCustomer;
@@ -22,7 +26,6 @@ public class RecordIt05 implements Record {
     private String commissionType3;
     private String couponSegmentCurrencyType;
     private String netReportingIndicator;
-    private String recordIdentifier;
     private String reservedSpace1;
     private String reservedSpace2;
     private String taxOnCommissionAmount;

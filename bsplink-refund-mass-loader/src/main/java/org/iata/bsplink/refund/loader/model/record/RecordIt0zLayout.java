@@ -14,7 +14,6 @@ public class RecordIt0zLayout extends RecordBaseLayout {
     @Override
     protected void setFieldsLayout(Map<String, String> fieldsLayout) {
 
-        fieldsLayout.put("recordIdentifier", "1-1");
         fieldsLayout.put("reportRecordCounter", "2-12");
     }
 

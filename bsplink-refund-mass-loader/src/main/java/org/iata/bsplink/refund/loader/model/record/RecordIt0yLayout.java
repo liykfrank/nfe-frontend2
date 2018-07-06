@@ -13,8 +13,7 @@ public class RecordIt0yLayout extends RecordBaseLayout {
 
     @Override
     protected void setFieldsLayout(Map<String, String> fieldsLayout) {
-
-        fieldsLayout.put("recordIdentifier", "1-1");
+        // nothing to do
     }
 
 }

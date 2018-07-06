@@ -20,7 +20,6 @@ public class RecordIt01Layout extends RecordBaseLayout {
         fieldsLayout.put("isoCountryCode", "29-30");
         fieldsLayout.put("processingDate", "19-24");
         fieldsLayout.put("processingTime", "25-28");
-        fieldsLayout.put("recordIdentifier", "1-1");
         fieldsLayout.put("reportingSystemIdentifier", "8-11");
         fieldsLayout.put("reservedSpace1", "31-36");
         fieldsLayout.put("reservedSpace2", "40-255");
