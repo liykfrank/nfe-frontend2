@@ -9,22 +9,17 @@ import { AlertModel } from './../../models/alert.model';
 })
 export class AlertsComponent implements OnInit {
 
-  private alert: AlertModel;
+  alert: AlertModel;
   display = false;
-  private style_class = '';
+  style_class = '';
+  image_type: string;
+
   private show_accept_button: boolean;
   private show_cancel_button: boolean;
-  image_type: string;
 
   constructor(
     private _AlertsService: AlertsService
   ) { }
-
-  // this._AlertsService.setAlert({
-  //   title: 'TITLE DASHBOARD',
-  //   message: 'MENSAJE DASHBOARD',
-  //   alert_type: 'ALERT'
-  // });
 
   ngOnInit() {
     this._AlertsService.getAlert().subscribe(alert => {

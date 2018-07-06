@@ -67,7 +67,7 @@
 
         td.title {
             color: #152C5A;
-            font-size: 14px;	
+            font-size: 14px;
             line-height: 16px;
         }
     }
@@ -90,11 +90,16 @@
         }
 
         .float-left {
-            float: left; 
+            float: left;
         }
 
         .float-right {
-            float: right; 
+            float: right;
+        }
+
+        .isNumber {
+          text-align: center;
+          /* padding: 17px 60px; */
         }
     }
 }

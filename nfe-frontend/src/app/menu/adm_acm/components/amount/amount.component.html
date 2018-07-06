@@ -74,7 +74,7 @@
               type='text'
               [ngModel]="agentCalculations.tax"
               (ngModelChange)="agentCalculations.tax = assignData($event)"
-               decimalsFormatterDirective 
+               decimalsFormatterDirective
                [decimals]="decimals"
               (blur)="calculateTotalOnAmount()"
             />
@@ -85,7 +85,7 @@
               type='text'
               [ngModel]="airlineCalculations.tax"
               (ngModelChange)="airlineCalculations.tax = assignData($event)"
-              decimalsFormatterDirective 
+              decimalsFormatterDirective
               [decimals]="decimals"
               (blur)="calculateTotalOnAmount()"
               />
@@ -107,7 +107,7 @@
               type='text'
               [ngModel]="agentCalculations.commission"
               (ngModelChange)="agentCalculations.commission = assignData($event)"
-              decimalsFormatterDirective 
+              decimalsFormatterDirective
               [decimals]="decimals"
               (blur)="calculateTotalOnAmount()"
             />
@@ -116,9 +116,9 @@
             <input
               class='input-custom-number amount-table'
               type='text'
-              [ngModel]="airlineCalculations.commission" 
+              [ngModel]="airlineCalculations.commission"
               (ngModelChange)="airlineCalculations.commission = assignData($event)"
-              decimalsFormatterDirective 
+              decimalsFormatterDirective
               [decimals]="decimals"
               (blur)="calculateTotalOnAmount()"
             />
@@ -202,9 +202,9 @@
       <tfoot>
         <tr>
           <td l10nTranslate>total </td>
-          <td> {{totalAmount.agentValue | abs | decimalsFormatter:decimals}} </td>
-          <td> {{totalAmount.airlineValue | abs  | decimalsFormatter:decimals}} </td>
-          <td> {{totalAmount.dif | decimalsFormatter:decimals}} </td>
+          <td class="isNumber"> {{totalAmount.agentValue | abs | decimalsFormatter:decimals}} </td>
+          <td class="isNumber"> {{totalAmount.airlineValue | abs  | decimalsFormatter:decimals}} </td>
+          <td class="isNumber"> {{totalAmount.dif | decimalsFormatter:decimals}} </td>
         </tr>
       </tfoot>
     </table>

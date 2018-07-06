@@ -1,6 +1,6 @@
-<p-dialog 
+<p-dialog
   [(visible)]="display"
-  [responsive]="true" 
+  [responsive]="true"
   [width]="289"
   [minY]="70"
   [modal]="true"
@@ -9,15 +9,15 @@
   [baseZIndex]="10000">
   <img src="assets/images/alerts/ico_{{image_type}}.svg">
   <p class="title">
-    {{ alert?.title }}
+    <b>{{ alert?.title }}</b>
   </p>
   <p class="content-text">{{ alert?.message }}</p>
   <p-footer>
-    <button class="button-accept" 
-      *ngIf="checkAcceptButton()"  
+    <button class="button-accept"
+      *ngIf="checkAcceptButton()"
       (click)="onClickAccept()" >Accept</button>
-    <button class="button-cancel" 
-      *ngIf="checkCancelButton()"  
+    <button class="button-cancel"
+      *ngIf="checkCancelButton()"
       (click)="onClickCancel()">Cancel</button>
   </p-footer>
 </p-dialog>

@@ -76,6 +76,7 @@
       [responsive]="true"
       [width]="430"
       [closable]="false"
+      appendTo="body"
     >
       <p-header>
         <span l10nTranslate>ADM_ACM.BASIC_INFO.agent.title</span>
@@ -159,6 +160,7 @@
       [responsive]="true"
       [width]="430"
       [closable]="false"
+      appendTo="body"
     >
       <p-header>
         <span l10nTranslate>ADM_ACM.BASIC_INFO.airline.title</span>
@@ -228,7 +230,7 @@
       <div class="form-group">
         <label l10nTranslate>ADM_ACM.BASIC_INFO.statCombo.label</label>
         <select class="form-control dropdown-custom"
-          [ngClass]="{'error' : getStyleError('stat')}"
+          [ngClass]="{'error' : getStyleError('stat', basicInfo.stat)}"
           *ngIf="configuration.freeStat"
           [(ngModel)]="basicInfo.stat">
           <option *ngFor="let stat of statList" [value]="stat.code">{{stat.description}}</option>
@@ -238,7 +240,7 @@
           ownPattern
           [typingPattern]="'[DI][A-Z0-9]{2}$'"
           maxlength="3"
-          [ngClass]="{'error' : getStyleError('stat')}"
+          [ngClass]="{'error' : getStyleError('stat', basicInfo.stat)}"
           *ngIf="!configuration.freeStat"
           [(ngModel)]="basicInfo.stat"
           (change)="register()"/>

@@ -116,12 +116,17 @@ export class BasicInfoComponent extends NwAbstractComponent implements OnInit {
     });
 
     this._BISvc.getToca().subscribe(data => {
-      if (data) {
+      if (data && data.length > 0) {
+        const empty: TocaType = new TocaType();
+        empty.code = '';
+        empty.description = '';
+        empty.isoCountryCode = '';
+
         this.tocaTypeList = data;
-        if (this.tocaTypeList.length > 0) {
-          this.basicInfo.tocaType = this.tocaTypeList[0].code;
-          this.register();
-        }
+        this.tocaTypeList.unshift(empty);
+
+        this.basicInfo.tocaType = data[0].code;
+        this.register();
       }
     });
 
@@ -409,8 +414,9 @@ export class BasicInfoComponent extends NwAbstractComponent implements OnInit {
     }
   }
 
-  getStyleError(text: string): boolean {
-    return this.errorList.indexOf(text) != -1;
+  getStyleError(text: string, fieldValue: string): boolean {
+
+    return this.errorList.indexOf(text) != -1 && (!fieldValue || fieldValue.length == 0);
   }
 
 }

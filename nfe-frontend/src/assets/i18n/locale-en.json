@@ -13,6 +13,12 @@
   "Size": "Size",
   "Date": "Date",
 
+  "support": "Support",
+  "resource": "Resource",
+  "shop": "Shop",
+  "help": "Help",
+  "notifications": "Notifications",
+
   "clear": "Clear",
   "save": "Save",
   "issue": "Issue",

@@ -13,20 +13,26 @@ import { CommentService } from './resources/comment.service';
 import { FileService } from './resources/file.service';
 import { FilesService } from './files.service';
 import { AlertsService } from '../../../core/services/alerts.service';
+import { Acdm } from '../models/acdm.model';
+import { CurrencyServer } from '../models/currency-server.model';
 
 describe('AdmAcmService', () => {
 
   const _ConfigurationService =
     jasmine.createSpyObj<ConfigurationService>('ConfigurationService', ['get', 'getWithISO', 'getConfiguration']);
-  const _AcdmsService = jasmine.createSpyObj<AcdmsService>('AcdmsService', ['get']);
-  const _AmountService = jasmine.createSpyObj<AmountService>('AmountService', ['copyFromAdcm']);
-  const _BasicInfoService = jasmine.createSpyObj<BasicInfoService>('BasicInfoService', ['copyFromAdcm']);
-  const _DetailsService = jasmine.createSpyObj<DetailsService>('DetailsService', ['copyFromAdcm']);
+
+  const _AcdmsService = jasmine.createSpyObj<AcdmsService>('AcdmsService', ['postAcdm']);
+  const _BasicInfoService = jasmine.createSpyObj<BasicInfoService>('BasicInfoService', ['copyFromAdcm', 'copyToAdcm', 'checkBasicInfo']);
+  const _AmountService = jasmine.createSpyObj<AmountService>('AmountService', ['copyFromAdcm', 'copyToAdcm', 'checkTaxes', 'checkTotal']);
+  const _DetailsService = jasmine.createSpyObj<DetailsService>('DetailsService', ['copyFromAdcm', 'copyToAdcm']);
+
   const _CommentsService = jasmine.createSpyObj<CommentsService>('CommentsService', ['get', 'getCommentsToUpload']);
   const _CommentService = jasmine.createSpyObj<CommentService>('CommentService', ['get']);
-  const _FileService = jasmine.createSpyObj<FileService>('FileService', ['get']);
-  const _FilesService = jasmine.createSpyObj<FilesService>('FilesService', ['get', 'getFilesToUpload']);
-  const _AlertsService = jasmine.createSpyObj<AlertsService>('AlertsService', ['get']);
+
+  const _FilesService = jasmine.createSpyObj<FilesService>('FilesService', ['copyToAdcm', 'getFilesToUpload']);
+  const _FileService = jasmine.createSpyObj<FileService>('FileService', ['copyToAdcm']);
+
+  const _AlertsService = jasmine.createSpyObj<AlertsService>('AlertsService', ['setAlertTranslate', 'setAlert']);
 
   _FilesService.getFilesToUpload.and.returnValue(Observable.of([]));
   _CommentsService.getCommentsToUpload.and.returnValue(Observable.of([]));
@@ -136,19 +142,172 @@ describe('AdmAcmService', () => {
     expect(_ConfigurationService.getWithISO.calls.count()).toBe(1);
   }));
 
-  /* it('setACDM', inject([AdmAcmService], (service: AdmAcmService) => {
-    _BasicInfoService.copyFromAdcm.calls.reset();
-    _AmountService.copyFromAdcm.calls.reset();
-    _DetailsService.copyFromAdcm.calls.reset();
+  it('issueACDM error on issue', inject([AdmAcmService], (service: AdmAcmService) => {
+    _BasicInfoService.checkBasicInfo.calls.reset();
+    _BasicInfoService.checkBasicInfo.and.returnValue(['TEST']);
 
-    _BasicInfoService.copyFromAdcm.and.returnValue(Observable.of({}));
-    _AmountService.copyFromAdcm.and.returnValue(Observable.of({}));
-    _DetailsService.copyFromAdcm.and.returnValue(Observable.of({}));
+    _AlertsService.setAlertTranslate.calls.reset();
+    _AlertsService.setAlertTranslate.and.returnValue(Observable.of({}));
 
-    service.setACDM();
-    expect(_BasicInfoService.copyFromAdcm.calls.count()).toBe(1);
-    expect(_AmountService.copyFromAdcm.calls.count()).toBe(1);
-    expect(_DetailsService.copyFromAdcm.calls.count()).toBe(1);
-  })); */
+    service.issueACDM();
+    expect(_BasicInfoService.checkBasicInfo.calls.count()).toBe(1);
+    expect(_AlertsService.setAlertTranslate.calls.count()).toBe(1);
+  }));
+
+  it('issueACDM error on checkTaxes', inject([AdmAcmService], (service: AdmAcmService) => {
+    _BasicInfoService.checkBasicInfo.calls.reset();
+    _BasicInfoService.checkBasicInfo.and.returnValue([]);
+
+    _AmountService.checkTaxes.calls.reset();
+    _AmountService.checkTaxes.and.returnValue(false);
+
+    _AlertsService.setAlertTranslate.calls.reset();
+    _AlertsService.setAlertTranslate.and.returnValue(Observable.of({}));
+
+    service.issueACDM();
+    expect(_BasicInfoService.checkBasicInfo.calls.count()).toBe(1, 'checkBasicInfo ERROR');
+    expect(_AmountService.checkTaxes.calls.count()).toBe(1, 'checkTaxes ERROR');
+    expect(_AlertsService.setAlertTranslate.calls.count()).toBe(1, 'setAlertTranslate ERROR');
+  }));
+
+  it('issueACDM error on checkTotal', inject([AdmAcmService], (service: AdmAcmService) => {
+    _BasicInfoService.checkBasicInfo.calls.reset();
+    _BasicInfoService.checkBasicInfo.and.returnValue([]);
+
+    _AmountService.checkTaxes.calls.reset();
+    _AmountService.checkTaxes.and.returnValue(true);
+
+    _AmountService.checkTotal.calls.reset();
+    _AmountService.checkTotal.and.returnValue(false);
+
+    _AlertsService.setAlertTranslate.calls.reset();
+    _AlertsService.setAlertTranslate.and.returnValue(Observable.of({}));
+
+    service.issueACDM();
+    expect(_BasicInfoService.checkBasicInfo.calls.count()).toBe(1, 'checkBasicInfo ERROR');
+    expect(_AmountService.checkTaxes.calls.count()).toBe(1, 'checkTaxes ERROR');
+    expect(_AmountService.checkTotal.calls.count()).toBe(1, 'checkTotal ERROR');
+    expect(_AlertsService.setAlertTranslate.calls.count()).toBe(1, 'setAlertTranslate ERROR');
+  }));
+
+  it('issueACDM no regularized OK', inject([AdmAcmService], (service: AdmAcmService) => {
+    const acdm = new Acdm();
+    acdm.isoCountryCode = 'AA';
+    acdm.currency = new CurrencyServer();
+    acdm.currency.decimals = 2;
+    acdm.netReporting = false;
+    acdm.transactionCode = 'ABC';
+    acdm.concernsIndicator = 'A';
+
+    _BasicInfoService.checkBasicInfo.calls.reset();
+    _BasicInfoService.copyToAdcm.calls.reset();
+    _BasicInfoService.checkBasicInfo.and.returnValue([]);
+    _BasicInfoService.copyToAdcm.and.returnValue(acdm);
+
+    _AmountService.checkTaxes.calls.reset();
+    _AmountService.copyToAdcm.calls.reset();
+    _AmountService.checkTaxes.and.returnValue(true);
+    _AmountService.copyToAdcm.and.returnValue(acdm);
+
+    _AmountService.checkTotal.calls.reset();
+    _AmountService.checkTotal.and.returnValue(true);
+
+    _DetailsService.copyToAdcm.calls.reset();
+    _DetailsService.copyToAdcm.and.returnValue(acdm);
+
+    _FilesService.copyToAdcm.calls.reset();
+    _FilesService.copyToAdcm.and.returnValue(acdm);
+
+    _AcdmsService.postAcdm.calls.reset();
+    _AcdmsService.postAcdm.and.returnValue(Observable.of(acdm));
+
+    _AlertsService.setAlert.calls.reset();
+    _AlertsService.setAlert.and.returnValue(Observable.of({}));
+
+    service.issueACDM();
+
+    expect(_BasicInfoService.checkBasicInfo.calls.count()).toBe(1, 'checkBasicInfo ERROR');
+    expect(_AmountService.checkTaxes.calls.count()).toBe(1, 'checkTaxes ERROR');
+    expect(_AmountService.checkTotal.calls.count()).toBe(1, 'checkTotal ERROR');
+
+    expect (_BasicInfoService.copyToAdcm.calls.count()).toBe(1, 'checkTotal ERROR');
+    expect (_AmountService.copyToAdcm.calls.count()).toBe(1, 'checkTotal ERROR');
+    expect (_DetailsService.copyToAdcm.calls.count()).toBe(1, 'checkTotal ERROR');
+    expect (_FilesService.copyToAdcm.calls.count()).toBe(1, 'checkTotal ERROR');
+
+    expect (_AcdmsService.postAcdm.calls.count()).toBe(1, 'checkTotal ERROR');
+    expect (_AlertsService.setAlert.calls.count()).toBe(1, 'checkTotal ERROR');
+  }));
+
+  it('checkRegularized', inject([AdmAcmService], (service: AdmAcmService) => {
+    const error: any = {};
+    error.validationErrors = [];
+
+    expect(service.checkRegularized(error)).toBe(false);
+
+    error.validationErrors.push({fieldName : 'regularized'});
+    expect(service.checkRegularized(error)).toBe(true);
+  }));
+
+  it('sendRegularized', inject([AdmAcmService], (service: AdmAcmService) => {
+    const acdm = new Acdm();
+    acdm.isoCountryCode = 'AA';
+    acdm.currency = new CurrencyServer();
+    acdm.currency.decimals = 2;
+    acdm.netReporting = false;
+    acdm.transactionCode = 'ABC';
+    acdm.concernsIndicator = 'A';
+
+    _BasicInfoService.checkBasicInfo.calls.reset();
+    _BasicInfoService.copyToAdcm.calls.reset();
+    _BasicInfoService.checkBasicInfo.and.returnValue([]);
+    _BasicInfoService.copyToAdcm.and.returnValue(acdm);
+
+    _AmountService.checkTaxes.calls.reset();
+    _AmountService.copyToAdcm.calls.reset();
+    _AmountService.checkTaxes.and.returnValue(true);
+    _AmountService.copyToAdcm.and.returnValue(acdm);
+
+    _AmountService.checkTotal.calls.reset();
+    _AmountService.checkTotal.and.returnValue(true);
+
+    _DetailsService.copyToAdcm.calls.reset();
+    _DetailsService.copyToAdcm.and.returnValue(acdm);
+
+    _FilesService.copyToAdcm.calls.reset();
+    _FilesService.copyToAdcm.and.returnValue(acdm);
+
+    _AcdmsService.postAcdm.calls.reset();
+    _AcdmsService.postAcdm.and.returnValue(Observable.of(acdm));
+
+    _AlertsService.setAlert.calls.reset();
+    _AlertsService.setAlert.and.returnValue(Observable.of({}));
+
+    service.sendRegularized();
+
+    expect(_BasicInfoService.checkBasicInfo.calls.count()).toBe(1, 'checkBasicInfo ERROR');
+    expect(_AmountService.checkTaxes.calls.count()).toBe(1, 'checkTaxes ERROR');
+    expect(_AmountService.checkTotal.calls.count()).toBe(1, 'checkTotal ERROR');
+
+    expect (_BasicInfoService.copyToAdcm.calls.count()).toBe(1, 'checkTotal ERROR');
+    expect (_AmountService.copyToAdcm.calls.count()).toBe(1, 'checkTotal ERROR');
+    expect (_DetailsService.copyToAdcm.calls.count()).toBe(1, 'checkTotal ERROR');
+    expect (_FilesService.copyToAdcm.calls.count()).toBe(1, 'checkTotal ERROR');
+
+    expect (_AcdmsService.postAcdm.calls.count()).toBe(1, 'checkTotal ERROR');
+    expect (_AlertsService.setAlert.calls.count()).toBe(1, 'checkTotal ERROR');
+  }));
+
+  it('getErrors', inject([AdmAcmService], (service: AdmAcmService) => {
+    expect(service.getErrors()).toBeTruthy();
+  }));
+
+  it('setErrors', inject([AdmAcmService], (service: AdmAcmService) => {
+    let elems;
+    service.getErrors().subscribe(data => elems = data);
+
+    service.setErrors(['TEST']);
+    expect(elems[0] == 'TEST').toBe(true);
+  }));
 
 });
