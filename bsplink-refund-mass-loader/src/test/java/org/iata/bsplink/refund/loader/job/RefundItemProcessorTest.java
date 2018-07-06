@@ -3,7 +3,7 @@ package org.iata.bsplink.refund.loader.job;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.AIRLINE_CODE;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.ISO_COUNTRY_CODE;
-import static org.iata.bsplink.refund.loader.test.fixtures.Constants.TICKET_DOCUMENT_NUMBER;
+import static org.iata.bsplink.refund.loader.test.fixtures.Constants.TICKET_DOCUMENT_NUMBER_1;
 import static org.junit.Assert.assertThat;
 
 import org.iata.bsplink.refund.loader.dto.Refund;
@@ -20,7 +20,7 @@ public class RefundItemProcessorTest {
         RecordIt02 recordIt02 = new RecordIt02();
         recordIt02.setIsoCountryCode(ISO_COUNTRY_CODE);
         recordIt02.setTicketingAirlineCodeNumber(AIRLINE_CODE);
-        recordIt02.setTicketDocumentNumber(TICKET_DOCUMENT_NUMBER);
+        recordIt02.setTicketDocumentNumber(TICKET_DOCUMENT_NUMBER_1);
 
         RefundDocument refundDocument = new RefundDocument();
         refundDocument.setRecordIt02(recordIt02);
@@ -32,7 +32,7 @@ public class RefundItemProcessorTest {
         // TODO: it's pending the addition of the fields that don't exist yet
         assertThat(refund.getIsoCountryCode(), equalTo(ISO_COUNTRY_CODE));
         assertThat(refund.getAirlineCode(), equalTo(AIRLINE_CODE));
-        assertThat(refund.getTicketDocumentNumber(), equalTo(TICKET_DOCUMENT_NUMBER));
+        assertThat(refund.getTicketDocumentNumber(), equalTo(TICKET_DOCUMENT_NUMBER_1));
     }
 
 }
