@@ -48,7 +48,6 @@ import org.springframework.batch.item.file.transform.LineTokenizer;
 import org.springframework.batch.item.file.transform.Range;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
@@ -242,7 +241,6 @@ public class BatchConfiguration {
     }
 
     @Bean
-    @Qualifier(RECORD_IT01_BEAN_NAME)
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public Record recordIt01() {
 
@@ -250,7 +248,6 @@ public class BatchConfiguration {
     }
 
     @Bean
-    @Qualifier(RECORD_IT02_BEAN_NAME)
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public Record recordIt02() {
 
@@ -258,7 +255,6 @@ public class BatchConfiguration {
     }
 
     @Bean
-    @Qualifier(RECORD_IT03_BEAN_NAME)
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public Record recordIt03() {
 
@@ -266,7 +262,6 @@ public class BatchConfiguration {
     }
 
     @Bean
-    @Qualifier(RECORD_IT05_BEAN_NAME)
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public Record recordIt05() {
 
@@ -274,7 +269,6 @@ public class BatchConfiguration {
     }
 
     @Bean
-    @Qualifier(RECORD_IT08_BEAN_NAME)
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public Record recordIt08() {
 
@@ -282,7 +276,6 @@ public class BatchConfiguration {
     }
 
     @Bean
-    @Qualifier(RECORD_IT0Y_BEAN_NAME)
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public Record recordIt0y() {
 
@@ -290,7 +283,6 @@ public class BatchConfiguration {
     }
 
     @Bean
-    @Qualifier(RECORD_IT0H_BEAN_NAME)
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public Record recordIt0h() {
 
@@ -298,7 +290,6 @@ public class BatchConfiguration {
     }
 
     @Bean
-    @Qualifier(RECORD_IT0Z_BEAN_NAME)
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public Record recordIt0z() {
 
@@ -306,7 +297,6 @@ public class BatchConfiguration {
     }
 
     @Bean
-    @Qualifier(RECORD_RAWLINE_BEAN_NAME)
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public Record recordRawLine() {
 

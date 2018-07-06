@@ -4,7 +4,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.AIRLINE_CODE;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.ID;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.ISO_COUNTRY_CODE;
-import static org.iata.bsplink.refund.loader.test.fixtures.Constants.TICKET_DOCUMENT_NUMBER_1;
+import static org.iata.bsplink.refund.loader.test.fixtures.Constants.TRANSACTION_NUMBER_1;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +49,7 @@ public class RefundWriterTest {
         refundToUpdate = createRefund();
         refundToUpdate.setId(ID);
 
-        when(client.findRefund(ISO_COUNTRY_CODE, AIRLINE_CODE, TICKET_DOCUMENT_NUMBER_1))
+        when(client.findRefund(ISO_COUNTRY_CODE, AIRLINE_CODE, TRANSACTION_NUMBER_1))
                 .thenReturn(ResponseEntity.ok().body(refundToUpdate));
     }
 
@@ -59,7 +59,7 @@ public class RefundWriterTest {
         refund = new Refund();
         refund.setIsoCountryCode(ISO_COUNTRY_CODE);
         refund.setAirlineCode(AIRLINE_CODE);
-        refund.setTicketDocumentNumber(TICKET_DOCUMENT_NUMBER_1);
+        refund.setTicketDocumentNumber(TRANSACTION_NUMBER_1);
 
         return refund;
     }
@@ -88,7 +88,7 @@ public class RefundWriterTest {
         capture.expect(
                 containsString(String.format("airlineCode=%s", AIRLINE_CODE)));
         capture.expect(
-                containsString(String.format("ticketDocumentNumber=%s", TICKET_DOCUMENT_NUMBER_1)));
+                containsString(String.format("ticketDocumentNumber=%s", TRANSACTION_NUMBER_1)));
     }
 
     @Test
