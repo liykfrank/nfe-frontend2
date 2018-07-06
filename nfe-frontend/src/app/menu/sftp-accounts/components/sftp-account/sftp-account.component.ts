@@ -1,5 +1,5 @@
 import { environment } from './../../../../../environments/environment';
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-sftp-account',

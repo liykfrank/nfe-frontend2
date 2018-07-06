@@ -11,7 +11,8 @@
         align-items: center;
         
         .logo { 
-            width: auto;
+            width: 5%;
+            margin-right: 20px;
             .header-logo {
                 height: 45px;
                 width: auto;
@@ -19,13 +20,13 @@
         }
 
         .brand {
-            width: 7%;
+            width: 10%;
             font-size: 22px;
             color: #033E78;
         }
         
         .combos {
-            width: 60%;
+            width: 65%;
             .special-selector {
                 padding: 3px 14px;
                 border: 1px solid #022F5B;
@@ -38,8 +39,9 @@
         }
         
         .actions {
-            width: 25%;
+            width: 20%;
             .single-action {
+                text-align: center;
                 float: left;
                 padding: 0 8px;
             }
@@ -55,8 +57,39 @@
     .right-side {
         margin: 25px 0;
         width: auto;
+        display: flex;
         padding: 0 20px;
         float: left;
+        align-items: center;
+
+        .notification {
+            padding: 0 10px;
+            text-align: center;
+            float: left;
+            position: relative;
+
+            .badge {
+                position: absolute;
+                padding: 1px 4px;
+                top: -5px;
+                background: #E72017;
+                color: white;
+                text-align: center;
+                border-radius: 50%;
+                font-size: 9px;
+                right: 35px;
+            }
+        }
+        
+        .user-icon {
+            padding: 0 10px;
+            
+        }
+        
+        .user {
+            float: left;
+            padding: 0 10px;
+        }
     }
 }
 

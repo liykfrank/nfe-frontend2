@@ -156,21 +156,17 @@ export class AdmAcmService {
     const errors = this._BasicInfoService.checkBasicInfo(this.$configuration.getValue());
 
     if (errors.length != 0) {
-      // console.log('Error Basic Info');
-
       this.$errors.next(errors);
       this._AlertsService.setAlertTranslate('error', 'ADM_ACM.error', AlertType.ERROR);
       return;
     }
 
     if (!this._AmountService.checkTaxes()) {
-      // console.log('Error Taxes');
       this._AlertsService.setAlertTranslate('error', 'ADM_ACM.AMOUNT.tax_error', AlertType.ERROR);
       return;
     }
 
     if (!this._AmountService.checkTotal(this.$subtype.getValue())) {
-      // console.log('Error Total');
       this._AlertsService.setAlertTranslate('error', 'ADM_ACM.AMOUNT.total_error', AlertType.ERROR);
       return;
     }

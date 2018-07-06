@@ -1,5 +1,4 @@
-<jqxMenu class="menu"
-  [theme]="'custom'"
+<jqxMenu [theme]="'custom'"
   [showTopLevelArrows]="true" 
   [autoOpen]="true">
   <ul>
@@ -38,5 +37,12 @@
         <li (click)="openTab('monitor')">MONITOR</li>
       </ul>
     </li>
+    <li>
+      <input class="search-input" placeholder="Search" type="text">
+      <button class="search-button">
+        <i class="fa fa-search" aria-hidden="true"></i>
+      </button>
+    </li>
   </ul>
+
 </jqxMenu>
