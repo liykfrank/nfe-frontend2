@@ -1,5 +1,6 @@
 package org.iata.bsplink.refund.loader.model.record;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,6 +9,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class RecordIt0h implements Record {
+
+    @Setter(AccessLevel.NONE)
+    private RecordIdentifier recordIdentifier = RecordIdentifier.IT0H;
 
     private String reasonForMemoInformation1;
     private String reasonForMemoInformation2;
@@ -20,6 +24,5 @@ public class RecordIt0h implements Record {
     private String reasonForMemoLineIdentifier3;
     private String reasonForMemoLineIdentifier4;
     private String reasonForMemoLineIdentifier5;
-    private String recordIdentifier;
     private String transactionNumber;
 }

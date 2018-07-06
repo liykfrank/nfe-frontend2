@@ -21,7 +21,6 @@ public class RefundDocumentFixtures {
         List<Record> records = new ArrayList<>();
 
         RecordIt01 recordIt01 = new RecordIt01();
-        recordIt01.setRecordIdentifier("1");
 
         records.add(recordIt01);
         records.addAll(getTransaction(TICKET_DOCUMENT_NUMBER_1));
@@ -35,12 +34,10 @@ public class RefundDocumentFixtures {
         List<Record> records = new ArrayList<>();
 
         RecordIt02 recordIt02 = new RecordIt02();
-        recordIt02.setRecordIdentifier("2");
         recordIt02.setTransactionNumber(transactionNumber);
         records.add(recordIt02);
 
         RecordIt03 recordIt03 = new RecordIt03();
-        recordIt03.setRecordIdentifier("3");
         recordIt03.setTransactionNumber(transactionNumber);
         records.add(recordIt03);
 

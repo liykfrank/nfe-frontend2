@@ -38,7 +38,6 @@ public class RecordIt02Layout extends RecordBaseLayout {
         fieldsLayout.put("stockSetStockControlNumberTo4", "228-231");
         fieldsLayout.put("isoCountryCode", "247-248");
         fieldsLayout.put("passengerName", "75-123");
-        fieldsLayout.put("recordIdentifier", "1-1");
         fieldsLayout.put("refundApplicationStatus", "255-255");
         fieldsLayout.put("settlementAuthorisationCode", "232-245");
         fieldsLayout.put("statisticalCode", "29-31");

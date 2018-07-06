@@ -22,7 +22,6 @@ public class RecordIt03Layout extends RecordBaseLayout {
         fieldsLayout.put("checkDigit6", "127-127");
         fieldsLayout.put("checkDigit7", "147-147");
         fieldsLayout.put("dateOfIssueRelatedDocument", "148-153");
-        fieldsLayout.put("recordIdentifier", "1-1");
         fieldsLayout.put("relatedTicketDocumentCouponNumberIdentifier1", "8-11");
         fieldsLayout.put("relatedTicketDocumentCouponNumberIdentifier2", "28-31");
         fieldsLayout.put("relatedTicketDocumentCouponNumberIdentifier3", "48-51");

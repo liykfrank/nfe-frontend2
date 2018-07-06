@@ -16,6 +16,7 @@ public class RefundItemProcessor implements ItemProcessor<RefundDocument, Refund
 
         Refund refund = new Refund();
 
+        // TODO: missing fields
         refund.setAirlineCode(item.getRecordIt02().getTicketingAirlineCodeNumber());
         refund.setIsoCountryCode(item.getRecordIt02().getIsoCountryCode());
         refund.setTicketDocumentNumber(item.getRecordIt02().getTicketDocumentNumber());
