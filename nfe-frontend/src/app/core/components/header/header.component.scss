@@ -2,17 +2,19 @@
     display: inline-flex;
     width: 100%;
 
+    color: #033E78;
+
     .left-side {
         margin: 25px 0;
         float: left;
         display: flex;
-        width: 80%;
+        width: 70%;
         padding: 0 20px;
         align-items: center;
 
         .logo {
-            width: 5%;
-            margin-right: 20px;
+            width: auto;
+
             .header-logo {
                 height: 45px;
                 width: auto;
@@ -22,6 +24,7 @@
         .brand {
             width: 10%;
             font-size: 22px;
+            margin-left: 5px;
             color: #033E78;
         }
 
