@@ -75,8 +75,6 @@ public class RefundReader implements ItemReader<RefundDocument> {
 
     private void readRecord(RefundDocument refund, Record line) {
 
-        RecordIdentifier recordIdentifier = line.getRecordIdentifier();
-
         switch (line.getRecordIdentifier()) {
 
             case IT02:
@@ -115,7 +113,7 @@ public class RefundReader implements ItemReader<RefundDocument> {
                 break;
 
             default:
-                log.info(recordIdentifier.toString() + ((RecordRawLine) line).getLine());
+                log.info("UNKNOW RECORD: " + ((RecordRawLine) line).getLine());
                 break;
         }
 
