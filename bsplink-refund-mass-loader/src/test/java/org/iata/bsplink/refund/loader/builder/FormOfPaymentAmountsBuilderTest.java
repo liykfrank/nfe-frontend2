@@ -41,7 +41,8 @@ public class FormOfPaymentAmountsBuilderTest {
         it08.setFormOfPaymentType2("");
         it08s.add(it08);
 
-        FormOfPaymentAmountsBuilder builder = new FormOfPaymentAmountsBuilder(it08s);
+        FormOfPaymentAmountsBuilder builder = new FormOfPaymentAmountsBuilder();
+        builder.setIt08s(it08s);
 
         builder.setNumDecimals(2);
 
@@ -88,7 +89,8 @@ public class FormOfPaymentAmountsBuilderTest {
         List<RecordIt08> it08s = new ArrayList<>();
         it08s.add(it08);
 
-        FormOfPaymentAmountsBuilder builder = new FormOfPaymentAmountsBuilder(Arrays.asList(it08));
+        FormOfPaymentAmountsBuilder builder = new FormOfPaymentAmountsBuilder();
+        builder.setIt08s(Arrays.asList(it08));
         builder.setNumDecimals(2);
 
         List<FormOfPaymentAmount> fops = builder.build();
@@ -113,7 +115,8 @@ public class FormOfPaymentAmountsBuilderTest {
         List<RecordIt08> it08s = new ArrayList<>();
         it08s.add(it08);
 
-        FormOfPaymentAmountsBuilder builder = new FormOfPaymentAmountsBuilder(Arrays.asList(it08));
+        FormOfPaymentAmountsBuilder builder = new FormOfPaymentAmountsBuilder();
+        builder.setIt08s(Arrays.asList(it08));
         builder.setNumDecimals(2);
 
         List<FormOfPaymentAmount> fops = builder.build();
@@ -123,8 +126,8 @@ public class FormOfPaymentAmountsBuilderTest {
 
     @Test
     public void testBuildWithoutIt08() {
-        FormOfPaymentAmountsBuilder builder =
-                new FormOfPaymentAmountsBuilder(Collections.emptyList());
+        FormOfPaymentAmountsBuilder builder = new FormOfPaymentAmountsBuilder();
+        builder.setIt08s(Collections.emptyList());
         builder.setNumDecimals(2);
 
         List<FormOfPaymentAmount> fops = builder.build();
@@ -157,8 +160,8 @@ public class FormOfPaymentAmountsBuilderTest {
             }
         });
 
-        FormOfPaymentAmountsBuilder builder = new FormOfPaymentAmountsBuilder(Arrays.asList(it08));
-
+        FormOfPaymentAmountsBuilder builder = new FormOfPaymentAmountsBuilder();
+        builder.setIt08s(Arrays.asList(it08));
         List<FormOfPaymentAmount> fops = builder.build();
         assertNotNull(fops);
         assertThat(fops, is(expected));

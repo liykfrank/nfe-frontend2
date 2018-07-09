@@ -3,14 +3,19 @@ package org.iata.bsplink.refund.loader.builder;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import org.iata.bsplink.refund.loader.model.record.RecordIt0h;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-@RequiredArgsConstructor
+@Setter
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RemarkBuilder {
-    private final List<RecordIt0h> it0hs;
+    private List<RecordIt0h> it0hs;
 
     /**
      * Creates the text of the Remark.

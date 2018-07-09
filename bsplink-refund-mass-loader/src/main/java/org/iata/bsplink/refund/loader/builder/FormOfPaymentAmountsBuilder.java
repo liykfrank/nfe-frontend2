@@ -4,19 +4,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import org.apache.commons.lang.StringUtils;
 import org.iata.bsplink.refund.loader.dto.FormOfPaymentAmount;
 import org.iata.bsplink.refund.loader.dto.FormOfPaymentType;
 import org.iata.bsplink.refund.loader.model.record.RecordIt08;
-import org.iata.bsplink.refund.utils.MathUtils;
+import org.iata.bsplink.refund.loader.utils.MathUtils;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 @Setter
-@RequiredArgsConstructor
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FormOfPaymentAmountsBuilder {
-    private final List<RecordIt08> it08s;
+    private List<RecordIt08> it08s;
     private Integer numDecimals;
 
     /**
