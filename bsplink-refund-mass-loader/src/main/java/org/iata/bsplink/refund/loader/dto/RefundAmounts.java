@@ -4,9 +4,11 @@ import java.math.BigDecimal;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class RefundAmounts {
 
     private BigDecimal cancellationPenalty = BigDecimal.ZERO;
