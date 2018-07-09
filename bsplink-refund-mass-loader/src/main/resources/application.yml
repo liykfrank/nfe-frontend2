@@ -1,3 +1,7 @@
+spring:
+  main:
+    banner-mode: "off"
+
 feign:
   refund:
     # URL of the refund management service
