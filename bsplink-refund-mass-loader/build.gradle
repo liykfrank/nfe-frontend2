@@ -55,6 +55,6 @@ dependencyManagement {
 }
 
 apply from: 'gradle/scripts/itest.gradle'
-//apply from: 'gradle/scripts/jacoco.gradle'
+apply from: 'gradle/scripts/jacoco.gradle'
 apply from: 'gradle/scripts/sonarqube.gradle'
 apply from: 'gradle/scripts/publish.gradle'
