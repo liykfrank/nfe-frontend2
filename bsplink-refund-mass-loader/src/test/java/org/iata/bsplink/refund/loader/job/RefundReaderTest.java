@@ -35,7 +35,7 @@ public class RefundReaderTest {
     private ItemReader<Record> delegate;
 
     @Rule
-    public OutputCapture capture = new OutputCapture();
+    public OutputCapture capture;
 
     private RefundDocument refund;
     private RefundReader reader;
@@ -44,6 +44,7 @@ public class RefundReaderTest {
     public void setUp() {
 
         reader = new RefundReader(delegate);
+        capture = new OutputCapture();
     }
 
     @Test

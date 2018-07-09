@@ -29,6 +29,7 @@ import org.iata.bsplink.refund.loader.model.record.RecordIt0zLayout;
 import org.iata.bsplink.refund.loader.model.record.RecordLayout;
 import org.iata.bsplink.refund.loader.model.record.RecordRawLine;
 import org.iata.bsplink.refund.loader.model.record.RecordRawLineLayout;
+import org.iata.bsplink.refund.loader.validation.RefundLoaderParametersValidator;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -122,6 +123,7 @@ public class BatchConfiguration {
 
         return jobBuilderFactory.get("refundMassLoaderJob")
             .listener(jobCompletionNotificationListener)
+            .validator(new RefundLoaderParametersValidator())
             .flow(step1)
             .end()
             .build();
