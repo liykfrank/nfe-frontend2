@@ -19,9 +19,9 @@ import org.springframework.stereotype.Component;
 public class RefundAmountsBuilder {
     private RecordIt05 it05;
     private Integer numDecimals;
-    private BigDecimal cancellationPenalty;
-    private BigDecimal miscellaneousFee;
-    private BigDecimal tax;
+    private BigDecimal cancellationPenalty = BigDecimal.ZERO;
+    private BigDecimal miscellaneousFee = BigDecimal.ZERO;
+    private BigDecimal tax = BigDecimal.ZERO;
 
     /**
      * Creates RefundAmounts.
@@ -31,7 +31,7 @@ public class RefundAmountsBuilder {
         RefundAmounts amounts = new RefundAmounts();
 
         amounts.setCommissionAmount(applyDecimals(it05.getCommissionAmount1(), numDecimals));
-        if (amounts.getCommissionAmount().signum() == 0) {
+        if (amounts.getCommissionAmount() == null || amounts.getCommissionAmount().signum() == 0) {
             amounts.setCommissionRate(applyDecimals(it05.getCommissionRate1(), 2));
         }
 
@@ -78,7 +78,7 @@ public class RefundAmountsBuilder {
         if (xlpAmount.matches("^0+$")) {
             amounts.setCommissionOnCpAndMfRate(applyDecimals(xlpRate, 2));
         } else {
-            amounts.setCommissionOnCpAndMfRate(applyDecimals(xlpAmount, numDecimals));
+            amounts.setCommissionOnCpAndMfAmount(applyDecimals(xlpAmount, numDecimals));
         }
     }
 
@@ -104,8 +104,7 @@ public class RefundAmountsBuilder {
 
 
     private void assignSpam(RefundAmounts amounts) {
-        if (StringUtils.isBlank(it05.getCommissionType2())
-                && it05.getNetReportingIndicator().equals("NR")) {
+        if (StringUtils.isBlank(it05.getCommissionType2())) {
             amounts.setSpam(applyDecimals(it05.getCommissionAmount2(), numDecimals));
         }
     }
