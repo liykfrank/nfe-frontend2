@@ -1,0 +1,23 @@
+// Integration tests
+// See: http://buransky.com/programming/integration-testing-with-gradle/
+configurations {
+    itestCompile.extendsFrom testCompile
+    itestRuntime.extendsFrom testRuntime
+}
+
+sourceSets {
+    itest {
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+        java.srcDir file('src/itest/java')
+    }
+}
+
+task itest(type: Test) {
+    description 'Runs the integration tests.'
+    testClassesDir = sourceSets.itest.output.classesDir
+    classpath = sourceSets.itest.runtimeClasspath
+}
+
+check.dependsOn itest
+itest.mustRunAfter test

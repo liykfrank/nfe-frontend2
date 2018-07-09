@@ -1,0 +1,6 @@
+// flyway plugin configuration
+flyway {
+    url = 'jdbc:h2:mem:testdb'
+    user = 'sa'
+    password = ''
+}
