@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import org.iata.bsplink.refund.loader.builder.FormOfPaymentAmountsBuilder;
@@ -22,18 +21,39 @@ import org.iata.bsplink.refund.loader.dto.RefundCurrency;
 import org.iata.bsplink.refund.loader.dto.RelatedDocument;
 import org.iata.bsplink.refund.loader.dto.TaxMiscellaneousFee;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 @Setter
-@RequiredArgsConstructor
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RefundCreator {
-    private final RefundDocument refundDocument;
+    private RefundDocument refundDocument;
+
+    @Autowired
+    private RefundBuilder refundBuilder;
+    @Autowired
+    FormOfPaymentAmountsBuilder fopBuilder;
+    @Autowired
+    RemarkBuilder remarkBuilder;
+    @Autowired
+    RefundCurrencyBuilder refundCurrencyBuilder;
+    @Autowired
+    TaxMiscellaneousFeesBuilder taxBuilder;
+    @Autowired
+    RefundAmountsBuilder amountsBuilder;
+    @Autowired
+    RelatedDocumentsBuilder relatedDocumentBuilder;
+
 
     /**
      * Creates a Refund.
      * @return The created Refund.
      */
     public Refund create() {
-        RefundBuilder refundBuilder = new RefundBuilder(refundDocument);
+        refundBuilder.setRefundDocument(refundDocument);
 
 
         RefundCurrency currency = currency();
@@ -56,15 +76,14 @@ public class RefundCreator {
 
 
     private List<FormOfPaymentAmount> formOfPaymentAmounts(Integer numDecimals) {
-        FormOfPaymentAmountsBuilder fopBuilder =
-                new FormOfPaymentAmountsBuilder(refundDocument.getRecordsIt08());
+        fopBuilder.setIt08s(refundDocument.getRecordsIt08());
         fopBuilder.setNumDecimals(numDecimals);
         return fopBuilder.build();
     }
 
 
     private String remark() {
-        RemarkBuilder remarkBuilder = new RemarkBuilder(refundDocument.getRecordsIt0h());
+        remarkBuilder.setIt0hs(refundDocument.getRecordsIt0h());
         return remarkBuilder.build();
     }
 
@@ -73,15 +92,12 @@ public class RefundCreator {
         if (refundDocument.getRecordsIt05().isEmpty()) {
             return null;
         }
-        RefundCurrencyBuilder refundCurrencyBuilder =
-                new RefundCurrencyBuilder(refundDocument.getRecordsIt05().get(0));
+        refundCurrencyBuilder.setIt05(refundDocument.getRecordsIt05().get(0));
         return refundCurrencyBuilder.build();
     }
 
-
     private List<TaxMiscellaneousFee> taxes(Integer numDecimals) {
-        TaxMiscellaneousFeesBuilder taxBuilder =
-                new TaxMiscellaneousFeesBuilder(refundDocument.getRecordsIt05());
+        taxBuilder.setIt05s(refundDocument.getRecordsIt05());
         taxBuilder.setNumDecimals(numDecimals);
         return taxBuilder.build();
     }
@@ -102,8 +118,7 @@ public class RefundCreator {
             return null;
         }
 
-        RefundAmountsBuilder amountsBuilder =
-                new RefundAmountsBuilder(refundDocument.getRecordsIt05().get(0));
+        amountsBuilder.setIt05(refundDocument.getRecordsIt05().get(0));
         amountsBuilder.setTax(taxSum(taxes.stream().filter(this::normalTaxFilter)));
         amountsBuilder.setCancellationPenalty(
                 taxSum(taxes.stream().filter(tax -> "CP".equals(tax.getType()))));
@@ -125,8 +140,7 @@ public class RefundCreator {
 
 
     private List<RelatedDocument> relatedDocuments() {
-        RelatedDocumentsBuilder relatedDocumentBuilder =
-                new RelatedDocumentsBuilder(refundDocument.getRecordsIt03());
+        relatedDocumentBuilder.setIt03s(refundDocument.getRecordsIt03());
         return relatedDocumentBuilder.build();
     }
 }

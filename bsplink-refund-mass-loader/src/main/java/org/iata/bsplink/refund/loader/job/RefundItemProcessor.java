@@ -4,6 +4,7 @@ import org.iata.bsplink.refund.loader.creator.RefundCreator;
 import org.iata.bsplink.refund.loader.dto.Refund;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,10 +13,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class RefundItemProcessor implements ItemProcessor<RefundDocument, Refund> {
 
+    @Autowired
+    RefundCreator refundCreator;
+
     @Override
     public Refund process(RefundDocument item) throws Exception {
 
-        RefundCreator refundCreator = new RefundCreator(item);
+        refundCreator.setRefundDocument(item);
 
         return refundCreator.create();
     }

@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import org.apache.commons.lang.StringUtils;
@@ -21,11 +20,15 @@ import org.iata.bsplink.refund.loader.model.record.RecordIt02;
 import org.iata.bsplink.refund.loader.model.record.RecordIt03;
 import org.iata.bsplink.refund.loader.model.record.RecordIt05;
 import org.iata.bsplink.refund.loader.model.record.RecordIt08;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 @Setter
-@RequiredArgsConstructor
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RefundBuilder {
-    private final RefundDocument refundDocument;
+    private RefundDocument refundDocument;
     private RefundAmounts amounts;
     private RefundCurrency currency;
     private List<FormOfPaymentAmount> formOfPaymentAmounts;

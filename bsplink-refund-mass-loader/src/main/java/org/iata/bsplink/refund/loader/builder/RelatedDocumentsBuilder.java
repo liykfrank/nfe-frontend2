@@ -4,15 +4,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import org.apache.commons.lang.StringUtils;
 import org.iata.bsplink.refund.loader.dto.RelatedDocument;
 import org.iata.bsplink.refund.loader.model.record.RecordIt03;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
+@Setter
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RelatedDocumentsBuilder {
-    private final List<RecordIt03> it03s;
+    private List<RecordIt03> it03s;
 
     /**
      * Creates the list of RelatedDocument.

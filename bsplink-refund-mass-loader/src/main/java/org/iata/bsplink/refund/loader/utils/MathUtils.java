@@ -1,4 +1,4 @@
-package org.iata.bsplink.refund.utils;
+package org.iata.bsplink.refund.loader.utils;
 
 import java.math.BigDecimal;
 

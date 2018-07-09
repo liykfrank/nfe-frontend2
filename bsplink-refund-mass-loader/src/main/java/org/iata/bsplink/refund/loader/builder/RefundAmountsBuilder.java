@@ -1,20 +1,23 @@
 package org.iata.bsplink.refund.loader.builder;
 
-import static org.iata.bsplink.refund.utils.MathUtils.applyDecimals;
+import static org.iata.bsplink.refund.loader.utils.MathUtils.applyDecimals;
 
 import java.math.BigDecimal;
 
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import org.apache.commons.lang.StringUtils;
 import org.iata.bsplink.refund.loader.dto.RefundAmounts;
 import org.iata.bsplink.refund.loader.model.record.RecordIt05;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 @Setter
-@RequiredArgsConstructor
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RefundAmountsBuilder {
-    private final RecordIt05 it05;
+    private RecordIt05 it05;
     private Integer numDecimals;
     private BigDecimal cancellationPenalty;
     private BigDecimal miscellaneousFee;

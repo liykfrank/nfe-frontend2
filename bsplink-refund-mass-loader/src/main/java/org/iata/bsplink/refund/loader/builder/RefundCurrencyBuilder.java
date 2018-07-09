@@ -1,14 +1,19 @@
 package org.iata.bsplink.refund.loader.builder;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import org.iata.bsplink.refund.loader.dto.RefundCurrency;
 import org.iata.bsplink.refund.loader.model.record.RecordIt05;
-import org.iata.bsplink.refund.utils.MathUtils;
+import org.iata.bsplink.refund.loader.utils.MathUtils;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
+@Setter
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RefundCurrencyBuilder {
-    private final RecordIt05 it05;
+    private RecordIt05 it05;
 
     /**
      * Creates RefundCurrency.
