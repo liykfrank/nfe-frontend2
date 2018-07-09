@@ -25,10 +25,8 @@ public class RecordIt05Layout extends RecordBaseLayout {
         fieldsLayout.put("commissionType1", "171-176");
         fieldsLayout.put("commissionType2", "193-198");
         fieldsLayout.put("commissionType3", "215-220");
-        fieldsLayout.put("couponSegmentCurrencyType", "98-101");
+        fieldsLayout.put("currencyType", "98-101");
         fieldsLayout.put("netReportingIndicator", "237-238");
-        fieldsLayout.put("reservedSpace1", "19-29");
-        fieldsLayout.put("reservedSpace2", "113-113");
         fieldsLayout.put("taxOnCommissionAmount", "102-112");
         fieldsLayout.put("taxOnCommissionType", "250-255");
         fieldsLayout.put("taxMiscellaneousFeeAmount1", "38-48");

@@ -24,10 +24,8 @@ public class RecordIt05 implements Record {
     private String commissionType1;
     private String commissionType2;
     private String commissionType3;
-    private String couponSegmentCurrencyType;
+    private String currencyType;
     private String netReportingIndicator;
-    private String reservedSpace1;
-    private String reservedSpace2;
     private String taxOnCommissionAmount;
     private String taxOnCommissionType;
     private String taxMiscellaneousFeeAmount1;

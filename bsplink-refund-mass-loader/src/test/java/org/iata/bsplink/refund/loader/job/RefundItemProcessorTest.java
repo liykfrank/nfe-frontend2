@@ -21,6 +21,7 @@ public class RefundItemProcessorTest {
         recordIt02.setIsoCountryCode(ISO_COUNTRY_CODE);
         recordIt02.setTicketingAirlineCodeNumber(AIRLINE_CODE);
         recordIt02.setTicketDocumentNumber(TRANSACTION_NUMBER_1);
+        recordIt02.setRefundApplicationStatus("A");
 
         RefundDocument refundDocument = new RefundDocument();
         refundDocument.setRecordIt02(recordIt02);
