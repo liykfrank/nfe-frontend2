@@ -72,7 +72,7 @@ public class RefundBuilder {
 
 
     private void assignRelatedDocuments(Refund refund) {
-        if (!relatedDocuments.isEmpty()) {
+        if (relatedDocuments != null && !relatedDocuments.isEmpty()) {
             refund.setRelatedDocument(relatedDocuments.get(0));
             if (relatedDocuments.size() > 1) {
                 refund.setConjunctions(relatedDocuments.subList(1, relatedDocuments.size()));
@@ -104,9 +104,9 @@ public class RefundBuilder {
         }
         RecordIt08 it08 = refundDocument.getRecordsIt08().get(0);
         if (StringUtils.isBlank(it08.getCustomerFileReference1())) {
-            refund.setCustomerFileReference(it08.getCustomerFileReference1().trim());
-        } else {
             refund.setCustomerFileReference(it08.getCustomerFileReference2().trim());
+        } else {
+            refund.setCustomerFileReference(it08.getCustomerFileReference1().trim());
         }
     }
 
