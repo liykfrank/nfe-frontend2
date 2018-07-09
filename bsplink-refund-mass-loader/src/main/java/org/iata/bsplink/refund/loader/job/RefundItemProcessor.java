@@ -1,5 +1,6 @@
 package org.iata.bsplink.refund.loader.job;
 
+import org.iata.bsplink.refund.loader.creator.RefundCreator;
 import org.iata.bsplink.refund.loader.dto.Refund;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.springframework.batch.item.ItemProcessor;
@@ -14,14 +15,8 @@ public class RefundItemProcessor implements ItemProcessor<RefundDocument, Refund
     @Override
     public Refund process(RefundDocument item) throws Exception {
 
-        Refund refund = new Refund();
+        RefundCreator refundCreator = new RefundCreator(item);
 
-        // TODO: missing fields
-        refund.setAirlineCode(item.getRecordIt02().getTicketingAirlineCodeNumber());
-        refund.setIsoCountryCode(item.getRecordIt02().getIsoCountryCode());
-        refund.setTicketDocumentNumber(item.getRecordIt02().getTicketDocumentNumber());
-
-        return refund;
+        return refundCreator.create();
     }
-
 }

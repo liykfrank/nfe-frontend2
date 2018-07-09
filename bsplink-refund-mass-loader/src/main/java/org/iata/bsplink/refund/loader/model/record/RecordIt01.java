@@ -20,8 +20,6 @@ public class RecordIt01 implements Record {
     private String processingDate;
     private String processingTime;
     private String reportingSystemIdentifier;
-    private String reservedSpace1;
-    private String reservedSpace2;
     private String systemProviderReportingPeriodEndingDate;
     private String testProductionStatus;
 }

@@ -21,8 +21,6 @@ public class RecordIt01Layout extends RecordBaseLayout {
         fieldsLayout.put("processingDate", "19-24");
         fieldsLayout.put("processingTime", "25-28");
         fieldsLayout.put("reportingSystemIdentifier", "8-11");
-        fieldsLayout.put("reservedSpace1", "31-36");
-        fieldsLayout.put("reservedSpace2", "40-255");
         fieldsLayout.put("systemProviderReportingPeriodEndingDate", "2-7");
         fieldsLayout.put("testProductionStatus", "15-18");
     }
