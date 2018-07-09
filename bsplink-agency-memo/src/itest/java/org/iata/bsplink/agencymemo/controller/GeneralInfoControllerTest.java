@@ -59,6 +59,7 @@ public class GeneralInfoControllerTest {
                 + "\"numDecimals\":2,\"expirationDate\":\"2058-12-24\"},"
                 + "{\"name\":\"DEF\",\"numDecimals\":3,\"expirationDate\":"
                 + "\"2058-12-25\"},{\"name\":\"GHI\",\"numDecimals\":0"
+                + ",\"expirationDate\":\"2058-12-25\"},{\"name\":\"JKL\",\"numDecimals\":1"
                 + ",\"expirationDate\":\"2058-12-25\"}]},{\"isoc\"" + ":\"BB\""
                 + ",\"currencies\":[{\"name\":\"ZZZ\","
                 + "\"numDecimals\":0,\"expirationDate\":\"2017-01-01\"}]}"
@@ -76,7 +77,8 @@ public class GeneralInfoControllerTest {
         String jsonInString = "[{\"isoc\":\"AA\",\"currencies\":[{\"name\":\"ABC\","
                 + "\"numDecimals\":2,\"expirationDate\":" + "\"2058-12-24\"},{\"name\":\"DEF\","
                 + "\"numDecimals\":3,\"expirationDate\":" + "\"2058-12-25\"},{\"name\":\"GHI\""
-                + ",\"numDecimals\":0,\"expirationDate\"" + ":\"2058-12-25\"}]}]";
+                + ",\"numDecimals\":0,\"expirationDate\"" + ":\"2058-12-25\"},{\"name\":\"JKL\""
+                + ",\"numDecimals\":1,\"expirationDate\"" + ":\"2058-12-25\"}]}]";
 
         mockMvc.perform(get("/v1/general-info/currencies/AA"))
                 .andExpect(content().json(jsonInString)).andExpect(status().isOk());
