@@ -1,6 +1,6 @@
 package org.iata.bsplink.refund.loader.builder;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -72,7 +72,7 @@ public class FormOfPaymentAmountsBuilderTest {
                 setType(FormOfPaymentType.CA);
             }
         });
-        assertThat(fops, is(expected));
+        assertThat(fops, equalTo(expected));
     }
 
 
@@ -99,7 +99,7 @@ public class FormOfPaymentAmountsBuilderTest {
         expected.setAmount(null);
 
         assertNotNull(fops);
-        assertThat(fops, is(Arrays.asList(expected)));
+        assertThat(fops, equalTo(Arrays.asList(expected)));
     }
 
     @Test
@@ -164,7 +164,7 @@ public class FormOfPaymentAmountsBuilderTest {
         builder.setIt08s(Arrays.asList(it08));
         List<FormOfPaymentAmount> fops = builder.build();
         assertNotNull(fops);
-        assertThat(fops, is(expected));
+        assertThat(fops, equalTo(expected));
     }
 
 
@@ -186,10 +186,10 @@ public class FormOfPaymentAmountsBuilderTest {
         assertNotNull(fops);
         assertThat(fops, hasSize(1));
         FormOfPaymentAmount fop = fops.get(0);
-        assertThat(fop.getAmount(), is(BigDecimal.valueOf(amount, 2)));
-        assertThat(fop.getNumber(), is(fpac));
-        assertThat(fop.getVendorCode(), is("GR"));
-        assertThat(fop.getType(), is(FormOfPaymentType.CC));
+        assertThat(fop.getAmount(), equalTo(BigDecimal.valueOf(amount, 2)));
+        assertThat(fop.getNumber(), equalTo(fpac));
+        assertThat(fop.getVendorCode(), equalTo("GR"));
+        assertThat(fop.getType(), equalTo(FormOfPaymentType.CC));
     }
 
     @Test
@@ -208,7 +208,7 @@ public class FormOfPaymentAmountsBuilderTest {
         assertNotNull(fops);
         assertThat(fops, hasSize(1));
         FormOfPaymentAmount fop = fops.get(0);
-        assertThat(fop.getVendorCode(), is("GR"));
-        assertThat(fop.getType(), is(FormOfPaymentType.EP));
+        assertThat(fop.getVendorCode(), equalTo("GR"));
+        assertThat(fop.getType(), equalTo(FormOfPaymentType.EP));
     }
 }

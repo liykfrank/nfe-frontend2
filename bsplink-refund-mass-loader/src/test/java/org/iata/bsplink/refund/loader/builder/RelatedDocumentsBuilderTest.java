@@ -1,6 +1,6 @@
 package org.iata.bsplink.refund.loader.builder;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -38,13 +38,20 @@ public class RelatedDocumentsBuilderTest {
         List<RelatedDocument> relatedDocuments =  builder.build();
         assertNotNull(relatedDocuments);
         assertThat(relatedDocuments, hasSize(7));
-        assertThat(relatedDocuments.get(0).getRelatedTicketDocumentNumber(), is(documents.get(0)));
-        assertThat(relatedDocuments.get(1).getRelatedTicketDocumentNumber(), is(documents.get(1)));
-        assertThat(relatedDocuments.get(2).getRelatedTicketDocumentNumber(), is(documents.get(2)));
-        assertThat(relatedDocuments.get(3).getRelatedTicketDocumentNumber(), is(documents.get(3)));
-        assertThat(relatedDocuments.get(4).getRelatedTicketDocumentNumber(), is(documents.get(4)));
-        assertThat(relatedDocuments.get(5).getRelatedTicketDocumentNumber(), is(documents.get(5)));
-        assertThat(relatedDocuments.get(6).getRelatedTicketDocumentNumber(), is(documents.get(6)));
+        assertThat(relatedDocuments.get(0).getRelatedTicketDocumentNumber(),
+                equalTo(documents.get(0)));
+        assertThat(relatedDocuments.get(1).getRelatedTicketDocumentNumber(),
+                equalTo(documents.get(1)));
+        assertThat(relatedDocuments.get(2).getRelatedTicketDocumentNumber(),
+                equalTo(documents.get(2)));
+        assertThat(relatedDocuments.get(3).getRelatedTicketDocumentNumber(),
+                equalTo(documents.get(3)));
+        assertThat(relatedDocuments.get(4).getRelatedTicketDocumentNumber(),
+                equalTo(documents.get(4)));
+        assertThat(relatedDocuments.get(5).getRelatedTicketDocumentNumber(),
+                equalTo(documents.get(5)));
+        assertThat(relatedDocuments.get(6).getRelatedTicketDocumentNumber(),
+                equalTo(documents.get(6)));
     }
 
     @Test
@@ -57,7 +64,7 @@ public class RelatedDocumentsBuilderTest {
         List<RelatedDocument> relatedDocuments =  builder.build();
         assertNotNull(relatedDocuments);
         assertThat(relatedDocuments, hasSize(8));
-        assertThat(relatedDocuments.get(7).getRelatedTicketDocumentNumber(), is(document));
+        assertThat(relatedDocuments.get(7).getRelatedTicketDocumentNumber(), equalTo(document));
     }
 
     @Test

@@ -1,6 +1,6 @@
 package org.iata.bsplink.refund.loader.builder;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -58,12 +58,12 @@ public class RefundBuilderTest {
 
         Refund refund = builder.build();
         assertNotNull(refund);
-        assertThat(refund.getAmounts(), is(amounts));
-        assertThat(refund.getCurrency(), is(currency));
-        assertThat(refund.getFormOfPaymentAmounts(), is(formOfPaymentAmounts));
+        assertThat(refund.getAmounts(), equalTo(amounts));
+        assertThat(refund.getCurrency(), equalTo(currency));
+        assertThat(refund.getFormOfPaymentAmounts(), equalTo(formOfPaymentAmounts));
         assertNull(refund.getRelatedDocument());
-        assertThat(refund.getAirlineRemark(), is(remark));
-        assertThat(refund.getTaxMiscellaneousFees(), is(taxMiscellaneousFees));
+        assertThat(refund.getAirlineRemark(), equalTo(remark));
+        assertThat(refund.getTaxMiscellaneousFees(), equalTo(taxMiscellaneousFees));
     }
 
 
@@ -98,10 +98,10 @@ public class RefundBuilderTest {
         builder.setRelatedDocuments(relatedDocuments);
         Refund refund = builder.build();
         assertNotNull(refund);
-        assertThat(refund.getRelatedDocument(), is(relatedDocuments.get(0)));
+        assertThat(refund.getRelatedDocument(), equalTo(relatedDocuments.get(0)));
         assertNotNull(refund.getConjunctions());
         assertThat(refund.getConjunctions(), hasSize(1));
-        assertThat(refund.getConjunctions().get(0), is(relatedDocuments.get(1)));
+        assertThat(refund.getConjunctions().get(0), equalTo(relatedDocuments.get(1)));
     }
 
 
@@ -131,14 +131,14 @@ public class RefundBuilderTest {
         builder.setRefundDocument(refundDocument);
         Refund refund = builder.build();
         assertNotNull(refund);
-        assertThat(refund.getAgentCode(), is(agentNumericCode));
-        assertThat(refund.getAirlineCode(), is(ticketingAirlineCodeNumber));
-        assertThat(refund.getIsoCountryCode(), is(isoCountryCode));
-        assertThat(refund.getPassenger(), is(passengerName));
-        assertThat(refund.getTicketDocumentNumber(), is(ticketDocumentNumber));
-        assertThat(refund.getStatisticalCode(), is(statisticalCode));
-        assertThat(refund.getSettlementAuthorisationCode(), is(settlementAuthorisationCode));
-        assertThat(refund.getStatus(), is(RefundStatus.UNDER_INVESTIGATION));
+        assertThat(refund.getAgentCode(), equalTo(agentNumericCode));
+        assertThat(refund.getAirlineCode(), equalTo(ticketingAirlineCodeNumber));
+        assertThat(refund.getIsoCountryCode(), equalTo(isoCountryCode));
+        assertThat(refund.getPassenger(), equalTo(passengerName));
+        assertThat(refund.getTicketDocumentNumber(), equalTo(ticketDocumentNumber));
+        assertThat(refund.getStatisticalCode(), equalTo(statisticalCode));
+        assertThat(refund.getSettlementAuthorisationCode(), equalTo(settlementAuthorisationCode));
+        assertThat(refund.getStatus(), equalTo(RefundStatus.UNDER_INVESTIGATION));
     }
 
     @Test
@@ -153,13 +153,13 @@ public class RefundBuilderTest {
         Refund refund = builder.build();
         assertNotNull(refund);
         assertNotNull(refund);
-        assertThat(refund.getAgentCode(), is(""));
-        assertThat(refund.getAirlineCode(), is(""));
-        assertThat(refund.getIsoCountryCode(), is(""));
-        assertThat(refund.getPassenger(), is(""));
-        assertThat(refund.getTicketDocumentNumber(), is(""));
-        assertThat(refund.getStatisticalCode(), is(""));
-        assertThat(refund.getSettlementAuthorisationCode(), is(""));
+        assertThat(refund.getAgentCode(), equalTo(""));
+        assertThat(refund.getAirlineCode(), equalTo(""));
+        assertThat(refund.getIsoCountryCode(), equalTo(""));
+        assertThat(refund.getPassenger(), equalTo(""));
+        assertThat(refund.getTicketDocumentNumber(), equalTo(""));
+        assertThat(refund.getStatisticalCode(), equalTo(""));
+        assertThat(refund.getSettlementAuthorisationCode(), equalTo(""));
         assertNull(refund.getStatus());
     }
 
@@ -177,8 +177,8 @@ public class RefundBuilderTest {
         builder.setRemark(remark);
         Refund refund = builder.build();
         assertNotNull(refund);
-        assertThat(refund.getStatus(), is(RefundStatus.AUTHORIZED));
-        assertThat(refund.getAirlineRemark(), is(remark));
+        assertThat(refund.getStatus(), equalTo(RefundStatus.AUTHORIZED));
+        assertThat(refund.getAirlineRemark(), equalTo(remark));
     }
 
     @Test
@@ -195,8 +195,8 @@ public class RefundBuilderTest {
         builder.setRemark(remark);
         Refund refund = builder.build();
         assertNotNull(refund);
-        assertThat(refund.getStatus(), is(RefundStatus.REJECTED));
-        assertThat(refund.getRejectionReason(), is(remark));
+        assertThat(refund.getStatus(), equalTo(RefundStatus.REJECTED));
+        assertThat(refund.getRejectionReason(), equalTo(remark));
     }
 
 
@@ -245,7 +245,7 @@ public class RefundBuilderTest {
         builder.setRefundDocument(refundDocument);
         Refund refund = builder.build();
         assertNotNull(refund);
-        assertThat(refund.getCustomerFileReference(), is(ref1));
+        assertThat(refund.getCustomerFileReference(), equalTo(ref1));
     }
 
 
@@ -271,8 +271,8 @@ public class RefundBuilderTest {
         Refund refund = builder.build();
         assertNotNull(refund);
         assertThat(refund.getDateOfIssueRelatedDocument(),
-                is(LocalDate.of(year, month, dayOfMonth)));
-        assertThat(refund.getAirlineCodeRelatedDocument(), is(airlineCodeRelatedDocument));
+                equalTo(LocalDate.of(year, month, dayOfMonth)));
+        assertThat(refund.getAirlineCodeRelatedDocument(), equalTo(airlineCodeRelatedDocument));
     }
 
 
@@ -307,7 +307,7 @@ public class RefundBuilderTest {
         RefundBuilder builder = new RefundBuilder();
         builder.setRefundDocument(refundDocument);
         Refund refund = builder.build();
-        assertThat(refund.getCustomerFileReference(), is(ref2));
+        assertThat(refund.getCustomerFileReference(), equalTo(ref2));
     }
 
 

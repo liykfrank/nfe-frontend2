@@ -1,6 +1,6 @@
 package org.iata.bsplink.refund.loader.builder;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
@@ -20,8 +20,8 @@ public class RefundCurrencyBuilderTest {
         RefundCurrencyBuilder builder = new RefundCurrencyBuilder();
         builder.setIt05(it05);
         RefundCurrency refundCurrency = builder.build();
-        assertThat(refundCurrency.getCode(), is(currencyCode));
-        assertThat(refundCurrency.getDecimals(), is(decimals));
+        assertThat(refundCurrency.getCode(), equalTo(currencyCode));
+        assertThat(refundCurrency.getDecimals(), equalTo(decimals));
     }
 
     @Test
@@ -33,7 +33,7 @@ public class RefundCurrencyBuilderTest {
         RefundCurrencyBuilder builder = new RefundCurrencyBuilder();
         builder.setIt05(it05);
         RefundCurrency refundCurrency = builder.build();
-        assertThat(refundCurrency.getCode(), is(currencyCode));
+        assertThat(refundCurrency.getCode(), equalTo(currencyCode));
         assertNull(refundCurrency.getDecimals());
     }
 

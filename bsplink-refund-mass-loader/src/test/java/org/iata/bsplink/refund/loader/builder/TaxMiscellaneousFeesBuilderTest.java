@@ -1,6 +1,6 @@
 package org.iata.bsplink.refund.loader.builder;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -31,8 +31,9 @@ public class TaxMiscellaneousFeesBuilderTest {
         assertNotNull(taxMiscellaneousFees);
         assertThat(taxMiscellaneousFees, hasSize(1));
         TaxMiscellaneousFee taxMiscellaneousFee = taxMiscellaneousFees.get(0);
-        assertThat(taxMiscellaneousFee.getAmount(), is(BigDecimal.valueOf(amount, numDecimals)));
-        assertThat(taxMiscellaneousFee.getType(), is(tmft));
+        assertThat(taxMiscellaneousFee.getAmount(),
+                equalTo(BigDecimal.valueOf(amount, numDecimals)));
+        assertThat(taxMiscellaneousFee.getType(), equalTo(tmft));
     }
 
     @Test
