@@ -1,6 +1,6 @@
 package org.iata.bsplink.refund.loader.builder;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
@@ -38,6 +38,6 @@ public class RemarkBuilderTest {
         String remark = builder.build();
 
         assertNotNull(remark);
-        assertThat(remark, is(StringUtils.repeat(s, 7)));
+        assertThat(remark, equalTo(StringUtils.repeat(s, 7)));
     }
 }

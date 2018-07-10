@@ -1,6 +1,6 @@
 package org.iata.bsplink.refund.loader.builder;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -35,13 +35,13 @@ public class RefundAmountsBuilderTest {
 
         RefundAmounts amounts = builder.build();
         assertNotNull(amounts);
-        assertThat(amounts.getCancellationPenalty(), is(cancellationPenalty));
-        assertThat(amounts.getMiscellaneousFee(), is(miscellaneousFee));
-        assertThat(amounts.getTax(), is(tax));
+        assertThat(amounts.getCancellationPenalty(), equalTo(cancellationPenalty));
+        assertThat(amounts.getMiscellaneousFee(), equalTo(miscellaneousFee));
+        assertThat(amounts.getTax(), equalTo(tax));
         BigDecimal grossFare = BigDecimal.valueOf(grossFareValue, numDecimals);
-        assertThat(amounts.getGrossFare(), is(grossFare));
-        assertThat(amounts.getRefundToPassenger(),
-                is(grossFare.add(tax).subtract(miscellaneousFee).subtract(cancellationPenalty)));
+        assertThat(amounts.getGrossFare(), equalTo(grossFare));
+        assertThat(amounts.getRefundToPassenger(),equalTo(
+                grossFare.add(tax).subtract(miscellaneousFee).subtract(cancellationPenalty)));
     }
 
     @Test
@@ -61,8 +61,8 @@ public class RefundAmountsBuilderTest {
 
         RefundAmounts amounts = builder.build();
         assertNotNull(amounts);
-        assertThat(amounts.getTax(), is(tax));
-        assertThat(amounts.getRefundToPassenger(), is(tax));
+        assertThat(amounts.getTax(), equalTo(tax));
+        assertThat(amounts.getRefundToPassenger(), equalTo(tax));
     }
 
     @Test
@@ -118,16 +118,16 @@ public class RefundAmountsBuilderTest {
 
         RefundAmounts amounts = builder.build();
         assertNotNull(amounts);
-        assertThat(amounts.getTax(), is(tax));
+        assertThat(amounts.getTax(), equalTo(tax));
         BigDecimal grossFare = BigDecimal.valueOf(grossFareValue, numDecimals);
-        assertThat(amounts.getGrossFare(), is(grossFare));
-        assertThat(amounts.getRefundToPassenger(), is(grossFare.add(tax)));
+        assertThat(amounts.getGrossFare(), equalTo(grossFare));
+        assertThat(amounts.getRefundToPassenger(), equalTo(grossFare.add(tax)));
 
         BigDecimal coam1 = BigDecimal.valueOf(coam1Value, numDecimals);
         BigDecimal coam2 = BigDecimal.valueOf(coam2Value, numDecimals);
-        assertThat(amounts.getCommissionRate(), is(BigDecimal.ZERO));
-        assertThat(amounts.getCommissionAmount(), is(coam1));
-        assertThat(amounts.getSpam(), is(coam2));
+        assertThat(amounts.getCommissionRate(), equalTo(BigDecimal.ZERO));
+        assertThat(amounts.getCommissionAmount(), equalTo(coam1));
+        assertThat(amounts.getSpam(), equalTo(coam2));
     }
 
 
@@ -153,15 +153,15 @@ public class RefundAmountsBuilderTest {
 
         RefundAmounts amounts = builder.build();
         assertNotNull(amounts);
-        assertThat(amounts.getTax(), is(tax));
+        assertThat(amounts.getTax(), equalTo(tax));
         BigDecimal grossFare = BigDecimal.valueOf(grossFareValue, numDecimals);
-        assertThat(amounts.getGrossFare(), is(grossFare));
-        assertThat(amounts.getRefundToPassenger(), is(grossFare.add(tax)));
+        assertThat(amounts.getGrossFare(), equalTo(grossFare));
+        assertThat(amounts.getRefundToPassenger(), equalTo(grossFare.add(tax)));
 
         BigDecimal cort1 = BigDecimal.valueOf(cort1Value, numDecimals);
-        assertThat(amounts.getCommissionAmount(), is(BigDecimal.ZERO.setScale(numDecimals)));
-        assertThat(amounts.getCommissionRate(), is(cort1));
-        assertThat(amounts.getSpam(), is(BigDecimal.ZERO.setScale(numDecimals)));
+        assertThat(amounts.getCommissionAmount(), equalTo(BigDecimal.ZERO.setScale(numDecimals)));
+        assertThat(amounts.getCommissionRate(), equalTo(cort1));
+        assertThat(amounts.getSpam(), equalTo(BigDecimal.ZERO.setScale(numDecimals)));
     }
 
 
@@ -204,11 +204,11 @@ public class RefundAmountsBuilderTest {
         assertNotNull(amounts);
 
         BigDecimal grossFare = BigDecimal.valueOf(grossFareValue, numDecimals);
-        assertThat(amounts.getGrossFare(), is(grossFare));
-        assertThat(amounts.getRefundToPassenger(), is(grossFare));
+        assertThat(amounts.getGrossFare(), equalTo(grossFare));
+        assertThat(amounts.getRefundToPassenger(), equalTo(grossFare));
 
         BigDecimal xlp = BigDecimal.valueOf(xlpValue, numDecimals);
-        assertThat(amounts.getCommissionOnCpAndMfAmount(), is(xlp));
+        assertThat(amounts.getCommissionOnCpAndMfAmount(), equalTo(xlp));
     }
 
 
@@ -233,12 +233,12 @@ public class RefundAmountsBuilderTest {
         assertNotNull(amounts);
 
         BigDecimal grossFare = BigDecimal.valueOf(grossFareValue, numDecimals);
-        assertThat(amounts.getGrossFare(), is(grossFare));
-        assertThat(amounts.getRefundToPassenger(), is(grossFare));
+        assertThat(amounts.getGrossFare(), equalTo(grossFare));
+        assertThat(amounts.getRefundToPassenger(), equalTo(grossFare));
 
         BigDecimal xlp = BigDecimal.valueOf(xlpRateValue, numDecimals);
-        assertThat(amounts.getCommissionOnCpAndMfAmount(), is(BigDecimal.ZERO));
-        assertThat(amounts.getCommissionOnCpAndMfRate(), is(xlp));
+        assertThat(amounts.getCommissionOnCpAndMfAmount(), equalTo(BigDecimal.ZERO));
+        assertThat(amounts.getCommissionOnCpAndMfRate(), equalTo(xlp));
     }
 
 
@@ -262,7 +262,7 @@ public class RefundAmountsBuilderTest {
         assertNotNull(amounts);
 
         BigDecimal xlp = BigDecimal.valueOf(xlpValue, numDecimals);
-        assertThat(amounts.getCommissionOnCpAndMfAmount(), is(xlp));
+        assertThat(amounts.getCommissionOnCpAndMfAmount(), equalTo(xlp));
     }
 
 
@@ -286,7 +286,7 @@ public class RefundAmountsBuilderTest {
         assertNotNull(amounts);
 
         BigDecimal xlp = BigDecimal.valueOf(xlpRateValue, numDecimals);
-        assertThat(amounts.getCommissionOnCpAndMfAmount(), is(BigDecimal.ZERO));
-        assertThat(amounts.getCommissionOnCpAndMfRate(), is(xlp));
+        assertThat(amounts.getCommissionOnCpAndMfAmount(), equalTo(BigDecimal.ZERO));
+        assertThat(amounts.getCommissionOnCpAndMfRate(), equalTo(xlp));
     }
 }
