@@ -1,3 +1,4 @@
+
 <div class="container">
 
   <div [id]="resume_bar" [ngClass]="{'sticky': isSticky}">
@@ -20,15 +21,15 @@
     <div [id]="link_bar" class="link-bar">
       <div class="pills-links"> <!-- TODO Pills -->
         <button class="pill-first"
-          (click)="scrollTo('basicInfo')" 
+          (click)="scrollTo('basicInfo')"
           [ngClass]="{'active': checkPillSelected('basicInfo')}"
            l10nTranslate>ADM_ACM.BASIC_INFO.title</button>
         <button class="pill"
-          (click)="scrollTo('amount')" 
+          (click)="scrollTo('amount')"
           [ngClass]="{'active': checkPillSelected('amount')}"
           l10nTranslate>ADM_ACM.AMOUNT.title</button>
-        <button class="pill-last" 
-          (click)="scrollTo('details')" 
+        <button class="pill-last"
+          (click)="scrollTo('details')"
           [ngClass]="{'active': checkPillSelected('details')}"
           l10nTranslate>ADM_ACM.DETAILS.title</button>
       </div>
@@ -52,25 +53,37 @@
     <div class="tr">
       <div class="td left-side"> <!-- todos los divs -->
 
-        <div-collapsable [id]="collapsable_basic_info" [title]="'ADM_ACM.BASIC_INFO.title'" 
-          (showHide)="collapseBasicInfo = $event" 
+        <div-collapsable [id]="collapsable_basic_info" [title]="'ADM_ACM.BASIC_INFO.title'"
+          (showHide)="collapseBasicInfo = $event"
           [open]="collapseBasicInfo" >
           <app-basic-info [isADM]="isAdm"></app-basic-info>
         </div-collapsable>
 
-        <div-collapsable [id]="collapsable_amount" [title]="'ADM_ACM.AMOUNT.title'" 
-          (showHide)="collapseAmount = $event" 
+        <div-collapsable [id]="collapsable_amount" [title]="'ADM_ACM.AMOUNT.title'"
+          (showHide)="collapseAmount = $event"
           [open]="collapseAmount">
           <app-amount [isADM]="isAdm" ></app-amount>
         </div-collapsable>
 
-        <div-collapsable [id]="collapsable_details" [title]="'ADM_ACM.DETAILS.title'" 
-          (showHide)="collapseDetail = $event" 
+        <div-collapsable [id]="collapsable_details" [title]="'ADM_ACM.DETAILS.title'"
+          (showHide)="collapseDetail = $event"
           [open]="collapseDetail">
           <app-details></app-details>
         </div-collapsable>
 
+        <div class="link_bar right">
+          <button class="button-switch-pill"
+              (click)="clickCollapse()">
+            <span class="fa-stack icon-fa-custom">
+              <i class="fa fa-circle-thin fa-stack-2x"></i>
+              <i [ngClass]="{'fa-angle-down': checkAllCollapsed(), 'fa-angle-up': !checkAllCollapsed()}" class="fa fa-stack-1x"></i>
+            </span>
+            <span class="button-title" *ngIf="checkAllCollapsed()" l10nTranslate> ADM_ACM.expand </span>
+            <span class="button-title" *ngIf="!checkAllCollapsed()" l10nTranslate> ADM_ACM.collapse </span>
+          </button>
+        </div>
       </div>
+
       <div class="td right-side"> <!-- multitabs -->
         <app-multitabs [modelView]="modelView" [id]="tabs_container" [ngClass]="{'sticky': isSticky}"></app-multitabs>
       </div>
@@ -84,6 +97,7 @@
       [responsive]="true"
       [minWidth]="200"
       [minY]="70"
+      appendTo="body"
       (onHide)="hide()"
       >
     <app-document-pop-up></app-document-pop-up>

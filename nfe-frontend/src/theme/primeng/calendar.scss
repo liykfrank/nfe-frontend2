@@ -1,4 +1,3 @@
-
 .custom.ui-calendar {
   color: #BDC3C9 !important;
   background: transparent !important;
@@ -31,4 +30,71 @@
   //   background-color: #FFFFFF !important;
   //   border-color: #BDC3C9 !important;
   // }
+}
+
+.custom.ui-datepicker {
+
+  .ui-datepicker-header {
+    background: #FFFFFF;
+    padding-top: 18px;
+    padding-bottom: 11px;
+    border-bottom: 0px;
+
+    .ui-datepicker-title {
+      color: #152C5A;
+    }
+  
+    .ui-datepicker-prev {
+      color: #1989CF;
+      left: 38px;
+      top: 18px;
+      &:hover {
+        background: #FFFFFF;
+      }
+    }
+    
+    .ui-datepicker-next {
+      color: #1989CF;
+      right: 38px;
+      top: 18px;
+      &:hover {
+        background: #FFFFFF;
+      }
+    }
+  }
+
+  .ui-datepicker-calendar {
+
+    thead {
+      th {
+        background-color: #FFFFFF !important;
+        color: #1989CF;
+      }
+    }
+
+    td {
+      border-bottom: 0px !important;
+
+      a {
+        border-radius: 20px;
+        padding: 10px !important; 
+      }
+
+      // &:not(.ui-state-disabled) {
+      //   a:hover {
+         
+      //   }
+      // }
+      
+      // a.ui-state-highlight {
+
+      // }
+
+      a.ui-state-active {
+        background-color: #1989CF !important;
+        color: #FFFFFF;
+      }
+    }
+
+  }
 }

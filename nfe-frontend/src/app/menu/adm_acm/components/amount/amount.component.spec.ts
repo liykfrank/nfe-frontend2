@@ -30,7 +30,7 @@ describe('AmountComponent', () => {
   conf.taxOnCommissionSign = -1;
 
   const _AdmAcmService = jasmine.createSpyObj<AdmAcmService>('AdmAcmService',
-    ['getConfiguration', 'getDecimals', 'getSubtype', 'getSpdr', 'getSpan']);
+    ['getConfiguration', 'getCurrency', 'getSubtype', 'getSpdr', 'getSpan']);
   const _AmountService = jasmine.createSpyObj<AmountService>('AmountService',
     [
       'getTotal',
@@ -45,7 +45,7 @@ describe('AmountComponent', () => {
     ]);
 
   _AdmAcmService.getConfiguration.and.returnValue(Observable.of(conf));
-  _AdmAcmService.getDecimals.and.returnValue(Observable.of(2));
+  _AdmAcmService.getCurrency.and.returnValue(Observable.of({name: 'AA', numDecimals: 2}));
   _AdmAcmService.getSpan.and.returnValue(Observable.of(false));
   _AdmAcmService.getSubtype.and.returnValue(Observable.of('ADMA'));
   _AdmAcmService.getSpdr.and.returnValue(Observable.of('I'));

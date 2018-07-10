@@ -26,11 +26,17 @@ AGENTCOMPONENT Y AIRLINECOMPONENT
   flex-wrap: wrap;
 
   label {
-    min-height: 12px;  
+    color: #152C5A;
+    min-height: 12px; 
+    white-space: nowrap; 
   }
 
   .form-group {
     margin-right: 5px;
+    
+    &.settings {
+      margin-right: 30px;
+    }
   }
 }
 

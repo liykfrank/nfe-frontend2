@@ -22,7 +22,7 @@
   "clear": "Clear",
   "save": "Save",
   "issue": "Issue",
-  "total": "Total",
+  "total": "TOTAL",
   "search_button": "Search",
   "close_button": "Close",
   "error": "Error",
@@ -105,8 +105,8 @@
 
     "AMOUNT": {
       "title": "Amount",
-      "adm_amount": "Amount due to Airline",
-      "acm_amount": "Amount due to Agent",
+      "adm_amount": "AMOUNT DUE TO AIRLINE",
+      "acm_amount": "AMOUNT DUE TO AGENT",
       "agentInput": "Agent Input",
       "airlineInput": "Airline Input",
       "difference": "Difference",

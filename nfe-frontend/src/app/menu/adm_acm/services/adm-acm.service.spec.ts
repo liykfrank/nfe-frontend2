@@ -65,8 +65,8 @@ describe('AdmAcmService', () => {
     expect(service.getConfiguration()).toBeTruthy();
   }));
 
-  it('getDecimals', inject([AdmAcmService], (service: AdmAcmService) => {
-    expect(service.getDecimals()).toBeTruthy();
+  it('getCurrency', inject([AdmAcmService], (service: AdmAcmService) => {
+    expect(service.getCurrency()).toBeTruthy();
   }));
 
   it('getSpan', inject([AdmAcmService], (service: AdmAcmService) => {
@@ -89,12 +89,14 @@ describe('AdmAcmService', () => {
     expect(service.getDateOfIssue()).toBeTruthy();
   }));
 
-  it('setDecimals', inject([AdmAcmService], (service: AdmAcmService) => {
+  it('setCurrency', inject([AdmAcmService], (service: AdmAcmService) => {
     let observe;
-    service.getDecimals().subscribe(data => observe = data);
-    const decimal = 1;
-    service.setDecimals(decimal);
-    expect(observe == decimal).toBe(true);
+    service.getCurrency().subscribe(data => observe = data);
+    const curr: any = new CurrencyServer();
+    curr.numDecimals = 1;
+
+    service.setCurrency(curr);
+    expect(observe.numDecimals == curr.numDecimals).toBe(true);
   }));
 
   it('setSpan', inject([AdmAcmService], (service: AdmAcmService) => {

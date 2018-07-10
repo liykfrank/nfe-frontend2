@@ -42,4 +42,20 @@ export class DecimalsFormatterDirectiveDirective implements OnInit, OnChanges {
     let transformed = this._DecimalsFormatterPipe.transform(value, this.decimals);
     setTimeout(() => this.el.value = transformed, 0);
   }
+
+  @HostListener('keydown', ['$event.key'])
+  onKeydown(value) {
+
+    if (value == 'Tab') {
+      return true;
+    }
+
+    const reg = new RegExp('[0-9.]');
+    const list = this.el.value.split('.');
+
+    if ((value.match(reg) || []).length == 0 || (value == '.' && list.length == 2)) {
+      return false;
+    }
+  }
+
 }
