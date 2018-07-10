@@ -79,13 +79,13 @@ public class RelatedDocumentsBuilder {
         if (rcpn.matches("[01]...")) {
             relatedDocument.setRelatedTicketCoupon1(rcpn.charAt(0) == '1');
         }
-        if (rcpn.matches(".[01]..")) {
+        if (rcpn.matches(".[02]..")) {
             relatedDocument.setRelatedTicketCoupon2(rcpn.charAt(1) == '2');
         }
-        if (rcpn.matches("..[01].")) {
+        if (rcpn.matches("..[03].")) {
             relatedDocument.setRelatedTicketCoupon3(rcpn.charAt(2) == '3');
         }
-        if (rcpn.matches("...[01]")) {
+        if (rcpn.matches("...[04]")) {
             relatedDocument.setRelatedTicketCoupon4(rcpn.charAt(3) == '4');
         }
         return relatedDocument;
