@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.iata.bsplink.refund.loader.dto.Refund;
+import org.iata.bsplink.refund.loader.job.FileValidatorTasklet;
 import org.iata.bsplink.refund.loader.job.JobCompletionNotificationListener;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.Record;
@@ -100,13 +101,24 @@ public class BatchConfiguration {
     }
 
     /**
-     * Builds step1.
+     * Builds the validation step.
      */
     @Bean
-    public Step step1(ItemReader<RefundDocument> reader,
+    public Step validationStep(FileValidatorTasklet validatorTasklet) {
+
+        return stepBuilderFactory.get("validationStep")
+                .tasklet(validatorTasklet)
+                .build();
+    }
+
+    /**
+     * Builds refundLoaderStep.
+     */
+    @Bean
+    public Step refundLoaderStep(ItemReader<RefundDocument> reader,
             ItemProcessor<RefundDocument, Refund> processor, ItemWriter<Refund> writer) {
 
-        return stepBuilderFactory.get("step1")
+        return stepBuilderFactory.get("refundLoaderStep")
             .<RefundDocument, Refund>chunk(STEP_CHUNK_SIZE)
             .reader(reader)
             .processor(processor)
@@ -119,13 +131,13 @@ public class BatchConfiguration {
      */
     @Bean
     public Job refundMassLoaderJob(
-            JobCompletionNotificationListener jobCompletionNotificationListener, Step step1) {
+            JobCompletionNotificationListener jobCompletionNotificationListener,
+            Step refundLoaderStep, Step validationStep) {
 
         return jobBuilderFactory.get("refundMassLoaderJob")
             .listener(jobCompletionNotificationListener)
             .validator(new RefundLoaderParametersValidator())
-            .flow(step1)
-            .end()
+            .start(validationStep).next(refundLoaderStep)
             .build();
     }
 

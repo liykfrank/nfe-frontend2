@@ -206,7 +206,7 @@ public class RefundBuilderTest {
         it05.setNetReportingIndicator("NR");
 
         RefundDocument refundDocument = new RefundDocument();
-        refundDocument.addrecordIt05(it05);
+        refundDocument.addRecordIt05(it05);
 
         RefundBuilder builder = new RefundBuilder();
         builder.setRefundDocument(refundDocument);
@@ -222,7 +222,7 @@ public class RefundBuilderTest {
         it05.setNetReportingIndicator("");
 
         RefundDocument refundDocument = new RefundDocument();
-        refundDocument.addrecordIt05(it05);
+        refundDocument.addRecordIt05(it05);
 
         RefundBuilder builder = new RefundBuilder();
         builder.setRefundDocument(refundDocument);
@@ -239,7 +239,7 @@ public class RefundBuilderTest {
         it08.setCustomerFileReference2("X");
 
         RefundDocument refundDocument = new RefundDocument();
-        refundDocument.addrecordIt08(it08);
+        refundDocument.addRecordIt08(it08);
 
         RefundBuilder builder = new RefundBuilder();
         builder.setRefundDocument(refundDocument);
@@ -264,7 +264,7 @@ public class RefundBuilderTest {
                 airlineCodeRelatedDocument + relatedTicketDocumentNumber);
 
         RefundDocument refundDocument = new RefundDocument();
-        refundDocument.addrecordIt03(it03);
+        refundDocument.addRecordIt03(it03);
 
         RefundBuilder builder = new RefundBuilder();
         builder.setRefundDocument(refundDocument);
@@ -284,7 +284,7 @@ public class RefundBuilderTest {
         it03.setRelatedTicketDocumentNumber1("2202024234123");
 
         RefundDocument refundDocument = new RefundDocument();
-        refundDocument.addrecordIt03(it03);
+        refundDocument.addRecordIt03(it03);
 
         RefundBuilder builder = new RefundBuilder();
         builder.setRefundDocument(refundDocument);
@@ -302,7 +302,7 @@ public class RefundBuilderTest {
         it08.setCustomerFileReference2(ref2);
 
         RefundDocument refundDocument = new RefundDocument();
-        refundDocument.addrecordIt08(it08);
+        refundDocument.addRecordIt08(it08);
 
         RefundBuilder builder = new RefundBuilder();
         builder.setRefundDocument(refundDocument);

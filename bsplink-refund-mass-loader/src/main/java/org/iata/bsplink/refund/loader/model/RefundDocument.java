@@ -22,23 +22,23 @@ public class RefundDocument {
     private List<RecordIt0y> recordsIt0y = new ArrayList<>();
     private List<RecordIt0h> recordsIt0h = new ArrayList<>();
 
-    public void addrecordIt03(RecordIt03 record) {
+    public void addRecordIt03(RecordIt03 record) {
         recordsIt03.add(record);
     }
 
-    public void addrecordIt05(RecordIt05 record) {
+    public void addRecordIt05(RecordIt05 record) {
         recordsIt05.add(record);
     }
 
-    public void addrecordIt08(RecordIt08 record) {
+    public void addRecordIt08(RecordIt08 record) {
         recordsIt08.add(record);
     }
 
-    public void addrecordIt0y(RecordIt0y record) {
+    public void addRecordIt0y(RecordIt0y record) {
         recordsIt0y.add(record);
     }
 
-    public void addrecordIt0h(RecordIt0h record) {
+    public void addRecordIt0h(RecordIt0h record) {
         recordsIt0h.add(record);
     }
 }
