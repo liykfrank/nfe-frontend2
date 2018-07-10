@@ -166,4 +166,49 @@ public class FormOfPaymentAmountsBuilderTest {
         assertNotNull(fops);
         assertThat(fops, is(expected));
     }
+
+
+    @Test
+    public void testBuildCreditPayment() {
+        int amount = 1000;
+        String fpac = "123456789012";
+        RecordIt08 it08 = new RecordIt08();
+        it08.setFormOfPaymentAccountNumber1(fpac);
+        it08.setFormOfPaymentAmount1(String.valueOf(amount));
+        it08.setFormOfPaymentType1("CCGR1234");
+        it08.setFormOfPaymentAccountNumber2("");
+        it08.setFormOfPaymentAmount2("0");
+        it08.setFormOfPaymentType2("");
+        FormOfPaymentAmountsBuilder builder = new FormOfPaymentAmountsBuilder();
+        builder.setIt08s(Arrays.asList(it08));
+        builder.setNumDecimals(2);
+        List<FormOfPaymentAmount> fops = builder.build();
+        assertNotNull(fops);
+        assertThat(fops, hasSize(1));
+        FormOfPaymentAmount fop = fops.get(0);
+        assertThat(fop.getAmount(), is(BigDecimal.valueOf(amount, 2)));
+        assertThat(fop.getNumber(), is(fpac));
+        assertThat(fop.getVendorCode(), is("GR"));
+        assertThat(fop.getType(), is(FormOfPaymentType.CC));
+    }
+
+    @Test
+    public void testBuildEasyPayment() {
+        RecordIt08 it08 = new RecordIt08();
+        it08.setFormOfPaymentAccountNumber1("1111");
+        it08.setFormOfPaymentAmount1("1");
+        it08.setFormOfPaymentType1("EPGR123");
+        it08.setFormOfPaymentAccountNumber2("");
+        it08.setFormOfPaymentAmount2("0");
+        it08.setFormOfPaymentType2("");
+        FormOfPaymentAmountsBuilder builder = new FormOfPaymentAmountsBuilder();
+        builder.setIt08s(Arrays.asList(it08));
+        builder.setNumDecimals(2);
+        List<FormOfPaymentAmount> fops = builder.build();
+        assertNotNull(fops);
+        assertThat(fops, hasSize(1));
+        FormOfPaymentAmount fop = fops.get(0);
+        assertThat(fop.getVendorCode(), is("GR"));
+        assertThat(fop.getType(), is(FormOfPaymentType.EP));
+    }
 }
