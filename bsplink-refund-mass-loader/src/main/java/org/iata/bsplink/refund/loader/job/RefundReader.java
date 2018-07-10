@@ -93,23 +93,23 @@ public class RefundReader implements ItemReader<RefundDocument> {
                 break;
 
             case IT03:
-                refund.addrecordIt03(((RecordIt03) line));
+                refund.addRecordIt03(((RecordIt03) line));
                 break;
 
             case IT05:
-                refund.addrecordIt05(((RecordIt05) line));
+                refund.addRecordIt05(((RecordIt05) line));
                 break;
 
             case IT08:
-                refund.addrecordIt08(((RecordIt08) line));
+                refund.addRecordIt08(((RecordIt08) line));
                 break;
 
             case IT0Y:
-                refund.addrecordIt0y(((RecordIt0y) line));
+                refund.addRecordIt0y(((RecordIt0y) line));
                 break;
 
             case IT0H:
-                refund.addrecordIt0h(((RecordIt0h) line));
+                refund.addRecordIt0h(((RecordIt0h) line));
                 break;
 
             default:
