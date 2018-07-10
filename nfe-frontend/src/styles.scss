@@ -11,6 +11,12 @@ body {
   * {
     font-family: Roboto;
   }
+
+  input,
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
 }
 @import './theme/content';
 @import './theme/general'

@@ -46,8 +46,8 @@ export class ResumeBarComponent implements OnInit {
       this.status = screenType === ScreenType.CREATE ? 'NEW' : 'DETAIL';
     });
 
-    this._AdmAcmService.getDecimals().subscribe(decimals => {
-      this.decimals = decimals;
+    this._AdmAcmService.getCurrency().subscribe(data => {
+      this.decimals = data ? data.decimals : 0;
     });
 
     this._AmountService.getTotal().subscribe(total => {

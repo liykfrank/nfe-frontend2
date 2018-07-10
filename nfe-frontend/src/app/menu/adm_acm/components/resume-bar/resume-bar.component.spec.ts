@@ -29,12 +29,12 @@ describe('ResumeBarComponent', () => {
   const bi = new BasicInfoModel();
   bi.currency = null;
 
-  const _AdmAcmService = jasmine.createSpyObj<AdmAcmService>('AdmAcmService', ['getScreenType', 'getDecimals', 'getDateOfIssue']);
+  const _AdmAcmService = jasmine.createSpyObj<AdmAcmService>('AdmAcmService', ['getScreenType', 'getCurrency', 'getDateOfIssue']);
   const _AmountService = jasmine.createSpyObj<AmountService>('AmountService', ['getTotal']);
   const _BasicInfoService = jasmine.createSpyObj<BasicInfoService>('BasicInfoService', ['getCountries', 'getBasicInfo', 'getSPDRCombo']);
 
   _BasicInfoService.getCountries.and.returnValue(Observable.of(countries));
-  _AdmAcmService.getDecimals.and.returnValue(Observable.of(2));
+  _AdmAcmService.getCurrency.and.returnValue(Observable.of(2));
   _AdmAcmService.getDateOfIssue.and.returnValue(new Date().toISOString());
   _AdmAcmService.getScreenType.and.returnValue(Observable.of(ScreenType.CREATE));
   _AmountService.getTotal.and.returnValue(Observable.of(1));
@@ -86,12 +86,12 @@ describe('ResumeBarComponent 2', () => {
   const bi = new BasicInfoModel();
   bi.agent.iataCode = 'TEXT';
 
-  const _AdmAcmService = jasmine.createSpyObj<AdmAcmService>('AdmAcmService', ['getScreenType', 'getDecimals', 'getDateOfIssue']);
+  const _AdmAcmService = jasmine.createSpyObj<AdmAcmService>('AdmAcmService', ['getScreenType', 'getCurrency', 'getDateOfIssue']);
   const _AmountService = jasmine.createSpyObj<AmountService>('AmountService', ['getTotal']);
   const _BasicInfoService = jasmine.createSpyObj<BasicInfoService>('BasicInfoService', ['getCountries', 'getBasicInfo', 'getSPDRCombo']);
 
   _BasicInfoService.getCountries.and.returnValue(Observable.of(countries));
-  _AdmAcmService.getDecimals.and.returnValue(Observable.of(2));
+  _AdmAcmService.getCurrency.and.returnValue(Observable.of({ name: 'AA', numDecimals: 2 }));
   _AdmAcmService.getDateOfIssue.and.returnValue(new Date().toISOString());
   _AdmAcmService.getScreenType.and.returnValue(Observable.of(ScreenType.CREATE));
   _AmountService.getTotal.and.returnValue(Observable.of(1));

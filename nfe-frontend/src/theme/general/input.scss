@@ -46,6 +46,7 @@
   color: #152C5A;
   font-size: 14px;	
   line-height: 16px;
+  width: 58.2%;
 }
 
 .input-custom.error,
@@ -55,6 +56,13 @@
 
 .input-date {
   @extend %input-custom;
+}
+
+.input-checkbox {
+  @extend %input-custom;
+  -webkit-appearance: checkbox;
+  width: auto;
+  height: 15px;
 }
 
 .input-date::-webkit-inner-spin-button {

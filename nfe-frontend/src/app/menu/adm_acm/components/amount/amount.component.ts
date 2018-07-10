@@ -23,6 +23,7 @@ export class AmountComponent extends NwAbstractComponent implements OnInit {
 
   /* Data from service */
   decimals: number;
+  currency: string;
   typeSimpleView: boolean;
   total: number = 0;
 
@@ -62,17 +63,18 @@ export class AmountComponent extends NwAbstractComponent implements OnInit {
       }
     });
 
-    this._AdmAcmService.getDecimals().subscribe(decimals => {
-      this.decimals = decimals;
+    this._AdmAcmService.getCurrency().subscribe(data => {
+      this.decimals = data ? data.decimals : 0;
+      this.currency = data ? data.code : '';
 
       this.setDecimals(this.airlineCalculations);
       this.setDecimals(this.agentCalculations);
 
       const zero = 0;
       for (let x of this.taxes) {
-        x.agentValue =    typeof x.agentValue == 'number' ?   +x.agentValue.toFixed(decimals) : +zero.toFixed(decimals);
-        x.airlineValue =  typeof x.airlineValue == 'number' ? +x.airlineValue.toFixed(decimals) : +zero.toFixed(decimals);
-        x.dif =           typeof x.dif == 'number' ?          +x.dif.toFixed(decimals) : +zero.toFixed(decimals);
+        x.agentValue =    typeof x.agentValue == 'number' ?   +x.agentValue.toFixed(this.decimals) : +zero.toFixed(this.decimals);
+        x.airlineValue =  typeof x.airlineValue == 'number' ? +x.airlineValue.toFixed(this.decimals) : +zero.toFixed(this.decimals);
+        x.dif =           typeof x.dif == 'number' ?          +x.dif.toFixed(this.decimals) : +zero.toFixed(this.decimals);
       }
     });
 

@@ -77,7 +77,7 @@ describe('BasicInfoComponent', () => {
       'getConfiguration',
       'findCountryConfiguration',
       'getErrors',
-      'setDecimals',
+      'setCurrency',
       'setSubtype',
       'setSpdr',
       'setSpan'

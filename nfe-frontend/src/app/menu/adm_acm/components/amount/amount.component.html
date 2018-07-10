@@ -3,6 +3,7 @@
   <label l10nTranslate *ngIf="isADM" >ADM_ACM.AMOUNT.adm_amount</label>
   <label l10nTranslate *ngIf="!isADM">ADM_ACM.AMOUNT.acm_amount</label>
   <span>{{total | decimalsFormatter:decimals }}</span>
+  <span>{{ currency }}</span>
 </div>
 
 <div *ngIf="typeSimpleView">
@@ -63,8 +64,9 @@
         <tr>
           <td class="title" l10nTranslate>ADM_ACM.AMOUNT.tfc
             <i
-              class="fa fa-question-circle"
+              src="assets/images/ico_tooltip.svg"
               alt="alternative text"
+              class="tooltip"
               [title]="translation.translate('ADM_ACM.AMOUNT.tfc_toggle')">
             </i>
           </td>
@@ -202,9 +204,9 @@
       <tfoot>
         <tr>
           <td l10nTranslate>total </td>
-          <td class="isNumber"> {{totalAmount.agentValue | abs | decimalsFormatter:decimals}} </td>
-          <td class="isNumber"> {{totalAmount.airlineValue | abs  | decimalsFormatter:decimals}} </td>
-          <td class="isNumber"> {{totalAmount.dif | decimalsFormatter:decimals}} </td>
+          <td class="isNumber"> {{totalAmount.agentValue | abs | decimalsFormatter:decimals}} {{ currency }}</td>
+          <td class="isNumber"> {{totalAmount.airlineValue | abs  | decimalsFormatter:decimals}} {{ currency }}</td>
+          <td class="isNumber"> {{totalAmount.dif | decimalsFormatter:decimals}} {{ currency }}</td>
         </tr>
       </tfoot>
     </table>
@@ -261,11 +263,8 @@
               readonly="true"
             />
 
-            <button class="button-bin-float-right">
-              <span class="small-font-awesome fa-stack"
-                 (click)="removeTax(i)">
-                <i class="fa fa-trash-o"></i>
-              </span>
+            <button class="button-bin-float-right" (click)="removeTax(i)">
+              <i class="fa fa-trash-o fa-lg"></i>
             </button>
           </td>
         </tr>
@@ -275,10 +274,8 @@
           <td colspan="4">
             <!-- TODO: cambiar la forma de hacer flotantes los divs -->
             <div class="float-left">
-              <button l10nTranslate
-                  class="button-add"
-                  (click)="addTax()"
-                  >
+              <button l10nTranslate class="button-add"
+                (click)="addTax()">
                   <span class="small-font-awesome fa-stack">
                     <i class="fa fa-circle fa-stack-2x"></i>
                     <i class="fa fa-plus inverse-color fa-stack-1x"></i>

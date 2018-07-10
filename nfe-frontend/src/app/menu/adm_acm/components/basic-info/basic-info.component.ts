@@ -209,7 +209,7 @@ export class BasicInfoComponent extends NwAbstractComponent implements OnInit {
           this.agentCode = data.iataCode.substr(0, data.iataCode.length - 1);
           this.agentCheckDigit = data.iataCode.substr(data.iataCode.length - 1, 1);
 
-          this.basicInfo.agentRegistrationNumber = this.configuration.airlineVatNumberEnabled ? data.vatNumber : null;
+          this.basicInfo.agentVatNumber = this.configuration.airlineVatNumberEnabled ? data.vatNumber : null;
           this.styleAgent = '';
         } else {
           this.styleAgent = 'error';
@@ -312,7 +312,7 @@ export class BasicInfoComponent extends NwAbstractComponent implements OnInit {
 
     this.basicInfo.currency.code = currencyAux.name;
     this.basicInfo.currency.decimals = currencyAux.numDecimals;
-    this._AdmAcmService.setDecimals(this.basicInfo.currency.decimals);
+    this._AdmAcmService.setCurrency(this.basicInfo.currency);
     this.register();
   }
 

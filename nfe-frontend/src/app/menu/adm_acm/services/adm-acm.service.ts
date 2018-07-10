@@ -1,3 +1,4 @@
+import { CurrencyServer } from './../models/currency-server.model';
 import { Observable } from 'rxjs/Observable';
 import { environment } from './../../../../environments/environment';
 
@@ -38,7 +39,7 @@ export class AdmAcmService {
   private $errors = new BehaviorSubject<string[]>([]);
 
   //Observables Basic Info
-  private $decimals = new BehaviorSubject<number>(2);
+  private $currency = new BehaviorSubject<CurrencyServer>(null);
   private $span = new BehaviorSubject<boolean>(false);
   private $subtype = new BehaviorSubject<string>('');
   private $spdr = new BehaviorSubject<string>('I');
@@ -103,12 +104,12 @@ export class AdmAcmService {
   }
 
   //Observables Basic Info
-  public getDecimals(): Observable<number> {
-    return this.$decimals.asObservable();
+  public getCurrency(): Observable<CurrencyServer> {
+    return this.$currency.asObservable();
   }
 
-  public setDecimals(decimals: number): void {
-    this.$decimals.next(decimals);
+  public setCurrency(currency: CurrencyServer): void {
+    this.$currency.next(currency);
   }
 
   public getSpan(): Observable<boolean> {
@@ -243,7 +244,7 @@ export class AdmAcmService {
   public setACDM() {
     //events
     this.findCountryConfiguration(this.acdm.isoCountryCode);
-    this.$decimals.next(this.acdm.currency.decimals);
+    this.$currency.next(this.acdm.currency);
     this.$span.next(this.acdm.netReporting);
     this.$subtype.next(this.acdm.transactionCode);
     this.$spdr.next(this.acdm.concernsIndicator);
