@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.iata.bsplink.refund.loader.dto.Refund;
+import org.iata.bsplink.refund.loader.error.RefundLoaderError;
 import org.iata.bsplink.refund.loader.job.FileValidatorTasklet;
 import org.iata.bsplink.refund.loader.job.JobCompletionNotificationListener;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
@@ -315,5 +316,11 @@ public class BatchConfiguration {
     public Record recordRawLine() {
 
         return new RecordRawLine();
+    }
+
+    @Bean
+    public List<RefundLoaderError> refundLoaderErrors() {
+
+        return new ArrayList<>();
     }
 }

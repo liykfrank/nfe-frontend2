@@ -1,7 +1,10 @@
 package org.iata.bsplink.refund.loader.job;
 
+import java.util.List;
+
 import org.iata.bsplink.refund.loader.creator.RefundCreator;
 import org.iata.bsplink.refund.loader.dto.Refund;
+import org.iata.bsplink.refund.loader.error.RefundLoaderError;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,9 @@ public class RefundItemProcessor implements ItemProcessor<RefundDocument, Refund
 
     @Autowired
     RefundCreator refundCreator;
+
+    @Autowired
+    List<RefundLoaderError> refundLoaderErrors;
 
     @Override
     public Refund process(RefundDocument item) throws Exception {
