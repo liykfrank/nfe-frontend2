@@ -17,6 +17,9 @@ import org.iata.bsplink.refund.loader.model.record.RecordIt08;
 import org.iata.bsplink.refund.loader.model.record.RecordIt0h;
 import org.iata.bsplink.refund.loader.model.record.RecordIt0y;
 import org.iata.bsplink.refund.loader.model.record.RecordRawLine;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.annotation.BeforeStep;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.stereotype.Component;
 
@@ -24,17 +27,44 @@ import org.springframework.stereotype.Component;
 @Log
 public class RefundReader implements ItemReader<RefundDocument> {
 
+    private static final String TRANSACTIONS_READ_COUNT_KEY = "transactions_read_count";
+
     private ItemReader<Record> delegate;
     private Optional<RecordIt02> newTransaction = Optional.empty();
     private boolean readingTransaction = false;
+    private ExecutionContext executionContext;
+    private long currentTransactionsReadCount = 0;
 
     public RefundReader(ItemReader<Record> delegate) {
 
         this.delegate = delegate;
     }
 
+    @BeforeStep
+    public void beforeStep(StepExecution stepExecution) {
+
+        executionContext = stepExecution.getExecutionContext();
+    }
+
     @Override
     public RefundDocument read() throws Exception {
+
+        skipAlreadyReadTransactions();
+
+        return readTransaction();
+    }
+
+    private void skipAlreadyReadTransactions() throws Exception {
+
+        long transactionsReadCount = executionContext.getLong(TRANSACTIONS_READ_COUNT_KEY, 0);
+
+        while (currentTransactionsReadCount < transactionsReadCount) {
+
+            readTransaction();
+        }
+    }
+
+    private RefundDocument readTransaction() throws Exception {
 
         RefundDocument refund = null;
         readingTransaction = false;
@@ -61,6 +91,8 @@ public class RefundReader implements ItemReader<RefundDocument> {
                 }
             }
         }
+
+        executionContext.put(TRANSACTIONS_READ_COUNT_KEY, ++currentTransactionsReadCount);
 
         return refund;
     }

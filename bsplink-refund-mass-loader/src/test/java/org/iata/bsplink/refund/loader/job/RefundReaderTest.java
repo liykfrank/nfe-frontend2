@@ -9,6 +9,7 @@ import static org.iata.bsplink.refund.loader.test.fixtures.Constants.TRANSACTION
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.TRANSACTION_NUMBER_2;
 import static org.iata.bsplink.refund.loader.test.fixtures.RefundDocumentFixtures.getTransactions;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -25,11 +26,15 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.OngoingStubbing;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.boot.test.rule.OutputCapture;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RefundReaderTest {
+
+    private static final String TRANSACTIONS_READ_COUNT_KEY = "transactions_read_count";
 
     @Mock
     private ItemReader<Record> delegate;
@@ -39,12 +44,21 @@ public class RefundReaderTest {
 
     private RefundDocument refund;
     private RefundReader reader;
+    private ExecutionContext executionContext;
 
     @Before
     public void setUp() {
 
-        reader = new RefundReader(delegate);
         capture = new OutputCapture();
+
+        reader = new RefundReader(delegate);
+
+        StepExecution stepExecution = mock(StepExecution.class);
+        executionContext = new ExecutionContext();
+
+        when(stepExecution.getExecutionContext()).thenReturn(executionContext);
+
+        reader.beforeStep(stepExecution);
     }
 
     @Test
@@ -184,6 +198,40 @@ public class RefundReaderTest {
         refund = reader.read();
 
         capture.expect(containsString("UNKNOW RECORD"));
+    }
+
+    @Test
+    public void testContinuesReadingFromPreviousExecutions() throws Exception {
+
+        configureDelegateMock();
+
+        executionContext.put(TRANSACTIONS_READ_COUNT_KEY, 1L);
+
+        RefundDocument refund1 = reader.read();
+        RefundDocument refund2 = reader.read();
+
+        assertThat(refund1, notNullValue());
+        assertThat(refund1.getRecordIt02().getTransactionNumber(),
+                equalTo(TRANSACTION_NUMBER_2));
+
+        assertThat(refund2, nullValue());
+    }
+
+    @Test
+    public void testUpdatesTransactionsReadCounter() throws Exception {
+
+        configureDelegateMock();
+
+        reader.read();
+
+        long firstReadCounter = executionContext.getLong(TRANSACTIONS_READ_COUNT_KEY);
+
+        reader.read();
+
+        long secondReadCounter = executionContext.getLong(TRANSACTIONS_READ_COUNT_KEY);
+
+        assertThat(firstReadCounter, equalTo(1L));
+        assertThat(secondReadCounter, equalTo(2L));
     }
 
 }
