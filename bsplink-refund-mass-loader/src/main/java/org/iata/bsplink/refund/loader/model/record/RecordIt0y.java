@@ -8,8 +8,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class RecordIt0y implements Record {
+public class RecordIt0y implements TransactionRecord {
 
     @Setter(AccessLevel.NONE)
     private RecordIdentifier recordIdentifier = RecordIdentifier.IT0Y;
+
+    private String transactionNumber;
 }

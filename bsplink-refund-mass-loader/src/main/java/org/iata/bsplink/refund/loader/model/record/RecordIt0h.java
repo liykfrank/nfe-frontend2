@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class RecordIt0h implements Record {
+public class RecordIt0h implements TransactionRecord {
 
     @Setter(AccessLevel.NONE)
     private RecordIdentifier recordIdentifier = RecordIdentifier.IT0H;
