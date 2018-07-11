@@ -2,10 +2,12 @@ package org.iata.bsplink.refund.loader.validation;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02;
 import org.iata.bsplink.refund.loader.model.record.RecordIt05;
+import org.iata.bsplink.refund.loader.model.record.RecordIt08;
 import org.iata.bsplink.refund.loader.model.record.TransactionRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,8 +15,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class RefundDocumentValidator {
     public static final String INCORRECT_TRANSACTION_CODE = "Incorrect transaction code";
+    public static final String INVALID_COMMISSION_TYPE = "Invalid Commission Type";
+    public static final String MANDATORY = "The field is mandatory";
+    public static final String INCORRECT_CURRENCY = "Incorrect Currency Type";
     public static final String COMMISSION_AMOUNT_ON_FIRST_IT05 =
             "Commission Amount only has to be reported on the first IT05";
+    public static final String COMMISSION_RATE_ON_FIRST_IT05 =
+            "Commission Rate only has to be reported on the first IT05";
+    public static final String COMMISSION_TYPE_ON_FIRST_IT05 =
+            "Commission Type only has to be reported on the first IT05";
+    public static final String COMMISSION_TDAM_ON_FIRST_IT05 =
+           "Ticket/Document Amount only has to be reported on the first IT05";
+    public static final String FIRST_COMMISSION_TYPE_BLANK =
+            "First Commission Type has to be left blank";
+    public static final String XLP_ONLY_ONCE =
+            "XLP Commission Type can only be reported once";
+
+    private static final String CURRENCY_TYPE = "currencyType";
+    private static final String COMMISSION_TYPE = "commissionType";
 
     @Autowired
     List<RefundLoaderError> refundLoaderErrors;
@@ -24,32 +42,197 @@ public class RefundDocumentValidator {
      *  and adds the errors (if there is any) to RefundLoaderError collection.
      */
     public boolean isValid(RefundDocument refundDocument) {
+
         boolean result = isValidTransactionCode(refundDocument.getRecordIt02());
 
-        result = isValidCommission(refundDocument.getRecordsIt05()) && result;
+        if (!isValidIt05(refundDocument.getRecordsIt05())) {
+            result = false;
+        }
+
+        if (!isValidCurrency(refundDocument)) {
+            result = false;
+        }
 
         return result;
     }
 
-    private boolean isValidCommission(List<RecordIt05> it05s) {
-        if (it05s == null || it05s.size() < 2) {
-            return true;
-        }
-        for (int i = 1; i < it05s.size(); i++) {
-            RecordIt05 it05 = it05s.get(i);
-            if (!isZero(it05.getCommissionAmount1())) {
-                addToErrors(it05, "commissionAmount1", COMMISSION_AMOUNT_ON_FIRST_IT05);
+
+
+    private boolean isValidCurrency(RefundDocument refundDocument) {
+        List<RecordIt05> it05s = refundDocument.getRecordsIt05();
+
+        boolean result = true;
+
+        String cutp;
+        if (it05s == null || it05s.isEmpty()) {
+            cutp = null;
+        } else {
+            cutp = it05s.get(0).getCurrencyType();
+            if (StringUtils.isBlank(cutp)) {
+                addToErrors(it05s.get(0), CURRENCY_TYPE, MANDATORY);
+                result = false;
             }
-            if (!isZero(it05.getCommissionAmount2())) {
-                addToErrors(it05, "commissionAmount2", COMMISSION_AMOUNT_ON_FIRST_IT05);
-            }
-            if (!isZero(it05.getCommissionAmount3())) {
-                addToErrors(it05, "commissionAmount3", COMMISSION_AMOUNT_ON_FIRST_IT05);
+            if (!isValidIt05Currency(it05s, cutp)) {
+                result = false;
             }
         }
 
-        return false;
+        List<RecordIt08> it08s = refundDocument.getRecordsIt08();
+        if (it08s != null && !isValidIt08Currency(it08s, cutp)) {
+            result = false;
+        }
+
+        return result;
     }
+
+
+    private boolean isValidIt05Currency(List<RecordIt05> it05s, String firstCutp) {
+        boolean result = true;
+        for (int i = 0; i < it05s.size(); i++) {
+            RecordIt05 it05 = it05s.get(i);
+            String cutp = it05.getCurrencyType();
+            if (StringUtils.isBlank(cutp)) {
+                addToErrors(it05, CURRENCY_TYPE, MANDATORY);
+                result = false;
+            } else {
+                if (!StringUtils.isBlank(firstCutp) && !firstCutp.equals(cutp)) {
+                    addToErrors(it05, CURRENCY_TYPE, INCORRECT_CURRENCY);
+                    result = false;
+                }
+            }
+        }
+        return result;
+    }
+
+
+    private boolean isValidIt08Currency(List<RecordIt08> it08s, String firstCutp) {
+        boolean result = true;
+        for (int i = 0; i < it08s.size(); i++) {
+            RecordIt08 it08 = it08s.get(i);
+            String cutp = it08.getCurrencyType1();
+            if (StringUtils.isBlank(cutp)) {
+                addToErrors(it08, CURRENCY_TYPE + 1, MANDATORY);
+                result = false;
+            } else {
+                if (!StringUtils.isBlank(firstCutp) && !firstCutp.equals(cutp)) {
+                    addToErrors(it08, CURRENCY_TYPE + 1, INCORRECT_CURRENCY);
+                    result = false;
+                }
+            }
+
+            cutp = it08.getCurrencyType2();
+            if (StringUtils.isBlank(cutp) && !isZero(it08.getFormOfPaymentAmount2())) {
+                addToErrors(it08, CURRENCY_TYPE + 2, MANDATORY);
+                result = false;
+            }
+            if (!StringUtils.isBlank(firstCutp) && !StringUtils.isBlank(cutp)
+                    && !firstCutp.equals(cutp)) {
+                addToErrors(it08, CURRENCY_TYPE + 2, INCORRECT_CURRENCY);
+                result = false;
+            }
+        }
+        return result;
+    }
+
+
+    private boolean isValidIt05(List<RecordIt05> it05s) {
+        if (it05s == null || it05s.isEmpty()) {
+            return true;
+        }
+
+        boolean result = isValidXlp(it05s.get(0));
+
+        for (int i = 1; i < it05s.size(); i++) {
+            RecordIt05 it05 = it05s.get(i);
+            result = isValidZeroCommissionAmount(it05) && result;
+            result = isValidZeroCommissionRate(it05) && result;
+            result = isValidBlankCommissionType(it05) && result;
+            if (!isZero(it05.getTicketDocumentAmount())) {
+                addToErrors(it05, "ticketDocumentAmount", COMMISSION_TDAM_ON_FIRST_IT05);
+                result = false;
+            }
+        }
+        return result;
+    }
+
+
+    private boolean isValidXlp(RecordIt05 it05) {
+        boolean result = true;
+        if (StringUtils.isNotBlank(it05.getCommissionType1())) {
+            addToErrors(it05, COMMISSION_TYPE + 1, FIRST_COMMISSION_TYPE_BLANK);
+            result = false;
+        }
+        if ("XLP".equals(it05.getCommissionType2()) && "XLP".equals(it05.getCommissionType3())) {
+            addToErrors(it05, COMMISSION_TYPE + 3, XLP_ONLY_ONCE);
+            result = false;
+        }
+        if (StringUtils.isNotBlank(it05.getCommissionType2())
+                && !"XLP".equals(it05.getCommissionType2())) {
+            addToErrors(it05, COMMISSION_TYPE + 2, INVALID_COMMISSION_TYPE);
+            result = false;
+        }
+        if (StringUtils.isNotBlank(it05.getCommissionType3())
+                && !"XLP".equals(it05.getCommissionType3())) {
+            addToErrors(it05, COMMISSION_TYPE + 3, INVALID_COMMISSION_TYPE);
+            result = false;
+        }
+        return result;
+    }
+
+
+    private boolean isValidBlankCommissionType(RecordIt05 it05) {
+        boolean result = true;
+        if (StringUtils.isNotBlank(it05.getCommissionType1())) {
+            addToErrors(it05, COMMISSION_TYPE + 1, FIRST_COMMISSION_TYPE_BLANK);
+            result = false;
+        }
+        if (StringUtils.isNotBlank(it05.getCommissionType2())) {
+            addToErrors(it05, COMMISSION_TYPE + 2, COMMISSION_TYPE_ON_FIRST_IT05);
+            result = false;
+        }
+        if (StringUtils.isNotBlank(it05.getCommissionType3())) {
+            addToErrors(it05, COMMISSION_TYPE + 3, COMMISSION_TYPE_ON_FIRST_IT05);
+            result = false;
+        }
+        return result;
+    }
+
+
+    private boolean isValidZeroCommissionRate(RecordIt05 it05) {
+        boolean result = true;
+        if (!isZero(it05.getCommissionRate1())) {
+            addToErrors(it05, "commissionRate1", COMMISSION_RATE_ON_FIRST_IT05);
+            result = false;
+        }
+        if (!isZero(it05.getCommissionRate2())) {
+            addToErrors(it05, "commissionRate2", COMMISSION_RATE_ON_FIRST_IT05);
+            result = false;
+        }
+        if (!isZero(it05.getCommissionRate3())) {
+            addToErrors(it05, "commissionRate3", COMMISSION_RATE_ON_FIRST_IT05);
+            result = false;
+        }
+        return result;
+    }
+
+
+    private boolean isValidZeroCommissionAmount(RecordIt05 it05) {
+        boolean result = true;
+        if (!isZero(it05.getCommissionAmount1())) {
+            addToErrors(it05, "commissionAmount1", COMMISSION_AMOUNT_ON_FIRST_IT05);
+            result = false;
+        }
+        if (!isZero(it05.getCommissionAmount2())) {
+            addToErrors(it05, "commissionAmount2", COMMISSION_AMOUNT_ON_FIRST_IT05);
+            result = false;
+        }
+        if (!isZero(it05.getCommissionAmount3())) {
+            addToErrors(it05, "commissionAmount3", COMMISSION_AMOUNT_ON_FIRST_IT05);
+            result = false;
+        }
+        return result;
+    }
+
 
     private boolean isZero(String value) {
         return value.matches("^0+");
