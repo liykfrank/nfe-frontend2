@@ -3,6 +3,7 @@ package org.iata.bsplink.refund.loader.job;
 import org.iata.bsplink.refund.loader.creator.RefundCreator;
 import org.iata.bsplink.refund.loader.dto.Refund;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
+import org.iata.bsplink.refund.loader.validation.RefundDocumentValidator;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,11 +17,17 @@ public class RefundItemProcessor implements ItemProcessor<RefundDocument, Refund
     @Autowired
     RefundCreator refundCreator;
 
+    @Autowired
+    RefundDocumentValidator validator;
+
     @Override
     public Refund process(RefundDocument item) throws Exception {
 
-        refundCreator.setRefundDocument(item);
+        if (validator.isValid(item)) {
+            refundCreator.setRefundDocument(item);
+            return refundCreator.create();
+        }
 
-        return refundCreator.create();
+        return null;
     }
 }
