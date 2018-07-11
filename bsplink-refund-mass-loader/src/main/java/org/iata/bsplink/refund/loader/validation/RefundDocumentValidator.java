@@ -9,7 +9,6 @@ import org.iata.bsplink.refund.loader.model.record.RecordIt02;
 import org.iata.bsplink.refund.loader.model.record.RecordIt05;
 import org.iata.bsplink.refund.loader.model.record.RecordIt08;
 import org.iata.bsplink.refund.loader.model.record.TransactionRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -34,8 +33,13 @@ public class RefundDocumentValidator {
     private static final String CURRENCY_TYPE = "currencyType";
     private static final String COMMISSION_TYPE = "commissionType";
 
-    @Autowired
-    List<RefundLoaderError> refundLoaderErrors;
+    private List<RefundLoaderError> refundLoaderErrors;
+
+    public RefundDocumentValidator(List<RefundLoaderError> refundLoaderErrors) {
+        this.refundLoaderErrors = refundLoaderErrors;
+    }
+
+
 
     /**
      * Validates RefundDocument
@@ -68,10 +72,6 @@ public class RefundDocumentValidator {
             cutp = null;
         } else {
             cutp = it05s.get(0).getCurrencyType();
-            if (StringUtils.isBlank(cutp)) {
-                addToErrors(it05s.get(0), CURRENCY_TYPE, MANDATORY);
-                result = false;
-            }
             if (!isValidIt05Currency(it05s, cutp)) {
                 result = false;
             }
@@ -105,7 +105,7 @@ public class RefundDocumentValidator {
     }
 
 
-    private boolean isValidIt08Currency(List<RecordIt08> it08s, String firstCutp) {
+    private boolean isValidIt08Currency(List<RecordIt08> it08s, String it05Cutp) {
         boolean result = true;
         for (int i = 0; i < it08s.size(); i++) {
             RecordIt08 it08 = it08s.get(i);
@@ -114,7 +114,7 @@ public class RefundDocumentValidator {
                 addToErrors(it08, CURRENCY_TYPE + 1, MANDATORY);
                 result = false;
             } else {
-                if (!StringUtils.isBlank(firstCutp) && !firstCutp.equals(cutp)) {
+                if (!StringUtils.isBlank(it05Cutp) && !it05Cutp.equals(cutp)) {
                     addToErrors(it08, CURRENCY_TYPE + 1, INCORRECT_CURRENCY);
                     result = false;
                 }
@@ -125,8 +125,8 @@ public class RefundDocumentValidator {
                 addToErrors(it08, CURRENCY_TYPE + 2, MANDATORY);
                 result = false;
             }
-            if (!StringUtils.isBlank(firstCutp) && !StringUtils.isBlank(cutp)
-                    && !firstCutp.equals(cutp)) {
+            if (!StringUtils.isBlank(it05Cutp) && !StringUtils.isBlank(cutp)
+                    && !it05Cutp.equals(cutp)) {
                 addToErrors(it08, CURRENCY_TYPE + 2, INCORRECT_CURRENCY);
                 result = false;
             }
@@ -254,5 +254,4 @@ public class RefundDocumentValidator {
         error.setMessage(message);
         refundLoaderErrors.add(error);
     }
-
 }
