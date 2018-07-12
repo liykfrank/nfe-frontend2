@@ -6,8 +6,11 @@ import org.apache.commons.lang.StringUtils;
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02;
+import org.iata.bsplink.refund.loader.model.record.RecordIt03;
 import org.iata.bsplink.refund.loader.model.record.RecordIt05;
 import org.iata.bsplink.refund.loader.model.record.RecordIt08;
+import org.iata.bsplink.refund.loader.model.record.RecordIt0h;
+import org.iata.bsplink.refund.loader.model.record.RecordIt0y;
 import org.iata.bsplink.refund.loader.model.record.TransactionRecord;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +20,7 @@ public class RefundDocumentValidator {
     public static final String INVALID_COMMISSION_TYPE = "Invalid Commission Type";
     public static final String MANDATORY = "The field is mandatory";
     public static final String INCORRECT_CURRENCY = "Incorrect Currency Type";
+    public static final String INCORRECT_TRANSACTION_NUMBER = "Incorrect Transaction Number";
     public static final String COMMISSION_AMOUNT_ON_FIRST_IT05 =
             "Commission Amount only has to be reported on the first IT05";
     public static final String COMMISSION_RATE_ON_FIRST_IT05 =
@@ -32,6 +36,7 @@ public class RefundDocumentValidator {
 
     private static final String CURRENCY_TYPE = "currencyType";
     private static final String COMMISSION_TYPE = "commissionType";
+
 
     private List<RefundLoaderError> refundLoaderErrors;
 
@@ -52,8 +57,10 @@ public class RefundDocumentValidator {
         if (!isValidIt05(refundDocument.getRecordsIt05())) {
             result = false;
         }
-
         if (!isValidCurrency(refundDocument)) {
+            result = false;
+        }
+        if (!isNotValidTransactionNumbering(refundDocument)) {
             result = false;
         }
 
@@ -235,8 +242,9 @@ public class RefundDocumentValidator {
 
 
     private boolean isZero(String value) {
-        return value.matches("^0+");
+        return StringUtils.isNotBlank(value) && value.matches("^0+");
     }
+
 
     private boolean isValidTransactionCode(RecordIt02 it02) {
         if (it02 != null && !"RFND".equals(it02.getTransactionCode())) {
@@ -245,6 +253,47 @@ public class RefundDocumentValidator {
         }
         return true;
     }
+
+
+
+    private boolean isNotValidTransactionNumbering(RefundDocument refundDocument) {
+        TransactionRecord it02 = refundDocument.getRecordIt02();
+        if (it02 == null) {
+            return true;
+        }
+        String trnn =  it02.getTransactionNumber();
+        if (StringUtils.isBlank(trnn) || !trnn.matches("^\\d{6}$")) {
+            addToErrors(it02, "transactionNumber", INCORRECT_TRANSACTION_NUMBER);
+            return false;
+        }
+        boolean result = true;
+        for (RecordIt03 record : refundDocument.getRecordsIt03()) {
+            result = isNotValidTransactionNumbering(record, trnn) && result;
+        }
+        for (RecordIt05 record : refundDocument.getRecordsIt05()) {
+            result = isNotValidTransactionNumbering(record, trnn) && result;
+        }
+        for (RecordIt08 record : refundDocument.getRecordsIt08()) {
+            result = isNotValidTransactionNumbering(record, trnn) && result;
+        }
+        for (RecordIt0h record : refundDocument.getRecordsIt0h()) {
+            result = isNotValidTransactionNumbering(record, trnn) && result;
+        }
+        for (RecordIt0y record : refundDocument.getRecordsIt0y()) {
+            result = isNotValidTransactionNumbering(record, trnn) && result;
+        }
+        return result;
+    }
+
+
+    private boolean isNotValidTransactionNumbering(TransactionRecord record, String trnn) {
+        if (trnn.equals(record.getTransactionNumber())) {
+            return true;
+        }
+        addToErrors(record, "transactionNumber", INCORRECT_TRANSACTION_NUMBER);
+        return false;
+    }
+
 
     private void addToErrors(TransactionRecord record, String field, String message) {
         RefundLoaderError error = new RefundLoaderError();
