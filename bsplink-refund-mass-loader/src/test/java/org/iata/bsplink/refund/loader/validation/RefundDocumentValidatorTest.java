@@ -27,6 +27,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
+import org.iata.bsplink.refund.loader.model.record.Record;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02;
 import org.iata.bsplink.refund.loader.model.record.RecordIt03;
 import org.iata.bsplink.refund.loader.model.record.RecordIt05;
@@ -49,18 +50,16 @@ public class RefundDocumentValidatorTest {
     public void setUp() throws Exception {
 
         refundDocument = new RefundDocument();
-        refundDocument.addRecordIt05(it05(12));
-        refundDocument.addRecordIt05(it05(13));
-        refundDocument.addRecordIt08(it08(14));
-        refundDocument.addRecordIt08(it08(15));
+        refundDocument.addRecordIt05(it05());
+        refundDocument.addRecordIt05(it05());
+        refundDocument.addRecordIt08(it08());
+        refundDocument.addRecordIt08(it08());
         refundDocument.setRecordIt02(new RecordIt02());
         refundDocument.getRecordIt02().setTransactionCode("RFND");
         refundDocument.getRecordIt02().setTransactionNumber("001234");
-        refundDocument.getRecordIt02().setLineNumber(10);
         refundDocument.addRecordIt03(new RecordIt03());
         refundDocument.getRecordsIt03().get(0).setTransactionNumber("001234");
-        refundDocument.getRecordsIt03().get(0).setLineNumber(11);
-
+        lineNumberRecords();
         refundLoaderErrors = new ArrayList<>();
         validator = new RefundDocumentValidator(refundLoaderErrors);
     }
@@ -163,9 +162,10 @@ public class RefundDocumentValidatorTest {
     @Parameters(method = "parametersForTestsTransactionNumbering")
     public void testIsValidTransactionNumbering(TransactionRecord record) {
 
-        record.setLineNumber(16);
         record.setTransactionNumber(refundDocument.getRecordIt02().getTransactionNumber());
+
         switch (record.getRecordIdentifier().getIdentifier().charAt(0)) {
+
             case '3':
                 refundDocument.addRecordIt03((RecordIt03) record);
                 break;
@@ -183,6 +183,8 @@ public class RefundDocumentValidatorTest {
                 break;
             default: return;
         }
+
+        lineNumberRecords();
         assertTrue(validator.isValid(refundDocument));
     }
 
@@ -192,9 +194,9 @@ public class RefundDocumentValidatorTest {
     public void testIsNotValidTransactionNumbering(TransactionRecord record) {
 
         record.setTransactionNumber("001252");
-        record.setLineNumber(16);
 
         switch (record.getRecordIdentifier().getIdentifier().charAt(0)) {
+
             case '3':
                 refundDocument.addRecordIt03((RecordIt03) record);
                 break;
@@ -212,6 +214,8 @@ public class RefundDocumentValidatorTest {
                 break;
             default: return;
         }
+
+        lineNumberRecords();
         assertFalse(validator.isValid(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
 
@@ -221,6 +225,25 @@ public class RefundDocumentValidatorTest {
 
 
         assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(expectedError));
+    }
+
+
+    private void lineNumberRecords() {
+
+        int lineNumber = 10;
+        refundDocument.getRecordIt02().setLineNumber(lineNumber);
+
+        List<Record> records = new ArrayList<>();
+        records.addAll(refundDocument.getRecordsIt03());
+        records.addAll(refundDocument.getRecordsIt05());
+        records.addAll(refundDocument.getRecordsIt08());
+        records.addAll(refundDocument.getRecordsIt0y());
+        records.addAll(refundDocument.getRecordsIt0h());
+
+        for (Record record: records) {
+
+            record.setLineNumber(++lineNumber);
+        }
     }
 
 
@@ -242,9 +265,10 @@ public class RefundDocumentValidatorTest {
     public Object[][] parametersForTestsTransactionNumbering() {
 
         return new Object[][] {
+
             { new RecordIt03() },
-            { it05(16) },
-            { it08(16) },
+            { it05() },
+            { it08() },
             { new RecordIt0h() },
             { new RecordIt0y() }
         };
@@ -257,6 +281,7 @@ public class RefundDocumentValidatorTest {
     public Object[][] parametersForTestIsNotValidIt05() {
 
         return new Object[][] {
+
             { 0, "currencyType", "", MANDATORY },
             { 1, "currencyType", "", MANDATORY },
             { 1, "currencyType", "USD2", INCORRECT_CURRENCY },
@@ -287,6 +312,7 @@ public class RefundDocumentValidatorTest {
     public Object[][] parametersForTestIsNotValidIt08() {
 
         return new Object[][] {
+
             { 0, "currencyType1", "", MANDATORY },
             { 1, "currencyType1", "", MANDATORY },
             { 1, "currencyType1", "USD2", INCORRECT_CURRENCY }
@@ -299,16 +325,16 @@ public class RefundDocumentValidatorTest {
     public Object[][] parametersForTestIsNotValidIt08SecondFop() {
 
         return new Object[][] {
+
             { 0, "currencyType2", "", MANDATORY },
             { 1, "currencyType2", "", MANDATORY },
             { 0, "currencyType2", "USD2", INCORRECT_CURRENCY }
         };
     }
 
-    private RecordIt05 it05(int lineNumber) {
+    private RecordIt05 it05() {
 
         RecordIt05 it05 = new RecordIt05();
-        it05.setLineNumber(lineNumber);
         it05.setTransactionNumber("001234");
         it05.setCommissionRate1("0");
         it05.setCommissionRate2("0");
@@ -324,10 +350,9 @@ public class RefundDocumentValidatorTest {
         return it05;
     }
 
-    private RecordIt08 it08(int lineNumber) {
+    private RecordIt08 it08() {
 
         RecordIt08 it08 = new RecordIt08();
-        it08.setLineNumber(lineNumber);
         it08.setTransactionNumber("001234");
         it08.setFormOfPaymentAmount1("0");
         it08.setFormOfPaymentAmount2("0");
