@@ -12,6 +12,7 @@ public class RecordIt03 implements TransactionRecord {
 
     @Setter(AccessLevel.NONE)
     private RecordIdentifier recordIdentifier = RecordIdentifier.IT03;
+    private int lineNumber;
 
     private String checkDigit1;
     private String checkDigit2;

@@ -12,6 +12,7 @@ public class RecordIt01 implements Record {
 
     @Setter(AccessLevel.NONE)
     private RecordIdentifier recordIdentifier = RecordIdentifier.IT01;
+    private int lineNumber;
 
     private String fileType;
     private String fileTypeSequenceNumber;

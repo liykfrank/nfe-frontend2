@@ -1,5 +1,6 @@
 package org.iata.bsplink.refund.loader.validation;
 
+import static org.iata.bsplink.refund.loader.test.fixtures.FixtureLoader.getFileFixture;
 import static org.junit.Assert.fail;
 
 import org.iata.bsplink.refund.loader.exception.WrongFileFormatException;
@@ -7,8 +8,6 @@ import org.iata.bsplink.refund.loader.exception.WrongRecordCounterException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
 
 public class RefundFileValidatorTest {
 
@@ -26,12 +25,9 @@ public class RefundFileValidatorTest {
 
     private void executeValidationOnFile(String fileName) throws Exception {
 
-        Resource resource =
-                new DefaultResourceLoader().getResource("classpath:fixtures/files/" + fileName);
-
         RefundFileValidator validator = new RefundFileValidator();
 
-        validator.validate(resource.getFile());
+        validator.validate(getFileFixture(fileName).getFile());
     }
 
     @Test

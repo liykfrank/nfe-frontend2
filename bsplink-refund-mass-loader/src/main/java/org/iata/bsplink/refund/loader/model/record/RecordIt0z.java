@@ -12,6 +12,7 @@ public class RecordIt0z implements Record {
 
     @Setter(AccessLevel.NONE)
     private RecordIdentifier recordIdentifier = RecordIdentifier.IT0Z;
+    private int lineNumber;
 
     private String reportRecordCounter;
 }
