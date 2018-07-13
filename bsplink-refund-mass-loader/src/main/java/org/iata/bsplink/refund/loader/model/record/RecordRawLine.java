@@ -12,6 +12,7 @@ public class RecordRawLine implements Record {
 
     @Setter(AccessLevel.NONE)
     private RecordIdentifier recordIdentifier = RecordIdentifier.UNKNOWN;
+    private int lineNumber;
 
     private String line;
 

@@ -12,6 +12,7 @@ public class RecordIt08 implements TransactionRecord {
 
     @Setter(AccessLevel.NONE)
     private RecordIdentifier recordIdentifier = RecordIdentifier.IT08;
+    private int lineNumber;
 
     private String addressVerificationCode1;
     private String addressVerificationCode2;

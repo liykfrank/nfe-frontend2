@@ -12,6 +12,7 @@ public class RecordIt05 implements TransactionRecord {
 
     @Setter(AccessLevel.NONE)
     private RecordIdentifier recordIdentifier = RecordIdentifier.IT05;
+    private int lineNumber;
 
     private String amountEnteredByAgent;
     private String amountPaidByCustomer;

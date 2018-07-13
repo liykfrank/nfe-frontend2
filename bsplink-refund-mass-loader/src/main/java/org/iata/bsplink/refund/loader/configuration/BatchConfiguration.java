@@ -10,6 +10,7 @@ import org.iata.bsplink.refund.loader.dto.Refund;
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
 import org.iata.bsplink.refund.loader.job.FileValidatorTasklet;
 import org.iata.bsplink.refund.loader.job.JobCompletionNotificationListener;
+import org.iata.bsplink.refund.loader.mapper.LineNumberAwarePatternMatchingCompositeLineMapper;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.Record;
 import org.iata.bsplink.refund.loader.model.record.RecordIt01;
@@ -45,7 +46,6 @@ import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
-import org.springframework.batch.item.file.mapping.PatternMatchingCompositeLineMapper;
 import org.springframework.batch.item.file.transform.FixedLengthTokenizer;
 import org.springframework.batch.item.file.transform.LineTokenizer;
 import org.springframework.batch.item.file.transform.Range;
@@ -194,9 +194,8 @@ public class BatchConfiguration {
         mappers.put(recordRawLineLayout.getPattern(),
                 fieldSetMappers.get(RECORD_RAWLINE_BEAN_NAME));
 
-
-        PatternMatchingCompositeLineMapper<Record> mapper =
-                new PatternMatchingCompositeLineMapper<>();
+        LineNumberAwarePatternMatchingCompositeLineMapper mapper =
+                new LineNumberAwarePatternMatchingCompositeLineMapper();
 
         mapper.setTokenizers(tokenizers);
         mapper.setFieldSetMappers(mappers);

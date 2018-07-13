@@ -12,6 +12,7 @@ public class RecordIt0y implements TransactionRecord {
 
     @Setter(AccessLevel.NONE)
     private RecordIdentifier recordIdentifier = RecordIdentifier.IT0Y;
+    private int lineNumber;
 
     private String transactionNumber;
 }

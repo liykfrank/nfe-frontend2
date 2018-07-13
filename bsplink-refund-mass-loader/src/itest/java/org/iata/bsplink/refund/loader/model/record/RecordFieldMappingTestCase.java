@@ -1,23 +1,17 @@
 package org.iata.bsplink.refund.loader.model.record;
 
+import static org.iata.bsplink.refund.loader.test.fixtures.FixtureLoader.readRecordFixtureToString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.nio.charset.StandardCharsets;
-
-import org.apache.commons.io.FileUtils;
 import org.iata.bsplink.refund.loader.configuration.BatchConfiguration;
 import org.junit.Before;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 public abstract class RecordFieldMappingTestCase<T extends Record> {
-
-    private static final String FIXTURES_DIR = "fixtures/records";
 
     private String recordLine;
     private LineMapper<Record> lineMapper;
@@ -38,7 +32,7 @@ public abstract class RecordFieldMappingTestCase<T extends Record> {
         if (recordLine == null) {
 
             // @BeforeClass is not used because the static properties will be the same in subclases
-            recordLine = readRecordLine();
+            recordLine = readRecordFixtureToString(getRecordFileName());
         }
 
         BeanFactory beanFactory = getBeanFactoryMock();
@@ -54,13 +48,6 @@ public abstract class RecordFieldMappingTestCase<T extends Record> {
     protected T readRecord() throws Exception {
 
         return (T) lineMapper.mapLine(recordLine, 1);
-    }
-
-    private String readRecordLine() throws Exception {
-
-        Resource resource = new ClassPathResource(FIXTURES_DIR + "/" + getRecordFileName());
-
-        return FileUtils.readFileToString(resource.getFile(), StandardCharsets.ISO_8859_1);
     }
 
     private BeanFactory getBeanFactoryMock() {
