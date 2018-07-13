@@ -1,5 +1,8 @@
 package org.iata.bsplink.refund.loader.validation;
 
+import static org.iata.bsplink.refund.loader.model.record.RecordIdentifier.IT01;
+import static org.iata.bsplink.refund.loader.model.record.RecordIdentifier.IT0Z;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -70,13 +73,13 @@ public class RefundFileValidator {
             throw new RefundLoaderException(exception);
         }
 
-        throwExceptionIfThereIsNoFileTrailerRecord(optionalLastReadLine);
+        throwExceptionIfThereIsNoFileTrailerRecord(optionalLastReadLine, actualLinesCount);
 
-        int expectedLinesCount = extractRecordCounter(optionalLastReadLine);
+        int expectedLinesCount = extractRecordCounter(optionalLastReadLine, actualLinesCount);
 
         if (expectedLinesCount != actualLinesCount) {
 
-            addToErrors(RecordIdentifier.IT0Z, "reportRecordCounter", INCORRECT_NUMBER_OF_RECORDS);
+            addToErrors(actualLinesCount, IT0Z, "reportRecordCounter", INCORRECT_NUMBER_OF_RECORDS);
 
             throw new WrongRecordCounterException(actualLinesCount, expectedLinesCount);
         }
@@ -87,7 +90,7 @@ public class RefundFileValidator {
 
         if (file.length() <= 0) {
 
-            addToErrors(null, null, FILE_EMPTY);
+            addToErrors(null, null, null, FILE_EMPTY);
 
             throw new WrongFileFormatException("the file is empty");
         }
@@ -98,24 +101,25 @@ public class RefundFileValidator {
 
         if (!line.startsWith("1")) {
 
-            addToErrors(RecordIdentifier.IT01, "recordIdentifier", IT01_EXPECTED_IN_LINE1);
+            addToErrors(1, IT01, "recordIdentifier", IT01_EXPECTED_IN_LINE1);
 
             throw new WrongFileFormatException("the file does not have header record (IT01)");
         }
     }
 
 
-    private void throwExceptionIfThereIsNoFileTrailerRecord(Optional<String> optionalLastReadLine) {
+    private void throwExceptionIfThereIsNoFileTrailerRecord(Optional<String> optionalLastReadLine,
+            int lineNumber) {
 
         if (!(optionalLastReadLine.isPresent() && optionalLastReadLine.get().startsWith("Z"))) {
 
-            addToErrors(RecordIdentifier.IT0Z, "recordIdentifier", IT0Z_EXPECTED_IN_LASTLINE);
+            addToErrors(lineNumber, IT0Z, "recordIdentifier", IT0Z_EXPECTED_IN_LASTLINE);
 
             throw new WrongFileFormatException("the file does not have trailer record (IT0Z)");
         }
     }
 
-    private int extractRecordCounter(Optional<String> optionalLastReadLine) {
+    private int extractRecordCounter(Optional<String> optionalLastReadLine, int lineNumber) {
 
         if (optionalLastReadLine.isPresent()) {
 
@@ -128,18 +132,20 @@ public class RefundFileValidator {
             }
         }
 
-        addToErrors(RecordIdentifier.IT0Z, "reportRecordCounter", IT0Z_RRDC_INCORRECT_FORMAT);
+        addToErrors(lineNumber, IT0Z, "reportRecordCounter", IT0Z_RRDC_INCORRECT_FORMAT);
 
         // if the record count was not returned yet there is a problem extracting the value
         throw new WrongFileFormatException("the record count can not be extracted from file");
     }
 
 
-    private void addToErrors(RecordIdentifier recordIdentifier, String field, String message) {
+    private void addToErrors(Integer lineNumber, RecordIdentifier recordIdentifier, String field,
+            String message) {
 
         RefundLoaderError error = new RefundLoaderError();
-        error.setField(field);
+        error.setLineNumber(lineNumber);
         error.setRecordIdentifier(recordIdentifier);
+        error.setField(field);
         error.setMessage(message);
         refundLoaderErrors.add(error);
     }
