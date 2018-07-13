@@ -58,7 +58,7 @@ public class RefundDocumentValidator {
         if (!isValidCurrency(refundDocument)) {
             result = false;
         }
-        if (!isNotValidTransactionNumbering(refundDocument)) {
+        if (!isValidTransactionNumbering(refundDocument)) {
             result = false;
         }
 
@@ -254,7 +254,7 @@ public class RefundDocumentValidator {
 
 
 
-    private boolean isNotValidTransactionNumbering(RefundDocument refundDocument) {
+    private boolean isValidTransactionNumbering(RefundDocument refundDocument) {
         TransactionRecord it02 = refundDocument.getRecordIt02();
         if (it02 == null) {
             return true;
