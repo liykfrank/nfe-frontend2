@@ -296,6 +296,7 @@ public class RefundDocumentValidator {
 
     private void addToErrors(TransactionRecord record, String field, String message) {
         RefundLoaderError error = new RefundLoaderError();
+        error.setLineNumber(record.getLineNumber());
         error.setField(field);
         error.setTransactionNumber(record.getTransactionNumber());
         error.setRecordIdentifier(record.getRecordIdentifier());
