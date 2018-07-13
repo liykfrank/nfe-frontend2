@@ -31,9 +31,9 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitParamsRunner.class)
 public class RefundDocumentValidatorTest {
 
-    RefundDocumentValidator validator;
-    List<RefundLoaderError> refundLoaderErrors;
-    RefundDocument refundDocument;
+    private RefundDocumentValidator validator;
+    private List<RefundLoaderError> refundLoaderErrors;
+    private RefundDocument refundDocument;
 
     @Before
     public void setUp() throws Exception {
