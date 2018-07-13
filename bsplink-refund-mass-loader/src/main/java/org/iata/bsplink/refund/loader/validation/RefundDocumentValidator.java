@@ -1,16 +1,14 @@
 package org.iata.bsplink.refund.loader.validation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02;
-import org.iata.bsplink.refund.loader.model.record.RecordIt03;
 import org.iata.bsplink.refund.loader.model.record.RecordIt05;
 import org.iata.bsplink.refund.loader.model.record.RecordIt08;
-import org.iata.bsplink.refund.loader.model.record.RecordIt0h;
-import org.iata.bsplink.refund.loader.model.record.RecordIt0y;
 import org.iata.bsplink.refund.loader.model.record.TransactionRecord;
 import org.springframework.stereotype.Component;
 
@@ -261,32 +259,33 @@ public class RefundDocumentValidator {
         if (it02 == null) {
             return true;
         }
+
         String trnn =  it02.getTransactionNumber();
         if (StringUtils.isBlank(trnn) || !trnn.matches("^\\d{6}$")) {
+
             addToErrors(it02, "transactionNumber", INCORRECT_TRANSACTION_NUMBER);
             return false;
         }
+
+        List<TransactionRecord> records = new ArrayList<>();
+        records.addAll(refundDocument.getRecordsIt03());
+        records.addAll(refundDocument.getRecordsIt05());
+        records.addAll(refundDocument.getRecordsIt08());
+        records.addAll(refundDocument.getRecordsIt0h());
+        records.addAll(refundDocument.getRecordsIt0y());
+
         boolean result = true;
-        for (RecordIt03 record : refundDocument.getRecordsIt03()) {
-            result = isNotValidTransactionNumbering(record, trnn) && result;
+        for (TransactionRecord record : records) {
+            if (!isValidTransactionNumbering(record, trnn)) {
+                result = false;
+            }
         }
-        for (RecordIt05 record : refundDocument.getRecordsIt05()) {
-            result = isNotValidTransactionNumbering(record, trnn) && result;
-        }
-        for (RecordIt08 record : refundDocument.getRecordsIt08()) {
-            result = isNotValidTransactionNumbering(record, trnn) && result;
-        }
-        for (RecordIt0h record : refundDocument.getRecordsIt0h()) {
-            result = isNotValidTransactionNumbering(record, trnn) && result;
-        }
-        for (RecordIt0y record : refundDocument.getRecordsIt0y()) {
-            result = isNotValidTransactionNumbering(record, trnn) && result;
-        }
+
         return result;
     }
 
 
-    private boolean isNotValidTransactionNumbering(TransactionRecord record, String trnn) {
+    private boolean isValidTransactionNumbering(TransactionRecord record, String trnn) {
         if (trnn.equals(record.getTransactionNumber())) {
             return true;
         }
