@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RefundDocumentValidator {
+
     public static final String INCORRECT_TRANSACTION_CODE = "Incorrect transaction code";
     public static final String INVALID_COMMISSION_TYPE = "Invalid Commission Type";
     public static final String MANDATORY = "The field is mandatory";
@@ -68,6 +69,7 @@ public class RefundDocumentValidator {
 
 
     private boolean isValidCurrency(RefundDocument refundDocument) {
+
         List<RecordIt05> it05s = refundDocument.getRecordsIt05();
 
         boolean result = true;
@@ -92,6 +94,7 @@ public class RefundDocumentValidator {
 
 
     private boolean isValidIt05Currency(List<RecordIt05> it05s, String firstCutp) {
+
         boolean result = true;
         for (int i = 0; i < it05s.size(); i++) {
             RecordIt05 it05 = it05s.get(i);
@@ -111,6 +114,7 @@ public class RefundDocumentValidator {
 
 
     private boolean isValidIt08Currency(List<RecordIt08> it08s, String it05Cutp) {
+
         boolean result = true;
         for (int i = 0; i < it08s.size(); i++) {
             RecordIt08 it08 = it08s.get(i);
@@ -141,6 +145,7 @@ public class RefundDocumentValidator {
 
 
     private boolean isValidIt05(List<RecordIt05> it05s) {
+
         if (it05s == null || it05s.isEmpty()) {
             return true;
         }
@@ -162,6 +167,7 @@ public class RefundDocumentValidator {
 
 
     private boolean isValidXlp(RecordIt05 it05) {
+
         boolean result = true;
         if (StringUtils.isNotBlank(it05.getCommissionType1())) {
             addToErrors(it05, COMMISSION_TYPE + 1, FIRST_COMMISSION_TYPE_BLANK);
@@ -186,6 +192,7 @@ public class RefundDocumentValidator {
 
 
     private boolean isValidBlankCommissionType(RecordIt05 it05) {
+
         boolean result = true;
         if (StringUtils.isNotBlank(it05.getCommissionType1())) {
             addToErrors(it05, COMMISSION_TYPE + 1, FIRST_COMMISSION_TYPE_BLANK);
@@ -204,6 +211,7 @@ public class RefundDocumentValidator {
 
 
     private boolean isValidZeroCommissionRate(RecordIt05 it05) {
+
         boolean result = true;
         if (!isZero(it05.getCommissionRate1())) {
             addToErrors(it05, "commissionRate1", COMMISSION_RATE_ON_FIRST_IT05);
@@ -222,6 +230,7 @@ public class RefundDocumentValidator {
 
 
     private boolean isValidZeroCommissionAmount(RecordIt05 it05) {
+
         boolean result = true;
         if (!isZero(it05.getCommissionAmount1())) {
             addToErrors(it05, "commissionAmount1", COMMISSION_AMOUNT_ON_FIRST_IT05);
@@ -240,11 +249,13 @@ public class RefundDocumentValidator {
 
 
     private boolean isZero(String value) {
+
         return StringUtils.isNotBlank(value) && value.matches("^0+");
     }
 
 
     private boolean isValidTransactionCode(RecordIt02 it02) {
+
         if (it02 != null && !"RFND".equals(it02.getTransactionCode())) {
             addToErrors(it02, "transactionCode", INCORRECT_TRANSACTION_CODE);
             return false;
@@ -255,6 +266,7 @@ public class RefundDocumentValidator {
 
 
     private boolean isValidTransactionNumbering(RefundDocument refundDocument) {
+
         TransactionRecord it02 = refundDocument.getRecordIt02();
         if (it02 == null) {
             return true;
@@ -285,16 +297,20 @@ public class RefundDocumentValidator {
     }
 
 
-    private boolean isValidTransactionNumbering(TransactionRecord record, String trnn) {
-        if (trnn.equals(record.getTransactionNumber())) {
+    private boolean isValidTransactionNumbering(TransactionRecord record,
+            String transactionNumber) {
+
+        if (transactionNumber.equals(record.getTransactionNumber())) {
             return true;
         }
-        addToErrors(record, "transactionNumber", INCORRECT_TRANSACTION_NUMBER);
+        addToErrors(record, "transactionNumber", INCORRECT_TRANSACTION_NUMBER)
+            .setTransactionNumber(transactionNumber);
         return false;
     }
 
 
-    private void addToErrors(TransactionRecord record, String field, String message) {
+    private RefundLoaderError addToErrors(TransactionRecord record, String field, String message) {
+
         RefundLoaderError error = new RefundLoaderError();
         error.setLineNumber(record.getLineNumber());
         error.setField(field);
@@ -302,5 +318,6 @@ public class RefundDocumentValidator {
         error.setRecordIdentifier(record.getRecordIdentifier());
         error.setMessage(message);
         refundLoaderErrors.add(error);
+        return error;
     }
 }
