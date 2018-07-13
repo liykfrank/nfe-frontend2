@@ -8,6 +8,7 @@ import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.
 import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.COMMISSION_TYPE_ON_FIRST_IT05;
 import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.FIRST_COMMISSION_TYPE_BLANK;
 import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.INCORRECT_CURRENCY;
+import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.INCORRECT_RECORD_ORDER;
 import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.INCORRECT_TRANSACTION_CODE;
 import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.INCORRECT_TRANSACTION_NUMBER;
 import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.INVALID_COMMISSION_TYPE;
@@ -223,8 +224,37 @@ public class RefundDocumentValidatorTest {
                 INCORRECT_TRANSACTION_NUMBER);
         expectedError.setTransactionNumber(refundDocument.getRecordIt02().getTransactionNumber());
 
-
         assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(expectedError));
+    }
+
+
+    @Test
+    public void testIsValidRecordOrden() {
+
+        RecordIt03 it03 = new RecordIt03();
+        refundDocument.addRecordIt03(it03);
+
+        it03.setTransactionNumber(refundDocument.getRecordIt02().getTransactionNumber());
+
+        lineNumberRecords();
+
+        int lineNumberIt03 = it03.getLineNumber();
+        RecordIt05 it05 = refundDocument.getRecordsIt05().get(0);
+        int lineNumberIt05 = it05.getLineNumber();
+
+        it03.setLineNumber(lineNumberIt05);
+        it05.setLineNumber(lineNumberIt03);
+
+        assertFalse(validator.isValid(refundDocument));
+        assertThat(refundLoaderErrors, hasSize(2));
+
+        RefundLoaderError expectedIt03Error =
+                refundLoaderError(it03, "recordIdentifier", INCORRECT_RECORD_ORDER);
+        assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(expectedIt03Error));
+
+        RefundLoaderError expectedIt05Error =
+                refundLoaderError(it05, "recordIdentifier", INCORRECT_RECORD_ORDER);
+        assertThat(refundLoaderErrors.get(1), samePropertyValuesAs(expectedIt05Error));
     }
 
 
