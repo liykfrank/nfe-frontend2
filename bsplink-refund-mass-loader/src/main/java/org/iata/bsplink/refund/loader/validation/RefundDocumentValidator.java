@@ -32,9 +32,11 @@ public class RefundDocumentValidator {
             "First Commission Type has to be left blank";
     public static final String XLP_ONLY_ONCE =
             "XLP Commission Type can only be reported once";
+    public static final String INCORRECT_ORDEN = "The record is not reported in the correct order.";
 
     private static final String CURRENCY_TYPE = "currencyType";
     private static final String COMMISSION_TYPE = "commissionType";
+
 
 
     private List<RefundLoaderError> refundLoaderErrors;
@@ -61,6 +63,41 @@ public class RefundDocumentValidator {
         }
         if (!isValidTransactionNumbering(refundDocument)) {
             result = false;
+        }
+        if (!isValidRecordOrden(refundDocument)) {
+            result = false;
+        }
+        return result;
+    }
+
+
+
+    private boolean isValidRecordOrden(RefundDocument refundDocument) {
+
+        RecordIt02 it02 = refundDocument.getRecordIt02();
+
+        if (it02 == null) {
+            return true;
+        }
+
+        boolean result = true;
+
+        int firstLineNumber = it02.getLineNumber();
+
+        List<TransactionRecord> records = new ArrayList<>();
+        records.addAll(refundDocument.getRecordsIt03());
+        records.addAll(refundDocument.getRecordsIt05());
+        records.addAll(refundDocument.getRecordsIt08());
+        records.addAll(refundDocument.getRecordsIt0y());
+        records.addAll(refundDocument.getRecordsIt0h());
+
+        for (TransactionRecord record: records) {
+
+            if (++firstLineNumber != record.getLineNumber()) {
+
+                addToErrors(record, "recordIdentifier", INCORRECT_ORDEN);
+                result = false;
+            }
         }
 
         return result;
