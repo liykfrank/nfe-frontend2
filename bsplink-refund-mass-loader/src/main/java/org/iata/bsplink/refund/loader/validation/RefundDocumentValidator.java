@@ -32,7 +32,8 @@ public class RefundDocumentValidator {
             "First Commission Type has to be left blank";
     public static final String XLP_ONLY_ONCE =
             "XLP Commission Type can only be reported once";
-    public static final String INCORRECT_ORDEN = "The record is not reported in the correct order.";
+    public static final String INCORRECT_RECORD_ORDER =
+            "The record is not reported in the correct order.";
 
     private static final String CURRENCY_TYPE = "currencyType";
     private static final String COMMISSION_TYPE = "commissionType";
@@ -95,7 +96,7 @@ public class RefundDocumentValidator {
 
             if (++firstLineNumber != record.getLineNumber()) {
 
-                addToErrors(record, "recordIdentifier", INCORRECT_ORDEN);
+                addToErrors(record, "recordIdentifier", INCORRECT_RECORD_ORDER);
                 result = false;
             }
         }
