@@ -1,7 +1,18 @@
 package org.iata.bsplink.refund.loader.validation;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.COMMISSION_AMOUNT_ON_FIRST_IT05;
+import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.COMMISSION_RATE_ON_FIRST_IT05;
+import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.COMMISSION_TDAM_ON_FIRST_IT05;
+import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.COMMISSION_TYPE_ON_FIRST_IT05;
+import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.FIRST_COMMISSION_TYPE_BLANK;
+import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.INCORRECT_CURRENCY;
+import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.INCORRECT_TRANSACTION_CODE;
+import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.INCORRECT_TRANSACTION_NUMBER;
+import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.INVALID_COMMISSION_TYPE;
+import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.MANDATORY;
+import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.XLP_ONLY_ONCE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -16,7 +27,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
-import org.iata.bsplink.refund.loader.model.record.RecordIdentifier;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02;
 import org.iata.bsplink.refund.loader.model.record.RecordIt03;
 import org.iata.bsplink.refund.loader.model.record.RecordIt05;
@@ -37,16 +47,19 @@ public class RefundDocumentValidatorTest {
 
     @Before
     public void setUp() throws Exception {
+
         refundDocument = new RefundDocument();
-        refundDocument.addRecordIt05(it05());
-        refundDocument.addRecordIt05(it05());
-        refundDocument.addRecordIt08(it08());
-        refundDocument.addRecordIt08(it08());
+        refundDocument.addRecordIt05(it05(12));
+        refundDocument.addRecordIt05(it05(13));
+        refundDocument.addRecordIt08(it08(14));
+        refundDocument.addRecordIt08(it08(15));
         refundDocument.setRecordIt02(new RecordIt02());
         refundDocument.getRecordIt02().setTransactionCode("RFND");
         refundDocument.getRecordIt02().setTransactionNumber("001234");
+        refundDocument.getRecordIt02().setLineNumber(10);
         refundDocument.addRecordIt03(new RecordIt03());
         refundDocument.getRecordsIt03().get(0).setTransactionNumber("001234");
+        refundDocument.getRecordsIt03().get(0).setLineNumber(11);
 
         refundLoaderErrors = new ArrayList<>();
         validator = new RefundDocumentValidator(refundLoaderErrors);
@@ -54,6 +67,7 @@ public class RefundDocumentValidatorTest {
 
     @Test
     public void testIsValid() {
+
         assertTrue(validator.isValid(refundDocument));
         assertThat(refundLoaderErrors, IsEmptyCollection.empty());
     }
@@ -61,32 +75,33 @@ public class RefundDocumentValidatorTest {
 
     @Test
     public void testIsValidWithoutRecords() {
+
         assertTrue(validator.isValid(new RefundDocument()));
     }
 
 
     @Test
     public void testIsNotValidTransactionCode() {
-        refundDocument.getRecordIt02().setTransactionCode("ACMA");
+
+        RecordIt02 it02 = refundDocument.getRecordIt02();
+        it02.setTransactionCode("ACMA");
         assertFalse(validator.isValid(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
-        RefundLoaderError refundLoaderError = refundLoaderErrors.get(0);
-        assertThat(refundLoaderError.getField(), equalTo("transactionCode"));
-        assertThat(refundLoaderError.getMessage(),
-                equalTo(RefundDocumentValidator.INCORRECT_TRANSACTION_CODE));
+        assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(
+                refundLoaderError(it02, "transactionCode", INCORRECT_TRANSACTION_CODE)));
     }
 
 
     @Test
     public void testIsNotValidWithTwoXlp() {
-        refundDocument.getRecordsIt05().get(0).setCommissionType2("XLP");
-        refundDocument.getRecordsIt05().get(0).setCommissionType3("XLP");
+
+        RecordIt05 it05 = refundDocument.getRecordsIt05().get(0);
+        it05.setCommissionType2("XLP");
+        it05.setCommissionType3("XLP");
         assertFalse(validator.isValid(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
-        RefundLoaderError refundLoaderError = refundLoaderErrors.get(0);
-        assertThat(refundLoaderError.getField(), equalTo("commissionType3"));
-        assertThat(refundLoaderError.getMessage(),
-                equalTo(RefundDocumentValidator.XLP_ONLY_ONCE));
+        assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(
+                refundLoaderError(it05, "commissionType3", XLP_ONLY_ONCE)));
     }
 
 
@@ -94,12 +109,13 @@ public class RefundDocumentValidatorTest {
     @Parameters
     public void testIsNotValidIt05(int recordNumber, String field, String value, String message)
             throws Exception {
-        BeanUtils.setProperty(refundDocument.getRecordsIt05().get(recordNumber), field, value);
+
+        RecordIt05 it05 = refundDocument.getRecordsIt05().get(recordNumber);
+        BeanUtils.setProperty(it05, field, value);
         assertFalse(validator.isValid(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
-        RefundLoaderError refundLoaderError = refundLoaderErrors.get(0);
-        assertThat(refundLoaderError.getField(), equalTo(field));
-        assertThat(refundLoaderError.getMessage(), equalTo(message));
+        assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(
+                refundLoaderError(it05, field, message)));
     }
 
 
@@ -107,44 +123,47 @@ public class RefundDocumentValidatorTest {
     @Parameters
     public void testIsNotValidIt08(int recordNumber, String field, String value, String message)
             throws Exception {
-        BeanUtils.setProperty(refundDocument.getRecordsIt08().get(recordNumber), field, value);
+
+        RecordIt08 it08 = refundDocument.getRecordsIt08().get(recordNumber);
+        BeanUtils.setProperty(it08, field, value);
         assertFalse(validator.isValid(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
-        RefundLoaderError refundLoaderError = refundLoaderErrors.get(0);
-        assertThat(refundLoaderError.getField(), equalTo(field));
-        assertThat(refundLoaderError.getMessage(), equalTo(message));
+        assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(
+                refundLoaderError(it08, field, message)));
     }
 
     @Test
     @Parameters
     public void testIsNotValidIt08SecondFop(int recordNumber, String field, String value,
             String message) throws Exception {
-        refundDocument.getRecordsIt08().get(recordNumber).setFormOfPaymentAmount2("12");
+
+        RecordIt08 it08 = refundDocument.getRecordsIt08().get(recordNumber);
+        it08.setFormOfPaymentAmount2("12");
         BeanUtils.setProperty(refundDocument.getRecordsIt08().get(recordNumber), field, value);
         assertFalse(validator.isValid(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
-        RefundLoaderError refundLoaderError = refundLoaderErrors.get(0);
-        assertThat(refundLoaderError.getField(), equalTo(field));
-        assertThat(refundLoaderError.getMessage(), equalTo(message));
+        assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(
+                refundLoaderError(it08, field, message)));
     }
 
     @Test
     @Parameters
     public void testIsNotValidTransactionNumberingInIt02(String transactionNumber) {
-        refundDocument.getRecordIt02().setTransactionNumber(transactionNumber);
+
+        RecordIt02 it02 = refundDocument.getRecordIt02();
+        it02.setTransactionNumber(transactionNumber);
         assertFalse(validator.isValid(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
-        RefundLoaderError refundLoaderError = refundLoaderErrors.get(0);
-        assertThat(refundLoaderError.getField(), equalTo("transactionNumber"));
-        assertThat(refundLoaderError.getRecordIdentifier(), equalTo(RecordIdentifier.IT02));
-        assertThat(refundLoaderError.getMessage(),
-                equalTo(RefundDocumentValidator.INCORRECT_TRANSACTION_NUMBER));
+        assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(
+                refundLoaderError(it02, "transactionNumber", INCORRECT_TRANSACTION_NUMBER)));
     }
 
 
     @Test
     @Parameters(method = "parametersForTestsTransactionNumbering")
     public void testIsValidTransactionNumbering(TransactionRecord record) {
+
+        record.setLineNumber(16);
         record.setTransactionNumber(refundDocument.getRecordIt02().getTransactionNumber());
         switch (record.getRecordIdentifier().getIdentifier().charAt(0)) {
             case '3':
@@ -171,7 +190,9 @@ public class RefundDocumentValidatorTest {
     @Test
     @Parameters(method = "parametersForTestsTransactionNumbering")
     public void testIsNotValidTransactionNumbering(TransactionRecord record) {
+
         record.setTransactionNumber("001252");
+        record.setLineNumber(16);
 
         switch (record.getRecordIdentifier().getIdentifier().charAt(0)) {
             case '3':
@@ -193,11 +214,13 @@ public class RefundDocumentValidatorTest {
         }
         assertFalse(validator.isValid(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
-        RefundLoaderError refundLoaderError = refundLoaderErrors.get(0);
-        assertThat(refundLoaderError.getField(), equalTo("transactionNumber"));
-        assertThat(refundLoaderError.getRecordIdentifier(), equalTo(record.getRecordIdentifier()));
-        assertThat(refundLoaderError.getMessage(),
-                equalTo(RefundDocumentValidator.INCORRECT_TRANSACTION_NUMBER));
+
+        RefundLoaderError expectedError = refundLoaderError(record, "transactionNumber",
+                INCORRECT_TRANSACTION_NUMBER);
+        expectedError.setTransactionNumber(refundDocument.getRecordIt02().getTransactionNumber());
+
+
+        assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(expectedError));
     }
 
 
@@ -205,6 +228,7 @@ public class RefundDocumentValidatorTest {
      * Parameters for Transaction Numbering test.
      */
     public Object[][] parametersForTestIsNotValidTransactionNumberingInIt02() {
+
         return new Object[][] {
             { "" },
             { "X" },
@@ -216,10 +240,11 @@ public class RefundDocumentValidatorTest {
      * Parameters for Transaction Numbering test.
      */
     public Object[][] parametersForTestsTransactionNumbering() {
+
         return new Object[][] {
             { new RecordIt03() },
-            { it05() },
-            { it08() },
+            { it05(16) },
+            { it08(16) },
             { new RecordIt0h() },
             { new RecordIt0y() }
         };
@@ -230,27 +255,28 @@ public class RefundDocumentValidatorTest {
      * Parameters for IT05 test.
      */
     public Object[][] parametersForTestIsNotValidIt05() {
+
         return new Object[][] {
-            { 0, "currencyType", "", RefundDocumentValidator.MANDATORY },
-            { 1, "currencyType", "", RefundDocumentValidator.MANDATORY },
-            { 1, "currencyType", "USD2", RefundDocumentValidator.INCORRECT_CURRENCY },
+            { 0, "currencyType", "", MANDATORY },
+            { 1, "currencyType", "", MANDATORY },
+            { 1, "currencyType", "USD2", INCORRECT_CURRENCY },
             { 1, "ticketDocumentAmount", "1",
-                RefundDocumentValidator.COMMISSION_TDAM_ON_FIRST_IT05 },
+                COMMISSION_TDAM_ON_FIRST_IT05 },
             { 1, "commissionAmount1", "1",
-                RefundDocumentValidator.COMMISSION_AMOUNT_ON_FIRST_IT05 },
+                COMMISSION_AMOUNT_ON_FIRST_IT05 },
             { 1, "commissionAmount2", "1",
-                RefundDocumentValidator.COMMISSION_AMOUNT_ON_FIRST_IT05 },
+                COMMISSION_AMOUNT_ON_FIRST_IT05 },
             { 1, "commissionAmount3", "1",
-                RefundDocumentValidator.COMMISSION_AMOUNT_ON_FIRST_IT05 },
-            { 1, "commissionRate1", "1", RefundDocumentValidator.COMMISSION_RATE_ON_FIRST_IT05 },
-            { 1, "commissionRate2", "1", RefundDocumentValidator.COMMISSION_RATE_ON_FIRST_IT05 },
-            { 1, "commissionRate3", "1", RefundDocumentValidator.COMMISSION_RATE_ON_FIRST_IT05 },
-            { 1, "commissionType1", "1", RefundDocumentValidator.FIRST_COMMISSION_TYPE_BLANK },
-            { 1, "commissionType2", "1", RefundDocumentValidator.COMMISSION_TYPE_ON_FIRST_IT05 },
-            { 1, "commissionType3", "1", RefundDocumentValidator.COMMISSION_TYPE_ON_FIRST_IT05 },
-            { 0, "commissionType2", "PLX", RefundDocumentValidator.INVALID_COMMISSION_TYPE },
-            { 0, "commissionType3", "PLX", RefundDocumentValidator.INVALID_COMMISSION_TYPE },
-            { 0, "commissionType1", "XLP", RefundDocumentValidator.FIRST_COMMISSION_TYPE_BLANK }
+                COMMISSION_AMOUNT_ON_FIRST_IT05 },
+            { 1, "commissionRate1", "1", COMMISSION_RATE_ON_FIRST_IT05 },
+            { 1, "commissionRate2", "1", COMMISSION_RATE_ON_FIRST_IT05 },
+            { 1, "commissionRate3", "1", COMMISSION_RATE_ON_FIRST_IT05 },
+            { 1, "commissionType1", "1", FIRST_COMMISSION_TYPE_BLANK },
+            { 1, "commissionType2", "1", COMMISSION_TYPE_ON_FIRST_IT05 },
+            { 1, "commissionType3", "1", COMMISSION_TYPE_ON_FIRST_IT05 },
+            { 0, "commissionType2", "PLX", INVALID_COMMISSION_TYPE },
+            { 0, "commissionType3", "PLX", INVALID_COMMISSION_TYPE },
+            { 0, "commissionType1", "XLP", FIRST_COMMISSION_TYPE_BLANK }
         };
     }
 
@@ -259,10 +285,11 @@ public class RefundDocumentValidatorTest {
      * Parameters for IT08 test.
      */
     public Object[][] parametersForTestIsNotValidIt08() {
+
         return new Object[][] {
-            { 0, "currencyType1", "", RefundDocumentValidator.MANDATORY },
-            { 1, "currencyType1", "", RefundDocumentValidator.MANDATORY },
-            { 1, "currencyType1", "USD2", RefundDocumentValidator.INCORRECT_CURRENCY }
+            { 0, "currencyType1", "", MANDATORY },
+            { 1, "currencyType1", "", MANDATORY },
+            { 1, "currencyType1", "USD2", INCORRECT_CURRENCY }
         };
     }
 
@@ -270,15 +297,18 @@ public class RefundDocumentValidatorTest {
      * Parameters for IT08 test for second Form of Payment.
      */
     public Object[][] parametersForTestIsNotValidIt08SecondFop() {
+
         return new Object[][] {
-            { 0, "currencyType2", "", RefundDocumentValidator.MANDATORY },
-            { 1, "currencyType2", "", RefundDocumentValidator.MANDATORY },
-            { 0, "currencyType2", "USD2", RefundDocumentValidator.INCORRECT_CURRENCY }
+            { 0, "currencyType2", "", MANDATORY },
+            { 1, "currencyType2", "", MANDATORY },
+            { 0, "currencyType2", "USD2", INCORRECT_CURRENCY }
         };
     }
 
-    private RecordIt05 it05() {
+    private RecordIt05 it05(int lineNumber) {
+
         RecordIt05 it05 = new RecordIt05();
+        it05.setLineNumber(lineNumber);
         it05.setTransactionNumber("001234");
         it05.setCommissionRate1("0");
         it05.setCommissionRate2("0");
@@ -294,8 +324,10 @@ public class RefundDocumentValidatorTest {
         return it05;
     }
 
-    private RecordIt08 it08() {
+    private RecordIt08 it08(int lineNumber) {
+
         RecordIt08 it08 = new RecordIt08();
+        it08.setLineNumber(lineNumber);
         it08.setTransactionNumber("001234");
         it08.setFormOfPaymentAmount1("0");
         it08.setFormOfPaymentAmount2("0");
@@ -303,4 +335,18 @@ public class RefundDocumentValidatorTest {
         it08.setCurrencyType2("");
         return it08;
     }
+
+
+    private RefundLoaderError refundLoaderError(TransactionRecord record, String field,
+            String message) {
+
+        RefundLoaderError error = new RefundLoaderError();
+        error.setRecordIdentifier(record.getRecordIdentifier());
+        error.setField(field);
+        error.setLineNumber(record.getLineNumber());
+        error.setMessage(message);
+        error.setTransactionNumber(record.getTransactionNumber());
+        return error;
+    }
+
 }
