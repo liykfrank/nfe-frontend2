@@ -9,7 +9,6 @@ import static org.iata.bsplink.refund.loader.test.fixtures.Constants.TRANSACTION
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.TRANSACTION_NUMBER_2;
 import static org.iata.bsplink.refund.loader.test.fixtures.RefundDocumentFixtures.getTransactions;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -26,7 +25,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.OngoingStubbing;
-import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.boot.test.rule.OutputCapture;
@@ -34,7 +32,7 @@ import org.springframework.boot.test.rule.OutputCapture;
 @RunWith(MockitoJUnitRunner.class)
 public class RefundReaderTest {
 
-    private static final String TRANSACTIONS_READ_COUNT_KEY = "transactions_read_count";
+    private static final String READ_COUNT_KEY = RefundReader.class.getName() + ".read.count";
 
     @Mock
     private ItemReader<Record> delegate;
@@ -53,12 +51,7 @@ public class RefundReaderTest {
 
         reader = new RefundReader(delegate);
 
-        StepExecution stepExecution = mock(StepExecution.class);
         executionContext = new ExecutionContext();
-
-        when(stepExecution.getExecutionContext()).thenReturn(executionContext);
-
-        reader.beforeStep(stepExecution);
     }
 
     @Test
@@ -205,7 +198,8 @@ public class RefundReaderTest {
 
         configureDelegateMock();
 
-        executionContext.put(TRANSACTIONS_READ_COUNT_KEY, 1L);
+        executionContext.put(READ_COUNT_KEY, 1);
+        reader.open(executionContext);
 
         RefundDocument refund1 = reader.read();
         RefundDocument refund2 = reader.read();
@@ -223,15 +217,17 @@ public class RefundReaderTest {
         configureDelegateMock();
 
         reader.read();
+        reader.update(executionContext);
 
-        long firstReadCounter = executionContext.getLong(TRANSACTIONS_READ_COUNT_KEY);
+        int firstReadCounter = executionContext.getInt(READ_COUNT_KEY);
 
         reader.read();
+        reader.update(executionContext);
 
-        long secondReadCounter = executionContext.getLong(TRANSACTIONS_READ_COUNT_KEY);
+        int secondReadCounter = executionContext.getInt(READ_COUNT_KEY);
 
-        assertThat(firstReadCounter, equalTo(1L));
-        assertThat(secondReadCounter, equalTo(2L));
+        assertThat(firstReadCounter, equalTo(1));
+        assertThat(secondReadCounter, equalTo(2));
     }
 
 }
