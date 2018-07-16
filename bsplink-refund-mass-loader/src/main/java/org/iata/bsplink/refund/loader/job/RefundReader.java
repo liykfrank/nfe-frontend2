@@ -17,51 +17,31 @@ import org.iata.bsplink.refund.loader.model.record.RecordIt08;
 import org.iata.bsplink.refund.loader.model.record.RecordIt0h;
 import org.iata.bsplink.refund.loader.model.record.RecordIt0y;
 import org.iata.bsplink.refund.loader.model.record.RecordRawLine;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.annotation.BeforeStep;
-import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.support.AbstractItemCountingItemStreamItemReader;
 import org.springframework.stereotype.Component;
 
 @Component
 @Log
-public class RefundReader implements ItemReader<RefundDocument> {
-
-    private static final String TRANSACTIONS_READ_COUNT_KEY = "transactions_read_count";
+public class RefundReader extends AbstractItemCountingItemStreamItemReader<RefundDocument> {
 
     private ItemReader<Record> delegate;
     private Optional<RecordIt02> newTransaction = Optional.empty();
     private boolean readingTransaction = false;
-    private ExecutionContext executionContext;
-    private long currentTransactionsReadCount = 0;
 
+    /**
+     * Creates the reader using a delegate.
+     */
     public RefundReader(ItemReader<Record> delegate) {
 
         this.delegate = delegate;
-    }
-
-    @BeforeStep
-    public void beforeStep(StepExecution stepExecution) {
-
-        executionContext = stepExecution.getExecutionContext();
+        setName(this.getClass().getName());
     }
 
     @Override
-    public RefundDocument read() throws Exception {
-
-        skipAlreadyReadTransactions();
+    protected RefundDocument doRead() throws Exception {
 
         return readTransaction();
-    }
-
-    private void skipAlreadyReadTransactions() throws Exception {
-
-        long transactionsReadCount = executionContext.getLong(TRANSACTIONS_READ_COUNT_KEY, 0);
-
-        while (currentTransactionsReadCount < transactionsReadCount) {
-
-            readTransaction();
-        }
     }
 
     private RefundDocument readTransaction() throws Exception {
@@ -91,8 +71,6 @@ public class RefundReader implements ItemReader<RefundDocument> {
                 }
             }
         }
-
-        executionContext.put(TRANSACTIONS_READ_COUNT_KEY, ++currentTransactionsReadCount);
 
         return refund;
     }
@@ -149,6 +127,18 @@ public class RefundReader implements ItemReader<RefundDocument> {
                 break;
         }
 
+    }
+
+    @Override
+    protected void doOpen() throws Exception {
+
+        // do nothing
+    }
+
+    @Override
+    protected void doClose() throws Exception {
+
+        // do nothing
     }
 
 }
