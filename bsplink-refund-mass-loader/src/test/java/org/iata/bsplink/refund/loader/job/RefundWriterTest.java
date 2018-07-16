@@ -1,17 +1,20 @@
 package org.iata.bsplink.refund.loader.job;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.AIRLINE_CODE;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.ID;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.ISO_COUNTRY_CODE;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.TRANSACTION_NUMBER_1;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 import org.iata.bsplink.refund.loader.dto.Refund;
-import org.iata.bsplink.refund.loader.job.RefundWriter;
+import org.iata.bsplink.refund.loader.dto.RefundAmounts;
 import org.iata.bsplink.refund.loader.restclient.RefundClient;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -45,9 +48,15 @@ public class RefundWriterTest {
         writer = new RefundWriter(client);
 
         refundFromFile = createRefund();
+        refundFromFile.getAmounts().setGrossFare(BigDecimal.TEN);
+        refundFromFile.getAmounts().setRefundToPassenger(BigDecimal.TEN);
+        refundFromFile.setPassenger("PASS FROM FILE");
 
         refundToUpdate = createRefund();
         refundToUpdate.setId(ID);
+        refundToUpdate.getAmounts().setGrossFare(BigDecimal.ONE);
+        refundToUpdate.getAmounts().setRefundToPassenger(BigDecimal.ONE);
+        refundToUpdate.setPassenger("PASS TO UPDATE");
 
         when(client.findRefund(ISO_COUNTRY_CODE, AIRLINE_CODE, TRANSACTION_NUMBER_1))
                 .thenReturn(ResponseEntity.ok().body(refundToUpdate));
@@ -60,6 +69,7 @@ public class RefundWriterTest {
         refund.setIsoCountryCode(ISO_COUNTRY_CODE);
         refund.setAirlineCode(AIRLINE_CODE);
         refund.setTicketDocumentNumber(TRANSACTION_NUMBER_1);
+        refund.setAmounts(new RefundAmounts());
 
         return refund;
     }
@@ -70,6 +80,13 @@ public class RefundWriterTest {
         writer.write(Arrays.asList(refundFromFile));
 
         verify(client).updateRefund(ID, refundToUpdate);
+
+        assertThat(refundToUpdate.getId(), equalTo(ID));
+        assertThat(refundToUpdate.getPassenger(), equalTo(refundFromFile.getPassenger()));
+        assertThat(refundToUpdate.getAmounts().getGrossFare(),
+                equalTo(refundFromFile.getAmounts().getGrossFare()));
+        assertThat(refundToUpdate.getAmounts().getRefundToPassenger(),
+                equalTo(refundFromFile.getAmounts().getRefundToPassenger()));
     }
 
     @Test

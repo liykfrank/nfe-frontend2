@@ -5,8 +5,10 @@ import java.util.List;
 import lombok.extern.java.Log;
 
 import org.iata.bsplink.refund.loader.dto.Refund;
+import org.iata.bsplink.refund.loader.dto.RefundEditable;
 import org.iata.bsplink.refund.loader.restclient.RefundClient;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -51,6 +53,8 @@ public class RefundWriter implements ItemWriter<Refund> {
     private void update(Refund refundFromFile, Refund refundToUpdate) {
 
         // TODO: copy properties from refundFromFile to refundToUpdate
+
+        BeanUtils.copyProperties(refundFromFile, refundToUpdate, RefundEditable.class);
 
         client.updateRefund(refundToUpdate.getId(), refundToUpdate);
 
