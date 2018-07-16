@@ -20,6 +20,8 @@ public class RecordIt02FieldMappingTest extends RecordFieldMappingTestCase<Recor
 
         RecordIt02 record = readRecord();
 
+        assertThat(record.getRecordIdentifier(), equalTo(RecordIdentifier.IT02));
+        assertThat(record.getLineNumber(), equalTo(1));
         assertThat(record.getAgentNumericCode(), equalTo("23200903"));
         assertThat(record.getApprovedLocationNumericCode1(), equalTo("00000000"));
         assertThat(record.getApprovedLocationNumericCode2(), equalTo("00000000"));
