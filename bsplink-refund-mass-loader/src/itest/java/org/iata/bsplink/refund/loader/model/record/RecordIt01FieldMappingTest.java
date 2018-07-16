@@ -20,6 +20,8 @@ public class RecordIt01FieldMappingTest extends RecordFieldMappingTestCase<Recor
 
         RecordIt01 record = readRecord();
 
+        assertThat(record.getRecordIdentifier(), equalTo(RecordIdentifier.IT01));
+        assertThat(record.getLineNumber(), equalTo(1));
         assertThat(record.getFileType(), isEmptyString());
         assertThat(record.getFileTypeSequenceNumber(), isEmptyString());
         assertThat(record.getHandbookRevisionNumber(), equalTo("203"));
