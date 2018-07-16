@@ -52,8 +52,6 @@ public class RefundWriter implements ItemWriter<Refund> {
 
     private void update(Refund refundFromFile, Refund refundToUpdate) {
 
-        // TODO: copy properties from refundFromFile to refundToUpdate
-
         BeanUtils.copyProperties(refundFromFile, refundToUpdate, RefundEditable.class);
 
         client.updateRefund(refundToUpdate.getId(), refundToUpdate);
