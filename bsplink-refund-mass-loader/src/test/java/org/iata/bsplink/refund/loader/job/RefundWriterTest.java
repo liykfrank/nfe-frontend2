@@ -15,6 +15,7 @@ import java.util.Arrays;
 
 import org.iata.bsplink.refund.loader.dto.Refund;
 import org.iata.bsplink.refund.loader.dto.RefundAmounts;
+import org.iata.bsplink.refund.loader.dto.RefundStatus;
 import org.iata.bsplink.refund.loader.restclient.RefundClient;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -51,6 +52,7 @@ public class RefundWriterTest {
         refundFromFile.getAmounts().setGrossFare(BigDecimal.TEN);
         refundFromFile.getAmounts().setRefundToPassenger(BigDecimal.TEN);
         refundFromFile.setPassenger("PASS FROM FILE");
+        refundFromFile.setStatus(RefundStatus.AUTHORIZED);
 
         refundToUpdate = createRefund();
         refundToUpdate.setId(ID);
@@ -79,7 +81,7 @@ public class RefundWriterTest {
 
         writer.write(Arrays.asList(refundFromFile));
 
-        verify(client).updateRefund(ID, refundToUpdate);
+        verify(client).updateRefund(ID, null, refundToUpdate);
 
         assertThat(refundToUpdate.getId(), equalTo(ID));
         assertThat(refundToUpdate.getPassenger(), equalTo(refundFromFile.getPassenger()));
