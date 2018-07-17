@@ -1,11 +1,13 @@
 package org.iata.bsplink.refund.loader.restclient;
 
 import org.iata.bsplink.refund.loader.dto.Refund;
+import org.iata.bsplink.refund.loader.dto.RefundStatusRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,7 +23,15 @@ public interface RefundClient {
             @RequestParam(value = "airlineCode") String airlineCode,
             @RequestParam(value = "ticketDocumentNumber") String ticketDocumentNumber);
 
-    @PutMapping("/indirects/{refundId}")
-    void updateRefund(@PathVariable("refundId") Long refundId, Refund refund);
+    @PutMapping(value = "/indirects/{refundId}", params = "fileName")
+    void updateRefund(
+            @PathVariable("refundId") Long refundId,
+            @RequestParam(value = "fileName") String fileName,
+            Refund refund);
 
+    @PostMapping(value = "/indirects/{refundId}/status", params = "fileName")
+    void updateStatus(
+            @PathVariable("refundId") Long refundId,
+            @RequestParam(value = "fileName") String fileName,
+            RefundStatusRequest refundStatusRequest);
 }

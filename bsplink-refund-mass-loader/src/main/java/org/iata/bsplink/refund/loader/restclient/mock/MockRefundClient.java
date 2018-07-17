@@ -3,6 +3,7 @@ package org.iata.bsplink.refund.loader.restclient.mock;
 import lombok.extern.java.Log;
 
 import org.iata.bsplink.refund.loader.dto.Refund;
+import org.iata.bsplink.refund.loader.dto.RefundStatusRequest;
 import org.iata.bsplink.refund.loader.restclient.RefundClient;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +41,15 @@ public class MockRefundClient implements RefundClient {
     }
 
     @Override
-    public void updateRefund(Long refundId, Refund refund) {
+    public void updateRefund(Long refundId, String fileName, Refund refund) {
 
         log.info(String.format("calling: updateRefund(%s, %s);", refundId, refund));
+    }
+
+    @Override
+    public void updateStatus(Long refundId, String fileName, RefundStatusRequest statusRequest) {
+
+        log.info(String.format("calling: updateRefund(%s, %s);", refundId, statusRequest));
     }
 
 }
