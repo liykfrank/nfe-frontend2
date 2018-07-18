@@ -1,11 +1,9 @@
 package org.iata.bsplink.refund.loader.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.ToString;
 
-@Getter
-@Setter
+@Data
 @ToString
 public class RefundStatusRequest {
 
