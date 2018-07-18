@@ -13,7 +13,8 @@ public class RecordIt0yLayout extends RecordBaseLayout {
 
     @Override
     protected void setFieldsLayout(Map<String, String> fieldsLayout) {
-        // nothing to do
+
+        fieldsLayout.put("transactionNumber", "2-7");
     }
 
 }

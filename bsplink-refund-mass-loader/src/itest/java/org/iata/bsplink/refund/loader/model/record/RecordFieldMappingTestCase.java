@@ -68,6 +68,8 @@ public abstract class RecordFieldMappingTestCase<T extends Record> {
                 .thenReturn(new RecordIt0y());
         when(beanFactory.getBean(Mockito.argThat(new RequestBeanWithName("recordIt0h"))))
                 .thenReturn(new RecordIt0h());
+        when(beanFactory.getBean(Mockito.argThat(new RequestBeanWithName("recordIt0z"))))
+                .thenReturn(new RecordIt0z());
         when(beanFactory.getBean(Mockito.argThat(new RequestBeanWithName("recordRawLine"))))
                 .thenReturn(new RecordRawLine());
 
