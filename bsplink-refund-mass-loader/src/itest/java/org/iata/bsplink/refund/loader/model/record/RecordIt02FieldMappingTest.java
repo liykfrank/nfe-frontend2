@@ -39,13 +39,13 @@ public class RecordIt02FieldMappingTest extends RecordFieldMappingTestCase<Recor
         assertThat(record.getDataInputStatusIndicator(), equalTo("M"));
         assertThat(record.getDateOfIssue(), equalTo("170412"));
         assertThat(record.getFormatIdentifier(), isEmptyString());
-        assertThat(record.getStockSetStockControlNumberFrom1(), isEmptyString());// TODO: name?
-        assertThat(record.getStockSetStockControlNumberFrom2(), isEmptyString());
-        assertThat(record.getStockSetStockControlNumberFrom3(), isEmptyString());
-        assertThat(record.getStockSetStockControlNumberTo1(), equalTo("0000"));
-        assertThat(record.getStockSetStockControlNumberTo2(), equalTo("0000"));
-        assertThat(record.getStockSetStockControlNumberTo3(), equalTo("0000"));
-        assertThat(record.getStockSetStockControlNumberTo4(), equalTo("0000"));
+        assertThat(record.getStockControlNumberFrom1(), isEmptyString());
+        assertThat(record.getStockControlNumberFrom2(), isEmptyString());
+        assertThat(record.getStockControlNumberFrom3(), isEmptyString());
+        assertThat(record.getStockControlNumberTo1(), equalTo("0000"));
+        assertThat(record.getStockControlNumberTo2(), equalTo("0000"));
+        assertThat(record.getStockControlNumberTo3(), equalTo("0000"));
+        assertThat(record.getStockControlNumberTo4(), equalTo("0000"));
         assertThat(record.getIsoCountryCode(), equalTo("AL"));
         assertThat(record.getPassengerName(), equalTo("SDFX"));
         assertThat(record.getRefundApplicationStatus(), equalTo("A"));
