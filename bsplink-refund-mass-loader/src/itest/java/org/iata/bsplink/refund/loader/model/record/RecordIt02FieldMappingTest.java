@@ -54,12 +54,12 @@ public class RecordIt02FieldMappingTest extends RecordFieldMappingTestCase<Recor
         assertThat(record.getStockControlNumber(), isEmptyString());
         assertThat(record.getTicketDocumentNumber(), equalTo("0745200000047"));
         assertThat(record.getTicketingAirlineCodeNumber(), equalTo("074"));
-        assertThat(record.getTransactionCode(), equalTo("RFND")); // TODO: check if it's correct
+        assertThat(record.getTransactionCode(), equalTo("RFND"));
         assertThat(record.getTransactionNumber(), equalTo("000001"));
         assertThat(record.getTransmissionControlNumber(), isEmptyString());
         assertThat(record.getTransmissionControlNumberCheckDigit(), equalTo("0"));
         assertThat(record.getVendorIdentification(), isEmptyString());
-        assertThat(record.getVendorIsoCountryCode(), isEmptyString()); //TODO: check if it's correct
+        assertThat(record.getVendorIsoCountryCode(), isEmptyString());
 
     }
 

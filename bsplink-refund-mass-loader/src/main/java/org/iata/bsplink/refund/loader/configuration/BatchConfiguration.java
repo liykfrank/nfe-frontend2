@@ -13,24 +13,15 @@ import org.iata.bsplink.refund.loader.job.JobCompletionNotificationListener;
 import org.iata.bsplink.refund.loader.mapper.LineNumberAwarePatternMatchingCompositeLineMapper;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.Record;
-import org.iata.bsplink.refund.loader.model.record.RecordIt01;
 import org.iata.bsplink.refund.loader.model.record.RecordIt01Layout;
-import org.iata.bsplink.refund.loader.model.record.RecordIt02;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02Layout;
-import org.iata.bsplink.refund.loader.model.record.RecordIt03;
 import org.iata.bsplink.refund.loader.model.record.RecordIt03Layout;
-import org.iata.bsplink.refund.loader.model.record.RecordIt05;
 import org.iata.bsplink.refund.loader.model.record.RecordIt05Layout;
-import org.iata.bsplink.refund.loader.model.record.RecordIt08;
 import org.iata.bsplink.refund.loader.model.record.RecordIt08Layout;
-import org.iata.bsplink.refund.loader.model.record.RecordIt0h;
 import org.iata.bsplink.refund.loader.model.record.RecordIt0hLayout;
-import org.iata.bsplink.refund.loader.model.record.RecordIt0y;
 import org.iata.bsplink.refund.loader.model.record.RecordIt0yLayout;
-import org.iata.bsplink.refund.loader.model.record.RecordIt0z;
 import org.iata.bsplink.refund.loader.model.record.RecordIt0zLayout;
 import org.iata.bsplink.refund.loader.model.record.RecordLayout;
-import org.iata.bsplink.refund.loader.model.record.RecordRawLine;
 import org.iata.bsplink.refund.loader.model.record.RecordRawLineLayout;
 import org.iata.bsplink.refund.loader.validation.RefundLoaderParametersValidator;
 import org.springframework.batch.core.Job;
@@ -52,10 +43,8 @@ import org.springframework.batch.item.file.transform.Range;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
 
 @Configuration
@@ -254,69 +243,6 @@ public class BatchConfiguration {
         }
 
         return fieldSetMappers;
-    }
-
-    @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public Record recordIt01() {
-
-        return new RecordIt01();
-    }
-
-    @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public Record recordIt02() {
-
-        return new RecordIt02();
-    }
-
-    @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public Record recordIt03() {
-
-        return new RecordIt03();
-    }
-
-    @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public Record recordIt05() {
-
-        return new RecordIt05();
-    }
-
-    @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public Record recordIt08() {
-
-        return new RecordIt08();
-    }
-
-    @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public Record recordIt0y() {
-
-        return new RecordIt0y();
-    }
-
-    @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public Record recordIt0h() {
-
-        return new RecordIt0h();
-    }
-
-    @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public Record recordIt0z() {
-
-        return new RecordIt0z();
-    }
-
-    @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public Record recordRawLine() {
-
-        return new RecordRawLine();
     }
 
     @Bean
