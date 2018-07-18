@@ -8,10 +8,12 @@ import org.junit.Test;
 
 public class RecordIt02FieldMappingTest extends RecordFieldMappingTestCase<RecordIt02> {
 
+    private static final String RECORD_FILE_NAME = "IT02";
+
     @Override
     String getRecordFileName() {
 
-        return "IT02_ALe9EARS_20170410_0744_016";
+        return RECORD_FILE_NAME;
     }
 
     @Override

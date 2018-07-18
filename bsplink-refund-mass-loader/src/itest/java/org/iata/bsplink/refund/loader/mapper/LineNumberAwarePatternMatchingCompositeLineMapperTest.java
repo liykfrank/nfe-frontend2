@@ -15,6 +15,8 @@ import org.springframework.beans.factory.BeanFactory;
 
 public class LineNumberAwarePatternMatchingCompositeLineMapperTest {
 
+    private static final String RECORD_FIXTURE_FILE_NAME = "IT01";
+
     @Test
     public void testSetsLineNumber() throws Exception {
 
@@ -25,7 +27,7 @@ public class LineNumberAwarePatternMatchingCompositeLineMapperTest {
 
     private String getLine() throws Exception {
 
-        return readRecordFixtureToString("IT01_ALe9EARS_20170410_0744_016");
+        return readRecordFixtureToString(RECORD_FIXTURE_FILE_NAME);
     }
 
     private LineMapper<Record> getMapper() {
