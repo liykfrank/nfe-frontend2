@@ -1,6 +1,8 @@
 package org.iata.bsplink.refund.controller;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.iata.bsplink.refund.test.fixtures.RefundFixtures.getRefunds;
@@ -58,6 +60,7 @@ import org.iata.bsplink.refund.validation.AirlineValidator;
 import org.iata.bsplink.refund.validation.CountryValidator;
 import org.iata.bsplink.refund.validation.CurrencyValidator;
 import org.iata.bsplink.refund.validation.IssuePermissionValidator;
+import org.iata.bsplink.refund.validation.MassloadFileNameValidator;
 import org.iata.bsplink.refund.validation.MassloadValidator;
 import org.iata.bsplink.refund.validation.PartialRefundValidator;
 import org.iata.bsplink.refund.validation.RefundCompositeValidator;
@@ -936,20 +939,30 @@ public class RefundControllerTest {
     }
 
     @Test
-    public void testUpdateRefundWithFileNameBadRequest() throws Exception {
+    public void testUpdateRefundWithFileNameNotFound() throws Exception {
         Refund refundWithId = refundRepository.save(refund);
         Refund refundCopied = saveAndCopyRefund();
         refundCopied.setStatus(RefundStatus.DRAFT);
 
         mockMvc.perform(put(BASE_URI + "/" + refundWithId.getId() + "?fileName=" + massloadFileName)
                 .content(mapper.writeValueAsString(refundCopied))
-                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message", equalTo("Validation error")))
-                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("status")))
-                .andExpect(jsonPath("$.validationErrors[0].message",
-                        equalTo(MassloadValidator.INCORRECT_STATUS)));
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
+    @Test
+    public void testUpdateRefundWithFileNameBadRequestIncorrectAirline() throws Exception {
+        refund.setAirlineCode("123");
+        Refund refundWithId = refundRepository.save(refund);
+        Refund refundCopied = saveAndCopyRefund();
+        mockMvc.perform(put(BASE_URI + "/" + refundWithId.getId()
+                + "?fileName=" + massloadFileName)
+                .content(mapper.writeValueAsString(refundCopied))
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", equalTo("Validation error")))
+                .andExpect(jsonPath("$.validationErrors[0].fieldName", nullValue()))
+                .andExpect(jsonPath("$.validationErrors[0].message",
+                        equalTo(MassloadFileNameValidator.INCORRECT_AIRLINE)));
+    }
 
     @Test
     public void testSaveIndirectRefundWithAuthorizedStatus() throws Exception {
@@ -965,9 +978,6 @@ public class RefundControllerTest {
     @Test
     public void testUpdateRefundWithFileName() throws Exception {
         Refund refundWithId = refundRepository.save(refund);
-
-        System.out.println(refundWithId);
-
         Refund refundUpdate = new Refund();
 
         BeanUtils.copyProperties(refundUpdate, refundWithId);
@@ -1014,4 +1024,48 @@ public class RefundControllerTest {
                 .anyMatch(h -> massloadFileName.equals(h.getFileName())));
     }
 
+
+    @Test
+    public void testChangeRefundStatusViaMassloadFileName() throws Exception {
+        refundRepository.save(refund);
+        RefundStatusRequest request = getRefundStatusRequest();
+        mockMvc.perform(post(BASE_URI + "/" + refund.getId() + "/status?fileName="
+                + massloadFileName).content(mapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+
+        assertThat(refund.getStatus(), equalTo(request.getStatus()));
+        assertTrue(refundHistoryService.findByRefundId(refund.getId()).stream()
+                .anyMatch(h -> massloadFileName.equals(h.getFileName())));
+    }
+
+    @Test
+    public void testChangeRefundStatusViaMassloadFileNameNotFound() throws Exception {
+        RefundStatusRequest request = getRefundStatusRequest();
+        mockMvc.perform(post(BASE_URI + "/777888/status?fileName="
+                + massloadFileName).content(mapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testChangeRefundStatusViaMassloadFileNameNotFoundBecauseOfStatus()
+            throws Exception {
+        refund.setStatus(RefundStatus.DRAFT);
+        refundRepository.save(refund);
+        RefundStatusRequest request = getRefundStatusRequest();
+        mockMvc.perform(post(BASE_URI + "/" + refund.getId() + "/status?fileName="
+                + massloadFileName).content(mapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    public void testChangeRefundStatusViaMassloadFileNameIncorrectAirline() throws Exception {
+        refund.setAirlineCode("123");
+        refundRepository.save(refund);
+        RefundStatusRequest request = getRefundStatusRequest();
+        mockMvc.perform(post(BASE_URI + "/" + refund.getId() + "/status?fileName="
+                + massloadFileName).content(mapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+        assertThat(refund.getStatus(), not(equalTo(request.getStatus())));
+    }
 }

@@ -33,6 +33,7 @@ import org.iata.bsplink.refund.validation.AirlineValidator;
 import org.iata.bsplink.refund.validation.CountryValidator;
 import org.iata.bsplink.refund.validation.CurrencyValidator;
 import org.iata.bsplink.refund.validation.IssuePermissionValidator;
+import org.iata.bsplink.refund.validation.MassloadFileNameValidator;
 import org.iata.bsplink.refund.validation.MassloadValidator;
 import org.iata.bsplink.refund.validation.PartialRefundValidator;
 import org.iata.bsplink.refund.validation.RefundCompositeValidator;
@@ -106,6 +107,9 @@ public class RefundController {
 
     @Autowired
     private MassloadValidator massloadValidator;
+
+    @Autowired
+    private MassloadFileNameValidator fileNameValidator;
 
     private static final String RESPONDING_WITH = "responding with response: ";
 
@@ -325,7 +329,13 @@ public class RefundController {
             return ResponseEntity.notFound().build();
         }
 
-        refundService.deleteIndirectRefund(optionalRefund.get());
+        Refund refund = optionalRefund.get();
+        if (!(RefundStatus.DRAFT.equals(refund.getStatus())
+                || RefundStatus.PENDING.equals(refund.getStatus())
+                || RefundStatus.PENDING_SUPERVISION.equals(refund.getStatus()))) {
+            return ResponseEntity.badRequest().build();
+        }
+        refundService.deleteIndirectRefund(refund);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -373,19 +383,19 @@ public class RefundController {
     public ResponseEntity<Refund> changeRefundStatus(@PathVariable(value = "id") Refund refund,
             @Valid @RequestBody RefundStatusRequest refundStatusRequest, Errors errors) {
 
-        log.info("received request to change refund's status: " + refund);       
+        log.info("received request to change refund's status: " + refund);
 
         if (refund == null) {
             return ResponseEntity.notFound().build();
         }
-        
+
         if (refundStatusRequest.getStatus().equals(RefundStatus.PENDING)) {
             issuePermissionValidator.validate(refund, errors);
         }
-        
+
         if (errors.hasErrors()) {
             throw new ApplicationValidationException(errors);
-        }      
+        }
 
         refundStatusValidator.validate(refund, refundStatusRequest, errors);
 
@@ -418,16 +428,21 @@ public class RefundController {
     }
 
     /**
-     * Updates an Indirect Refund.
+     * Updates an Indirect Refund via massload file.
      */
     @PutMapping(value = "/{id}", params = "fileName")
-    @ApiOperation(value = "Updates an Indirect Refund")
+    @ApiOperation(value = "Updates an Indirect Refund via massload file")
     @ApiImplicitParams({@ApiImplicitParam(name = "body", value = "The Indirect Refund to update.",
             paramType = "body", required = true, dataType = "Refund")})
     public ResponseEntity<Refund> updateRefundViaMassload(
             @PathVariable(value = "id", required = true) Long id,
             @RequestParam(required = true) String fileName,
             @Valid @RequestBody(required = true) Refund refund, Errors errors) {
+
+        if (refund == null || RefundStatus.DRAFT.equals(refund.getStatus())
+                || RefundStatus.PENDING_SUPERVISION.equals(refund.getStatus())) {
+            return ResponseEntity.notFound().build();
+        }
 
         Refund newRefund = massloadValidator.validate(id, refund, fileName, errors);
 
@@ -437,5 +452,51 @@ public class RefundController {
 
         refundService.updateIndirectRefund(newRefund, fileName);
         return ResponseEntity.status(HttpStatus.OK).body(newRefund);
+    }
+
+
+    /**
+     * Updates refund's status via massload file.
+     *
+     * @param refund To update
+     * @param refundStatusRequest New status
+     * @param errors list of errors
+     * @return Refund updated refund
+     */
+    @ApiOperation("Changes refund's status via massload file")
+    @PostMapping(value = "/{id}/status", params = "fileName")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "body", value = "New status", paramType = "body",
+                    required = true, dataType = "RefundStatusRequest"),
+            @ApiImplicitParam(name = "id", value = "The identifier of the refund", required = true,
+                    type = "Long")})
+    @ResponseBody
+    public ResponseEntity<Refund> changeRefundStatusViaMassload(
+            @RequestParam(required = true) String fileName,
+            @PathVariable(value = "id") Refund refund,
+            @Valid @RequestBody RefundStatusRequest refundStatusRequest,
+            Errors errors) {
+
+        log.info("received request to change refund's status via massload file: "
+                + refund + " " + fileName);
+
+        if (refund == null || RefundStatus.DRAFT.equals(refund.getStatus())
+                || RefundStatus.PENDING_SUPERVISION.equals(refund.getStatus())) {
+            return ResponseEntity.notFound().build();
+        }
+
+        fileNameValidator.validate(refund, fileName, errors);
+
+        if (errors.hasErrors()) {
+            throw new ApplicationValidationException(errors);
+        }
+
+        refundStatusValidator.validate(refund, refundStatusRequest, errors);
+
+        Refund updatedRefund = refundService.updateIndirectRefund(refund, fileName);
+
+        log.info(RESPONDING_WITH + updatedRefund);
+
+        return ResponseEntity.status(HttpStatus.OK).body(updatedRefund);
     }
 }
