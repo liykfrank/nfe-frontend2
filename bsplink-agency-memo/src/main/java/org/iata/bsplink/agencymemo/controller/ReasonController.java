@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/reasons")
+@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*")
 public class ReasonController {
 
     @Autowired
