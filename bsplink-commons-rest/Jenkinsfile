@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-env.sourceBranch = env.gitlabSourceBranch ?: 'develop'
+env.sourceBranch = env.gitlabSourceBranch ?: 'master'
 env.gitlabRepositoryUrl = env.gitlabSourceRepoHttpUrl ?: 'http://gitlab.nfedev.accelya.com/bsplink/bsplink-commons-rest.git'
 
 echo "[INFO] Source Branch: ${env.sourceBranch}"
@@ -71,7 +71,7 @@ pipeline {
 			}
 		}
         
-        stage('Push to IATA repository') {
+	stage('Push to IATA repository') {
 			when{
 				expression{
 					return env.sourceBranch == 'master'
