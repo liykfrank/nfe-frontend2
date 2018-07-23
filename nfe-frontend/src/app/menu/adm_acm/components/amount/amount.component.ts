@@ -48,6 +48,8 @@ export class AmountComponent extends NwAbstractComponent implements OnInit {
   private checkNR: boolean = false;
   /* Data to service */
 
+  private TAX_PATTERN = /^(([O][ABC][A-Z0-9./-]{0,6})|([A-Z0-9]{2})|([X][F](([A-Z]{3})([0-9]{1,3})?)?))$/;
+
   constructor(injector: Injector, private _AdmAcmService: AdmAcmService, private _AmountService: AmountService) {
     super(injector);
 
@@ -84,7 +86,7 @@ export class AmountComponent extends NwAbstractComponent implements OnInit {
     });
 
     this._AdmAcmService.getSubtype().subscribe(value => {
-      const list = ['ADMD', 'ACMD'];
+      let list = ['SPDR', 'SPCR', 'ACMA', 'ACMD'];
       this.subType = value;
       this.typeSimpleView = list.indexOf(value) >= 0;
 
@@ -138,6 +140,10 @@ export class AmountComponent extends NwAbstractComponent implements OnInit {
     return event;
   }
 
+  checkSimpleView() {
+    return !this.typeSimpleView;
+  }
+
   clean() {
     this.taxes = [this.getEmptyInput()];
     this._AmountService.setTaxMiscellaneousFees([]);
@@ -151,6 +157,9 @@ export class AmountComponent extends NwAbstractComponent implements OnInit {
   }
 
   validateName(pos: number): void {
+    this.taxes[pos].name = this.taxes[pos].name.toUpperCase();
+    this.taxes[pos].name = this.TAX_PATTERN.test(this.taxes[pos].name) ? this.taxes[pos].name : '';
+
     if (!this.showCPTax && this.taxes[pos].name == 'CP') {
       this.taxes[pos].name = '';
     }
@@ -166,8 +175,8 @@ export class AmountComponent extends NwAbstractComponent implements OnInit {
     console.log('on populate');
   }
 
-  simpleCalculateFare(event: any) {
-    const total: number = event.args.owner.decimal;
+  simpleCalculateFare() {
+    const total = this.total;
 
     if (this.isADM) {
       this.airlineCalculations.fare = total;
@@ -308,7 +317,7 @@ export class AmountComponent extends NwAbstractComponent implements OnInit {
     return ret;
   }
 
-  private showMFTaxOnScreen(): boolean{
+  private showMFTaxOnScreen(): boolean {
     const ret = (this.conf.mfPermittedForConcerningIssue && this.spdrType == 'I') ||
                   (this.conf.mfPermittedForConcerningRefund && this.spdrType == 'R');
 

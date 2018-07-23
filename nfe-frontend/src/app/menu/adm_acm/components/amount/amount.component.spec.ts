@@ -94,11 +94,7 @@ describe('AmountComponent', () => {
     _AmountService.setAirlineCalculations.calls.reset();
     _AmountService.setAirlineCalculations.and.returnValue(Observable.of({}));
 
-    const ev: any = {};
-    ev.args = {};
-    ev.args.owner = {};
-    ev.args.owner.decimal = 1;
-    component.simpleCalculateFare(ev);
+    component.simpleCalculateFare();
     expect(_AmountService.setAirlineCalculations.calls.count()).toBe(1);
   });
 
@@ -107,11 +103,7 @@ describe('AmountComponent', () => {
     _AmountService.setAgentCalculations.calls.reset();
     _AmountService.setAgentCalculations.and.returnValue(Observable.of({}));
 
-    const ev: any = {};
-    ev.args = {};
-    ev.args.owner = {};
-    ev.args.owner.decimal = 1;
-    component.simpleCalculateFare(ev);
+    component.simpleCalculateFare();
     expect(_AmountService.setAgentCalculations.calls.count()).toBe(1);
   });
 

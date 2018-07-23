@@ -169,7 +169,7 @@ describe('BasicInfoComponent', () => {
     _BISvc.setBasicInfo.and.returnValue(Observable.of({}));
     _AdmAcmService.setSpan.and.returnValue(Observable.of({}));
 
-    component.setNetReporting(false);
+    component.setNetReporting();
 
     expect(_AdmAcmService.setSpan.calls.count()).toBe(1, '_AdmAcmService.setSpan error');
     expect(_BISvc.setBasicInfo.calls.count()).toBe(1, '_BISvc.setBasicInfo error');

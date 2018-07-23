@@ -6,20 +6,22 @@
   <span>{{ currency }}</span>
 </div>
 
-<div *ngIf="typeSimpleView">
+<div *ngIf="checkSimpleView()">
   <div class="form-entry">
-    <label l10nTranslate>ADM_ACM.BASIC_INFO.fare</label>
+    <label l10nTranslate>ADM_ACM.AMOUNT.fare</label>
     <div class="input-content">
-      <input
-        class='input-custom-number amount-table'
-        min='0'
-        type='number'
-        (change)="simpleCalculateFare($event)"/>
+      <input class='input-custom-number amount-table'
+        type='text' 
+        [ngModel]="total" 
+        (ngModelChange)="total = assignData($event)"
+        decimalsFormatterDirective 
+        [decimals]="decimals"
+        (blur)="simpleCalculateFare()"/>
     </div>
   </div>
 </div>
 
-<div *ngIf="!typeSimpleView">
+<div *ngIf="!checkSimpleView()">
   <div class="table-container">
     <table class="table-amount">
       <thead>
@@ -225,43 +227,35 @@
       <tbody>
         <tr *ngFor="let item of taxes; let i=index" >
           <td>
-            <input
-              class='input-custom'
+            <input class='input-custom'
               [(ngModel)]="item.name"
-              pattern="^(([A-WY-Z][A-Z])|([A-Z][A-SU-Z])|(O[ABC][A-Z0-9 ./-]{0,6})|(XF[A-Z]{3}[0-9]*[1-9][0-9]*(\\.[0-9]+)?)|(XF[A-Z]{3}[0-9]+(\\.[0-9]*[1-9][0-9]*)?))$"
-              (change)="validateName(i)"
-            />
+              maxlength="8"
+              (change)="validateName(i)"/>
           </td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
               [ngModel]="item.agentValue"
               (ngModelChange)="item.agentValue = assignData($event)"
               decimalsFormatterDirective
               [decimals]="decimals"
-              (change)="calculateOnTax()"
-            />
+              (change)="calculateOnTax()"/>
           </td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
               [ngModel]="item.airlineValue"
               (ngModelChange)="item.airlineValue = assignData($event)"
               decimalsFormatterDirective
               [decimals]="decimals"
-              (change)="calculateOnTax()"
-            />
+              (change)="calculateOnTax()"/>
           </td>
           <td>
 
-            <input
-              class='input-custom-number-float-left amount-table'
+            <input class='input-custom-number-float-left amount-table'
               type='text'
               [value]="item.dif | abs | decimalsFormatter:decimals"
-              readonly="true"
-            />
+              readonly="true"/>
 
             <button class="button-bin-float-right" (click)="removeTax(i)">
               <i class="fa fa-trash-o fa-lg"></i>

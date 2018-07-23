@@ -220,8 +220,8 @@ export class BasicInfoService {
   public getStatList(): KeyValue[] {
     const list: KeyValue[] = [];
 
-    list.push({ code: 'D', description: 'DOM' });
-    list.push({ code: 'I', description: 'INT' });
+    list.push({ code: 'DOM', description: 'DOM' });
+    list.push({ code: 'INT', description: 'INT' });
 
     return list;
   }

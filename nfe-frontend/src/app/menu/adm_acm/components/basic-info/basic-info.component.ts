@@ -86,6 +86,10 @@ export class BasicInfoComponent extends NwAbstractComponent implements OnInit {
           this.basicInfo.agentVatNumber = '';
         }
 
+        if (data.defaultStat) {
+          this.basicInfo.stat = data.defaultStat;
+        }
+
         if (!data.airlineVatNumberEnabled) {
           this.basicInfo.airlineVatNumber = '';
         }
@@ -316,8 +320,8 @@ export class BasicInfoComponent extends NwAbstractComponent implements OnInit {
     this.register();
   }
 
-  setNetReporting(value: boolean) {
-    this._AdmAcmService.setSpan(value);
+  setNetReporting() {
+    this._AdmAcmService.setSpan(this.basicInfo.netReporting);
     this.register();
   }
 
