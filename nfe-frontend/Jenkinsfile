@@ -70,11 +70,11 @@ pipeline {
 	  	}
 
         stage('Push to IATA repository') {
-			when{
-				expression{
-					return env.sourceBranch == 'master'
-				}
-  			}
+		    //when{
+			//	expression{
+			//		return env.sourceBranch == 'master'
+			//	}
+  			//}
             steps {
             	// this shell script is located in <JENKINS_HOME>/bin folder and the PATH is configured through jenkins
                 sh 'push_to_iata.bash $WORKSPACE $JOB_BASE_NAME'
