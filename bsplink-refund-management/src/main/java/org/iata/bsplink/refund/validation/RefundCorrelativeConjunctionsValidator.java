@@ -38,7 +38,7 @@ public class RefundCorrelativeConjunctionsValidator extends RefundBaseValidator 
 
     private boolean numbersAreCorrelatives(List<String> documentNumbers) {
 
-        Integer expectedNumber = null;
+        Long expectedNumber = null;
 
         for (String documentNumber : documentNumbers) {
 
@@ -47,7 +47,7 @@ public class RefundCorrelativeConjunctionsValidator extends RefundBaseValidator 
                 return false;
             }
 
-            int currentNumber = Integer.parseInt(documentNumber);
+            long currentNumber = Long.parseLong(documentNumber);
 
             expectedNumber = expectedNumber == null ? currentNumber : expectedNumber + 1;
 

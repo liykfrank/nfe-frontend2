@@ -3,6 +3,7 @@ package org.iata.bsplink.refund.validation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -126,5 +127,22 @@ public class RefundMaxConjunctionsValidatorTest {
             { getConjunctionsList(MAX_CONJUNCTIONS - 1), false },
             { getConjunctionsList(MAX_CONJUNCTIONS + 1), true },
         };
+    }
+
+    @Test
+    public void testCanManageNullValueInConjuntions() {
+
+        refund.setConjunctions(null);
+
+        try {
+
+            validator.validate(refund, errors);
+
+        } catch (NullPointerException exception) {
+
+            fail("The validator should be able to manage null value in conjunctions");
+        }
+
+        assertFalse(errors.hasErrors());
     }
 }

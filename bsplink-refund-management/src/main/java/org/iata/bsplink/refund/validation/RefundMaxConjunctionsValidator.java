@@ -21,7 +21,8 @@ public class RefundMaxConjunctionsValidator extends RefundBaseValidator {
     public void validate(Refund refund, Errors errors, Config countryConfig) {
 
         int maxConjunctions = countryConfig.getMaxConjunctions();
-        int totalConjunctions = refund.getConjunctions().size();
+        int totalConjunctions =
+                refund.getConjunctions() == null ? 0 : refund.getConjunctions().size();
 
         if (totalConjunctions > maxConjunctions) {
 

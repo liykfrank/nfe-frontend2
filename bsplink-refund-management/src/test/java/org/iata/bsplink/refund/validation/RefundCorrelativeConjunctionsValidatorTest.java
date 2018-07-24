@@ -3,6 +3,7 @@ package org.iata.bsplink.refund.validation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -135,5 +136,35 @@ public class RefundCorrelativeConjunctionsValidatorTest {
             { relatedDocumentNan, correlativeConjunctions, true },
             { new RelatedDocument(), correlativeConjunctions, true }
         };
+    }
+
+    @Test
+    public void testResultIsValidIfConjuntionsAreCorrect() {
+
+        refund.setRelatedDocument(createRelatedDocument("123450"));
+        refund.setConjunctions(
+                Arrays.asList(createRelatedDocument("123451"), createRelatedDocument("123452")));
+
+        validator.validate(refund, errors);
+
+        assertFalse(errors.hasErrors());
+    }
+
+    @Test
+    public void testCanManageBigDocumentNumbers() {
+
+        refund.setRelatedDocument(createRelatedDocument("100000000123450"));
+        refund.setConjunctions(Arrays.asList(
+                createRelatedDocument("100000000123451"),
+                createRelatedDocument("100000000123452")));
+
+        try {
+
+            validator.validate(refund, errors);
+
+        } catch (NumberFormatException exception) {
+
+            fail("Validation should be able to manage big document numbers");
+        }
     }
 }
