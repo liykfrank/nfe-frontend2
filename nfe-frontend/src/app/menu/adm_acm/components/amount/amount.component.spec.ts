@@ -79,10 +79,6 @@ describe('AmountComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('assignData', () => {
-    expect(component.assignData(3)).toBe(3);
-  });
-
   it('validateName', () => {
     component.taxes[0].name = 'AA';
     component.taxes[0].agentValue = 1;

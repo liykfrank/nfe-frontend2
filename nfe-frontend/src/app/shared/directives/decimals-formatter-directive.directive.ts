@@ -7,8 +7,9 @@ import { DecimalsFormatterPipe } from './decimals-formatter.pipe';
 export class DecimalsFormatterDirectiveDirective implements OnInit, OnChanges {
 
   private el: HTMLInputElement;
+  private value_aux;
 
-  @Input() decimals: number;
+  @Input() decimals: number = 0;
 
   constructor(
     private elemntRef: ElementRef,
@@ -23,11 +24,12 @@ export class DecimalsFormatterDirectiveDirective implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.decimals) {
-      this.setValueWithDecimals();
+      this.setValueWithDecimals(true);
     }
   }
 
-  setValueWithDecimals() {
+  setValueWithDecimals(fromOnChange?: boolean) {
+    this.el.value = fromOnChange ? '0' : this.el.value;
     let transformed = this._DecimalsFormatterPipe.transform(this.el.value, this.decimals);
     setTimeout(() => this.el.value = transformed, 0);
   }
@@ -39,14 +41,21 @@ export class DecimalsFormatterDirectiveDirective implements OnInit, OnChanges {
 
   @HostListener('blur', ['$event.target.value'])
   onBlur(value) {
-    let transformed = this._DecimalsFormatterPipe.transform(value, this.decimals);
+    let transformed = this._DecimalsFormatterPipe.transform(this.value_aux, this.decimals);
     setTimeout(() => this.el.value = transformed, 0);
+  }
+
+  @HostListener('keyup', ['$event.target.value'])
+  onKeyup(value) {
+    if (this.checkLength(this.el.value)) {
+      this.value_aux = this.el.value;
+    }
+    this.el.value = this.value_aux;
   }
 
   @HostListener('keydown', ['$event.key'])
   onKeydown(value) {
-
-    if (value == 'Tab') {
+    if (this.checkKeys(value)) {
       return true;
     }
 
@@ -56,6 +65,22 @@ export class DecimalsFormatterDirectiveDirective implements OnInit, OnChanges {
     if ((value.match(reg) || []).length == 0 || (value == '.' && list.length == 2)) {
       return false;
     }
+  }
+
+  checkKeys(value) {
+    return  value == 'Tab'
+         || value == 'Backspace'
+         || value == 'Delete'
+         || value == 'ArrowUp'
+         || value == 'ArrowLeft'
+         || value == 'ArrowDown'
+         || value == 'ArrowRight';
+  }
+
+  checkLength(value) {
+    const maxLength = 11 - (this.decimals && !value.toString().includes('.') ? this.decimals : 0);
+    const value_replaced = value.toString().replace('.', '');
+    return value_replaced.length <= maxLength;
   }
 
 }

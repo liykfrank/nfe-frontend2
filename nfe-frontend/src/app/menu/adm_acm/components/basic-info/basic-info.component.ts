@@ -273,7 +273,6 @@ export class BasicInfoComponent extends NwAbstractComponent implements OnInit {
 
   ngOnInit() {
     this.admSubTipeList = this._BISvc.getSubTypeList(this.isADM);
-    console.log(this.admSubTipeList);
     this.basicInfo.transactionCode = this.admSubTipeList[0].code;
     this.selectSubtype();
 

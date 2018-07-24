@@ -65,40 +65,9 @@ export class AmountComponent extends NwAbstractComponent implements OnInit {
       }
     });
 
-    this._AdmAcmService.getCurrency().subscribe(data => {
-      this.decimals = data ? data.decimals : 0;
-      this.currency = data ? data.code : '';
-
-      this.setDecimals(this.airlineCalculations);
-      this.setDecimals(this.agentCalculations);
-
-      const zero = 0;
-      for (let x of this.taxes) {
-        x.agentValue =    typeof x.agentValue == 'number' ?   +x.agentValue.toFixed(this.decimals) : +zero.toFixed(this.decimals);
-        x.airlineValue =  typeof x.airlineValue == 'number' ? +x.airlineValue.toFixed(this.decimals) : +zero.toFixed(this.decimals);
-        x.dif =           typeof x.dif == 'number' ?          +x.dif.toFixed(this.decimals) : +zero.toFixed(this.decimals);
-      }
-    });
-
     this._AdmAcmService.getSpan().subscribe(value => {
-        this.checkNR = value;
-        this.showSpam = this.showSpamOnScreen();
-    });
-
-    this._AdmAcmService.getSubtype().subscribe(value => {
-      let list = ['SPDR', 'SPCR', 'ACMA', 'ACMD'];
-      this.subType = value;
-      this.typeSimpleView = list.indexOf(value) >= 0;
-
-      this.agentCalculations = new InputAmountServer();
-      this.airlineCalculations = new InputAmountServer();
-      this.clean();
-
-      this.setDecimals(this.agentCalculations);
-      this.setDecimals(this.airlineCalculations);
-
-      this._AmountService.setAgentCalculations(this.agentCalculations);
-      this._AmountService.setAirlineCalculations(this.airlineCalculations);
+      this.checkNR = value;
+      this.showSpam = this.showSpamOnScreen();
     });
 
     this._AdmAcmService.getSpdr().subscribe(value => {
@@ -111,24 +80,37 @@ export class AmountComponent extends NwAbstractComponent implements OnInit {
 
     this._AmountService.getValidTaxes().subscribe(value => this.validTaxes = value);
 
-    this._AmountService.getAgentCalculations().subscribe(agentCalc => {
-      this.agentCalculations.commission       = agentCalc.commission;
-      this.agentCalculations.fare             = agentCalc.fare;
-      this.agentCalculations.spam             = agentCalc.spam;
-      this.agentCalculations.tax              = agentCalc.tax;
-      this.agentCalculations.taxOnCommission  = agentCalc.taxOnCommission;
-    });
+    // this._AmountService.getAgentCalculations().subscribe(agentCalc => {
+    //   this.agentCalculations.commission       = agentCalc.commission;
+    //   this.agentCalculations.fare             = agentCalc.fare;
+    //   this.agentCalculations.spam             = agentCalc.spam;
+    //   this.agentCalculations.tax              = agentCalc.tax;
+    //   this.agentCalculations.taxOnCommission  = agentCalc.taxOnCommission;
+    // });
 
-    this._AmountService.getAirlineCalculations().subscribe(airlineCalc => {
-      this.airlineCalculations.commission       = airlineCalc.commission;
-      this.airlineCalculations.fare             = airlineCalc.fare;
-      this.airlineCalculations.spam             = airlineCalc.spam;
-      this.airlineCalculations.tax              = airlineCalc.tax;
-      this.airlineCalculations.taxOnCommission  = airlineCalc.taxOnCommission;
-    });
+    // this._AmountService.getAirlineCalculations().subscribe(airlineCalc => {
+    //   this.airlineCalculations.commission       = airlineCalc.commission;
+    //   this.airlineCalculations.fare             = airlineCalc.fare;
+    //   this.airlineCalculations.spam             = airlineCalc.spam;
+    //   this.airlineCalculations.tax              = airlineCalc.tax;
+    //   this.airlineCalculations.taxOnCommission  = airlineCalc.taxOnCommission;
+    // });
 
     this._AmountService.getTaxMiscellaneousFees().subscribe(taxMiscellaneous => {
       this.taxMiscellaneousFees = taxMiscellaneous;
+    });
+
+    this._AdmAcmService.getCurrency().subscribe(data => {
+      this.decimals = data ? data.decimals : 0;
+      this.currency = data ? data.code : '';
+      this.resetData();
+    });
+
+    this._AdmAcmService.getSubtype().subscribe(value => {
+      let list = ['SPDR', 'SPCR', 'ACMA', 'ADMA'];
+      this.subType = value;
+      this.typeSimpleView = list.indexOf(value) >= 0;
+      this.resetData();
     });
   }
 
@@ -136,17 +118,34 @@ export class AmountComponent extends NwAbstractComponent implements OnInit {
     this.taxes = [this.getEmptyInput()];
   }
 
-  assignData(event) {
-    return event;
-  }
+  resetData() {
+    this.agentCalculations = new InputAmountServer();
+    this.airlineCalculations = new InputAmountServer();
+    this.clean();
 
-  checkSimpleView() {
-    return !this.typeSimpleView;
+    this.setDecimals(this.agentCalculations);
+    this.setDecimals(this.airlineCalculations);
+    this.calculateTotalOnAmount();
+
+    this._AmountService.setAgentCalculations(this.agentCalculations);
+    this._AmountService.setAirlineCalculations(this.airlineCalculations);
   }
 
   clean() {
     this.taxes = [this.getEmptyInput()];
     this._AmountService.setTaxMiscellaneousFees([]);
+  }
+
+  private setDecimals(elem: InputAmountServer) {
+    elem.commission =       Number(Number(elem.commission).toFixed(this.decimals));
+    elem.fare =             Number(Number(elem.fare).toFixed(this.decimals));
+    elem.spam =             Number(Number(elem.spam).toFixed(this.decimals));
+    elem.tax =              Number(Number(elem.tax).toFixed(this.decimals));
+    elem.taxOnCommission =  Number(Number(elem.taxOnCommission).toFixed(this.decimals));
+  }
+
+  checkSimpleView() {
+    return !this.typeSimpleView;
   }
 
   addTax() {
@@ -197,25 +196,24 @@ export class AmountComponent extends NwAbstractComponent implements OnInit {
     this.setDecimals(this.airlineCalculations);
 
     this.totalCalculations.fare =
-      (calcType * this.agentCalculations.fare) + (-1 * calcType * this.airlineCalculations.fare);
-
+      (calcType * this.agentCalculations.fare) +
+      (-1 * calcType * this.airlineCalculations.fare);
 
     this.totalCalculations.tax =
-      (calcType * this.agentCalculations.tax) + (-1 * calcType * this.airlineCalculations.tax);
+      (calcType * this.agentCalculations.tax) +
+      (-1 * calcType * this.airlineCalculations.tax);
 
-
-      this.totalCalculations.commission =
-      (calcType * this.agentCalculations.commission) + (-1 * calcType * this.airlineCalculations.commission);
-
+    this.totalCalculations.commission =
+      (calcType * this.agentCalculations.commission) +
+      (-1 * calcType * this.airlineCalculations.commission);
 
     this.totalCalculations.spam =
-      (calcType * this.agentCalculations.spam) + (-1 * calcType * this.airlineCalculations.spam);
-
+      (calcType * this.agentCalculations.spam) +
+      (-1 * calcType * this.airlineCalculations.spam);
 
     this.totalCalculations.taxOnCommission =
-      (calcType * this.agentCalculations.taxOnCommission) + (-1 * calcType * this.airlineCalculations.taxOnCommission);
-
-
+      (calcType * this.agentCalculations.taxOnCommission) +
+      (-1 * calcType * this.airlineCalculations.taxOnCommission);
 
     this.totalAmount.agentValue =   this.calculateTotal(this.agentCalculations);
     this.totalAmount.airlineValue = this.calculateTotal(this.airlineCalculations);
@@ -224,10 +222,6 @@ export class AmountComponent extends NwAbstractComponent implements OnInit {
     this._AmountService.setAgentCalculations(this.agentCalculations);
     this._AmountService.setAirlineCalculations(this.airlineCalculations);
     this._AmountService.setTotal(this.totalAmount.dif);
-
-  //   console.log(this.agentCalculations);
-  //   console.log(this.airlineCalculations);
-  //   console.log(this.totalCalculations);
   }
 
   checkFailSide() {
@@ -359,14 +353,7 @@ export class AmountComponent extends NwAbstractComponent implements OnInit {
       this._AmountService.setAgentCalculations(this.agentCalculations);
       this._AmountService.setAirlineCalculations(this.airlineCalculations);
     }
-    return ret;
-  }
 
-  private setDecimals(elem: InputAmountServer) {
-    elem.commission =       Number(Number(elem.commission).toFixed(this.decimals));
-    elem.fare =             Number(Number(elem.fare).toFixed(this.decimals));
-    elem.spam =             Number(Number(elem.spam).toFixed(this.decimals));
-    elem.tax =              Number(Number(elem.tax).toFixed(this.decimals));
-    elem.taxOnCommission =  Number(Number(elem.taxOnCommission).toFixed(this.decimals));
+    return ret;
   }
 }
