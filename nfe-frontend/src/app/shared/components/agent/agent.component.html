@@ -7,7 +7,6 @@
       ownPattern
       [typingPattern]="'[0-9]{7}$'"
       (patternOnBlur)="onValueChanged()"
-
       [ngClass]="{'error': setStyle(agentCode)}"
       maxlength="7"
       [(ngModel)]="agentCode"/>

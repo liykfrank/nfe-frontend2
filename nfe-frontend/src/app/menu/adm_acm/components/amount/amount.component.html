@@ -6,20 +6,21 @@
   <span>{{ currency }}</span>
 </div>
 
-<div *ngIf="typeSimpleView">
+<div *ngIf="checkSimpleView()">
   <div class="form-entry">
-    <label l10nTranslate>ADM_ACM.BASIC_INFO.fare</label>
+    <label l10nTranslate>ADM_ACM.AMOUNT.fare</label>
     <div class="input-content">
-      <input
-        class='input-custom-number amount-table'
-        min='0'
-        type='number'
-        (change)="simpleCalculateFare($event)"/>
+      <input class='input-custom-number amount-table'
+        type='text' 
+        [(ngModel)]="total" 
+        decimalsFormatterDirective 
+        [decimals]="decimals"
+        (blur)="simpleCalculateFare()"/>
     </div>
   </div>
 </div>
 
-<div *ngIf="!typeSimpleView">
+<div *ngIf="!checkSimpleView()">
   <div class="table-container">
     <table class="table-amount">
       <thead>
@@ -34,28 +35,23 @@
         <tr>
           <td class="title" l10nTranslate>ADM_ACM.AMOUNT.fare</td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type="text"
-              [ngModel]="agentCalculations.fare"
-              (ngModelChange)="agentCalculations.fare = assignData($event)"
+              [(ngModel)]="agentCalculations.fare"
               decimalsFormatterDirective
               [decimals]="decimals"
               (blur)="calculateTotalOnAmount()"/>
           </td>
           <td>
-              <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
-              [ngModel]="airlineCalculations.fare"
-              (ngModelChange)="airlineCalculations.fare = assignData($event)"
+              [(ngModel)]="airlineCalculations.fare"
               decimalsFormatterDirective
               [decimals]="decimals"
               (blur)="calculateTotalOnAmount()"/>
           </td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
               [value]="totalCalculations.fare | abs | decimalsFormatter:decimals"
               readonly="true"/>
@@ -63,141 +59,108 @@
         </tr>
         <tr>
           <td class="title" l10nTranslate>ADM_ACM.AMOUNT.tfc
-            <i
-              src="assets/images/ico_tooltip.svg"
+            <img class="tooltip"
+              src="assets/images/utils/ico_tooltip.svg"
               alt="alternative text"
-              class="tooltip"
-              [title]="translation.translate('ADM_ACM.AMOUNT.tfc_toggle')">
-            </i>
+              [title]="translation.translate('ADM_ACM.AMOUNT.tfc_toggle')"/>
           </td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
-              [ngModel]="agentCalculations.tax"
-              (ngModelChange)="agentCalculations.tax = assignData($event)"
-               decimalsFormatterDirective
-               [decimals]="decimals"
-              (blur)="calculateTotalOnAmount()"
-            />
-          </td>
-          <td>
-            <input
-              class='input-custom-number amount-table'
-              type='text'
-              [ngModel]="airlineCalculations.tax"
-              (ngModelChange)="airlineCalculations.tax = assignData($event)"
+              [(ngModel)]="agentCalculations.tax"
               decimalsFormatterDirective
               [decimals]="decimals"
               (blur)="calculateTotalOnAmount()"
-              />
+            />
           </td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
+              type='text'
+              [(ngModel)]="airlineCalculations.tax"
+              decimalsFormatterDirective
+              [decimals]="decimals"
+              (blur)="calculateTotalOnAmount()"/>
+          </td>
+          <td>
+            <input class='input-custom-number amount-table'
               type='text'
               [value]="totalCalculations.tax | abs | decimalsFormatter:decimals"
-              readonly="true"
-            />
+              readonly="true"/>
           </td>
         </tr>
         <tr>
           <td class="title" l10nTranslate>ADM_ACM.AMOUNT.comission</td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
-              [ngModel]="agentCalculations.commission"
-              (ngModelChange)="agentCalculations.commission = assignData($event)"
+              [(ngModel)]="agentCalculations.commission"
               decimalsFormatterDirective
               [decimals]="decimals"
-              (blur)="calculateTotalOnAmount()"
-            />
+              (blur)="calculateTotalOnAmount()"/>
           </td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
-              [ngModel]="airlineCalculations.commission"
-              (ngModelChange)="airlineCalculations.commission = assignData($event)"
+              [(ngModel)]="airlineCalculations.commission"
               decimalsFormatterDirective
               [decimals]="decimals"
-              (blur)="calculateTotalOnAmount()"
-            />
+              (blur)="calculateTotalOnAmount()"/>
           </td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
               [value]="totalCalculations.commission | abs | decimalsFormatter:decimals"
-              readonly="true"
-            />
+              readonly="true"/>
           </td>
         </tr>
         <tr *ngIf="showSpam">
           <td class="title" l10nTranslate>ADM_ACM.AMOUNT.spam</td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
-              [ngModel]="agentCalculations.spam"
-              (ngModelChange)="agentCalculations.spam = assignData($event)"
+              [(ngModel)]="agentCalculations.spam"
               decimalsFormatterDirective
               [decimals]="decimals"
-              (blur)="calculateTotalOnAmount()"
-            />
+              (blur)="calculateTotalOnAmount()"/>
           </td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
-              [ngModel]="airlineCalculations.spam"
-              (ngModelChange)="airlineCalculations.spam = assignData($event)"
+              [(ngModel)]="airlineCalculations.spam"
               decimalsFormatterDirective
               [decimals]="decimals"
-              (blur)="calculateTotalOnAmount()"
-            />
+              (blur)="calculateTotalOnAmount()"/>
           </td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
               [value]="totalCalculations.spam | abs | decimalsFormatter:decimals"
-              readonly="true"
-            />
+              readonly="true"/>
           </td>
         </tr>
         <tr *ngIf="showTOCA">
           <td class="title" l10nTranslate>ADM_ACM.AMOUNT.toca</td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
-              [ngModel]="agentCalculations.taxOnCommission"
-              (ngModelChange)="agentCalculations.taxOnCommission = assignData($event)"
+              [(ngModel)]="agentCalculations.taxOnCommission"
               decimalsFormatterDirective
               [decimals]="decimals"
-              (blur)="calculateTotalOnAmount()"
-            />
+              (blur)="calculateTotalOnAmount()"/>
           </td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
-              [ngModel]="airlineCalculations.taxOnCommission"
-              (ngModelChange)="airlineCalculations.taxOnCommission = assignData($event)"
+              [(ngModel)]="airlineCalculations.taxOnCommission"
               decimalsFormatterDirective
               [decimals]="decimals"
-              (blur)="calculateTotalOnAmount()"
-            />
+              (blur)="calculateTotalOnAmount()"/>
           </td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
               [value]="totalCalculations.taxOnCommission | abs | decimalsFormatter:decimals"
-              readonly="true"
-            />
+              readonly="true"/>
           </td>
         </tr>
       </tbody>
@@ -225,43 +188,32 @@
       <tbody>
         <tr *ngFor="let item of taxes; let i=index" >
           <td>
-            <input
-              class='input-custom'
+            <input class='input-custom'
               [(ngModel)]="item.name"
-              pattern="^(([A-WY-Z][A-Z])|([A-Z][A-SU-Z])|(O[ABC][A-Z0-9 ./-]{0,6})|(XF[A-Z]{3}[0-9]*[1-9][0-9]*(\\.[0-9]+)?)|(XF[A-Z]{3}[0-9]+(\\.[0-9]*[1-9][0-9]*)?))$"
-              (change)="validateName(i)"
-            />
+              maxlength="8"
+              (change)="validateName(i)"/>
           </td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
-              [ngModel]="item.agentValue"
-              (ngModelChange)="item.agentValue = assignData($event)"
+              [(ngModel)]="item.agentValue"
               decimalsFormatterDirective
               [decimals]="decimals"
-              (change)="calculateOnTax()"
-            />
+              (change)="calculateOnTax()"/>
           </td>
           <td>
-            <input
-              class='input-custom-number amount-table'
+            <input class='input-custom-number amount-table'
               type='text'
-              [ngModel]="item.airlineValue"
-              (ngModelChange)="item.airlineValue = assignData($event)"
+              [(ngModel)]="item.airlineValue"
               decimalsFormatterDirective
               [decimals]="decimals"
-              (change)="calculateOnTax()"
-            />
+              (change)="calculateOnTax()"/>
           </td>
           <td>
-
-            <input
-              class='input-custom-number-float-left amount-table'
+            <input class='input-custom-number-float-left amount-table'
               type='text'
               [value]="item.dif | abs | decimalsFormatter:decimals"
-              readonly="true"
-            />
+              readonly="true"/>
 
             <button class="button-bin-float-right" (click)="removeTax(i)">
               <i class="fa fa-trash-o fa-lg"></i>
