@@ -76,45 +76,37 @@ pipeline {
 			}
 		}
         
-		stage('Push to IATA repository') {
-		//	when{
-		//		expression{
-		//			return env.sourceBranch == 'master'
-		//		}
-  		//	}
-            steps {
-            	// this shell script is located in <JENKINS_HOME>/bin folder and the PATH is configured through jenkins
-                sh 'push_to_iata.bash $WORKSPACE $JOB_BASE_NAME'
-                sh 'push_to_iata2.bash $WORKSPACE $JOB_BASE_NAME'
-			}
-        }
-		
+
 		stage('Promote artifact to deploy DEV')
 		{
+		    
 		  agent {
                 label 'a2lyadesch1'
-            }  
+            }   
+		    
 		  steps {
-		      dir('build/libs') {
+		      
+		    dir('build/libs') {
                     unstash name: 'agency-memo-artifact'
-                }
+                }    
               withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'credentials-openshift',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                    
+                     
                       script {
-                          
-                        docker.image('atsistemas/openshift-cli:1.2').withRun('-v $WORKSPACE/build/libs:/home/jenkins/workspace/Accelya/bsplink-agency-memo') { c ->
+                        docker.image('atsistemas/openshift-cli:1.2').withRun('-v $WORKSPACE/build/libs:$WORKSPACE') { c ->
                             sh "oc login https://$clusterOpenShiftDev -u $USERNAME -p $PASSWORD --insecure-skip-tls-verify=true"
                             sh "oc project nfeqainternal"
-                            sh "oc start-build bsplink-agency-memo --from-dir=/home/jenkins/workspace/Accelya/bsplink-agency-memo/build/libs --follow"
+                            sh "oc start-build bsplink-agency-memo --from-dir=$WORKSPACE/build/libs --follow"
                         }
                       }   
                         
-                    }
-                     
+                  
+               }    
+                    
+                
 		  }
 			
-		}
+		 }
 		
 		
   	}
