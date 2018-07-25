@@ -104,8 +104,8 @@ pipeline {
                       script {
                           
                         docker.image('atsistemas/openshift-cli:1.2').withRun('-v $WORKSPACE/build/libs:/home/jenkins/workspace/Accelya/bsplink-agency-memo') { c ->
-                            sh "oc login https://$clusterOpenShiftDev:8443 -u $USERNAME -p $PASSWORD --insecure-skip-tls-verify=true"
-                            sh "oc project nfedesarrollo"
+                            sh "oc login https://$clusterOpenShiftDev -u $USERNAME -p $PASSWORD --insecure-skip-tls-verify=true"
+                            sh "oc project nfeqainternal"
                             sh "oc start-build bsplink-agency-memo --from-dir=/home/jenkins/workspace/Accelya/bsplink-agency-memo/build/libs --follow"
                         }
                       }   
