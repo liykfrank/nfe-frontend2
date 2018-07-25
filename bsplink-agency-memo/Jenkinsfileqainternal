@@ -1,0 +1,121 @@
+#!/usr/bin/env groovy
+
+env.sourceBranch = env.gitlabSourceBranch ?: 'develop'
+env.gitlabRepositoryUrl = env.gitlabSourceRepoHttpUrl ?: 'http://a2lgit1/bsplink/bsplink-agency-memo.git'
+env.SERVICE_MASTERDATA_AGENT_URL='http://localhost:8082'
+env.SERVICE_MASTERDATA_AIRLINE_URL='http://localhost:8083'
+
+echo "[INFO] Source Branch: ${env.sourceBranch}"
+echo "[INFO] Source Repository URL: ${env.gitlabRepositoryUrl}"
+
+// add source branch to current build description
+currentBuild.description = (currentBuild.description ?: 'Started directly through Jenkins') + "\nSource Branch: ${sourceBranch}"
+
+pipeline {
+
+    agent {label 'master'}
+
+	//configuration for returning the pipeline execution status to Gitlab
+	options {
+        gitLabConnection('A2LGIT1')
+        gitlabCommitStatus(name: 'jenkins')
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+		    	checkout poll: false, scm: [
+					$class: 'GitSCM',
+					branches: [[name: "*/${env.sourceBranch}" ]],
+					doGenerateSubmoduleConfigurations: false,
+						extensions: [],
+						submoduleCfg: [],
+						userRemoteConfigs: [[
+							credentialsId: env.gitlabCredentialsId,
+							url: "${env.gitlabRepositoryUrl}"
+					]]]
+
+				configFileProvider([configFile(fileId: 'gradle.properties', targetLocation: '.')]) {
+                	sh './gradlew clean build -x test -x itest'
+                }
+				dir('build/libs') {
+                    stash name: 'agency-memo-artifact'
+                }
+            }
+        }
+        
+        stage('Test') {
+            steps {
+		    	sh './gradlew test itest'
+            }
+            //publish unit tests and unit test coverage reports
+         	post {
+                always {
+                    junit '**/test-results/**/*.xml'
+                    step([$class: 'JacocoPublisher'])
+                }
+            }
+        }
+        
+        stage('SonarQube') {
+            steps {
+            	withSonarQubeEnv('a2lsonarq1') {
+                	sh './gradlew sonarqube'
+             	}
+            }
+        }
+        
+    	stage('Nexus')  {
+    		when{
+				expression{
+					return env.sourceBranch == 'master' || env.sourceBranch == 'develop'
+				}
+  			}
+			steps {
+				sh './gradlew uploadArchives'
+			}
+		}
+        
+		stage('Push to IATA repository') {
+		//	when{
+		//		expression{
+		//			return env.sourceBranch == 'master'
+		//		}
+  		//	}
+            steps {
+            	// this shell script is located in <JENKINS_HOME>/bin folder and the PATH is configured through jenkins
+                sh 'push_to_iata.bash $WORKSPACE $JOB_BASE_NAME'
+                sh 'push_to_iata2.bash $WORKSPACE $JOB_BASE_NAME'
+			}
+        }
+		
+		stage('Promote artifact to deploy DEV')
+		{
+		  agent {
+                label 'a2lyadesch1'
+            }  
+		  steps {
+		      dir('build/libs') {
+                    unstash name: 'agency-memo-artifact'
+                }
+              withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'credentials-openshift',
+                    usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                    
+                      script {
+                          
+                        docker.image('atsistemas/openshift-cli:1.2').withRun('-v $WORKSPACE/build/libs:/home/jenkins/workspace/Accelya/bsplink-agency-memo') { c ->
+                            sh "oc login https://$clusterOpenShiftDev:8443 -u $USERNAME -p $PASSWORD --insecure-skip-tls-verify=true"
+                            sh "oc project nfedesarrollo"
+                            sh "oc start-build bsplink-agency-memo --from-dir=/home/jenkins/workspace/Accelya/bsplink-agency-memo/build/libs --follow"
+                        }
+                      }   
+                        
+                    }
+                     
+		  }
+			
+		}
+		
+		
+  	}
+}
