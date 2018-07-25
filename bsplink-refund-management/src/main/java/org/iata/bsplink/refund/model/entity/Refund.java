@@ -211,6 +211,7 @@ public class Refund {
     @ElementCollection(fetch = FetchType.LAZY)
     @OrderColumn(name = "order_nr")
     @OrderBy("order_nr")
+    @NotNull(message = NON_NULL_MESSAGE)
     @Valid
     private List<RelatedDocument> conjunctions = new ArrayList<>();
 

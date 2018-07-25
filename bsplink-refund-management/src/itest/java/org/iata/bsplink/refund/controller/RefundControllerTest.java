@@ -12,6 +12,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -64,6 +65,7 @@ import org.iata.bsplink.refund.validation.MassloadFileNameValidator;
 import org.iata.bsplink.refund.validation.MassloadValidator;
 import org.iata.bsplink.refund.validation.PartialRefundValidator;
 import org.iata.bsplink.refund.validation.RefundCompositeValidator;
+import org.iata.bsplink.refund.validation.RefundUpdateValidator;
 import org.iata.bsplink.yadeutils.YadeUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -136,6 +138,12 @@ public class RefundControllerTest {
 
     @SpyBean
     private RefundCompositeValidator refundValidator;
+
+    @SpyBean
+    private RefundUpdateValidator refundUpdateValidator;
+
+    @SpyBean
+    private MassloadValidator massloadValidator;
 
     private Refund refund;
 
@@ -1068,4 +1076,44 @@ public class RefundControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
         assertThat(refund.getStatus(), not(equalTo(request.getStatus())));
     }
+
+    @Test
+    public void testValidatesConjunctionsOnRefundCreation() throws Exception {
+        refund.setConjunctions(null);
+        String refundJson = getRefundJson();
+        mockMvc.perform(post(BASE_URI).content(refundJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", equalTo("Validation error")))
+                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("conjunctions")))
+                .andExpect(jsonPath("$.validationErrors[0].message", equalTo("Field required.")));
+    }
+
+    @Test
+    public void testOnUpdateRefundUpdateValidatorIsNotCalledIfThereArePreviousErrors()
+            throws Exception {
+
+        Refund refundWithId = refundRepository.save(refund);
+        refund.setConjunctions(null);
+
+        mockMvc.perform(put(BASE_URI + "/" + refundWithId.getId())
+                .content(mapper.writeValueAsString(refundWithId))
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+
+        verify(refundUpdateValidator, never()).validate(any(), any(), any());
+    }
+
+    @Test
+    public void testOnUpdateRefundViaMassloadValidatorIsNotCalledIfThereArePreviousErrors()
+            throws Exception {
+
+        Refund refundWithId = refundRepository.save(refund);
+        refund.setConjunctions(null);
+
+        mockMvc.perform(put(BASE_URI + "/" + refundWithId.getId() + "?fileName=" + massloadFileName)
+                .content(mapper.writeValueAsString(refundWithId))
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+
+        verify(massloadValidator, never()).validate(any(), any(), any(), any());
+    }
+
 }

@@ -304,7 +304,11 @@ public class RefundController {
 
         log.info("received request to update indirect refund: " + refund);
 
-        Refund refundToSave = refundUpdateValidator.validate(id, refund, errors);
+        Refund refundToSave = null;
+
+        if (!errors.hasErrors()) {
+            refundToSave = refundUpdateValidator.validate(id, refund, errors);
+        }
 
         if (errors.hasErrors() || refundToSave == null) {
             throw new ApplicationValidationException(errors);
@@ -444,7 +448,11 @@ public class RefundController {
             return ResponseEntity.notFound().build();
         }
 
-        Refund newRefund = massloadValidator.validate(id, refund, fileName, errors);
+        Refund newRefund = null;
+
+        if (!errors.hasErrors()) {
+            newRefund = massloadValidator.validate(id, refund, fileName, errors);
+        }
 
         if (errors.hasErrors()) {
             throw new ApplicationValidationException(errors);
