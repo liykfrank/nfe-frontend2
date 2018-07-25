@@ -1,0 +1,37 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        temp:
+          # Gets rid of PostgreSql's related exception:
+          # Disabling contextual LOB creation as createClob() method threw error
+          use_jdbc_metadata_defaults: false
+        default_schema: agencymemo
+  flyway:
+    schemas: agencymemo
+
+feign:
+  agents:
+    url: http://localhost:8082
+  airlines:
+    url: http://localhost:8083
+    
+    
+app:
+  local_attached_files_directory: attached_files
+  remote_full_path_file: attached_files/%s/acdm/%d/%s
+  remote_attached_files_directory: attached_files/%s/acdm/%d  
+  file_name_rex: ^([A-Z]{2})([a-z0-9]{2})([^_]+)_.*$
+  host:  
+    sftp:      
+      name: 
+      username: 
+      password: 
+      port:
+      protocol: 
+    local:
+      name: 
+      username:
+      password:
+      port:
+      protocol: 
