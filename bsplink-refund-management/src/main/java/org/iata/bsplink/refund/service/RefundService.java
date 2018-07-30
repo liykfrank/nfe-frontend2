@@ -68,6 +68,10 @@ public class RefundService {
 
         log.info("Saving refund : " + refund);
 
+        refund.setAttachedFiles(null);
+        refund.setHistory(null);
+        refund.setComments(null);
+        
         Refund refundSaved = refundRepository.save(refund);
 
         refundSaved.setHistory(saveRefundHistory(refundSaved, RefundAction.REFUND_ISSUE));

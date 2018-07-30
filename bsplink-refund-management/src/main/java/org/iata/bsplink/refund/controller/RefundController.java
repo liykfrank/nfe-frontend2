@@ -283,7 +283,7 @@ public class RefundController {
                 errors.rejectValue("status", "incorrect_status", "The refund status is incorrect.");
             }
         }
-
+        
         if (errors.hasErrors()) {
             throw new ApplicationValidationException(errors);
         }
