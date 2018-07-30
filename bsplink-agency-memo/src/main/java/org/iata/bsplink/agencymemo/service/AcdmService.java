@@ -37,6 +37,8 @@ public class AcdmService {
     public Acdm save(AcdmRequest acdmRequest) {
         Acdm acdm = new Acdm();
         copyPropertiesFromAcdmRequestToAcdm(acdmRequest, acdm);
+        acdm.setComments(null);
+        acdm.setAttachedFiles(null);
         return acdmRepository.save(acdm);
     }
 
