@@ -82,8 +82,9 @@ public class CustomBsplinkFileRepositoryImpl implements CustomBsplinkFileReposit
     private void addEqualConditionIfValueIsPresent(Object value, Path<Object> path,
             List<Predicate> conditions) {
 
-        if (value != null && value instanceof List) {
+        if (value instanceof List) {
 
+            @SuppressWarnings("unchecked")
             List<BsplinkFileStatus> status = (List<BsplinkFileStatus>) value;
 
             if (!status.isEmpty()) {
