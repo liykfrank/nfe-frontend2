@@ -1,29 +1,25 @@
 CREATE SCHEMA IF NOT EXISTS agencymemo;
     
-    drop table agencymemo.acdm if exists;
+    drop table if exists agencymemo.acdm;
     
-    drop table agencymemo.acdm_related_ticket_documents if exists;
+    drop table if exists agencymemo.acdm_related_ticket_documents;
     
-    drop table agencymemo.acdm_tax_miscellaneous_fees if exists;
+    drop table if exists agencymemo.acdm_tax_miscellaneous_fees;
     
-    drop table agencymemo.calculations if exists;
+    drop table if exists agencymemo.calculations;
     
-    drop table agencymemo.config if exists;
+    drop table if exists agencymemo.config;
     
-    drop table agencymemo.tax_on_commission_type if exists;
+    drop table if exists agencymemo.tax_on_commission_type;
     
     drop sequence if exists agencymemo.hibernate_sequence;
+   
+    DROP TABLE if exists agencymemo.bsplink_file;
     
-    DROP TABLE agencymemo.bsplink_file IF EXISTS;
+    DROP TABLE if exists agencymemo.comment;
     
-    DROP TABLE agencymemo.comment IF EXISTS;
-    
-	create sequence agencymemo.hibernate_sequence start with 1 increment by 1;
-	
-	CREATE SEQUENCE agencymemo.bsplink_file_id START 1 INCREMENT by 1 MINVALUE 1;
-	
-	CREATE SEQUENCE agencymemo.comment_id START 1 INCREMENT by 1 MINVALUE 1;
-    
+	create sequence agencymemo.hibernate_sequence start with 1 increment by 1;	
+ 
     create table agencymemo.acdm (
        id bigint not null,
         agent_code varchar(8) not null,
@@ -112,7 +108,7 @@ CREATE SCHEMA IF NOT EXISTS agencymemo;
     );
     
     CREATE TABLE agencymemo.bsplink_file (
-	    id INT default agencymemo.bsplink_file_id.nextval NOT NULL,
+	    id serial NOT NULL,
 	    name VARCHAR(255) NOT NULL,
 	    path VARCHAR(255),
 	    bytes INT8 NOT NULL,   
@@ -122,7 +118,7 @@ CREATE SCHEMA IF NOT EXISTS agencymemo;
 	);
 	
 	CREATE TABLE agencymemo.comment(
-		id INT default agencymemo.comment_id.nextval NOT NULL,
+		id serial NOT NULL,
 		text VARCHAR(255) NOT NULL,
 		acdm_id int8 not null,
 		insert_date_time TIMESTAMP NOT NULL,
