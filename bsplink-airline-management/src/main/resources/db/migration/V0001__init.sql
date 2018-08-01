@@ -1,6 +1,6 @@
 CREATE SCHEMA IF NOT EXISTS airlinemanagement;
 
-DROP TABLE airlinemanagement.airline IF EXISTS;
+DROP TABLE IF EXISTS airlinemanagement.airline CASCADE ;
 
 CREATE TABLE airlinemanagement.airline (
     airline_code VARCHAR(3) NOT NULL,
