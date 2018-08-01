@@ -1,22 +1,24 @@
 CREATE SCHEMA IF NOT EXISTS agencymemo;
     
-    drop table if exists agencymemo.acdm;
+    drop table if exists agencymemo.acdm CASCADE;
     
-    drop table if exists agencymemo.acdm_related_ticket_documents;
+    drop table if exists agencymemo.reason CASCADE;
     
-    drop table if exists agencymemo.acdm_tax_miscellaneous_fees;
+    drop table if exists agencymemo.acdm_related_ticket_documents CASCADE;
     
-    drop table if exists agencymemo.calculations;
+    drop table if exists agencymemo.acdm_tax_miscellaneous_fees CASCADE;
     
-    drop table if exists agencymemo.config;
+    drop table if exists agencymemo.calculations CASCADE;
     
-    drop table if exists agencymemo.tax_on_commission_type;
+    drop table if exists agencymemo.config CASCADE;
     
-    drop sequence if exists agencymemo.hibernate_sequence;
-   
-    DROP TABLE if exists agencymemo.bsplink_file;
+    drop table if exists agencymemo.tax_on_commission_type CASCADE;
+       
+    DROP TABLE if exists agencymemo.bsplink_file CASCADE;
     
-    DROP TABLE if exists agencymemo.comment;
+    DROP TABLE if exists agencymemo.comment CASCADE;
+    
+    DROP sequence if exists agencymemo.hibernate_sequence;
     
 	create sequence agencymemo.hibernate_sequence start with 1 increment by 1;	
  

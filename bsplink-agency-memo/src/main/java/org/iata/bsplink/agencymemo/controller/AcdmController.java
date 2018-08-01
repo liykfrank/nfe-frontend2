@@ -5,13 +5,11 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import javax.validation.Valid;
-
+import lombok.extern.java.Log;
 import org.iata.bsplink.agencymemo.dto.AcdmRequest;
 import org.iata.bsplink.agencymemo.dto.CommentRequest;
 import org.iata.bsplink.agencymemo.model.entity.Acdm;
@@ -38,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@Log
 @RestController()
 @RequestMapping("/v1/acdms")
 @CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*")
@@ -81,7 +80,7 @@ public class AcdmController {
      */
     @ApiOperation(value = "Save an ADM / ACM")
     @PostMapping()
-    @ApiImplicitParams({@ApiImplicitParam(name = "body", value = "The ADM / ACM to save.",
+    @ApiImplicitParams({@ApiImplicitParam(name = "acdm", value = "The ADM / ACM to save.",
             paramType = "body", required = true, dataType = "AcdmRequest")})
     public ResponseEntity<Acdm> save(@Valid @RequestBody(required = true) AcdmRequest acdm,
             Errors errors) {
@@ -93,6 +92,35 @@ public class AcdmController {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(acdmService.save(acdm));
+    }
+
+    /**
+     * Save an ADM / ACM via massload file.
+     */
+    @PostMapping(value = "/massload")
+    @ApiOperation(value = "Save an ADM / ACM via massload file")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "acdm", value = "The ADM / ACM to save.", paramType = "body",
+                    required = true, dataType = "AcdmRequest"),
+            @ApiImplicitParam(name = "fileName", value = "Name of the massload file",
+                    required = true, dataType = "string", paramType = "query")})
+    public ResponseEntity<Acdm> saveAcdmViaMassload(
+            @Valid @RequestBody(required = true) AcdmRequest acdm,
+            @RequestParam(required = true) String fileName, Errors errors) {
+
+        log.info("received request for saving ADM / ACDM via massload file: " + fileName);
+
+        freeStatValidator.validate(acdm, errors);
+
+        if (errors.hasErrors()) {
+            throw new ApplicationValidationException(errors);
+        }
+
+        Acdm reponse = acdmService.save(acdm);
+
+        log.info("responding with adm/acdm: " + reponse);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(reponse);
     }
 
 
