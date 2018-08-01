@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS agentmanagement;
 
 DROP TABLE IF EXISTS agentmanagement.agent CASCADE;
-DROP TABLE agentmanagement.form_of_payment IF EXISTS;
+DROP TABLE IF EXISTS agentmanagement.form_of_payment CASCADE;
 
 DROP SEQUENCE IF EXISTS agentmanagement.hibernate_sequence;
 CREATE SEQUENCE agentmanagement.hibernate_sequence START WITH 1 INCREMENT BY 1;
