@@ -1,4 +1,6 @@
-spring:
+spring:      
+  flyway:  
+    schemas: filemanagement
   devtools:
     restart:
       exclude: files/**
@@ -8,6 +10,9 @@ spring:
   jpa:
     properties:
       hibernate:
+        format_sql: true
+        ddl-auto: none
+        default_schema: filemanagement
         temp:
           # Gets rid of PostgreSql's related exception:
           # Disabling contextual LOB creation as createClob() method threw error

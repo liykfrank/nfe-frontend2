@@ -1,0 +1,61 @@
+spring:
+
+  devtools:
+    restart:
+      exclude: files/**
+  servlet:
+    multipart:
+      max-file-size: 2MB
+
+      
+  flyway:
+    locations: classpath:/db/migration,/db/data/dev
+    schemas: filemanagement
+
+  jpa:
+    properties:
+      hibernate:
+        temp:
+          # Gets rid of PostgreSql's related exception:
+          # Disabling contextual LOB creation as createClob() method threw error
+          use_jdbc_metadata_defaults: false
+        default_schema: filemanagement
+
+  datasource:
+    url: jdbc:postgresql://10.5.0.53:5432/nfedataqai1
+    username: nferootdb
+    password: bdtoorefn_2018.
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
+app:
+  yade:
+    inbox: /jobscheduler_inbox
+    outbox: /jobscheduler_outbox
+    host:
+      sftp:
+        name: sftp.nfedev.accelya.com
+        user: sftpqaiadmin
+        password: Adm1n
+        directory: /jobscheduler_inbox
+        protocol: sftp
+        port: 2227
+      local:
+        name: localhost
+        user: 
+        password: 
+        directory: /qai_jobscheduler_outbox
+        protocol: local
+        port:
+app:
+  file_name_rex: ^([A-Z]{2})([a-z0-9]{2})([^_]+)_.*$
+  file_name_outbox_replacement: $3/$1/outbox/$2/
+  file_name_eliminated_replacement: $3/$1/outbox/$2/eliminated
+  file_name_type_replacement: $2
+  local_uploaded_files_directory: uploaded_files
+  local_downloaded_files_directory: downloaded_files
+  zip:
+    name: test.zip

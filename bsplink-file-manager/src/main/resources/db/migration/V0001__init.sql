@@ -1,9 +1,10 @@
-DROP TABLE IF EXISTS bsplink_file CASCADE;
-DROP SEQUENCE IF EXISTS hibernate_sequence;
+CREATE SCHEMA IF NOT EXISTS filemanagement;
+DROP TABLE IF EXISTS filemanagement.bsplink_file CASCADE;
+DROP SEQUENCE IF EXISTS filemanagement.hibernate_sequence;
 
-CREATE SEQUENCE hibernate_sequence START 1 INCREMENT 1;
+CREATE SEQUENCE filemanagement.hibernate_sequence START 1 INCREMENT 1;
 
-CREATE TABLE bsplink_file (
+CREATE TABLE filemanagement.bsplink_file (
     id INT8 NOT NULL,
     bytes INT8 NOT NULL,
     name VARCHAR(255) NOT NULL,
