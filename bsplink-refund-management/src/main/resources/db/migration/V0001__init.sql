@@ -1,27 +1,27 @@
 CREATE SCHEMA IF NOT EXISTS refund;
     
-    DROP TABLE refund.bsplink_file IF EXISTS;
+    DROP TABLE IF EXISTS refund.bsplink_file CASCADE;
     
-    DROP TABLE refund.comment IF EXISTS;   		   
+    DROP TABLE IF EXISTS refund.comment CASCADE;   		   
  
-    drop table refund.contact if exists;
+    drop table if exists refund.contact CASCADE;
 
     
-    drop table refund.refund if exists;
+    drop table if exists refund.refund CASCADE;
 
     
-    drop table refund.refund_conjunctions if exists;
+    drop table if exists refund.refund_conjunctions CASCADE;
 
     
-    drop table refund.refund_form_of_payment_amounts if exists;
+    drop table if exists refund.refund_form_of_payment_amounts CASCADE;
 
-    drop table refund.refund_tax_miscellaneous_fees if exists;
+    drop table  if exists refund.refund_tax_miscellaneous_fees CASCADE;
 
-	drop table refund.refund_issue_permission if exists;
+	drop table if exists refund.refund_issue_permission CASCADE;
 	
-	drop table refund.config if exists;
+	drop table if exists refund.config CASCADE;
 	
-	drop table refund.reason if exists;
+	drop table if exists refund.reason CASCADE;
 
     drop sequence if exists refund.hibernate_sequence;
 
