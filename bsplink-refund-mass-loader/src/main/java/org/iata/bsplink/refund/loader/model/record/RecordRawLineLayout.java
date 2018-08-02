@@ -1,6 +1,6 @@
 package org.iata.bsplink.refund.loader.model.record;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * This layout describes a complete record without tokenization.
@@ -15,9 +15,9 @@ public class RecordRawLineLayout extends RecordBaseLayout {
     }
 
     @Override
-    protected void setFieldsLayout(Map<String, String> fieldsLayout) {
+    protected void setFieldsLayouts(List<FieldLayout> fieldsLayouts) {
 
-        fieldsLayout.put("line", "1-254");
+        fieldsLayouts.add(new FieldLayout("line", 1, "", FieldType.AN, 1, 255));
     }
 
 }

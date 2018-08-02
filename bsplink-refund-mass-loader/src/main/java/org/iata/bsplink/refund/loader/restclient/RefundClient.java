@@ -1,5 +1,7 @@
 package org.iata.bsplink.refund.loader.restclient;
 
+import feign.Response;
+
 import org.iata.bsplink.refund.loader.dto.Refund;
 import org.iata.bsplink.refund.loader.dto.RefundStatusRequest;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -15,22 +17,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "refund", url = "${feign.refund.url}", decode404 = true)
 public interface RefundClient {
 
-    @GetMapping("/indirects/?isoCountryCode={isoCountryCode}"
-            + "&airlineCode={airlineCode}"
-            + "&ticketDocumentNumber={ticketDocumentNumber}")
+    @GetMapping("/indirects")
     ResponseEntity<Refund> findRefund(
             @RequestParam(value = "isoCountryCode") String isoCountryCode,
             @RequestParam(value = "airlineCode") String airlineCode,
             @RequestParam(value = "ticketDocumentNumber") String ticketDocumentNumber);
 
     @PutMapping(value = "/indirects/{refundId}", params = "fileName")
-    void updateRefund(
+    Response updateRefund(
             @PathVariable("refundId") Long refundId,
             @RequestParam(value = "fileName") String fileName,
             Refund refund);
 
     @PostMapping(value = "/indirects/{refundId}/status", params = "fileName")
-    void updateStatus(
+    Response updateStatus(
             @PathVariable("refundId") Long refundId,
             @RequestParam(value = "fileName") String fileName,
             RefundStatusRequest refundStatusRequest);

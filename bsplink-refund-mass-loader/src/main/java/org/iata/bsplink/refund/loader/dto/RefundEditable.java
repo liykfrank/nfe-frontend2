@@ -1,5 +1,7 @@
 package org.iata.bsplink.refund.loader.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,16 +18,15 @@ public abstract class RefundEditable {
     private List<RelatedDocument> conjunctions;
     private RefundCurrency currency;
     private String customerFileReference;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOfIssueRelatedDocument;
     private List<FormOfPaymentAmount> formOfPaymentAmounts;
     private Boolean netReporting;
-    private Boolean partialRefund;
-    private String passenger;
+    private Boolean partialRefund = false;
     private RelatedDocument relatedDocument;
     private String settlementAuthorisationCode;
     private String statisticalCode;
     private RefundStatus status;
     private List<TaxMiscellaneousFee> taxMiscellaneousFees;
-    private String tourCode;
     private String waiverCode;
 }

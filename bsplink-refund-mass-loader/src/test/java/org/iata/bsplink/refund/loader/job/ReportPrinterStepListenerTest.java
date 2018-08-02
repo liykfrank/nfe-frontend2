@@ -1,0 +1,138 @@
+package org.iata.bsplink.refund.loader.job;
+
+import static org.iata.bsplink.refund.loader.configuration.BatchConfiguration.LOADER_STEP_NAME;
+import static org.iata.bsplink.refund.loader.configuration.BatchConfiguration.VALIDATION_STEP_NAME;
+import static org.iata.bsplink.refund.loader.job.RefundJobParametersConverter.REQUIRED_PARAMETER;
+import static org.iata.bsplink.refund.loader.job.ReportPrinterStepListener.VALIDATION_ERRORS_KEY;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.iata.bsplink.refund.loader.error.RefundLoaderError;
+import org.iata.bsplink.refund.loader.report.ProcessReportPrinter;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.springframework.batch.core.ExitStatus;
+import org.springframework.batch.core.JobParameter;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.item.ExecutionContext;
+
+public class ReportPrinterStepListenerTest {
+
+    private static final String ANY_REFUND_FILE_NAME = "ALe9EARS_20170410_0744_016";
+    private static final String ANY_REPORT_FILE_NAME = "ALe80744_20170410_016";
+
+    private static final ExitStatus EXIT_COMPLETED =
+            new ExitStatus(ExitStatus.COMPLETED.getExitCode(), "any description");
+    private static final ExitStatus EXIT_FAILED =
+            new ExitStatus(ExitStatus.FAILED.getExitCode(), "any description");
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    private ProcessReportPrinter printer;
+    private ReportPrinterStepListener listener;
+    private ExecutionContext executionContext;
+    private StepExecution stepExecution;
+    private List<RefundLoaderError> errors = Collections.emptyList();
+
+    @Before
+    public void setUp() {
+
+        executionContext = new ExecutionContext();
+
+        stepExecution = mock(StepExecution.class);
+        when(stepExecution.getExecutionContext()).thenReturn(executionContext);
+        when(stepExecution.getJobParameters()).thenReturn(getJobParameters());
+
+        printer = mock(ProcessReportPrinter.class);
+
+        listener = new ReportPrinterStepListener(printer);
+        listener.beforeStep(stepExecution);
+    }
+
+    private JobParameters getJobParameters() {
+
+        Map<String, JobParameter> parameters = new HashMap<>();
+
+        parameters.put(REQUIRED_PARAMETER, new JobParameter(ANY_REFUND_FILE_NAME, false));
+
+        return new JobParameters(parameters);
+    }
+
+    @Test
+    public void testThrowsExceptionIfValidationErrorsAreNotSet() {
+
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage(
+                String.format("No key %s found in execution context", VALIDATION_ERRORS_KEY));
+
+        configureStepExecution(VALIDATION_STEP_NAME, EXIT_FAILED);
+
+        listener.afterStep(stepExecution);
+    }
+
+    private void configureStepExecution(String stepName, ExitStatus exitStatus) {
+
+        when(stepExecution.getStepName()).thenReturn(stepName);
+        when(stepExecution.getExitStatus()).thenReturn(exitStatus);
+    }
+
+    @Test
+    public void testPrintsErrorReportWhenValidationStepFails() {
+
+        addValidationErrors();
+        configureStepExecution(VALIDATION_STEP_NAME, EXIT_FAILED);
+
+        listener.afterStep(stepExecution);
+
+        verify(printer).print(errors, ANY_REPORT_FILE_NAME);
+    }
+
+    private void addValidationErrors() {
+
+        executionContext.put(VALIDATION_ERRORS_KEY, errors);
+    }
+
+    @Test
+    public void testDoesNotPrintErrorReportIfValidationStepSuccess() {
+
+        configureStepExecution(VALIDATION_STEP_NAME, EXIT_COMPLETED);
+
+        listener.afterStep(stepExecution);
+
+        verify(printer, never()).print(any(), any());
+    }
+
+    @Test
+    public void testPrintsErrorReportWhenLoaderStepSuccess() {
+
+        addValidationErrors();
+        configureStepExecution(LOADER_STEP_NAME, EXIT_COMPLETED);
+
+        listener.afterStep(stepExecution);
+
+        verify(printer).print(errors, ANY_REPORT_FILE_NAME);
+    }
+
+    @Test
+    public void testDoesNotPrintErrorReportIfLoaderStepFails() {
+
+        configureStepExecution(LOADER_STEP_NAME, EXIT_FAILED);
+
+        listener.afterStep(stepExecution);
+
+        verify(printer, never()).print(any(), any());
+    }
+
+}

@@ -2,6 +2,11 @@ package org.iata.bsplink.refund.loader.validation;
 
 import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_EMPTY_FILE;
+import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_NO_FILE_TRAILER_RECORD;
+import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_NO_HEADER_RECORD;
+import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_WRONG_RECORD_COUNTER;
+import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_WRONG_RECORD_COUNT_FORMAT;
 import static org.iata.bsplink.refund.loader.test.fixtures.FixtureLoader.getFileFixture;
 import static org.iata.bsplink.refund.loader.validation.RefundFileValidator.FILE_EMPTY;
 import static org.iata.bsplink.refund.loader.validation.RefundFileValidator.INCORRECT_NUMBER_OF_RECORDS;
@@ -9,142 +14,129 @@ import static org.iata.bsplink.refund.loader.validation.RefundFileValidator.IT01
 import static org.iata.bsplink.refund.loader.validation.RefundFileValidator.IT0Z_EXPECTED_IN_LASTLINE;
 import static org.iata.bsplink.refund.loader.validation.RefundFileValidator.IT0Z_RRDC_INCORRECT_FORMAT;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hamcrest.collection.IsEmptyCollection;
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
-import org.iata.bsplink.refund.loader.exception.WrongFileFormatException;
-import org.iata.bsplink.refund.loader.exception.WrongRecordCounterException;
+import org.iata.bsplink.refund.loader.error.ValidationPhase;
 import org.iata.bsplink.refund.loader.model.record.RecordIdentifier;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class RefundFileValidatorTest {
 
+    private RefundFileValidator validator;
     private List<RefundLoaderError> refundLoaderErrors;
 
-
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         refundLoaderErrors = new ArrayList<>();
-    }
-
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    @Test
-    public void testThrowsExceptionWhenRecordCounterIsWrong() throws Exception {
-
-        thrown.expect(WrongRecordCounterException.class);
-        thrown.expectMessage("wrong number of file lines: expected 14 there are 8");
-
-        RefundLoaderError error = it0zError(8, INCORRECT_NUMBER_OF_RECORDS);
-        error.setField("reportRecordCounter");
-
-        executeValidationOnFile("wrong/WRONG_RECORD_COUNTER", error);
-    }
-
-    private void executeValidationOnFile(String fileName,
-            RefundLoaderError expectedRefundLoaderError) throws Exception {
-
-        RefundFileValidator validator = new RefundFileValidator(refundLoaderErrors);
-
-        try {
-
-            validator.validate(getFileFixture(fileName).getFile());
-        } catch (Exception e) {
-
-            assertThat(refundLoaderErrors, hasSize(1));
-            assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(expectedRefundLoaderError));
-
-            throw e;
-        }
+        validator = new RefundFileValidator();
     }
 
     @Test
-    public void testValidationSucceedWhenFileIsCorrect() throws Exception {
+    public void testValidatesRecordCounter() {
+
+        RefundLoaderError expectedError = it0zError(8, INCORRECT_NUMBER_OF_RECORDS);
+        expectedError.setField("reportRecordCounter");
+
+        executeValidationOnFile(FILE_WRONG_RECORD_COUNTER);
+
+        assertError(expectedError);
+    }
+
+    private void executeValidationOnFile(String fileName) {
 
         try {
 
-            executeValidationOnFile("ALe9EARS_20170410_0744_016", null);
+            validator.validate(getFileFixture(fileName).getFile(), refundLoaderErrors);
 
         } catch (Exception exception) {
 
-            fail("Validation should be correct");
+            throw new RuntimeException(exception);
         }
+    }
+
+    private void assertError(RefundLoaderError expected) {
+
+        assertThat(refundLoaderErrors, hasSize(1));
+        assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(expected));
+    }
+
+    @Test
+    public void testValidationSucceedWhenFileIsCorrect() {
+
+        executeValidationOnFile("ALe9EARS_20170410_0744_016");
 
         assertThat(refundLoaderErrors, IsEmptyCollection.empty());
     }
 
-
     @Test
-    public void testThrowsExceptionIfThereIsNotFileTrailerRecord() throws Exception {
+    public void testValidatesFileTrailerRecord() {
 
-        thrown.expect(WrongFileFormatException.class);
-        thrown.expectMessage("the file does not have trailer record (IT0Z)");
+        executeValidationOnFile(FILE_NO_FILE_TRAILER_RECORD);
 
-
-        executeValidationOnFile("wrong/NO_FILE_TRAILER_RECORD",
-                it0zError(7, IT0Z_EXPECTED_IN_LASTLINE));
+        assertError(it0zError(7, IT0Z_EXPECTED_IN_LASTLINE));
     }
 
     @Test
-    public void testThrowsExceptionIfFileIsEmpty() throws Exception {
+    public void testValidatesFileIsEmpty() {
 
-        thrown.expect(WrongFileFormatException.class);
-        thrown.expectMessage("the file is empty");
+        RefundLoaderError expectedError = new RefundLoaderError();
+        expectedError.setMessage(FILE_EMPTY);
+        expectedError.setValidationPhase(ValidationPhase.FILE);
 
-        RefundLoaderError error = new RefundLoaderError();
-        error.setMessage(FILE_EMPTY);
-        executeValidationOnFile("wrong/EMPTY_FILE", error);
+        executeValidationOnFile(FILE_EMPTY_FILE);
+
+        assertError(expectedError);
     }
 
     @Test
-    public void testThrowsExceptionIfRecordCountCanNotBeObtained() throws Exception {
+    public void testIsAwareOfRecordCountExtractionErrors() {
 
-        thrown.expect(WrongFileFormatException.class);
-        thrown.expectMessage("the record count can not be extracted from file");
+        RefundLoaderError expectedError = it0zError(8, IT0Z_RRDC_INCORRECT_FORMAT);
+        expectedError.setField("reportRecordCounter");
 
-        RefundLoaderError error = it0zError(8, IT0Z_RRDC_INCORRECT_FORMAT);
-        error.setField("reportRecordCounter");
+        executeValidationOnFile(FILE_WRONG_RECORD_COUNT_FORMAT);
 
-        executeValidationOnFile("wrong/WRONG_RECORD_COUNT_FORMAT", error);
+        assertError(expectedError);
     }
 
     @Test
-    public void testThrowsExceptionIfThereIsNoHeaderRecord() throws Exception {
+    public void testValidatesHeaderRecord() {
 
-        thrown.expect(WrongFileFormatException.class);
-        thrown.expectMessage("the file does not have header record (IT01)");
+        executeValidationOnFile(FILE_NO_HEADER_RECORD);
 
-        executeValidationOnFile("wrong/NO_HEADER_RECORD", it01Error(IT01_EXPECTED_IN_LINE1));
+        assertError(it01Error(IT01_EXPECTED_IN_LINE1));
     }
 
 
     private RefundLoaderError it01Error(String message) {
 
         RefundLoaderError it01Error = new RefundLoaderError();
+
         it01Error.setRecordIdentifier(RecordIdentifier.IT01);
         it01Error.setField("recordIdentifier");
         it01Error.setLineNumber(1);
         it01Error.setMessage(message);
+        it01Error.setValidationPhase(ValidationPhase.FILE);
+
         return it01Error;
     }
 
     private RefundLoaderError it0zError(int lineNumber, String message) {
 
         RefundLoaderError it0zError = new RefundLoaderError();
+
         it0zError.setRecordIdentifier(RecordIdentifier.IT0Z);
         it0zError.setField("recordIdentifier");
         it0zError.setLineNumber(lineNumber);
         it0zError.setMessage(message);
+        it0zError.setValidationPhase(ValidationPhase.FILE);
+
         return it0zError;
     }
 }

@@ -5,14 +5,18 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
+import org.iata.bsplink.refund.loader.error.ValidationPhase;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02;
 import org.iata.bsplink.refund.loader.model.record.RecordIt05;
 import org.iata.bsplink.refund.loader.model.record.RecordIt08;
 import org.iata.bsplink.refund.loader.model.record.TransactionRecord;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RefundDocumentValidator {
 
     public static final String INCORRECT_TRANSACTION_CODE = "Incorrect transaction code";
@@ -38,21 +42,16 @@ public class RefundDocumentValidator {
     private static final String CURRENCY_TYPE = "currencyType";
     private static final String COMMISSION_TYPE = "commissionType";
 
-
-
     private List<RefundLoaderError> refundLoaderErrors;
 
-    public RefundDocumentValidator(List<RefundLoaderError> refundLoaderErrors) {
-        this.refundLoaderErrors = refundLoaderErrors;
-    }
-
-
-
     /**
-     * Validates RefundDocument
-     *  and adds the errors (if there is any) to RefundLoaderError collection.
+     * Validates RefundDocument and adds the errors (if there is any) to RefundLoaderError
+     * collection.
      */
-    public boolean isValid(RefundDocument refundDocument) {
+    public boolean validate(RefundDocument refundDocument,
+            List<RefundLoaderError> refundLoaderErrors) {
+
+        this.refundLoaderErrors = refundLoaderErrors;
 
         boolean result = isValidTransactionCode(refundDocument.getRecordIt02());
 
@@ -65,15 +64,13 @@ public class RefundDocumentValidator {
         if (!isValidTransactionNumbering(refundDocument)) {
             result = false;
         }
-        if (!isValidRecordOrden(refundDocument)) {
+        if (!isValidRecordOrder(refundDocument)) {
             result = false;
         }
         return result;
     }
 
-
-
-    private boolean isValidRecordOrden(RefundDocument refundDocument) {
+    private boolean isValidRecordOrder(RefundDocument refundDocument) {
 
         RecordIt02 it02 = refundDocument.getRecordIt02();
 
@@ -355,6 +352,7 @@ public class RefundDocumentValidator {
         error.setTransactionNumber(record.getTransactionNumber());
         error.setRecordIdentifier(record.getRecordIdentifier());
         error.setMessage(message);
+        error.setValidationPhase(ValidationPhase.TRANSACTION);
         refundLoaderErrors.add(error);
         return error;
     }

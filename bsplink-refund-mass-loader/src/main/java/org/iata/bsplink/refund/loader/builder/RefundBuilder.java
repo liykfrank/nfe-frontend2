@@ -3,6 +3,7 @@ package org.iata.bsplink.refund.loader.builder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Collections;
 import java.util.List;
 
 import lombok.Setter;
@@ -54,6 +55,7 @@ public class RefundBuilder {
             refund.setTicketDocumentNumber(it02.getTicketDocumentNumber());
             refund.setStatisticalCode(it02.getStatisticalCode());
             refund.setSettlementAuthorisationCode(it02.getSettlementAuthorisationCode());
+            refund.setTransactionNumber(it02.getTransactionNumber());
         }
 
         assignRelatedDocuments(refund);
@@ -72,12 +74,17 @@ public class RefundBuilder {
 
 
     private void assignRelatedDocuments(Refund refund) {
+
+        List<RelatedDocument> conjunctions = Collections.emptyList();
+
         if (relatedDocuments != null && !relatedDocuments.isEmpty()) {
             refund.setRelatedDocument(relatedDocuments.get(0));
             if (relatedDocuments.size() > 1) {
-                refund.setConjunctions(relatedDocuments.subList(1, relatedDocuments.size()));
+                conjunctions = relatedDocuments.subList(1, relatedDocuments.size());
             }
         }
+
+        refund.setConjunctions(conjunctions);
     }
 
 

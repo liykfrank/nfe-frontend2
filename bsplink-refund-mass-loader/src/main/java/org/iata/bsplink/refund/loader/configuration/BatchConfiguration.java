@@ -1,18 +1,20 @@
 package org.iata.bsplink.refund.loader.configuration;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.iata.bsplink.refund.loader.dto.Refund;
-import org.iata.bsplink.refund.loader.error.RefundLoaderError;
 import org.iata.bsplink.refund.loader.job.FileValidatorTasklet;
 import org.iata.bsplink.refund.loader.job.JobCompletionNotificationListener;
+import org.iata.bsplink.refund.loader.job.JobExitCodeGeneratorListener;
+import org.iata.bsplink.refund.loader.job.ReportPrinterStepListener;
 import org.iata.bsplink.refund.loader.mapper.LineNumberAwarePatternMatchingCompositeLineMapper;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.Record;
+import org.iata.bsplink.refund.loader.model.record.RecordIdentifier;
 import org.iata.bsplink.refund.loader.model.record.RecordIt01Layout;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02Layout;
 import org.iata.bsplink.refund.loader.model.record.RecordIt03Layout;
@@ -39,7 +41,6 @@ import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FixedLengthTokenizer;
 import org.springframework.batch.item.file.transform.LineTokenizer;
-import org.springframework.batch.item.file.transform.Range;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,6 +66,10 @@ public class BatchConfiguration {
     private static final String RECORD_IT0H_BEAN_NAME = "recordIt0h";
     private static final String RECORD_IT0Z_BEAN_NAME = "recordIt0z";
     private static final String RECORD_RAWLINE_BEAN_NAME = "recordRawLine";
+
+    public static final String VALIDATION_STEP_NAME = "validationStep";
+    public static final String LOADER_STEP_NAME = "refundLoaderStep";
+    public static final String LOADER_JOB_NAME = "refundMassLoaderJob";
 
     @Autowired
     public JobBuilderFactory jobBuilderFactory;
@@ -94,12 +99,14 @@ public class BatchConfiguration {
      * Builds the validation step.
      */
     @Bean
-    public Step validationStep(FileValidatorTasklet validatorTasklet) {
+    public Step validationStep(FileValidatorTasklet validatorTasklet,
+            ReportPrinterStepListener errorReportPrinterStepListener) {
 
-        return stepBuilderFactory.get("validationStep")
+        return stepBuilderFactory.get(VALIDATION_STEP_NAME)
                 .tasklet(validatorTasklet)
                 // TODO: add test that ensures that this step executes always
                 .allowStartIfComplete(true)
+                .listener(errorReportPrinterStepListener)
                 .build();
     }
 
@@ -108,13 +115,15 @@ public class BatchConfiguration {
      */
     @Bean
     public Step refundLoaderStep(ItemReader<RefundDocument> reader,
-            ItemProcessor<RefundDocument, Refund> processor, ItemWriter<Refund> writer) {
+            ItemProcessor<RefundDocument, Refund> processor, ItemWriter<Refund> writer,
+            ReportPrinterStepListener errorReportPrinterStepListener) {
 
-        return stepBuilderFactory.get("refundLoaderStep")
+        return stepBuilderFactory.get(LOADER_STEP_NAME)
             .<RefundDocument, Refund>chunk(STEP_CHUNK_SIZE)
             .reader(reader)
             .processor(processor)
             .writer(writer)
+            .listener(errorReportPrinterStepListener)
             .build();
     }
 
@@ -124,30 +133,57 @@ public class BatchConfiguration {
     @Bean
     public Job refundMassLoaderJob(
             JobCompletionNotificationListener jobCompletionNotificationListener,
+            JobExitCodeGeneratorListener jobExitCodeGeneratorListener,
             Step refundLoaderStep, Step validationStep) {
 
-        return jobBuilderFactory.get("refundMassLoaderJob")
+        Job job = jobBuilderFactory.get(LOADER_JOB_NAME)
             .listener(jobCompletionNotificationListener)
+            .listener(jobExitCodeGeneratorListener)
             .validator(new RefundLoaderParametersValidator())
             .start(validationStep).next(refundLoaderStep)
             .build();
+
+        return job;
+    }
+
+    /**
+     * Returns a map indexed by record identifier with the record layouts.
+     */
+    @Bean
+    public Map<RecordIdentifier, RecordLayout> recordLayouts() {
+
+        EnumMap<RecordIdentifier, RecordLayout> recordLayouts =
+                new EnumMap<>(RecordIdentifier.class);
+
+        recordLayouts.put(RecordIdentifier.IT01, new RecordIt01Layout());
+        recordLayouts.put(RecordIdentifier.IT02, new RecordIt02Layout());
+        recordLayouts.put(RecordIdentifier.IT03, new RecordIt03Layout());
+        recordLayouts.put(RecordIdentifier.IT05, new RecordIt05Layout());
+        recordLayouts.put(RecordIdentifier.IT08, new RecordIt08Layout());
+        recordLayouts.put(RecordIdentifier.IT0Y, new RecordIt0yLayout());
+        recordLayouts.put(RecordIdentifier.IT0H, new RecordIt0hLayout());
+        recordLayouts.put(RecordIdentifier.IT0Z, new RecordIt0zLayout());
+        recordLayouts.put(RecordIdentifier.UNKNOWN, new RecordRawLineLayout());
+
+        return recordLayouts;
     }
 
     /**
      * Builds the refund line mapper.
      */
     @Bean
-    public LineMapper<Record> lineMapper(Map<String, FieldSetMapper<Record>> fieldSetMappers) {
+    public LineMapper<Record> lineMapper(Map<RecordIdentifier, RecordLayout> recordLayouts,
+            Map<String, FieldSetMapper<Record>> fieldSetMappers) {
 
-        RecordIt01Layout recordIt01Layout = new RecordIt01Layout();
-        RecordIt02Layout recordIt02Layout = new RecordIt02Layout();
-        RecordIt03Layout recordIt03Layout = new RecordIt03Layout();
-        RecordIt05Layout recordIt05Layout = new RecordIt05Layout();
-        RecordIt08Layout recordIt08Layout = new RecordIt08Layout();
-        RecordIt0yLayout recordIt0yLayout = new RecordIt0yLayout();
-        RecordIt0hLayout recordIt0hLayout = new RecordIt0hLayout();
-        RecordIt0zLayout recordIt0zLayout = new RecordIt0zLayout();
-        RecordRawLineLayout recordRawLineLayout = new RecordRawLineLayout();
+        RecordLayout recordIt01Layout = recordLayouts.get(RecordIdentifier.IT01);
+        RecordLayout recordIt02Layout = recordLayouts.get(RecordIdentifier.IT02);
+        RecordLayout recordIt03Layout = recordLayouts.get(RecordIdentifier.IT03);
+        RecordLayout recordIt05Layout = recordLayouts.get(RecordIdentifier.IT05);
+        RecordLayout recordIt08Layout = recordLayouts.get(RecordIdentifier.IT08);
+        RecordLayout recordIt0yLayout = recordLayouts.get(RecordIdentifier.IT0Y);
+        RecordLayout recordIt0hLayout = recordLayouts.get(RecordIdentifier.IT0H);
+        RecordLayout recordIt0zLayout = recordLayouts.get(RecordIdentifier.IT0Z);
+        RecordLayout recordRawLineLayout = recordLayouts.get(RecordIdentifier.UNKNOWN);
 
         Map<String, LineTokenizer> tokenizers = new HashMap<>();
 
@@ -196,19 +232,9 @@ public class BatchConfiguration {
 
     private LineTokenizer getTokenizer(RecordLayout recordLayout) {
 
-        List<Range> ranges = new ArrayList<>();
-
-        for (String fieldPosition : recordLayout.getFieldsLayout().values()) {
-
-            String[] limits = fieldPosition.split("-");
-
-            Range range = new Range(Integer.parseInt(limits[0]), Integer.parseInt(limits[1]));
-            ranges.add(range);
-        }
-
         FixedLengthTokenizer tokenizer = new FixedLengthTokenizer();
-        tokenizer.setNames(recordLayout.getFieldsLayout().keySet().toArray(new String[] {}));
-        tokenizer.setColumns(ranges.toArray(new Range[] {}));
+        tokenizer.setNames(recordLayout.getFieldsNames());
+        tokenizer.setColumns(recordLayout.getFieldsRanges());
         tokenizer.setStrict(false);
 
         return tokenizer;
@@ -245,9 +271,4 @@ public class BatchConfiguration {
         return fieldSetMappers;
     }
 
-    @Bean
-    public List<RefundLoaderError> refundLoaderErrors() {
-
-        return new ArrayList<>();
-    }
 }

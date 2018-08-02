@@ -5,7 +5,7 @@ import static org.iata.bsplink.refund.loader.model.record.RecordIdentifier.IT0Z;
 
 import java.util.Optional;
 
-import lombok.extern.java.Log;
+import lombok.extern.apachecommons.CommonsLog;
 
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.Record;
@@ -22,7 +22,7 @@ import org.springframework.batch.item.support.AbstractItemCountingItemStreamItem
 import org.springframework.stereotype.Component;
 
 @Component
-@Log
+@CommonsLog
 public class RefundReader extends AbstractItemCountingItemStreamItemReader<RefundDocument> {
 
     private ItemReader<Record> delegate;

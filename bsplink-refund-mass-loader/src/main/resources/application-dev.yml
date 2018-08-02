@@ -1,0 +1,10 @@
+# Activates feign client log    
+logging:
+  level:
+    org:
+      iata:
+        bsplink:
+          refund:
+            loader:
+              restclient:
+                RefundClient: DEBUG

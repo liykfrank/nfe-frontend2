@@ -1,0 +1,123 @@
+{
+	"info": {
+		"_postman_id": "bebe35c2-a4c8-4ea0-ab2c-ec95daa103b4",
+		"name": "Mass load test",
+		"description": "These requests are aimed to do a manual test with the massive refund loader, they prepare the airline, agent and refund management services to allow the loading.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Mass load test",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"agentCode\": \"78200010\",\n    \"airlineCodeRelatedDocument\": \"074\",\n    \"airlineRemark\": \"\",\n    \"amounts\": {\n        \"cancellationPenalty\": 0,\n        \"commissionAmount\": 0,\n        \"commissionOnCpAndMfAmount\": 0,\n        \"commissionOnCpAndMfRate\": 0,\n        \"commissionRate\": 0,\n        \"grossFare\": 1500,\n        \"lessGrossFareUsed\": 0,\n        \"miscellaneousFee\": 0,\n        \"refundToPassenger\": 1500,\n        \"spam\": 0,\n        \"tax\": 0,\n        \"taxOnCancellationPenalty\": 0,\n        \"taxOnMiscellaneousFee\": 0\n    },\n    \"conjunctions\": [],\n    \"currency\": {\n        \"code\": \"ABC\",\n        \"decimals\": 2\n    },\n    \"customerFileReference\": \"\",\n    \"dateOfIssueRelatedDocument\": \"2017-04-04\",\n    \"formOfPaymentAmounts\": [\n        {\n            \"amount\": 1000,\n            \"number\": null,\n            \"type\": \"CA\",\n            \"vendorCode\": null\n        },\n        {\n            \"amount\": 500,\n            \"number\": null,\n            \"type\": \"MSCA\",\n            \"vendorCode\": null\n        }\n    ],\n    \"netReporting\": false,\n    \"partialRefund\": false,\n    \"passenger\": \"SDFX\",\n    \"relatedDocument\": {\n        \"relatedTicketCoupon1\": true,\n        \"relatedTicketCoupon2\": true,\n        \"relatedTicketCoupon3\": true,\n        \"relatedTicketCoupon4\": true,\n        \"relatedTicketDocumentNumber\": \"9999999999\"\n    },\n    \"settlementAuthorisationCode\": \"\",\n    \"statisticalCode\": \"I\",\n    \"status\": \"PENDING\",\n    \"taxMiscellaneousFees\": [],\n    \"tourCode\": null,\n    \"waiverCode\": \"88888888888888\",\n    \"agentContact\": null,\n    \"agentRegistrationNumber\": null,\n    \"agentVatNumber\": null,\n    \"airlineCode\": \"123\",\n    \"airlineContact\": null,\n    \"airlineRegistrationNumber\": null,\n    \"airlineVatNumber\": null,\n    \"billingPeriod\": null,\n    \"dateOfAirlineAction\": null,\n    \"dateOfIssue\": \"2017-04-04\",\n    \"exchange\": null,\n    \"isoCountryCode\": \"AA\",\n    \"issueReason\": null,\n    \"originalIssue\": null,\n    \"rejectionReason\": null,\n    \"ticketDocumentNumber\": null,\n    \"issueReason\": \"any issue reason\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8085/v1/refunds/indirects",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"v1",
+						"refunds",
+						"indirects"
+					]
+				},
+				"description": "This request adds a refund prepared to be updated by the massive refund loader."
+			},
+			"response": []
+		},
+		{
+			"name": "Mass load agent",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"accreditationDate\": \"2018-06-01\",\r\n        \"billingCity\": \"CITY_78200010\",\r\n        \"billingCountry\": \"COUNTRY_78200010\",\r\n        \"billingPostalCode\": \"PC_78200010\",\r\n        \"billingState\": \"STATE_78200010\",\r\n        \"billingStreet\": \"STREET_78200010\",\r\n        \"defaultDate\": null,\r\n        \"email\": \"agent78200010@example.com\",\r\n        \"fax\": \"FAX_78200010\",\r\n        \"formOfPayment\": [\r\n            {\r\n                \"type\": \"CC\",\r\n                \"status\": \"Active\"\r\n            },\r\n            {\r\n                \"type\": \"CA\",\r\n                \"status\": \"Active\"\r\n            },\r\n            {\r\n                \"type\": \"EP\",\r\n                \"status\": \"Active\"\r\n            }\r\n        ],\r\n        \"iataCode\": \"78200010\",\r\n        \"isoCountryCode\": \"AA\",\r\n        \"locationClass\": \"A\",\r\n        \"locationType\": \"AE\",\r\n        \"name\": \"AGENT_78200010\",\r\n        \"parentIataCode\": null,\r\n        \"phone\": \"PHONE_78200010\",\r\n        \"remittanceFrequency\": \"W\",\r\n        \"taxId\": \"TAX_ID_78200010\",\r\n        \"topParentIataCode\": null,\r\n        \"tradeName\": \"TRADE_NAME_78200010\",\r\n        \"vatNumber\": \"00000078200010\"\r\n    }\r\n]"
+				},
+				"url": {
+					"raw": "http://localhost:8082/v1/agents",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"v1",
+						"agents"
+					]
+				},
+				"description": "This request introduces an agent in the agent management service in order to load an example file with the massive refund loader.\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Mass load configuration",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"isoCountryCode\": \"AA\",\n    \"agentVatNumberEnabled\": false,\n    \"airlineVatNumberEnabled\": false,\n    \"companyRegistrationNumberEnabled\": false,\n    \"defaultStat\": \"INT\",\n    \"easyPayEnabled\": true,\n    \"freeStat\": false,\n    \"creditOnIndirectRefundsEnabled\": true,\n    \"creditOnDirectRefundsEnabled\": false,\n    \"fareAdjustmentAmountEnabled\": false,\n    \"mfAmount\": 0,\n    \"handlingFeeEnabled\": false,\n    \"penaltyChargeEnabled\": false,\n    \"commissionOnCpAndMfEnabled\": false,\n    \"mixedTaxesAllowed\": false,\n    \"nrRefundsAllowed\": false,\n    \"airlineMfAndCpConfigurationAllowed\": false,\n    \"electronicTicketValidationsEnabled\": false,\n    \"refundNoticeNumberConsidered\": false,\n    \"tctpForVatOnCp\": null,\n    \"tctpForVatOnMf\": null,\n    \"vatOnMfAndVatOnCpEnabled\": false,\n    \"issueRefundsWithoutCouponsAllowed\": false,\n    \"allGdsAgentsIssueRefundNoticeAllowed\": false,\n    \"defaultCurrency\": null,\n    \"maxCouponsInRelatedDocuments\": 16,\n    \"maxConjunctions\": 99\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8085/v1/configurations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"v1",
+						"configurations"
+					]
+				},
+				"description": "This request updates the configuration of the refund service to change the values of the ficticional country AA in order to be able to do the example load."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "4a63890a-1273-4294-89af-a737c3593b4e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "6be606c8-1675-4f98-8e9d-b2c5896931b1",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

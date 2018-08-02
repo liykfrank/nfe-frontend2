@@ -10,6 +10,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.iata.bsplink.refund.loader.dto.FormOfPaymentAmount;
@@ -104,6 +106,28 @@ public class RefundBuilderTest {
         assertThat(refund.getConjunctions().get(0), equalTo(relatedDocuments.get(1)));
     }
 
+    @Test
+    public void testRequiredFieldConjunctionsIsInitializedIfThereAreNoRelatedDocuments() {
+
+        RefundBuilder builder = new RefundBuilder();
+        builder.setRefundDocument(new RefundDocument());
+        builder.setRelatedDocuments(null);
+
+        assertNotNull(builder.build().getConjunctions());
+
+        builder = new RefundBuilder();
+        builder.setRefundDocument(new RefundDocument());
+        builder.setRelatedDocuments(Collections.emptyList());
+
+        assertNotNull(builder.build().getConjunctions());
+
+        builder = new RefundBuilder();
+        builder.setRefundDocument(new RefundDocument());
+        builder.setRelatedDocuments(Arrays.asList(new RelatedDocument()));
+
+        assertNotNull(builder.build().getConjunctions());
+    }
+
 
     @Test
     public void testBuildWithIt02() {
@@ -123,6 +147,7 @@ public class RefundBuilderTest {
         String settlementAuthorisationCode = "ESAC";
         it02.setSettlementAuthorisationCode(settlementAuthorisationCode);
         it02.setRefundApplicationStatus("U");
+        it02.setTransactionNumber("000001");
 
         RefundDocument refundDocument = new RefundDocument();
         refundDocument.setRecordIt02(it02);
@@ -139,6 +164,7 @@ public class RefundBuilderTest {
         assertThat(refund.getStatisticalCode(), equalTo(statisticalCode));
         assertThat(refund.getSettlementAuthorisationCode(), equalTo(settlementAuthorisationCode));
         assertThat(refund.getStatus(), equalTo(RefundStatus.UNDER_INVESTIGATION));
+        assertThat(refund.getTransactionNumber(), equalTo("000001"));
     }
 
     @Test

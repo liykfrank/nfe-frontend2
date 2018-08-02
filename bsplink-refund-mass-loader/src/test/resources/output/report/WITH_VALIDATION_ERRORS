@@ -1,0 +1,6 @@
+Line:    10 TRNN: 000002    Record: IT03    Element: # 4    RTDN
+ERROR: The record element is mandatory
+
+Line:    20 TRNN: 000004    Record: IT05    Element: # 8    TMFA
+ERROR: Non-numeric characters in numeric fields
+

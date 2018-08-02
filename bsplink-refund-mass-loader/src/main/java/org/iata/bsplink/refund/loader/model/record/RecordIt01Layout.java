@@ -1,6 +1,6 @@
 package org.iata.bsplink.refund.loader.model.record;
 
-import java.util.Map;
+import java.util.List;
 
 public class RecordIt01Layout extends RecordBaseLayout {
 
@@ -12,17 +12,26 @@ public class RecordIt01Layout extends RecordBaseLayout {
     }
 
     @Override
-    protected void setFieldsLayout(Map<String, String> fieldsLayout) {
+    protected void setFieldsLayouts(List<FieldLayout> fieldsLayouts) {
 
-        fieldsLayout.put("fileType", "37-37");
-        fieldsLayout.put("fileTypeSequenceNumber", "38-39");
-        fieldsLayout.put("handbookRevisionNumber", "12-14");
-        fieldsLayout.put("isoCountryCode", "29-30");
-        fieldsLayout.put("processingDate", "19-24");
-        fieldsLayout.put("processingTime", "25-28");
-        fieldsLayout.put("reportingSystemIdentifier", "8-11");
-        fieldsLayout.put("systemProviderReportingPeriodEndingDate", "2-7");
-        fieldsLayout.put("testProductionStatus", "15-18");
+        fieldsLayouts.add(new FieldLayout(
+                "fileType", 10, "FTYP", FieldType.AN, 37, 1));
+        fieldsLayouts.add(new FieldLayout(
+                "fileTypeSequenceNumber", 11, "FTSN", FieldType.AN, 38, 2));
+        fieldsLayouts.add(new FieldLayout(
+                "handbookRevisionNumber", 4, "REVN", FieldType.N, 12, 3));
+        fieldsLayouts.add(new FieldLayout(
+                "isoCountryCode", 8, "ISOC", FieldType.A, 29, 2));
+        fieldsLayouts.add(new FieldLayout(
+                "processingDate", 6, "PRDA", FieldType.N, 19, 6));
+        fieldsLayouts.add(new FieldLayout(
+                "processingTime", 7, "TIME", FieldType.N, 25, 4));
+        fieldsLayouts.add(new FieldLayout(
+                "reportingSystemIdentifier", 3, "RPSI", FieldType.AN, 8, 4));
+        fieldsLayouts.add(new FieldLayout(
+                "systemProviderReportingPeriodEndingDate", 2, "SPED", FieldType.N, 2, 6));
+        fieldsLayouts.add(new FieldLayout(
+                "testProductionStatus", 5, "TPST", FieldType.AN, 15, 4));
     }
 
 }

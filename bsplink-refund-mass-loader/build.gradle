@@ -36,14 +36,15 @@ checkstyle {
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-batch')
 	compile('org.springframework.cloud:spring-cloud-starter-openfeign')
+	compile('commons-io:commons-io:2.6')
+	compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.6')
+	compile('commons-beanutils:commons-beanutils:1.9.3')
     runtime('com.h2database:h2')
     runtime('org.postgresql:postgresql')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.batch:spring-batch-test')
 	testCompile('nl.jqno.equalsverifier:equalsverifier:2.4.6')
 	testCompile('pl.pragmatists:JUnitParams:1.1.1')
-	testCompile('commons-beanutils:commons-beanutils:1.9.3')
-	testCompile('commons-io:commons-io:2.6')
 }
 
 ext {

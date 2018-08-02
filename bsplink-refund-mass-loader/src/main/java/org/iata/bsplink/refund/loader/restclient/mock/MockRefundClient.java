@@ -1,6 +1,10 @@
 package org.iata.bsplink.refund.loader.restclient.mock;
 
-import lombok.extern.java.Log;
+import feign.Response;
+
+import java.util.HashMap;
+
+import lombok.extern.apachecommons.CommonsLog;
 
 import org.iata.bsplink.refund.loader.dto.Refund;
 import org.iata.bsplink.refund.loader.dto.RefundStatusRequest;
@@ -14,7 +18,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Profile("mock")
-@Log
+@CommonsLog
 public class MockRefundClient implements RefundClient {
 
     @Override
@@ -41,15 +45,28 @@ public class MockRefundClient implements RefundClient {
     }
 
     @Override
-    public void updateRefund(Long refundId, String fileName, Refund refund) {
+    public Response updateRefund(Long refundId, String fileName, Refund refund) {
 
         log.info(String.format("calling: updateRefund(%s, %s);", refundId, refund));
+
+        return getOkResponse();
     }
 
     @Override
-    public void updateStatus(Long refundId, String fileName, RefundStatusRequest statusRequest) {
+    public Response updateStatus(Long refundId, String fileName,
+            RefundStatusRequest statusRequest) {
 
         log.info(String.format("calling: updateRefund(%s, %s);", refundId, statusRequest));
+
+        return getOkResponse();
+    }
+
+    private Response getOkResponse() {
+
+        return Response.builder()
+                .status(200)
+                .headers(new HashMap<>())
+                .build();
     }
 
 }

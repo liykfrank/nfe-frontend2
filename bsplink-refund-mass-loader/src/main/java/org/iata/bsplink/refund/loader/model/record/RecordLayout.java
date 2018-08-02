@@ -1,11 +1,19 @@
 package org.iata.bsplink.refund.loader.model.record;
 
-import java.util.Map;
+import java.util.List;
+
+import org.springframework.batch.item.file.transform.Range;
 
 public interface RecordLayout {
 
     String getPattern();
 
-    Map<String, String> getFieldsLayout();
+    FieldLayout getFieldLayout(String field);
+
+    List<FieldLayout> getFieldsLayouts();
+
+    String[] getFieldsNames();
+
+    Range[] getFieldsRanges();
 
 }

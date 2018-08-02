@@ -1,6 +1,6 @@
 package org.iata.bsplink.refund.loader.model.record;
 
-import java.util.Map;
+import java.util.List;
 
 public class RecordIt0zLayout extends RecordBaseLayout {
 
@@ -12,9 +12,9 @@ public class RecordIt0zLayout extends RecordBaseLayout {
     }
 
     @Override
-    protected void setFieldsLayout(Map<String, String> fieldsLayout) {
+    protected void setFieldsLayouts(List<FieldLayout> fieldsLayouts) {
 
-        fieldsLayout.put("reportRecordCounter", "2-12");
+        fieldsLayouts.add(new FieldLayout("reportRecordCounter", 10, "RRDC", FieldType.N, 2, 11));
     }
 
 }

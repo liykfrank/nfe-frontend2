@@ -4,6 +4,8 @@ config/application*.yml
 .checkstyle
 *.log
 *.db
+test_tmp/
+/*e8*
 
 # Created by https://www.gitignore.io/api/eclipse,gradle
 

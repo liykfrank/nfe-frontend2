@@ -42,6 +42,7 @@ public class RefundJobParametersConverter implements JobParametersConverter {
             }
 
             String fileName = (String) properties.get(REQUIRED_PARAMETER);
+            // TODO: refatorize, use filenameutils
             String baseFileName =
                     FileSystems.getDefault().getPath(fileName).getFileName().toString();
 

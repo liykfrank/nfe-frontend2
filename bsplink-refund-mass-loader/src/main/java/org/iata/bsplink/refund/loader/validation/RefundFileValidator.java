@@ -11,16 +11,18 @@ import java.util.List;
 import java.util.Optional;
 
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
+import org.iata.bsplink.refund.loader.error.ValidationPhase;
 import org.iata.bsplink.refund.loader.exception.RefundLoaderException;
-import org.iata.bsplink.refund.loader.exception.WrongFileFormatException;
-import org.iata.bsplink.refund.loader.exception.WrongRecordCounterException;
 import org.iata.bsplink.refund.loader.model.record.RecordIdentifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
  * Basic refund file validations.
  */
 @Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RefundFileValidator {
 
     public static final String FILE_EMPTY = "The file is empty";
@@ -34,21 +36,16 @@ public class RefundFileValidator {
 
     private List<RefundLoaderError> refundLoaderErrors;
 
-    public RefundFileValidator(List<RefundLoaderError> refundLoaderErrors) {
-        this.refundLoaderErrors = refundLoaderErrors;
-    }
-
-
     /**
-     * Does the file validation and throws an exception if there is an error.
-     *
-     * <p>
-     * If a validation error occurs a exception is thrown.
-     * </p>
+     * Does the file validation.
      */
-    public void validate(File file) {
+    public void validate(File file, List<RefundLoaderError> refundLoaderErrors) {
 
-        throwExeptionIfFileIsEmpty(file);
+        this.refundLoaderErrors = refundLoaderErrors;
+
+        if (!validateFileSize(file)) {
+            return;
+        }
 
         String currentLine = null;
         Optional<String> optionalLastReadLine = Optional.empty();
@@ -62,9 +59,8 @@ public class RefundFileValidator {
                 optionalLastReadLine = Optional.ofNullable(currentLine);
                 actualLinesCount++;
 
-                if (actualLinesCount == 1) {
-
-                    throwExceptionIfThereIsNoFileHeaderRecord(currentLine);
+                if (actualLinesCount == 1 && ! validateHeaderRecord(currentLine)) {
+                    return;
                 }
             }
 
@@ -73,53 +69,75 @@ public class RefundFileValidator {
             throw new RefundLoaderException(exception);
         }
 
-        throwExceptionIfThereIsNoFileTrailerRecord(optionalLastReadLine, actualLinesCount);
+        if (!validateTrailerRecord(optionalLastReadLine, actualLinesCount)) {
+            return;
+        }
 
-        int expectedLinesCount = extractRecordCounter(optionalLastReadLine, actualLinesCount);
+        validateRecordCounter(optionalLastReadLine, actualLinesCount);
+
+    }
+
+    private boolean validateFileSize(File file) {
+
+        if (file.length() > 0) {
+
+            return true;
+        }
+
+        addToErrors(null, null, null, FILE_EMPTY);
+
+        return false;
+    }
+
+    private boolean validateHeaderRecord(String line) {
+
+        if (line.startsWith("1")) {
+
+            return true;
+        }
+
+        addToErrors(1, IT01, "recordIdentifier", IT01_EXPECTED_IN_LINE1);
+
+        return false;
+    }
+
+
+    private boolean validateTrailerRecord(Optional<String> optionalLastReadLine,
+            int actualLinesCount) {
+
+        if (optionalLastReadLine.isPresent() && optionalLastReadLine.get().startsWith("Z")) {
+
+            return true;
+        }
+
+        addToErrors(actualLinesCount, IT0Z, "recordIdentifier", IT0Z_EXPECTED_IN_LASTLINE);
+
+        return false;
+    }
+
+    private boolean validateRecordCounter(Optional<String> optionalLastReadLine,
+            Integer actualLinesCount) {
+
+        Integer expectedLinesCount = extractRecordCounter(optionalLastReadLine);
+
+        if (expectedLinesCount == null) {
+
+            addToErrors(actualLinesCount, IT0Z, "reportRecordCounter", IT0Z_RRDC_INCORRECT_FORMAT);
+
+            return false;
+        }
 
         if (expectedLinesCount != actualLinesCount) {
 
             addToErrors(actualLinesCount, IT0Z, "reportRecordCounter", INCORRECT_NUMBER_OF_RECORDS);
 
-            throw new WrongRecordCounterException(actualLinesCount, expectedLinesCount);
+            return false;
         }
 
+        return true;
     }
 
-    private void throwExeptionIfFileIsEmpty(File file) {
-
-        if (file.length() <= 0) {
-
-            addToErrors(null, null, null, FILE_EMPTY);
-
-            throw new WrongFileFormatException("the file is empty");
-        }
-
-    }
-
-    private void throwExceptionIfThereIsNoFileHeaderRecord(String line) {
-
-        if (!line.startsWith("1")) {
-
-            addToErrors(1, IT01, "recordIdentifier", IT01_EXPECTED_IN_LINE1);
-
-            throw new WrongFileFormatException("the file does not have header record (IT01)");
-        }
-    }
-
-
-    private void throwExceptionIfThereIsNoFileTrailerRecord(Optional<String> optionalLastReadLine,
-            int lineNumber) {
-
-        if (!(optionalLastReadLine.isPresent() && optionalLastReadLine.get().startsWith("Z"))) {
-
-            addToErrors(lineNumber, IT0Z, "recordIdentifier", IT0Z_EXPECTED_IN_LASTLINE);
-
-            throw new WrongFileFormatException("the file does not have trailer record (IT0Z)");
-        }
-    }
-
-    private int extractRecordCounter(Optional<String> optionalLastReadLine, int lineNumber) {
+    private Integer extractRecordCounter(Optional<String> optionalLastReadLine) {
 
         if (optionalLastReadLine.isPresent()) {
 
@@ -132,10 +150,7 @@ public class RefundFileValidator {
             }
         }
 
-        addToErrors(lineNumber, IT0Z, "reportRecordCounter", IT0Z_RRDC_INCORRECT_FORMAT);
-
-        // if the record count was not returned yet there is a problem extracting the value
-        throw new WrongFileFormatException("the record count can not be extracted from file");
+        return null;
     }
 
 
@@ -143,10 +158,19 @@ public class RefundFileValidator {
             String message) {
 
         RefundLoaderError error = new RefundLoaderError();
+
         error.setLineNumber(lineNumber);
         error.setRecordIdentifier(recordIdentifier);
         error.setField(field);
         error.setMessage(message);
+        error.setValidationPhase(ValidationPhase.FILE);
+
         refundLoaderErrors.add(error);
     }
+
+    public List<RefundLoaderError> getErrors() {
+
+        return refundLoaderErrors;
+    }
+
 }

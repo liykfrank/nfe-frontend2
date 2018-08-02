@@ -1,6 +1,6 @@
 package org.iata.bsplink.refund.loader.model.record;
 
-import java.util.Map;
+import java.util.List;
 
 public class RecordIt0hLayout extends RecordBaseLayout {
 
@@ -12,20 +12,32 @@ public class RecordIt0hLayout extends RecordBaseLayout {
     }
 
     @Override
-    protected void setFieldsLayout(Map<String, String> fieldsLayout) {
+    protected void setFieldsLayouts(List<FieldLayout> fieldsLayouts) {
 
-        fieldsLayout.put("reasonForMemoInformation1", "11-55");
-        fieldsLayout.put("reasonForMemoInformation2", "59-103");
-        fieldsLayout.put("reasonForMemoInformation3", "107-151");
-        fieldsLayout.put("reasonForMemoInformation4", "155-199");
-        fieldsLayout.put("reasonForMemoInformation5", "203-247");
-        fieldsLayout.put("reasonForMemoIssuanceCode", "248-252");
-        fieldsLayout.put("reasonForMemoLineIdentifier1", "8-10");
-        fieldsLayout.put("reasonForMemoLineIdentifier2", "56-58");
-        fieldsLayout.put("reasonForMemoLineIdentifier3", "104-106");
-        fieldsLayout.put("reasonForMemoLineIdentifier4", "152-154");
-        fieldsLayout.put("reasonForMemoLineIdentifier5", "200-202");
-        fieldsLayout.put("transactionNumber", "2-7");
+        fieldsLayouts.add(new FieldLayout(
+                "reasonForMemoInformation1", 4, "RMIN", FieldType.AN, 11, 45));
+        fieldsLayouts.add(new FieldLayout(
+                "reasonForMemoInformation2", 6, "RMIN", FieldType.AN, 59, 45));
+        fieldsLayouts.add(new FieldLayout(
+                "reasonForMemoInformation3", 8, "RMIN", FieldType.AN, 107, 45));
+        fieldsLayouts.add(new FieldLayout(
+                "reasonForMemoInformation4", 10, "RMIN", FieldType.AN, 155, 45));
+        fieldsLayouts.add(new FieldLayout(
+                "reasonForMemoInformation5", 12, "RMIN", FieldType.AN, 203, 45));
+        fieldsLayouts.add(new FieldLayout(
+                "reasonForMemoIssuanceCode", 13, "", FieldType.AN, 248, 5));
+        fieldsLayouts.add(new FieldLayout(
+                "reasonForMemoLineIdentifier1", 3, "RMLI", FieldType.AN, 8, 3));
+        fieldsLayouts.add(new FieldLayout(
+                "reasonForMemoLineIdentifier2", 5, "RMLI", FieldType.N, 56, 3));
+        fieldsLayouts.add(new FieldLayout(
+                "reasonForMemoLineIdentifier3", 7, "RMLI", FieldType.N, 104, 3));
+        fieldsLayouts.add(new FieldLayout(
+                "reasonForMemoLineIdentifier4", 9, "RMLI", FieldType.N, 152, 3));
+        fieldsLayouts.add(new FieldLayout(
+                "reasonForMemoLineIdentifier5", 11, "RMLI", FieldType.N, 200, 3));
+        fieldsLayouts.add(new FieldLayout(
+                "transactionNumber", 2, "TRNN", FieldType.N, 2, 6));
     }
 
 }

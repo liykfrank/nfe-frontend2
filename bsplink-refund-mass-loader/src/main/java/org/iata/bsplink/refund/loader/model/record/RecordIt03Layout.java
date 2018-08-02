@@ -1,6 +1,6 @@
 package org.iata.bsplink.refund.loader.model.record;
 
-import java.util.Map;
+import java.util.List;
 
 public class RecordIt03Layout extends RecordBaseLayout {
 
@@ -12,33 +12,58 @@ public class RecordIt03Layout extends RecordBaseLayout {
     }
 
     @Override
-    protected void setFieldsLayout(Map<String, String> fieldsLayout) {
+    protected void setFieldsLayouts(List<FieldLayout> fieldsLayouts) {
 
-        fieldsLayout.put("checkDigit1", "27-27");
-        fieldsLayout.put("checkDigit2", "47-47");
-        fieldsLayout.put("checkDigit3", "67-67");
-        fieldsLayout.put("checkDigit4", "87-87");
-        fieldsLayout.put("checkDigit5", "107-107");
-        fieldsLayout.put("checkDigit6", "127-127");
-        fieldsLayout.put("checkDigit7", "147-147");
-        fieldsLayout.put("dateOfIssueRelatedDocument", "148-153");
-        fieldsLayout.put("relatedTicketDocumentCouponNumberIdentifier1", "8-11");
-        fieldsLayout.put("relatedTicketDocumentCouponNumberIdentifier2", "28-31");
-        fieldsLayout.put("relatedTicketDocumentCouponNumberIdentifier3", "48-51");
-        fieldsLayout.put("relatedTicketDocumentCouponNumberIdentifier4", "68-71");
-        fieldsLayout.put("relatedTicketDocumentCouponNumberIdentifier5", "88-91");
-        fieldsLayout.put("relatedTicketDocumentCouponNumberIdentifier6", "108-111");
-        fieldsLayout.put("relatedTicketDocumentCouponNumberIdentifier7", "128-131");
-        fieldsLayout.put("relatedTicketDocumentNumber1", "12-26");
-        fieldsLayout.put("relatedTicketDocumentNumber2", "32-46");
-        fieldsLayout.put("relatedTicketDocumentNumber3", "52-66");
-        fieldsLayout.put("relatedTicketDocumentNumber4", "72-86");
-        fieldsLayout.put("relatedTicketDocumentNumber5", "92-106");
-        fieldsLayout.put("relatedTicketDocumentNumber6", "112-126");
-        fieldsLayout.put("relatedTicketDocumentNumber7", "132-146");
-        fieldsLayout.put("tourCode", "154-168");
-        fieldsLayout.put("transactionNumber", "2-7");
-        fieldsLayout.put("waiverCode", "169-182");
+        fieldsLayouts.add(new FieldLayout(
+                "checkDigit1", 5, "CDGT", FieldType.N, 27, 1));
+        fieldsLayouts.add(new FieldLayout(
+                "checkDigit2", 8, "CDGT", FieldType.N, 47, 1));
+        fieldsLayouts.add(new FieldLayout(
+                "checkDigit3", 11, "CDGT", FieldType.N, 67, 1));
+        fieldsLayouts.add(new FieldLayout(
+                "checkDigit4", 14, "CDGT", FieldType.N, 87, 1));
+        fieldsLayouts.add(new FieldLayout(
+                "checkDigit5", 17, "CDGT", FieldType.N, 107, 1));
+        fieldsLayouts.add(new FieldLayout(
+                "checkDigit6", 20, "CDGT", FieldType.N, 127, 1));
+        fieldsLayouts.add(new FieldLayout(
+                "checkDigit7", 23, "CDGT", FieldType.N, 147, 1));
+        fieldsLayouts.add(new FieldLayout(
+                "dateOfIssueRelatedDocument", 24, "DIRD", FieldType.N, 148, 6));
+        fieldsLayouts.add(new FieldLayout(
+                "relatedTicketDocumentCouponNumberIdentifier1", 3, "RCPN", FieldType.N, 8, 4));
+        fieldsLayouts.add(new FieldLayout(
+                "relatedTicketDocumentCouponNumberIdentifier2", 6, "RCPN", FieldType.N, 28, 4));
+        fieldsLayouts.add(new FieldLayout(
+                "relatedTicketDocumentCouponNumberIdentifier3", 9, "RCPN", FieldType.N, 48, 4));
+        fieldsLayouts.add(new FieldLayout(
+                "relatedTicketDocumentCouponNumberIdentifier4", 12, "RCPN", FieldType.N, 68, 4));
+        fieldsLayouts.add(new FieldLayout(
+                "relatedTicketDocumentCouponNumberIdentifier5", 15, "RCPN", FieldType.N, 88, 4));
+        fieldsLayouts.add(new FieldLayout(
+                "relatedTicketDocumentCouponNumberIdentifier6", 18, "RCPN", FieldType.N, 108, 4));
+        fieldsLayouts.add(new FieldLayout(
+                "relatedTicketDocumentCouponNumberIdentifier7", 21, "RCPN", FieldType.N, 128, 4));
+        fieldsLayouts.add(new FieldLayout(
+                "relatedTicketDocumentNumber1", 4, "RTDN", FieldType.AN, 12, 15));
+        fieldsLayouts.add(new FieldLayout(
+                "relatedTicketDocumentNumber2", 7, "RTDN", FieldType.AN, 32, 15));
+        fieldsLayouts.add(new FieldLayout(
+                "relatedTicketDocumentNumber3", 10, "RTDN", FieldType.AN, 52, 15));
+        fieldsLayouts.add(new FieldLayout(
+                "relatedTicketDocumentNumber4", 13, "RTDN", FieldType.AN, 72, 15));
+        fieldsLayouts.add(new FieldLayout(
+                "relatedTicketDocumentNumber5", 16, "RTDN", FieldType.AN, 92, 15));
+        fieldsLayouts.add(new FieldLayout(
+                "relatedTicketDocumentNumber6", 19, "RTDN", FieldType.AN, 112, 15));
+        fieldsLayouts.add(new FieldLayout(
+                "relatedTicketDocumentNumber7", 22, "RTDN", FieldType.AN, 132, 15));
+        fieldsLayouts.add(new FieldLayout(
+                "tourCode", 25, "TOUR", FieldType.AN, 154, 15));
+        fieldsLayouts.add(new FieldLayout(
+                "transactionNumber", 2, "TRNN", FieldType.N, 2, 6));
+        fieldsLayouts.add(new FieldLayout(
+                "waiverCode", 26, "WAVR", FieldType.AN, 169, 14));
     }
 
 }

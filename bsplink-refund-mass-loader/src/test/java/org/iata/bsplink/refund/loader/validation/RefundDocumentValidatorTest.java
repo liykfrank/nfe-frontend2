@@ -27,6 +27,7 @@ import junitparams.Parameters;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
+import org.iata.bsplink.refund.loader.error.ValidationPhase;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.Record;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02;
@@ -62,21 +63,25 @@ public class RefundDocumentValidatorTest {
         refundDocument.getRecordsIt03().get(0).setTransactionNumber("001234");
         lineNumberRecords();
         refundLoaderErrors = new ArrayList<>();
-        validator = new RefundDocumentValidator(refundLoaderErrors);
+        validator = new RefundDocumentValidator();
     }
 
     @Test
     public void testIsValid() {
 
-        assertTrue(validator.isValid(refundDocument));
+        assertTrue(executeValidation(refundDocument));
         assertThat(refundLoaderErrors, IsEmptyCollection.empty());
     }
 
+    private boolean executeValidation(RefundDocument refundDocument) {
+
+        return validator.validate(refundDocument, refundLoaderErrors);
+    }
 
     @Test
     public void testIsValidWithoutRecords() {
 
-        assertTrue(validator.isValid(new RefundDocument()));
+        assertTrue(validator.validate(new RefundDocument(), refundLoaderErrors));
     }
 
 
@@ -85,7 +90,7 @@ public class RefundDocumentValidatorTest {
 
         RecordIt02 it02 = refundDocument.getRecordIt02();
         it02.setTransactionCode("ACMA");
-        assertFalse(validator.isValid(refundDocument));
+        assertFalse(executeValidation(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
         assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(
                 refundLoaderError(it02, "transactionCode", INCORRECT_TRANSACTION_CODE)));
@@ -98,7 +103,7 @@ public class RefundDocumentValidatorTest {
         RecordIt05 it05 = refundDocument.getRecordsIt05().get(0);
         it05.setCommissionType2("XLP");
         it05.setCommissionType3("XLP");
-        assertFalse(validator.isValid(refundDocument));
+        assertFalse(executeValidation(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
         assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(
                 refundLoaderError(it05, "commissionType3", XLP_ONLY_ONCE)));
@@ -112,7 +117,7 @@ public class RefundDocumentValidatorTest {
 
         RecordIt05 it05 = refundDocument.getRecordsIt05().get(recordNumber);
         BeanUtils.setProperty(it05, field, value);
-        assertFalse(validator.isValid(refundDocument));
+        assertFalse(executeValidation(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
         assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(
                 refundLoaderError(it05, field, message)));
@@ -126,7 +131,7 @@ public class RefundDocumentValidatorTest {
 
         RecordIt08 it08 = refundDocument.getRecordsIt08().get(recordNumber);
         BeanUtils.setProperty(it08, field, value);
-        assertFalse(validator.isValid(refundDocument));
+        assertFalse(executeValidation(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
         assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(
                 refundLoaderError(it08, field, message)));
@@ -140,7 +145,7 @@ public class RefundDocumentValidatorTest {
         RecordIt08 it08 = refundDocument.getRecordsIt08().get(recordNumber);
         it08.setFormOfPaymentAmount2("12");
         BeanUtils.setProperty(refundDocument.getRecordsIt08().get(recordNumber), field, value);
-        assertFalse(validator.isValid(refundDocument));
+        assertFalse(executeValidation(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
         assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(
                 refundLoaderError(it08, field, message)));
@@ -152,7 +157,7 @@ public class RefundDocumentValidatorTest {
 
         RecordIt02 it02 = refundDocument.getRecordIt02();
         it02.setTransactionNumber(transactionNumber);
-        assertFalse(validator.isValid(refundDocument));
+        assertFalse(executeValidation(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
         assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(
                 refundLoaderError(it02, "transactionNumber", INCORRECT_TRANSACTION_NUMBER)));
@@ -186,7 +191,7 @@ public class RefundDocumentValidatorTest {
         }
 
         lineNumberRecords();
-        assertTrue(validator.isValid(refundDocument));
+        assertTrue(executeValidation(refundDocument));
     }
 
 
@@ -217,7 +222,7 @@ public class RefundDocumentValidatorTest {
         }
 
         lineNumberRecords();
-        assertFalse(validator.isValid(refundDocument));
+        assertFalse(executeValidation(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
 
         RefundLoaderError expectedError = refundLoaderError(record, "transactionNumber",
@@ -245,7 +250,7 @@ public class RefundDocumentValidatorTest {
         it03.setLineNumber(lineNumberIt05);
         it05.setLineNumber(lineNumberIt03);
 
-        assertFalse(validator.isValid(refundDocument));
+        assertFalse(executeValidation(refundDocument));
         assertThat(refundLoaderErrors, hasSize(2));
 
         RefundLoaderError expectedIt03Error =
@@ -401,6 +406,7 @@ public class RefundDocumentValidatorTest {
         error.setLineNumber(record.getLineNumber());
         error.setMessage(message);
         error.setTransactionNumber(record.getTransactionNumber());
+        error.setValidationPhase(ValidationPhase.TRANSACTION);
         return error;
     }
 
