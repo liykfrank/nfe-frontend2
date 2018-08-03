@@ -26,20 +26,19 @@ import org.springframework.stereotype.Component;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RecordFieldContentTypeValidator {
 
-    private static final String FILE_MUST_BE_ALPHA_MESSAGE =
-            "Non-alphabetic characters in alphabetic fields";
-
-    private static final String FILE_MUST_BE_ALPHANUMERIC_MESSAGE =
-            "Non-alphanumeric characters in alphanumeric fields";
-
-    private static final String FILE_MUST_BE_NUMERIC_MESSAGE =
+    private static final String FIELD_WITH_INVALID_CHARACTERS_MESSAGE = "Invalid character";
+    private static final String FIELD_MUST_BE_NUMERIC_MESSAGE =
             "Non-numeric characters in numeric fields";
+
+    // \\x20-\\x7E -> ASCII printable characters
+    private static final String PRINTABLE_CHARACTERS_WITH_ADDITIONS_REGEX =
+            "[\\x20-\\x7EEÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÖÜ£¥áíóúñÑªº¿¡ßØ±ãÃõÕÔÓ~€]*";
 
     private boolean result = true;
     private List<RefundLoaderError> refundLoaderErrors;
 
     /**
-     * Validates the document.
+     * Validates the record.
      */
     public boolean validate(Record record, List<RefundLoaderError> refundLoaderErrors) {
 
@@ -59,17 +58,13 @@ public class RecordFieldContentTypeValidator {
             FieldLayout fieldLayout = recordLayout.getFieldLayout(fieldName);
             String fieldValue = getFieldValue(record, fieldName);
 
-            if (isAlphabeticWithWrongValue(fieldLayout, fieldValue)) {
+            if (hasInvalidCharacters(fieldLayout, fieldValue)) {
 
-                addError(record, fieldLayout, FILE_MUST_BE_ALPHA_MESSAGE);
+                addError(record, fieldLayout, FIELD_WITH_INVALID_CHARACTERS_MESSAGE);
 
             } else if (isNumericWithWrongValue(fieldLayout, fieldValue)) {
 
-                addError(record, fieldLayout, FILE_MUST_BE_NUMERIC_MESSAGE);
-
-            } else if (isAlphaNumericWithWrongValue(fieldLayout, fieldValue)) {
-
-                addError(record, fieldLayout, FILE_MUST_BE_ALPHANUMERIC_MESSAGE);
+                addError(record, fieldLayout, FIELD_MUST_BE_NUMERIC_MESSAGE);
             }
         }
     }
@@ -86,19 +81,17 @@ public class RecordFieldContentTypeValidator {
         }
     }
 
-    private boolean isAlphabeticWithWrongValue(FieldLayout fieldLayout, String fieldValue) {
+    private boolean hasInvalidCharacters(FieldLayout fieldLayout, String fieldValue) {
 
-        return FieldType.A.equals(fieldLayout.getType()) && !isAlpha(fieldValue);
+        return (FieldType.A.equals(fieldLayout.getType()) && !isAlpha(fieldValue))
+                || (FieldType.AN.equals(fieldLayout.getType()) && !isAlphanumeric(fieldValue))
+                || (FieldType.AX.equals(fieldLayout.getType())
+                        && !fieldValue.matches(PRINTABLE_CHARACTERS_WITH_ADDITIONS_REGEX));
     }
 
     private boolean isNumericWithWrongValue(FieldLayout fieldLayout, String fieldValue) {
 
         return FieldType.N.equals(fieldLayout.getType()) && !isNumeric(fieldValue);
-    }
-
-    private boolean isAlphaNumericWithWrongValue(FieldLayout fieldLayout, String fieldValue) {
-
-        return FieldType.AN.equals(fieldLayout.getType()) && !isAlphanumeric(fieldValue);
     }
 
     private void addError(Record record, FieldLayout layout, String message) {

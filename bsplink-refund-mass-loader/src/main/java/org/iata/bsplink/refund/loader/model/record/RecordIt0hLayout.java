@@ -15,15 +15,15 @@ public class RecordIt0hLayout extends RecordBaseLayout {
     protected void setFieldsLayouts(List<FieldLayout> fieldsLayouts) {
 
         fieldsLayouts.add(new FieldLayout(
-                "reasonForMemoInformation1", 4, "RMIN", FieldType.AN, 11, 45));
+                "reasonForMemoInformation1", 4, "RMIN", FieldType.AX, 11, 45));
         fieldsLayouts.add(new FieldLayout(
-                "reasonForMemoInformation2", 6, "RMIN", FieldType.AN, 59, 45));
+                "reasonForMemoInformation2", 6, "RMIN", FieldType.AX, 59, 45));
         fieldsLayouts.add(new FieldLayout(
-                "reasonForMemoInformation3", 8, "RMIN", FieldType.AN, 107, 45));
+                "reasonForMemoInformation3", 8, "RMIN", FieldType.AX, 107, 45));
         fieldsLayouts.add(new FieldLayout(
-                "reasonForMemoInformation4", 10, "RMIN", FieldType.AN, 155, 45));
+                "reasonForMemoInformation4", 10, "RMIN", FieldType.AX, 155, 45));
         fieldsLayouts.add(new FieldLayout(
-                "reasonForMemoInformation5", 12, "RMIN", FieldType.AN, 203, 45));
+                "reasonForMemoInformation5", 12, "RMIN", FieldType.AX, 203, 45));
         fieldsLayouts.add(new FieldLayout(
                 "reasonForMemoIssuanceCode", 13, "", FieldType.AN, 248, 5));
         fieldsLayouts.add(new FieldLayout(

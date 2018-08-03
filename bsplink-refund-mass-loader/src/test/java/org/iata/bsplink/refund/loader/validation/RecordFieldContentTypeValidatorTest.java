@@ -4,6 +4,7 @@ import static org.apache.commons.beanutils.PropertyUtils.setProperty;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
+import static org.iata.bsplink.refund.loader.test.RecordUtils.initializeRecordFieldsWithEmptyStrings;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.TRANSACTION_NUMBER_1;
 import static org.junit.Assert.assertThat;
 
@@ -36,13 +37,8 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitParamsRunner.class)
 public class RecordFieldContentTypeValidatorTest {
 
-    private static final String FILE_MUST_BE_ALPHA_MESSAGE =
-            "Non-alphabetic characters in alphabetic fields";
-
-    private static final String FILE_MUST_BE_ALPHANUMERIC_MESSAGE =
-            "Non-alphanumeric characters in alphanumeric fields";
-
-    private static final String FILE_MUST_BE_NUMERIC_MESSAGE =
+    private static final String FIELD_WITH_INVALID_CHARACTERS_MESSAGE = "Invalid character";
+    private static final String FIELD_MUST_BE_NUMERIC_MESSAGE =
             "Non-numeric characters in numeric fields";
 
     private RecordFieldContentTypeValidator validator;
@@ -56,8 +52,9 @@ public class RecordFieldContentTypeValidatorTest {
     }
 
     @Test
-    @Parameters
-    public void testValidatesRecordFieldType(String fieldName, Record record, RecordLayout layout)
+    @Parameters(method = "parametersForTestValidatesRecordFieldType")
+    public void testValidatesRecordFieldTypeWithWrongValue(String fieldName, Record record,
+            RecordLayout layout)
             throws Exception {
 
         initializeRecordAndAddWrongValue(record, layout, fieldName);
@@ -84,10 +81,7 @@ public class RecordFieldContentTypeValidatorTest {
     private void initializeRecordAndAddWrongValue(Record record, RecordLayout layout,
             String fieldName) throws Exception {
 
-        for (String layoutFieldName : layout.getFieldsNames()) {
-
-            setProperty(record, layoutFieldName, "");
-        }
+        initializeRecordFieldsWithEmptyStrings(record);
 
         FieldLayout fieldLayout = layout.getFieldLayout(fieldName);
         setProperty(record, fieldName, getIncorrectContentType(fieldLayout.getType()));
@@ -147,6 +141,9 @@ public class RecordFieldContentTypeValidatorTest {
             case AN:
                 return "...";
 
+            case AX:
+                return "ψ ω ϓ";
+
             default:
                 return null;
         }
@@ -157,17 +154,61 @@ public class RecordFieldContentTypeValidatorTest {
         switch (fieldType) {
 
             case A:
-                return FILE_MUST_BE_ALPHA_MESSAGE;
+                return FIELD_WITH_INVALID_CHARACTERS_MESSAGE;
 
             case N:
-                return FILE_MUST_BE_NUMERIC_MESSAGE;
+                return FIELD_MUST_BE_NUMERIC_MESSAGE;
 
             case AN:
-                return FILE_MUST_BE_ALPHANUMERIC_MESSAGE;
+                return FIELD_WITH_INVALID_CHARACTERS_MESSAGE;
+
+            case AX:
+                return FIELD_WITH_INVALID_CHARACTERS_MESSAGE;
 
             default:
                 return null;
         }
     }
 
+    @Test
+    @Parameters(method = "parametersForTestValidatesRecordFieldType")
+    public void testValidatesRecordFieldTypeWithRightValue(String fieldName, Record record,
+            RecordLayout layout)
+            throws Exception {
+
+        initializeRecordAndAddRightValue(record, layout, fieldName);
+
+        assertThat(validator.validate(record, errors), equalTo(true));
+        assertThat(errors, hasSize(0));
+    }
+
+    private void initializeRecordAndAddRightValue(Record record, RecordLayout layout,
+            String fieldName) throws Exception {
+
+        initializeRecordFieldsWithEmptyStrings(record);
+
+        FieldLayout fieldLayout = layout.getFieldLayout(fieldName);
+        setProperty(record, fieldName, getCorrectContentType(fieldLayout.getType()));
+    }
+
+    private String getCorrectContentType(FieldType fieldType) {
+
+        switch (fieldType) {
+
+            case A:
+                return "ABC";
+
+            case N:
+                return "123";
+
+            case AN:
+                return "123ABC";
+
+            case AX:
+                return " @\\~\\EÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÖÜ£¥áíóúñÑªº¿¡ßØ±ãÃõÕÔÓ~€";
+
+            default:
+                return null;
+        }
+    }
 }

@@ -9,7 +9,7 @@ import org.iata.bsplink.refund.loader.creator.RefundCreator;
 import org.iata.bsplink.refund.loader.dto.Refund;
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
-import org.iata.bsplink.refund.loader.validation.RefundDocumentValidator;
+import org.iata.bsplink.refund.loader.validation.CompositeRefundDocumentValidator;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.item.ExecutionContext;
@@ -23,13 +23,14 @@ import org.springframework.stereotype.Component;
 public class RefundItemProcessor implements ItemProcessor<RefundDocument, Refund> {
 
     private RefundCreator refundCreator;
-    private RefundDocumentValidator validator;
+    private CompositeRefundDocumentValidator validator;
     private List<RefundLoaderError> refundLoaderErrors = new ArrayList<>();
 
     /**
      * Creates the refund processor.
      */
-    public RefundItemProcessor(RefundCreator refundCreator, RefundDocumentValidator validator) {
+    public RefundItemProcessor(RefundCreator refundCreator,
+            CompositeRefundDocumentValidator validator) {
 
         this.refundCreator = refundCreator;
         this.validator = validator;

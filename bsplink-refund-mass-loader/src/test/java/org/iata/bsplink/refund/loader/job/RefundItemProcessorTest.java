@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.empty;
 import static org.iata.bsplink.refund.loader.job.ReportPrinterStepListener.VALIDATION_ERRORS_KEY;
+import static org.iata.bsplink.refund.loader.test.RecordUtils.initializeRecordFieldsWithEmptyStrings;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -21,6 +22,8 @@ import org.iata.bsplink.refund.loader.dto.Refund;
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02;
+import org.iata.bsplink.refund.loader.validation.CompositeRefundDocumentValidator;
+import org.iata.bsplink.refund.loader.validation.RecordFieldContentTypeValidator;
 import org.iata.bsplink.refund.loader.validation.RefundDocumentValidator;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +59,13 @@ public class RefundItemProcessorTest {
         when(refundCreator.create()).thenReturn(refundCreated);
         when(stepExecution.getExecutionContext()).thenReturn(executionContext);
 
-        processor = new RefundItemProcessor(refundCreator, new RefundDocumentValidator());
+        RecordFieldContentTypeValidator recordValidator = new RecordFieldContentTypeValidator();
+        RefundDocumentValidator documentValidator = new RefundDocumentValidator();
+
+        CompositeRefundDocumentValidator validator =
+                new CompositeRefundDocumentValidator(recordValidator, documentValidator);
+
+        processor = new RefundItemProcessor(refundCreator, validator);
         processor.beforeStep(stepExecution);
     }
 
@@ -86,7 +95,12 @@ public class RefundItemProcessorTest {
     private RefundDocument getWrongRefundDocument() {
 
         RefundDocument refundDocument = new RefundDocument();
-        refundDocument.setRecordIt02(new RecordIt02());
+
+        RecordIt02 recordIt02 = new RecordIt02();
+
+        initializeRecordFieldsWithEmptyStrings(recordIt02);
+
+        refundDocument.setRecordIt02(recordIt02);
         refundDocument.getRecordIt02().setTransactionCode("CANX");
 
         return refundDocument;
