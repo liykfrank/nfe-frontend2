@@ -1,5 +1,8 @@
 package org.iata.bsplink.refund.loader.validation;
 
+import static org.apache.commons.io.FilenameUtils.getName;
+import static org.iata.bsplink.refund.loader.utils.RefundNameUtils.isValidRefundFileName;
+
 import com.google.common.base.Optional;
 
 import java.io.File;
@@ -21,6 +24,7 @@ public class RefundLoaderParametersValidator implements JobParametersValidator {
                 Optional.fromNullable(parameters.getString(FILE_PARAMETER));
 
         throwExceptionIfFileParameterIsMissing(optionalFileName);
+        throwExceptionIfFileNameIsNotValid(optionalFileName.get());
 
         File file = new File(optionalFileName.get());
 
@@ -42,6 +46,17 @@ public class RefundLoaderParametersValidator implements JobParametersValidator {
 
             throw new JobParametersInvalidException(
                     "A refund file must be passed with the option file=REFUND_FILE");
+        }
+    }
+
+    private void throwExceptionIfFileNameIsNotValid(String fileName)
+            throws JobParametersInvalidException {
+
+        String baseFileName = getName(fileName);
+
+        if (!isValidRefundFileName(getName(baseFileName))) {
+
+            throw new JobParametersInvalidException("Invalid refund file name: " + baseFileName);
         }
     }
 

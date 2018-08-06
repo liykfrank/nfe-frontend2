@@ -1,6 +1,8 @@
 package org.iata.bsplink.refund.loader.job;
 
-import java.nio.file.FileSystems;
+import static org.apache.commons.io.FilenameUtils.getFullPathNoEndSeparator;
+import static org.apache.commons.io.FilenameUtils.getName;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,32 +27,65 @@ public class RefundJobParametersConverter implements JobParametersConverter {
 
     public static final String REQUIRED_PARAMETER = "file";
     public static final String JOBID_PARAMETER_NAME = "jobid";
+    public static final String OUTPUT_PATH = "outputPath";
 
     @Override
     public JobParameters getJobParameters(Properties properties) {
 
-        if (properties == null || properties.isEmpty()) {
-            return new JobParameters();
-        }
-
         Map<String, JobParameter> parameters = new HashMap<>();
+
+        getJobParameters(properties, parameters);
+
+        throwExceptionIfRequiredParameterDoesNotExist(parameters);
+
+        addDefaultOutputPathIfItIsNotDefined(parameters);
+
+        return new JobParameters(parameters);
+    }
+
+    private void getJobParameters(Properties properties, Map<String, JobParameter> parameters) {
 
         for (Object key : Collections.list(properties.keys())) {
 
-            if (!REQUIRED_PARAMETER.equals(key)) {
-                continue;
+            if (REQUIRED_PARAMETER.equals(key)) {
+
+                String fileName = (String) properties.get(REQUIRED_PARAMETER);
+
+                parameters.put(REQUIRED_PARAMETER, new JobParameter(fileName, false));
+                parameters.put(JOBID_PARAMETER_NAME, new JobParameter(getName(fileName), true));
             }
 
-            String fileName = (String) properties.get(REQUIRED_PARAMETER);
-            // TODO: refatorize, use filenameutils
-            String baseFileName =
-                    FileSystems.getDefault().getPath(fileName).getFileName().toString();
+            if (OUTPUT_PATH.equals(key)) {
 
-            parameters.put(REQUIRED_PARAMETER, new JobParameter(fileName, false));
-            parameters.put(JOBID_PARAMETER_NAME, new JobParameter(baseFileName, true));
+                parameters.put(OUTPUT_PATH,
+                        new JobParameter((String) properties.get(OUTPUT_PATH), false));
+            }
+        }
+    }
+
+    private void throwExceptionIfRequiredParameterDoesNotExist(
+            Map<String, JobParameter> parameters) {
+
+        if (parameters.containsKey(REQUIRED_PARAMETER)) {
+
+            return;
         }
 
-        return new JobParameters(parameters);
+        throw new IllegalArgumentException(
+                String.format("Parameter \"%s\" is required", REQUIRED_PARAMETER));
+    }
+
+    private void addDefaultOutputPathIfItIsNotDefined(Map<String, JobParameter> parameters) {
+
+        if (parameters.containsKey(OUTPUT_PATH)) {
+
+            return;
+        }
+
+        String fileName = (String) parameters.get(REQUIRED_PARAMETER).getValue();
+
+        parameters.put(OUTPUT_PATH,
+                new JobParameter(getFullPathNoEndSeparator(fileName), false));
     }
 
     @Override

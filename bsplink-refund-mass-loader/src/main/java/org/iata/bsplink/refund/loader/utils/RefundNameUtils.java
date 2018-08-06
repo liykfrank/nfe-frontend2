@@ -1,14 +1,14 @@
-package org.iata.bsplink.refund.loader.report;
+package org.iata.bsplink.refund.loader.utils;
 
 import static org.apache.commons.io.FilenameUtils.getName;
 
-public class ReportUtils {
+public class RefundNameUtils {
 
     private static final String REPORT_FILE_DESCRIPTOR = "e8";
     private static final String FILE_NAME_FIELD_SEPARATOR = "_";
 
-    private ReportUtils() {
-        // this class only has static methods
+    private RefundNameUtils() {
+        // this class has only static methods
     }
 
     /**
@@ -31,5 +31,10 @@ public class ReportUtils {
                 + date
                 + FILE_NAME_FIELD_SEPARATOR
                 + sequence;
+    }
+
+    public static boolean isValidRefundFileName(String refundFileName) {
+
+        return refundFileName.matches("^[A-Z]{2}e9EARS_\\d{8}_[A-Z0-9]{3}[0-69]_\\d{3}");
     }
 }

@@ -13,6 +13,8 @@ import org.springframework.batch.core.JobParametersInvalidException;
 
 public class RefundLoaderParametersValidatorTest {
 
+    private static final String ANY_FILE_NAME = "ALe9EARS_20170410_0744_016";
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -46,10 +48,10 @@ public class RefundLoaderParametersValidatorTest {
     public void testThrowsExceptionIfFileDoesNotExist() throws Exception {
 
         thrown.expect(JobParametersInvalidException.class);
-        thrown.expectMessage("File FOO does not exist");
+        thrown.expectMessage("File " + ANY_FILE_NAME + " does not exist");
 
         Map<String,JobParameter> parameters = new HashMap<>();
-        parameters.put("file", new JobParameter("FOO"));
+        parameters.put("file", new JobParameter(ANY_FILE_NAME));
 
         validator.validate(new JobParameters(parameters));
     }
@@ -61,6 +63,18 @@ public class RefundLoaderParametersValidatorTest {
 
         parameters.put("file",
                 new JobParameter("./src/test/resources/fixtures/files/ALe9EARS_20170410_0744_016"));
+
+        validator.validate(new JobParameters(parameters));
+    }
+
+    @Test
+    public void testThrowsExceptionIfFileNameIsNotValid() throws Exception {
+
+        thrown.expect(JobParametersInvalidException.class);
+        thrown.expectMessage("Invalid refund file name: FOO");
+
+        Map<String,JobParameter> parameters = new HashMap<>();
+        parameters.put("file", new JobParameter("FOO"));
 
         validator.validate(new JobParameters(parameters));
     }

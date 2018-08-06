@@ -2,6 +2,7 @@ package org.iata.bsplink.refund.loader.report;
 
 import static org.apache.commons.io.FileUtils.deleteQuietly;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.iata.bsplink.refund.loader.test.fixtures.FixtureLoader.createTmpDirectory;
 import static org.iata.bsplink.refund.loader.test.fixtures.RefundDocumentFixtures.getRecordLayouts;
 import static org.iata.bsplink.refund.loader.test.fixtures.RefundDocumentFixtures.getValidationErrorsTransactionPhase;
 import static org.springframework.batch.test.AssertFile.assertFileEquals;
@@ -26,8 +27,7 @@ public class ProcessReportPrinterTest {
     @Rule
     public OutputCapture capture;
 
-    private static final String TMP_DIRECTORY_NAME = "./test_tmp";
-    private static final String REPORT_FILE_NAME = TMP_DIRECTORY_NAME + "/XXe80011_20180101_001";
+    private static String reportFileName;
 
     private ProcessReportPrinter printer;
     private List<RefundLoaderError> errors;
@@ -35,10 +35,7 @@ public class ProcessReportPrinterTest {
     @BeforeClass
     public static void setUpBeforeClass() {
 
-        File tmpDirectory = new File(TMP_DIRECTORY_NAME);
-
-        deleteQuietly(tmpDirectory);
-        tmpDirectory.mkdirs();
+        reportFileName = createTmpDirectory().getPath() + "/XXe80011_20180101_001";
     }
 
     @Before
@@ -52,16 +49,16 @@ public class ProcessReportPrinterTest {
 
         capture = new OutputCapture();
 
-        deleteQuietly(new File(REPORT_FILE_NAME));
+        deleteQuietly(new File(reportFileName));
     }
 
     @Test
     public void testGeneratesReportIfThereAreNoErrors() throws Exception {
 
-        printer.print(errors, REPORT_FILE_NAME);
+        printer.print(errors, reportFileName);
 
         Resource expected = new ClassPathResource("output/report/SUCCESSFULLY");
-        Resource actual = new FileSystemResource(REPORT_FILE_NAME);
+        Resource actual = new FileSystemResource(reportFileName);
 
         assertFileEquals(expected, actual);
     }
@@ -71,10 +68,10 @@ public class ProcessReportPrinterTest {
 
         errors = getValidationErrorsTransactionPhase();
 
-        printer.print(errors, REPORT_FILE_NAME);
+        printer.print(errors, reportFileName);
 
         Resource expected = new ClassPathResource("output/report/WITH_VALIDATION_ERRORS");
-        Resource actual = new FileSystemResource(REPORT_FILE_NAME);
+        Resource actual = new FileSystemResource(reportFileName);
 
         assertFileEquals(expected, actual);
     }
@@ -87,10 +84,10 @@ public class ProcessReportPrinterTest {
         errors.get(0).setField("unknowField1");
         errors.get(1).setRecordIdentifier(null);
 
-        printer.print(errors, REPORT_FILE_NAME);
+        printer.print(errors, reportFileName);
 
         Resource expected = new ClassPathResource("output/report/WITH_ERRORS_WITHOUT_LAYOUT");
-        Resource actual = new FileSystemResource(REPORT_FILE_NAME);
+        Resource actual = new FileSystemResource(reportFileName);
 
         assertFileEquals(expected, actual);
     }
@@ -103,10 +100,10 @@ public class ProcessReportPrinterTest {
 
         errors.add(error);
 
-        printer.print(errors, REPORT_FILE_NAME);
+        printer.print(errors, reportFileName);
 
         Resource expected = new ClassPathResource("output/report/WITH_ERRORS_WITHOUT_RECORDS");
-        Resource actual = new FileSystemResource(REPORT_FILE_NAME);
+        Resource actual = new FileSystemResource(reportFileName);
 
         assertFileEquals(expected, actual);
     }
@@ -116,7 +113,7 @@ public class ProcessReportPrinterTest {
 
         errors = getValidationErrorsTransactionPhase();
 
-        printer.print(errors, REPORT_FILE_NAME);
+        printer.print(errors, reportFileName);
 
         capture.expect(containsString("ERROR"));
         capture.expect(containsString("Refund loader errors: 2"));
@@ -132,10 +129,10 @@ public class ProcessReportPrinterTest {
 
         errors.add(error);
 
-        printer.print(errors, REPORT_FILE_NAME);
+        printer.print(errors, reportFileName);
 
         Resource expected = new ClassPathResource("output/report/NORMALIZED_MESSAGE");
-        Resource actual = new FileSystemResource(REPORT_FILE_NAME);
+        Resource actual = new FileSystemResource(reportFileName);
 
         assertFileEquals(expected, actual);
     }

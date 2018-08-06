@@ -1,7 +1,9 @@
 package org.iata.bsplink.refund.loader.job;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.iata.bsplink.refund.loader.configuration.BatchConfiguration.LOADER_STEP_NAME;
 import static org.iata.bsplink.refund.loader.configuration.BatchConfiguration.VALIDATION_STEP_NAME;
+import static org.iata.bsplink.refund.loader.job.RefundJobParametersConverter.OUTPUT_PATH;
 import static org.iata.bsplink.refund.loader.job.RefundJobParametersConverter.REQUIRED_PARAMETER;
 import static org.iata.bsplink.refund.loader.job.ReportPrinterStepListener.VALIDATION_ERRORS_KEY;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,11 +28,15 @@ import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.item.ExecutionContext;
+import org.springframework.boot.test.rule.OutputCapture;
 
 public class ReportPrinterStepListenerTest {
 
     private static final String ANY_REFUND_FILE_NAME = "ALe9EARS_20170410_0744_016";
-    private static final String ANY_REPORT_FILE_NAME = "ALe80744_20170410_016";
+    private static final String ANY_REPORT_OUTPUT_PATH = "my/output/path";
+    private static final String ANY_REPORT_FILE_NAME =
+            ANY_REPORT_OUTPUT_PATH + "/ALe80744_20170410_016";
+
 
     private static final ExitStatus EXIT_COMPLETED =
             new ExitStatus(ExitStatus.COMPLETED.getExitCode(), "any description");
@@ -39,6 +45,9 @@ public class ReportPrinterStepListenerTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
+    @Rule
+    public OutputCapture capture;
 
     private ProcessReportPrinter printer;
     private ReportPrinterStepListener listener;
@@ -53,19 +62,23 @@ public class ReportPrinterStepListenerTest {
 
         stepExecution = mock(StepExecution.class);
         when(stepExecution.getExecutionContext()).thenReturn(executionContext);
-        when(stepExecution.getJobParameters()).thenReturn(getJobParameters());
+        when(stepExecution.getJobParameters())
+                .thenReturn(getJobParameters(ANY_REPORT_OUTPUT_PATH, ANY_REFUND_FILE_NAME));
 
         printer = mock(ProcessReportPrinter.class);
 
         listener = new ReportPrinterStepListener(printer);
         listener.beforeStep(stepExecution);
+
+        capture = new OutputCapture();
     }
 
-    private JobParameters getJobParameters() {
+    private JobParameters getJobParameters(String outputPath, String inputFileName) {
 
         Map<String, JobParameter> parameters = new HashMap<>();
 
-        parameters.put(REQUIRED_PARAMETER, new JobParameter(ANY_REFUND_FILE_NAME, false));
+        parameters.put(OUTPUT_PATH, new JobParameter(outputPath, false));
+        parameters.put(REQUIRED_PARAMETER, new JobParameter(inputFileName, false));
 
         return new JobParameters(parameters);
     }
@@ -133,6 +146,35 @@ public class ReportPrinterStepListenerTest {
         listener.afterStep(stepExecution);
 
         verify(printer, never()).print(any(), any());
+    }
+
+    @Test
+    public void testNormalizesOutputPathEndSeparator() {
+
+        addValidationErrors();
+        configureStepExecution(VALIDATION_STEP_NAME, EXIT_FAILED);
+
+        when(stepExecution.getJobParameters())
+                .thenReturn(getJobParameters(ANY_REPORT_OUTPUT_PATH + "//", ANY_REFUND_FILE_NAME));
+
+        listener.afterStep(stepExecution);
+
+        verify(printer).print(errors, ANY_REPORT_FILE_NAME);
+    }
+
+    @Test
+    public void testLogsReadAndWrittenRecords() {
+
+        addValidationErrors();
+        configureStepExecution(LOADER_STEP_NAME, EXIT_COMPLETED);
+
+        when(stepExecution.getReadCount()).thenReturn(10);
+        when(stepExecution.getWriteCount()).thenReturn(8);
+
+        listener.afterStep(stepExecution);
+
+        capture.expect(containsString("Total read transactions: 10"));
+        capture.expect(containsString("Total written transactions: 8"));
     }
 
 }

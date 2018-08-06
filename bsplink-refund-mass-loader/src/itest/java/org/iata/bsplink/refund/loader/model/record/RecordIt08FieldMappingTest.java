@@ -40,8 +40,8 @@ public class RecordIt08FieldMappingTest extends RecordFieldMappingTestCase<Recor
         assertThat(record.getExpiryDate2(), isEmptyString());
         assertThat(record.getExtendedPaymentCode1(), isEmptyString());
         assertThat(record.getExtendedPaymentCode2(), isEmptyString());
-        assertThat(record.getFormOfPaymentAccountNumber1(), equalTo("376010[}O0000GB"));
-        assertThat(record.getFormOfPaymentAccountNumber2(), equalTo("456480[}b00000eP"));
+        assertThat(record.getFormOfPaymentAccountNumber1(), equalTo("37601000O0000GB"));
+        assertThat(record.getFormOfPaymentAccountNumber2(), equalTo("45648000b00000eP"));
         assertThat(record.getFormOfPaymentAmount1(), equalTo("00000030000"));
         assertThat(record.getFormOfPaymentAmount2(), equalTo("00000040000"));
         assertThat(record.getFormOfPaymentType1(), equalTo("CCAX3760"));

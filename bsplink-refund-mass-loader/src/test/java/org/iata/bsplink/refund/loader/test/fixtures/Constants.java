@@ -22,6 +22,8 @@ public class Constants {
             BASE_WRONG_TEST_FILE + "_WRONG_RECORD_COUNT_FORMAT";
     public static final String FILE_NO_HEADER_RECORD =
             BASE_WRONG_TEST_FILE + "_NO_HEADER_RECORD";
+    public static final String FILE_INVALID_TRANSACTIONS =
+            "wrong/FRe9EARS_20150602_0302_INVALID";
 
     private Constants() {
         // empty

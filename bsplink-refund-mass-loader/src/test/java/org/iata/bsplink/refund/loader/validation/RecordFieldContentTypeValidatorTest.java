@@ -1,5 +1,6 @@
 package org.iata.bsplink.refund.loader.validation;
 
+import static org.apache.commons.beanutils.PropertyUtils.getProperty;
 import static org.apache.commons.beanutils.PropertyUtils.setProperty;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -72,6 +73,10 @@ public class RecordFieldContentTypeValidatorTest {
 
         String errorMessage = getErrorMessageForType(layout.getFieldLayout(fieldName).getType());
         assertThat(error.getMessage(), equalTo(errorMessage));
+
+        String fieldValue = (String) getProperty(record, fieldName);
+        assertThat(error.getDescription(),
+                equalTo(String.format("Wrong field value \"%s\"", fieldValue)));
 
         if (shouldConsiderTransactionNumber(fieldName, record)) {
             assertThat(error.getTransactionNumber(), equalTo(TRANSACTION_NUMBER_1));

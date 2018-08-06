@@ -55,6 +55,8 @@ public class ProcessReportPrinter {
             generateReportProcessedWithErrors(reportFile, errors);
         }
 
+        log.info("Result file generated: " + reportFileName);
+
     }
 
     private void generateReportProcessedSuccessfully(File reportFile, String content) {

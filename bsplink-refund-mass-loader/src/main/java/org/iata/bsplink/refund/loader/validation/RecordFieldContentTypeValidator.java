@@ -60,11 +60,11 @@ public class RecordFieldContentTypeValidator {
 
             if (hasInvalidCharacters(fieldLayout, fieldValue)) {
 
-                addError(record, fieldLayout, FIELD_WITH_INVALID_CHARACTERS_MESSAGE);
+                addError(record, fieldLayout, fieldValue, FIELD_WITH_INVALID_CHARACTERS_MESSAGE);
 
             } else if (isNumericWithWrongValue(fieldLayout, fieldValue)) {
 
-                addError(record, fieldLayout, FIELD_MUST_BE_NUMERIC_MESSAGE);
+                addError(record, fieldLayout, fieldValue, FIELD_MUST_BE_NUMERIC_MESSAGE);
             }
         }
     }
@@ -94,13 +94,14 @@ public class RecordFieldContentTypeValidator {
         return FieldType.N.equals(fieldLayout.getType()) && !isNumeric(fieldValue);
     }
 
-    private void addError(Record record, FieldLayout layout, String message) {
+    private void addError(Record record, FieldLayout layout, String fieldValue, String message) {
 
         RefundLoaderError error = new RefundLoaderError();
 
         error.setField(layout.getField());
         error.setFieldLayout(layout);
         error.setMessage(message);
+        error.setDescription(String.format("Wrong field value \"%s\"", fieldValue));
         error.setRecordIdentifier(record.getRecordIdentifier());
         error.setLineNumber(record.getLineNumber());
         // TODO: this seems that it's not the correct place to set the transaction fase

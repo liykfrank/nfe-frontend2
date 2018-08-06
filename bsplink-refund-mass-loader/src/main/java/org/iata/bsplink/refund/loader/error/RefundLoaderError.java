@@ -14,6 +14,7 @@ public class RefundLoaderError {
 
     private String field;
     private String message;
+    private String description;
     private String transactionNumber;
     private ValidationPhase validationPhase = ValidationPhase.NONE;
     private Integer lineNumber;
