@@ -128,10 +128,8 @@ public class AcdmRequest {
     private AcdmCurrencyRequest currency = new AcdmCurrencyRequest();
 
     @ApiModelProperty(
-           value = "Regularized, there are both positive and negative amount differences",
-           required = true)
-    @NotNull(message = NON_NULL_MESSAGE)
-    private Boolean regularized = Boolean.FALSE;
+           value = "Regularized, there are both positive and negative amount differences")
+    private Boolean regularized;
 
     @ApiModelProperty(
             value = "Net-Reporting",
