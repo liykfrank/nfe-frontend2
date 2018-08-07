@@ -6,9 +6,11 @@ import java.util.stream.Collectors;
 
 import org.iata.bsplink.agencymemo.dto.AcdmRequest;
 import org.iata.bsplink.agencymemo.model.entity.Acdm;
+import org.iata.bsplink.agencymemo.model.entity.Config;
 import org.iata.bsplink.agencymemo.model.entity.RelatedTicketDocument;
 import org.iata.bsplink.agencymemo.model.entity.TaxMiscellaneousFee;
 import org.iata.bsplink.agencymemo.model.repository.AcdmRepository;
+import org.iata.bsplink.agencymemo.utils.CalculationsUtility;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -16,17 +18,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class AcdmService {
 
-    AcdmRepository acdmRepository;
+    private AcdmRepository acdmRepository;
+    private ConfigService configService;
 
-    public AcdmService(AcdmRepository acdmRepository) {
+    public AcdmService(AcdmRepository acdmRepository, ConfigService configService) {
         this.acdmRepository = acdmRepository;
+        this.configService = configService;
     }
 
     public Optional<Acdm> findById(Long id) {
         return acdmRepository.findById(id);
     }
-    
-    
+
+
     public List<Acdm> findAll() {
         return acdmRepository.findAll();
     }
@@ -67,4 +71,15 @@ public class AcdmService {
         }).collect(Collectors.toList()));
     }
 
+
+    /**
+     * Sets ACDM Request's regularized flag if it is null.
+     */
+    public void regularization(AcdmRequest acdmRequest) {
+
+        if (acdmRequest.getRegularized() == null && acdmRequest.getIsoCountryCode() != null) {
+            Config cfg = configService.find(acdmRequest.getIsoCountryCode());
+            acdmRequest.setRegularized(CalculationsUtility.isToRegularize(cfg, acdmRequest));
+        }
+    }
 }

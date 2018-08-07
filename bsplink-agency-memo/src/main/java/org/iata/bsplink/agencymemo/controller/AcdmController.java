@@ -24,6 +24,7 @@ import org.iata.bsplink.agencymemo.service.AcdmService;
 import org.iata.bsplink.agencymemo.service.BsplinkFileService;
 import org.iata.bsplink.agencymemo.service.CommentService;
 import org.iata.bsplink.agencymemo.validation.FreeStatValidator;
+import org.iata.bsplink.agencymemo.validation.RegularizationNotNullValidator;
 import org.iata.bsplink.commons.rest.exception.ApplicationException;
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,9 @@ public class AcdmController {
     @Autowired
     private FreeStatValidator freeStatValidator;
 
+    @Autowired
+    private RegularizationNotNullValidator regularizationNotNullValidator;
+
     /**
      * Get an ACDM.
      */
@@ -90,6 +94,7 @@ public class AcdmController {
             Errors errors) {
 
         freeStatValidator.validate(acdm, errors);
+        regularizationNotNullValidator.validate(acdm, errors);
 
         if (errors.hasErrors()) {
             throw new ApplicationValidationException(errors);
@@ -115,6 +120,7 @@ public class AcdmController {
         log.info("received request for saving ADM / ACDM via massload file: " + fileName);
 
         freeStatValidator.validate(acdm, errors);
+        acdmService.regularization(acdm);
 
         if (errors.hasErrors()) {
             throw new ApplicationValidationException(errors);

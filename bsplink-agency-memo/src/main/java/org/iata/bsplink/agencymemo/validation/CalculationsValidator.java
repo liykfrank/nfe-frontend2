@@ -1,5 +1,9 @@
 package org.iata.bsplink.agencymemo.validation;
 
+import static org.iata.bsplink.agencymemo.utils.CalculationsUtility.calculationsDifference;
+import static org.iata.bsplink.agencymemo.utils.CalculationsUtility.isToRegularize;
+import static org.iata.bsplink.agencymemo.utils.CalculationsUtility.isZero;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.function.Function;
@@ -310,136 +314,26 @@ public class CalculationsValidator
     }
 
 
-    private int acdmSignum(AcdmRequest acdm) {
-        boolean concernsRfnd = ConcernsIndicator.R.equals(acdm.getConcernsIndicator());
-        boolean isAdm = acdm.getTransactionCode().isAdm();
-        return (isAdm ? 1 : -1) * (concernsRfnd ? -1 : 1);
-    }
-
-
-    private boolean hasOppositeSignum(int acdmSignum, BigDecimal amount) {
-        return amount.signum() != 0 && acdmSignum != amount.signum();
-    }
-
-    private boolean hasSameSignum(int acdmSignum, BigDecimal amount) {
-        return acdmSignum == amount.signum();
-    }
-
-    private boolean isZero(BigDecimal amount) {
-        return amount.signum() == 0;
-    }
-
-
-    private boolean isToRegularizeTaxAndFareZero(int acdmSignum,
-            Calculations calc, boolean totalCommissionsAreDifferent) {
-        if (hasSameSignum(acdmSignum, calc.getCommission())) {
-            return true;
-        }
-        if (hasSameSignum(acdmSignum, calc.getSpam())) {
-            return true;
-        }
-
-        return hasSameSignum(acdmSignum, calc.getTaxOnCommission())
-                && totalCommissionsAreDifferent;
-    }
-
-
-    private boolean isToRegularizeTaxAndFareNotZero(boolean tocaIsPositive, int acdmSignum,
-            Calculations calc) {
-        if (hasOppositeSignum(acdmSignum, calc.getSpam())) {
-            return true;
-        }
-        if (hasOppositeSignum(acdmSignum, calc.getTaxOnCommission())
-                && isZero(calc.getCommission())) {
-            return true;
-        }
-        if (hasOppositeSignum(acdmSignum, calc.getTaxOnCommission())
-                && hasSameSignum(acdmSignum, calc.getCommission())) {
-            return true;
-        }
-        if (!tocaIsPositive && hasSameSignum(acdmSignum, calc.getTaxOnCommission())
-                && hasOppositeSignum(acdmSignum, calc.getCommission())) {
-            return true;
-        }
-        return tocaIsPositive && hasOppositeSignum(acdmSignum, calc.getCommission())
-                && hasOppositeSignum(acdmSignum, calc.getTaxOnCommission());
-    }
-
-
-    private boolean isToRegularize(Config cfg, AcdmRequest acdm) {
-        final int acdmSignum = acdmSignum(acdm);
-        Calculations calc = calculationsDifference(acdm);
-
-        if (hasOppositeSignum(acdmSignum, calc.getFare())) {
-            return true;
-        }
-
-        if (hasOppositeSignum(acdmSignum, calc.getTax())) {
-            return true;
-        }
-
-        boolean tocaIsPositive = BigDecimal.valueOf(cfg.getTaxOnCommissionSign()).signum() > 0;
-
-        if (isZero(calc.getFare()) && isZero(calc.getTax())) {
-            return isToRegularizeTaxAndFareZero(acdmSignum, calc,
-                    totalCommissionsAreDifferent(acdm));
-        }
-
-        return isToRegularizeTaxAndFareNotZero(tocaIsPositive, acdmSignum, calc);
-    }
-
-
-    private boolean totalCommissionsAreDifferent(AcdmRequest acdm) {
-        CalculationsRequest air = acdm.getAirlineCalculations();
-        CalculationsRequest agn = acdm.getAgentCalculations();
-        BigDecimal airTotalCommission = air.getCommission().add(air.getSpam());
-        BigDecimal agnTotalCommission = agn.getCommission().add(agn.getSpam());
-        return airTotalCommission.compareTo(agnTotalCommission) != 0;
-    }
-
-
     private boolean isValidRegularized(Config cfg, AcdmRequest acdm,
             ConstraintValidatorContext context) {
 
-        boolean isToRegularize = isTaxRegularized(acdm) || isToRegularize(cfg, acdm);
+        if (acdm.getRegularized() == null) {
+            return true;
+        }
 
-        if (isToRegularize && (acdm.getRegularized() == null || !acdm.getRegularized())) {
+        boolean isToRegularize = isToRegularize(cfg, acdm);
+
+        if (isToRegularize && !acdm.getRegularized()) {
             addToContext(context, "regularized", REGULARIZED_MSG);
             return false;
         }
 
-        if (!isToRegularize && acdm.getRegularized() != null  && acdm.getRegularized()) {
+        if (!isToRegularize && acdm.getRegularized()) {
             addToContext(context, "regularized", NO_REGULARIZED_MSG);
             return false;
         }
 
         return true;
-    }
-
-
-    private boolean isTaxRegularized(AcdmRequest acdm) {
-        if (acdm.getTaxMiscellaneousFees() == null) {
-            return false;
-        }
-        final int acdmSignum = acdmSignum(acdm);
-        return acdm.getTaxMiscellaneousFees().stream()
-            .filter(Objects::nonNull)
-            .filter(t -> t.getAirlineAmount() != null && t.getAgentAmount() != null)
-            .map(t -> t.getAirlineAmount().subtract(t.getAgentAmount()).signum())
-            .anyMatch(s -> s != 0 && s != acdmSignum);
-    }
-
-
-    private Calculations calculationsDifference(AcdmRequest acdm) {
-        CalculationsRequest air = acdm.getAirlineCalculations();
-        CalculationsRequest agn = acdm.getAgentCalculations();
-        Calculations calc = new Calculations();
-        calc.setCommission(air.getCommission().subtract(agn.getCommission()));
-        calc.setFare(air.getFare().subtract(agn.getFare()));
-        calc.setSpam(air.getSpam().subtract(agn.getSpam()));
-        calc.setTax(air.getTax().subtract(agn.getTax()));
-        calc.setTaxOnCommission(air.getTaxOnCommission().subtract(agn.getTaxOnCommission()));
-        return calc;
     }
 
 

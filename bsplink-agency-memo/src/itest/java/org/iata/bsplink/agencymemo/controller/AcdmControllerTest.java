@@ -3,6 +3,8 @@ package org.iata.bsplink.agencymemo.controller;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.iata.bsplink.agencymemo.test.fixtures.AcdmFixtures.getAcdms;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,6 +38,7 @@ import org.iata.bsplink.agencymemo.service.AirlineService;
 import org.iata.bsplink.agencymemo.service.CommentService;
 import org.iata.bsplink.agencymemo.service.ConfigService;
 import org.iata.bsplink.agencymemo.validation.FreeStatValidator;
+import org.iata.bsplink.agencymemo.validation.ValidationMessages;
 import org.iata.bsplink.yadeutils.YadeUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -220,6 +223,38 @@ public class AcdmControllerTest {
         List<Acdm> findAll = acdmRepository.findAll();
         assertTrue(findAll.isEmpty());
     }
+
+
+    @Test
+    public void testCreatesAcdmMassloadRegularization() throws Exception {
+
+        acdm.setRegularized(null);
+
+        String json = mapper.writeValueAsString(acdm);
+        String responseBody = mockMvc.perform(post(BASE_URI + "?fileName=file.txt").content(json)
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+        Acdm retrievedAcdm = readAcdmFromJson(responseBody);
+        assertNotNull(retrievedAcdm.getRegularized());
+        assertFalse(retrievedAcdm.getRegularized());
+    }
+
+
+
+    @Test
+    public void testCreatesAcdmRegularizationNotNull() throws Exception {
+
+        acdm.setRegularized(null);
+
+        String json = mapper.writeValueAsString(acdm);
+        mockMvc.perform(post(BASE_URI).content(json)
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", equalTo("Validation error")))
+                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("regularized")))
+                .andExpect(jsonPath("$.validationErrors[0].message",
+                equalTo(ValidationMessages.NON_NULL_MESSAGE)));
+    }
+
 
     private Acdm readAcdmFromJson(String json) throws Exception {
 
