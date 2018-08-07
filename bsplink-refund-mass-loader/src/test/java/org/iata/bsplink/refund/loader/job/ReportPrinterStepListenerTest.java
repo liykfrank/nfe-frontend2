@@ -12,6 +12,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +34,9 @@ import org.springframework.boot.test.rule.OutputCapture;
 public class ReportPrinterStepListenerTest {
 
     private static final String ANY_REFUND_FILE_NAME = "ALe9EARS_20170410_0744_016";
-    private static final String ANY_REPORT_OUTPUT_PATH = "my/output/path";
+    private static final String ANY_REPORT_OUTPUT_PATH = "output" + File.separator + "path";
     private static final String ANY_REPORT_FILE_NAME =
-            ANY_REPORT_OUTPUT_PATH + "/ALe80744_20170410_016";
+            ANY_REPORT_OUTPUT_PATH + File.separator + "ALe80744_20170410_016";
 
 
     private static final ExitStatus EXIT_COMPLETED =
@@ -154,8 +155,8 @@ public class ReportPrinterStepListenerTest {
         addValidationErrors();
         configureStepExecution(VALIDATION_STEP_NAME, EXIT_FAILED);
 
-        when(stepExecution.getJobParameters())
-                .thenReturn(getJobParameters(ANY_REPORT_OUTPUT_PATH + "//", ANY_REFUND_FILE_NAME));
+        when(stepExecution.getJobParameters()).thenReturn(getJobParameters(
+                ANY_REPORT_OUTPUT_PATH + File.separator + File.separator, ANY_REFUND_FILE_NAME));
 
         listener.afterStep(stepExecution);
 

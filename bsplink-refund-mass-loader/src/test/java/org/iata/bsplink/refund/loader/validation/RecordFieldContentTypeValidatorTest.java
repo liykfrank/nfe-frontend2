@@ -53,7 +53,7 @@ public class RecordFieldContentTypeValidatorTest {
     }
 
     @Test
-    @Parameters(method = "parametersForTestValidatesRecordFieldType")
+    @Parameters
     public void testValidatesRecordFieldTypeWithWrongValue(String fieldName, Record record,
             RecordLayout layout)
             throws Exception {
@@ -104,8 +104,15 @@ public class RecordFieldContentTypeValidatorTest {
                 && fieldName != "transactionNumber";
     }
 
-    @SuppressWarnings({ "unused", "unchecked" })
-    private Object[][] parametersForTestValidatesRecordFieldType() throws Exception {
+    @SuppressWarnings({ "unused" })
+    private Object[][] parametersForTestValidatesRecordFieldTypeWithWrongValue() throws Exception {
+
+        return getParametersForTestValidatesRecordFieldType(false);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Object[][] getParametersForTestValidatesRecordFieldType(boolean addAxFields)
+            throws Exception {
 
         List<Object[]> values = new ArrayList<>();
 
@@ -126,7 +133,13 @@ public class RecordFieldContentTypeValidatorTest {
 
             for (String fieldName : layout.getFieldsNames()) {
 
-                values.add(new Object[] { fieldName, recordType.newInstance(), layout });
+                if (!addAxFields
+                        && FieldType.AX.equals(layout.getFieldLayout(fieldName).getType())) {
+                    continue;
+                }
+
+                values.add(new Object[] {fieldName, recordType.newInstance(), layout});
+
             }
         }
 
@@ -146,9 +159,6 @@ public class RecordFieldContentTypeValidatorTest {
             case AN:
                 return "...";
 
-            case AX:
-                return "ψ ω ϓ";
-
             default:
                 return null;
         }
@@ -167,16 +177,13 @@ public class RecordFieldContentTypeValidatorTest {
             case AN:
                 return FIELD_WITH_INVALID_CHARACTERS_MESSAGE;
 
-            case AX:
-                return FIELD_WITH_INVALID_CHARACTERS_MESSAGE;
-
             default:
                 return null;
         }
     }
 
     @Test
-    @Parameters(method = "parametersForTestValidatesRecordFieldType")
+    @Parameters
     public void testValidatesRecordFieldTypeWithRightValue(String fieldName, Record record,
             RecordLayout layout)
             throws Exception {
@@ -185,6 +192,12 @@ public class RecordFieldContentTypeValidatorTest {
 
         assertThat(validator.validate(record, errors), equalTo(true));
         assertThat(errors, hasSize(0));
+    }
+
+    @SuppressWarnings({ "unused" })
+    private Object[][] parametersForTestValidatesRecordFieldTypeWithRightValue() throws Exception {
+
+        return getParametersForTestValidatesRecordFieldType(true);
     }
 
     private void initializeRecordAndAddRightValue(Record record, RecordLayout layout,

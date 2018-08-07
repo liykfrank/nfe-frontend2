@@ -1,9 +1,6 @@
 Line:    20 TRNN: 000004    Record: IT08    Element: # 2    TRNN
 ERROR: Incorrect Transaction Number
 
-Line:    26 TRNN: 000005    Record: IT0H    Element: # 6    RMIN
-ERROR: Invalid character
-
 Line:    43 TRNN: 000009    Record: IT08    Element: # 2    TRNN
 ERROR: Incorrect Transaction Number
 

@@ -8,11 +8,6 @@ import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_NO_HEA
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_WRONG_RECORD_COUNTER;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_WRONG_RECORD_COUNT_FORMAT;
 import static org.iata.bsplink.refund.loader.test.fixtures.FixtureLoader.getFileFixture;
-import static org.iata.bsplink.refund.loader.validation.RefundFileValidator.FILE_EMPTY;
-import static org.iata.bsplink.refund.loader.validation.RefundFileValidator.INCORRECT_NUMBER_OF_RECORDS;
-import static org.iata.bsplink.refund.loader.validation.RefundFileValidator.IT01_EXPECTED_IN_LINE1;
-import static org.iata.bsplink.refund.loader.validation.RefundFileValidator.IT0Z_EXPECTED_IN_LASTLINE;
-import static org.iata.bsplink.refund.loader.validation.RefundFileValidator.IT0Z_RRDC_INCORRECT_FORMAT;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
@@ -26,6 +21,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class RefundFileValidatorTest {
+
+    private static final String FILE_EMPTY = "The file is empty";
+    private static final String IT01_EXPECTED_IN_LINE1 =
+            "The IT01 Record is expected to be reported in first line.";
+    private static final String IT0Z_EXPECTED_IN_LASTLINE =
+            "The IT0Z Record is expected to be reported in last line.";
+    private static final String IT0Z_RRDC_INCORRECT_FORMAT =
+            "The report record counter doesn't have a valid format.";
+    private static final String INCORRECT_NUMBER_OF_RECORDS =
+            "Incorrect number of records reported in Report Record Counter field.";
 
     private RefundFileValidator validator;
     private List<RefundLoaderError> refundLoaderErrors;

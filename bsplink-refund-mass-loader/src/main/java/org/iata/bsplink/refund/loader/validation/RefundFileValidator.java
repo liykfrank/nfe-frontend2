@@ -25,13 +25,14 @@ import org.springframework.stereotype.Component;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RefundFileValidator {
 
-    public static final String FILE_EMPTY = "The file is empty";
-    public static final String IT01_EXPECTED_IN_LINE1 =
+    private static final String FILE_EMPTY = "The file is empty";
+    private static final String IT01_EXPECTED_IN_LINE1 =
             "The IT01 Record is expected to be reported in first line.";
-    public static final String IT0Z_EXPECTED_IN_LASTLINE =
+    private static final String IT0Z_EXPECTED_IN_LASTLINE =
             "The IT0Z Record is expected to be reported in last line.";
-    public static final String IT0Z_RRDC_INCORRECT_FORMAT = null;
-    public static final String INCORRECT_NUMBER_OF_RECORDS =
+    private static final String IT0Z_RRDC_INCORRECT_FORMAT =
+            "The report record counter doesn't have a valid format.";
+    private static final String INCORRECT_NUMBER_OF_RECORDS =
             "Incorrect number of records reported in Report Record Counter field.";
 
     private List<RefundLoaderError> refundLoaderErrors;

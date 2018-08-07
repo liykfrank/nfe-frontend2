@@ -30,10 +30,6 @@ public class RecordFieldContentTypeValidator {
     private static final String FIELD_MUST_BE_NUMERIC_MESSAGE =
             "Non-numeric characters in numeric fields";
 
-    // \\x20-\\x7E -> ASCII printable characters
-    private static final String PRINTABLE_CHARACTERS_WITH_ADDITIONS_REGEX =
-            "[\\x20-\\x7EEÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÖÜ£¥áíóúñÑªº¿¡ßØ±ãÃõÕÔÓ~€]*";
-
     private boolean result = true;
     private List<RefundLoaderError> refundLoaderErrors;
 
@@ -84,9 +80,7 @@ public class RecordFieldContentTypeValidator {
     private boolean hasInvalidCharacters(FieldLayout fieldLayout, String fieldValue) {
 
         return (FieldType.A.equals(fieldLayout.getType()) && !isAlpha(fieldValue))
-                || (FieldType.AN.equals(fieldLayout.getType()) && !isAlphanumeric(fieldValue))
-                || (FieldType.AX.equals(fieldLayout.getType())
-                        && !fieldValue.matches(PRINTABLE_CHARACTERS_WITH_ADDITIONS_REGEX));
+                || (FieldType.AN.equals(fieldLayout.getType()) && !isAlphanumeric(fieldValue));
     }
 
     private boolean isNumericWithWrongValue(FieldLayout fieldLayout, String fieldValue) {
