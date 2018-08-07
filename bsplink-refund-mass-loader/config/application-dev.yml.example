@@ -1,0 +1,14 @@
+#spring:
+#  batch:
+#    # whether the metadata schema of the batch should be created or no
+#    initialize-schema: always
+#  datasource:
+#    # database and connection credentials
+#    url: jdbc:postgresql://host:5432/database_name
+#    username: username
+#    password: password
+#    
+#feign:
+#  refund:
+#    # URL of the refund management service
+#    url: ${service.refund:http://localhost:8085/v1/refunds}
