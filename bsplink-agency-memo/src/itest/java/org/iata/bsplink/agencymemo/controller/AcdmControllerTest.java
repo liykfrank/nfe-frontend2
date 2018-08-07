@@ -203,7 +203,7 @@ public class AcdmControllerTest {
 
     @Test
     public void testCreatesAcdmMassload() throws Exception {
-        mockMvc.perform(post(BASE_URI + "/massload?fileName=file.txt").content(acdmJson)
+        mockMvc.perform(post(BASE_URI + "?fileName=file.txt").content(acdmJson)
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
         List<Acdm> findAll = acdmRepository.findAll();
         assertThat(findAll, hasSize(1));
@@ -214,7 +214,7 @@ public class AcdmControllerTest {
     public void testCreatesAcdmMassloadBadRequest() throws Exception {
         acdm.setAirlineCode(null);
         String json = mapper.writeValueAsString(acdm);
-        mockMvc.perform(post(BASE_URI + "/massload?fileName=file.txt").content(json)
+        mockMvc.perform(post(BASE_URI + "?fileName=file.txt").content(json)
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
 
         List<Acdm> findAll = acdmRepository.findAll();

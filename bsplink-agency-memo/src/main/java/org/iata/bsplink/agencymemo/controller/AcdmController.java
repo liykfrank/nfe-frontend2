@@ -5,11 +5,15 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javax.validation.Valid;
+
 import lombok.extern.java.Log;
+
 import org.iata.bsplink.agencymemo.dto.AcdmRequest;
 import org.iata.bsplink.agencymemo.dto.CommentRequest;
 import org.iata.bsplink.agencymemo.model.entity.Acdm;
@@ -97,7 +101,7 @@ public class AcdmController {
     /**
      * Save an ADM / ACM via massload file.
      */
-    @PostMapping(value = "/massload")
+    @PostMapping(params = "fileName")
     @ApiOperation(value = "Save an ADM / ACM via massload file")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "acdm", value = "The ADM / ACM to save.", paramType = "body",
