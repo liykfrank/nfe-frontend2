@@ -30,6 +30,7 @@ repositories {
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.security:spring-security-core')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('pl.pragmatists:JUnitParams:1.1.1')
 }
