@@ -18,14 +18,12 @@ import org.iata.bsplink.refund.loader.model.record.RecordIt01;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02Layout;
 import org.iata.bsplink.refund.loader.model.record.RecordIt03;
-import org.iata.bsplink.refund.loader.model.record.RecordIt03Layout;
 import org.iata.bsplink.refund.loader.model.record.RecordIt05;
 import org.iata.bsplink.refund.loader.model.record.RecordIt05Layout;
 import org.iata.bsplink.refund.loader.model.record.RecordIt08;
 import org.iata.bsplink.refund.loader.model.record.RecordIt0h;
 import org.iata.bsplink.refund.loader.model.record.RecordIt0y;
 import org.iata.bsplink.refund.loader.model.record.RecordIt0z;
-import org.iata.bsplink.refund.loader.model.record.RecordLayout;
 
 public class RefundDocumentFixtures {
 
@@ -147,19 +145,6 @@ public class RefundDocumentFixtures {
         error2.setValidationPhase(ValidationPhase.UPDATE);
 
         return Arrays.asList(error1, error2);
-    }
-
-    /**
-     * Returns a map of record layouts.
-     */
-    public static Map<RecordIdentifier, RecordLayout> getRecordLayouts() {
-
-        Map<RecordIdentifier, RecordLayout> recordLayouts = new HashMap<>();
-
-        recordLayouts.put(RecordIdentifier.IT03, new RecordIt03Layout());
-        recordLayouts.put(RecordIdentifier.IT05, new RecordIt05Layout());
-
-        return recordLayouts;
     }
 
     /**

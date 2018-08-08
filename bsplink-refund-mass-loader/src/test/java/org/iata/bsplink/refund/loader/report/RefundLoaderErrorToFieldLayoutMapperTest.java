@@ -2,7 +2,6 @@ package org.iata.bsplink.refund.loader.report;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.iata.bsplink.refund.loader.test.fixtures.RefundDocumentFixtures.getFieldNameToFieldLayoutMap;
-import static org.iata.bsplink.refund.loader.test.fixtures.RefundDocumentFixtures.getRecordLayouts;
 import static org.iata.bsplink.refund.loader.test.fixtures.RefundDocumentFixtures.getValidationErrorsTransactionPhase;
 import static org.iata.bsplink.refund.loader.test.fixtures.RefundDocumentFixtures.getValidationErrorsUpdatePhase;
 import static org.junit.Assert.assertThat;
@@ -22,8 +21,7 @@ public class RefundLoaderErrorToFieldLayoutMapperTest {
     @Before
     public void setUp() {
 
-        mapper = new RefundLoaderErrorToFieldLayoutMapper(getRecordLayouts(),
-                getFieldNameToFieldLayoutMap());
+        mapper = new RefundLoaderErrorToFieldLayoutMapper(getFieldNameToFieldLayoutMap());
 
         errors = new ArrayList<>();
         errors.addAll(getValidationErrorsTransactionPhase());

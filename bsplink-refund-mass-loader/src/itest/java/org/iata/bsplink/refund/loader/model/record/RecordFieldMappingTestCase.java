@@ -38,8 +38,7 @@ public abstract class RecordFieldMappingTestCase<T extends Record> {
         BeanFactory beanFactory = getBeanFactoryMock();
         BatchConfiguration batchConfiguration = new BatchConfiguration();
 
-        lineMapper = batchConfiguration.lineMapper(batchConfiguration.recordLayouts(),
-                batchConfiguration.fieldSetMappers(beanFactory));
+        lineMapper = batchConfiguration.lineMapper(batchConfiguration.fieldSetMappers(beanFactory));
     }
 
     /**

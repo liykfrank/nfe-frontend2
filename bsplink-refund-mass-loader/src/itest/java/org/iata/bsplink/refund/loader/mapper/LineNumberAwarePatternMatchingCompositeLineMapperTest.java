@@ -37,8 +37,7 @@ public class LineNumberAwarePatternMatchingCompositeLineMapperTest {
 
         BatchConfiguration batchConfiguration = new BatchConfiguration();
 
-        return batchConfiguration.lineMapper(batchConfiguration.recordLayouts(),
-                batchConfiguration.fieldSetMappers(beanFactory));
+        return batchConfiguration.lineMapper(batchConfiguration.fieldSetMappers(beanFactory));
     }
 
 }

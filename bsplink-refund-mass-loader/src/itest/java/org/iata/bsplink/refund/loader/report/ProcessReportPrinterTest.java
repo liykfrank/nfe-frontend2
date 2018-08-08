@@ -3,7 +3,6 @@ package org.iata.bsplink.refund.loader.report;
 import static org.apache.commons.io.FileUtils.deleteQuietly;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.iata.bsplink.refund.loader.test.fixtures.FixtureLoader.createTmpDirectory;
-import static org.iata.bsplink.refund.loader.test.fixtures.RefundDocumentFixtures.getRecordLayouts;
 import static org.iata.bsplink.refund.loader.test.fixtures.RefundDocumentFixtures.getValidationErrorsTransactionPhase;
 import static org.springframework.batch.test.AssertFile.assertFileEquals;
 
@@ -41,8 +40,8 @@ public class ProcessReportPrinterTest {
     @Before
     public void setUp() {
 
-        RefundLoaderErrorToFieldLayoutMapper mapper = new RefundLoaderErrorToFieldLayoutMapper(
-                getRecordLayouts(), new HashMap<>());
+        RefundLoaderErrorToFieldLayoutMapper mapper =
+                new RefundLoaderErrorToFieldLayoutMapper(new HashMap<>());
 
         printer = new ProcessReportPrinter(mapper);
         errors = new ArrayList<>();

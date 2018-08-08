@@ -1,7 +1,6 @@
 package org.iata.bsplink.refund.loader.configuration;
 
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,16 +14,7 @@ import org.iata.bsplink.refund.loader.mapper.LineNumberAwarePatternMatchingCompo
 import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.Record;
 import org.iata.bsplink.refund.loader.model.record.RecordIdentifier;
-import org.iata.bsplink.refund.loader.model.record.RecordIt01Layout;
-import org.iata.bsplink.refund.loader.model.record.RecordIt02Layout;
-import org.iata.bsplink.refund.loader.model.record.RecordIt03Layout;
-import org.iata.bsplink.refund.loader.model.record.RecordIt05Layout;
-import org.iata.bsplink.refund.loader.model.record.RecordIt08Layout;
-import org.iata.bsplink.refund.loader.model.record.RecordIt0hLayout;
-import org.iata.bsplink.refund.loader.model.record.RecordIt0yLayout;
-import org.iata.bsplink.refund.loader.model.record.RecordIt0zLayout;
 import org.iata.bsplink.refund.loader.model.record.RecordLayout;
-import org.iata.bsplink.refund.loader.model.record.RecordRawLineLayout;
 import org.iata.bsplink.refund.loader.validation.RefundLoaderParametersValidator;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -145,43 +135,20 @@ public class BatchConfiguration {
     }
 
     /**
-     * Returns a map indexed by record identifier with the record layouts.
-     */
-    @Bean
-    public Map<RecordIdentifier, RecordLayout> recordLayouts() {
-
-        EnumMap<RecordIdentifier, RecordLayout> recordLayouts =
-                new EnumMap<>(RecordIdentifier.class);
-
-        recordLayouts.put(RecordIdentifier.IT01, new RecordIt01Layout());
-        recordLayouts.put(RecordIdentifier.IT02, new RecordIt02Layout());
-        recordLayouts.put(RecordIdentifier.IT03, new RecordIt03Layout());
-        recordLayouts.put(RecordIdentifier.IT05, new RecordIt05Layout());
-        recordLayouts.put(RecordIdentifier.IT08, new RecordIt08Layout());
-        recordLayouts.put(RecordIdentifier.IT0Y, new RecordIt0yLayout());
-        recordLayouts.put(RecordIdentifier.IT0H, new RecordIt0hLayout());
-        recordLayouts.put(RecordIdentifier.IT0Z, new RecordIt0zLayout());
-        recordLayouts.put(RecordIdentifier.UNKNOWN, new RecordRawLineLayout());
-
-        return recordLayouts;
-    }
-
-    /**
      * Builds the refund line mapper.
      */
     @Bean
-    public LineMapper<Record> lineMapper(Map<RecordIdentifier, RecordLayout> recordLayouts,
-            Map<String, FieldSetMapper<Record>> fieldSetMappers) {
+    public LineMapper<Record> lineMapper(Map<String, FieldSetMapper<Record>> fieldSetMappers) {
 
-        RecordLayout recordIt01Layout = recordLayouts.get(RecordIdentifier.IT01);
-        RecordLayout recordIt02Layout = recordLayouts.get(RecordIdentifier.IT02);
-        RecordLayout recordIt03Layout = recordLayouts.get(RecordIdentifier.IT03);
-        RecordLayout recordIt05Layout = recordLayouts.get(RecordIdentifier.IT05);
-        RecordLayout recordIt08Layout = recordLayouts.get(RecordIdentifier.IT08);
-        RecordLayout recordIt0yLayout = recordLayouts.get(RecordIdentifier.IT0Y);
-        RecordLayout recordIt0hLayout = recordLayouts.get(RecordIdentifier.IT0H);
-        RecordLayout recordIt0zLayout = recordLayouts.get(RecordIdentifier.IT0Z);
-        RecordLayout recordRawLineLayout = recordLayouts.get(RecordIdentifier.UNKNOWN);
+        RecordLayout recordIt01Layout = RecordIdentifier.IT01.getLayout();
+        RecordLayout recordIt02Layout = RecordIdentifier.IT02.getLayout();
+        RecordLayout recordIt03Layout = RecordIdentifier.IT03.getLayout();
+        RecordLayout recordIt05Layout = RecordIdentifier.IT05.getLayout();
+        RecordLayout recordIt08Layout = RecordIdentifier.IT08.getLayout();
+        RecordLayout recordIt0yLayout = RecordIdentifier.IT0Y.getLayout();
+        RecordLayout recordIt0hLayout = RecordIdentifier.IT0H.getLayout();
+        RecordLayout recordIt0zLayout = RecordIdentifier.IT0Z.getLayout();
+        RecordLayout recordRawLineLayout = RecordIdentifier.UNKNOWN.getLayout();
 
         Map<String, LineTokenizer> tokenizers = new HashMap<>();
 
@@ -195,9 +162,6 @@ public class BatchConfiguration {
         tokenizers.put(recordIt0zLayout.getPattern(), getTokenizer(recordIt0zLayout));
         tokenizers.put(recordRawLineLayout.getPattern(), getTokenizer(recordRawLineLayout));
 
-        // TODO: the prototype bean names of fieldSetMappers should be passed in a better way
-        // because right now it is completely hardcoded and repeated in three places (having in
-        // mind the bean creation).
         Map<String, FieldSetMapper<Record>> mappers = new HashMap<>();
 
         mappers.put(recordIt01Layout.getPattern(),

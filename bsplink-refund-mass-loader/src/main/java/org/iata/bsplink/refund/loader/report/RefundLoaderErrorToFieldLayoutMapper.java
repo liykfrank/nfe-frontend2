@@ -6,7 +6,6 @@ import java.util.Map;
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
 import org.iata.bsplink.refund.loader.model.record.FieldLayout;
 import org.iata.bsplink.refund.loader.model.record.RecordIdentifier;
-import org.iata.bsplink.refund.loader.model.record.RecordLayout;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,16 +14,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class RefundLoaderErrorToFieldLayoutMapper {
 
-    private Map<RecordIdentifier, RecordLayout> recordLayouts;
     private Map<String, FieldLayout> fieldNameToFieldLayoutMap;
 
     /**
      * Creates the mapper.
      */
-    public RefundLoaderErrorToFieldLayoutMapper(Map<RecordIdentifier, RecordLayout> recordLayouts,
+    public RefundLoaderErrorToFieldLayoutMapper(
             Map<String, FieldLayout> fieldNameToFieldLayoutMap) {
 
-        this.recordLayouts = recordLayouts;
         this.fieldNameToFieldLayoutMap = fieldNameToFieldLayoutMap;
     }
 
@@ -37,9 +34,9 @@ public class RefundLoaderErrorToFieldLayoutMapper {
 
             RecordIdentifier recordIdentifier = x.getRecordIdentifier();
 
-            if (recordIdentifier != null && recordLayouts.containsKey(recordIdentifier)) {
+            if (recordIdentifier != null) {
 
-                x.setFieldLayout(recordLayouts.get(recordIdentifier).getFieldLayout(x.getField()));
+                x.setFieldLayout(recordIdentifier.getLayout().getFieldLayout(x.getField()));
 
             } else if (fieldNameToFieldLayoutMap.containsKey(x.getField())) {
 
