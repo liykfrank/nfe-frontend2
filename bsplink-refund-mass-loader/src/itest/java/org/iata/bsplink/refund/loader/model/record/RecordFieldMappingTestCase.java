@@ -27,7 +27,7 @@ public abstract class RecordFieldMappingTestCase<T extends Record> {
     abstract void testFieldsAreMappedCorrectly() throws Exception;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         if (recordLine == null) {
 

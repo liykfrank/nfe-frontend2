@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import feign.Response;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -125,7 +126,7 @@ public class RefundWriter implements ItemWriter<Refund> {
         log.error(error);
     }
 
-    private void update(Refund refundFromFile, Refund refundToUpdate) throws Exception {
+    private void update(Refund refundFromFile, Refund refundToUpdate) throws IOException {
 
         RefundStatus newStatus = refundFromFile.getStatus();
 
@@ -161,7 +162,7 @@ public class RefundWriter implements ItemWriter<Refund> {
     }
 
     private void manageUpdateResponse(Refund refundFromFile, Response response)
-            throws Exception {
+            throws IOException {
 
         if (HttpStatus.valueOf(response.status()).equals(HttpStatus.BAD_REQUEST)) {
 

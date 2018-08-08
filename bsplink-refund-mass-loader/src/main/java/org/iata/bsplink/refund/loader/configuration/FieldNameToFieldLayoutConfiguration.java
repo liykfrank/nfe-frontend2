@@ -15,6 +15,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FieldNameToFieldLayoutConfiguration {
 
+    private static final String RCPN_BASE_FIELD_NAME =
+            "relatedTicketDocumentCouponNumberIdentifier";
+
+    private static final String RCPN1_FIELD_NAME = RCPN_BASE_FIELD_NAME + 1;
+    private static final String RCPN2_FIELD_NAME = RCPN_BASE_FIELD_NAME + 2;
+    private static final String RCPN3_FIELD_NAME = RCPN_BASE_FIELD_NAME + 3;
+    private static final String RCPN4_FIELD_NAME = RCPN_BASE_FIELD_NAME + 4;
+    private static final String RCPN5_FIELD_NAME = RCPN_BASE_FIELD_NAME + 5;
+    private static final String RCPN6_FIELD_NAME = RCPN_BASE_FIELD_NAME + 6;
+    private static final String RCPN7_FIELD_NAME = RCPN_BASE_FIELD_NAME + 7;
+
+    private static final String TMFA1_FIELD_NAME = "taxMiscellaneousFeeAmount1";
+
     /**
      * Returns the mapping of field names to field layouts used to create the error report file.
      */
@@ -51,75 +64,75 @@ public class FieldNameToFieldLayoutConfiguration {
         fieldLayouts.put("relatedDocument.relatedTicketDocumentNumber",
                 recordIt03Layout.getFieldLayout("relatedTicketDocumentNumber1"));
         fieldLayouts.put("relatedDocument.relatedTicketCoupon1",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier1"));
+                recordIt03Layout.getFieldLayout(RCPN1_FIELD_NAME));
         fieldLayouts.put("relatedDocument.relatedTicketCoupon2",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier1"));
+                recordIt03Layout.getFieldLayout(RCPN1_FIELD_NAME));
         fieldLayouts.put("relatedDocument.relatedTicketCoupon3",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier1"));
+                recordIt03Layout.getFieldLayout(RCPN1_FIELD_NAME));
         fieldLayouts.put("relatedDocument.relatedTicketCoupon4",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier1"));
+                recordIt03Layout.getFieldLayout(RCPN1_FIELD_NAME));
 
         // conjunctions
         fieldLayouts.put("conjunctions[0].relatedTicketDocumentNumber",
                 recordIt03Layout.getFieldLayout("relatedTicketDocumentNumber2"));
         fieldLayouts.put("conjunctions[0].relatedTicketCoupon1",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier2"));
+                recordIt03Layout.getFieldLayout(RCPN2_FIELD_NAME));
         fieldLayouts.put("conjunctions[0].relatedTicketCoupon2",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier2"));
+                recordIt03Layout.getFieldLayout(RCPN2_FIELD_NAME));
         fieldLayouts.put("conjunctions[0].relatedTicketCoupon3",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier2"));
+                recordIt03Layout.getFieldLayout(RCPN2_FIELD_NAME));
         fieldLayouts.put("conjunctions[0].relatedTicketCoupon4",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier2"));
+                recordIt03Layout.getFieldLayout(RCPN2_FIELD_NAME));
         fieldLayouts.put("conjunctions[1].relatedTicketDocumentNumber",
                 recordIt03Layout.getFieldLayout("relatedTicketDocumentNumber3"));
         fieldLayouts.put("conjunctions[1].relatedTicketCoupon1",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier3"));
+                recordIt03Layout.getFieldLayout(RCPN3_FIELD_NAME));
         fieldLayouts.put("conjunctions[1].relatedTicketCoupon2",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier3"));
+                recordIt03Layout.getFieldLayout(RCPN3_FIELD_NAME));
         fieldLayouts.put("conjunctions[1].relatedTicketCoupon3",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier3"));
+                recordIt03Layout.getFieldLayout(RCPN3_FIELD_NAME));
         fieldLayouts.put("conjunctions[1].relatedTicketCoupon4",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier3"));
+                recordIt03Layout.getFieldLayout(RCPN3_FIELD_NAME));
         fieldLayouts.put("conjunctions[2].relatedTicketDocumentNumber",
                 recordIt03Layout.getFieldLayout("relatedTicketDocumentNumber4"));
         fieldLayouts.put("conjunctions[2].relatedTicketCoupon1",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier4"));
+                recordIt03Layout.getFieldLayout(RCPN4_FIELD_NAME));
         fieldLayouts.put("conjunctions[2].relatedTicketCoupon2",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier4"));
+                recordIt03Layout.getFieldLayout(RCPN4_FIELD_NAME));
         fieldLayouts.put("conjunctions[2].relatedTicketCoupon3",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier4"));
+                recordIt03Layout.getFieldLayout(RCPN4_FIELD_NAME));
         fieldLayouts.put("conjunctions[2].relatedTicketCoupon4",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier4"));
+                recordIt03Layout.getFieldLayout(RCPN4_FIELD_NAME));
         fieldLayouts.put("conjunctions[3].relatedTicketDocumentNumber",
                 recordIt03Layout.getFieldLayout("relatedTicketDocumentNumber5"));
         fieldLayouts.put("conjunctions[3].relatedTicketCoupon1",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier5"));
+                recordIt03Layout.getFieldLayout(RCPN5_FIELD_NAME));
         fieldLayouts.put("conjunctions[3].relatedTicketCoupon2",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier5"));
+                recordIt03Layout.getFieldLayout(RCPN5_FIELD_NAME));
         fieldLayouts.put("conjunctions[3].relatedTicketCoupon3",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier5"));
+                recordIt03Layout.getFieldLayout(RCPN5_FIELD_NAME));
         fieldLayouts.put("conjunctions[3].relatedTicketCoupon4",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier5"));
+                recordIt03Layout.getFieldLayout(RCPN5_FIELD_NAME));
         fieldLayouts.put("conjunctions[4].relatedTicketDocumentNumber",
                 recordIt03Layout.getFieldLayout("relatedTicketDocumentNumber6"));
         fieldLayouts.put("conjunctions[4].relatedTicketCoupon1",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier6"));
+                recordIt03Layout.getFieldLayout(RCPN6_FIELD_NAME));
         fieldLayouts.put("conjunctions[4].relatedTicketCoupon2",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier6"));
+                recordIt03Layout.getFieldLayout(RCPN6_FIELD_NAME));
         fieldLayouts.put("conjunctions[4].relatedTicketCoupon3",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier6"));
+                recordIt03Layout.getFieldLayout(RCPN6_FIELD_NAME));
         fieldLayouts.put("conjunctions[4].relatedTicketCoupon4",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier6"));
+                recordIt03Layout.getFieldLayout(RCPN6_FIELD_NAME));
         fieldLayouts.put("conjunctions[5].relatedTicketDocumentNumber",
                 recordIt03Layout.getFieldLayout("relatedTicketDocumentNumber7"));
         fieldLayouts.put("conjunctions[5].relatedTicketCoupon1",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier7"));
+                recordIt03Layout.getFieldLayout(RCPN7_FIELD_NAME));
         fieldLayouts.put("conjunctions[5].relatedTicketCoupon2",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier7"));
+                recordIt03Layout.getFieldLayout(RCPN7_FIELD_NAME));
         fieldLayouts.put("conjunctions[5].relatedTicketCoupon3",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier7"));
+                recordIt03Layout.getFieldLayout(RCPN7_FIELD_NAME));
         fieldLayouts.put("conjunctions[5].relatedTicketCoupon4",
-                recordIt03Layout.getFieldLayout("relatedTicketDocumentCouponNumberIdentifier7"));
+                recordIt03Layout.getFieldLayout(RCPN7_FIELD_NAME));
 
         fieldLayouts.put("currency.code",
                 recordIt05Layout.getFieldLayout("currencyType"));
@@ -130,7 +143,7 @@ public class FieldNameToFieldLayoutConfiguration {
 
         // amounts
         fieldLayouts.put("amounts.cancellationPenalty",
-                recordIt05Layout.getFieldLayout("taxMiscellaneousFeeAmount1"));
+                recordIt05Layout.getFieldLayout(TMFA1_FIELD_NAME));
         fieldLayouts.put("amounts.commissionAmount",
                 recordIt05Layout.getFieldLayout("commissionAmount1"));
         fieldLayouts.put("amounts.commissionOnCpAndMfAmount",
@@ -142,17 +155,17 @@ public class FieldNameToFieldLayoutConfiguration {
         fieldLayouts.put("amounts.grossFare",
                 recordIt05Layout.getFieldLayout("ticketDocumentAmount"));
         fieldLayouts.put("amounts.miscellaneousFee",
-                recordIt05Layout.getFieldLayout("taxMiscellaneousFeeAmount1"));
+                recordIt05Layout.getFieldLayout(TMFA1_FIELD_NAME));
         fieldLayouts.put("amounts.refundToPassenger",
                 recordIt05Layout.getFieldLayout("ticketDocumentAmount"));
         fieldLayouts.put("amounts.spam",
                 recordIt05Layout.getFieldLayout("commissionAmount2"));
         fieldLayouts.put("amounts.tax",
-                recordIt05Layout.getFieldLayout("taxMiscellaneousFeeAmount1"));
+                recordIt05Layout.getFieldLayout(TMFA1_FIELD_NAME));
 
         // taxMiscellaneousFees
         fieldLayouts.put("taxMiscellaneousFees[0].amount",
-                recordIt05Layout.getFieldLayout("taxMiscellaneousFeeAmount1"));
+                recordIt05Layout.getFieldLayout(TMFA1_FIELD_NAME));
         fieldLayouts.put("taxMiscellaneousFees[1].amount",
                 recordIt05Layout.getFieldLayout("taxMiscellaneousFeeAmount2"));
         fieldLayouts.put("taxMiscellaneousFees[2].amount",

@@ -136,14 +136,12 @@ public class BatchConfiguration {
             JobExitCodeGeneratorListener jobExitCodeGeneratorListener,
             Step refundLoaderStep, Step validationStep) {
 
-        Job job = jobBuilderFactory.get(LOADER_JOB_NAME)
+        return jobBuilderFactory.get(LOADER_JOB_NAME)
             .listener(jobCompletionNotificationListener)
             .listener(jobExitCodeGeneratorListener)
             .validator(new RefundLoaderParametersValidator())
             .start(validationStep).next(refundLoaderStep)
             .build();
-
-        return job;
     }
 
     /**
