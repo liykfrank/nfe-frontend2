@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/reasons/indirects")
+@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*")
 public class ReasonController {
 
     @Autowired
@@ -56,20 +58,19 @@ public class ReasonController {
     @GetMapping(params = "isoCountryCode")
     public ResponseEntity<List<Reason>> getReasonsByIsoc(@RequestParam String isoCountryCode) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(
-                reasonService.findByIsoCountryCode(isoCountryCode));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(reasonService.findByIsoCountryCode(isoCountryCode));
     }
 
     /**
      * Returns Reasons defined in the indicated country.
      */
     @GetMapping(params = {"isoCountryCode", "refundType"})
-    public ResponseEntity<List<Reason>> getReasonsByIsocAndType(
-            @RequestParam String isoCountryCode,
+    public ResponseEntity<List<Reason>> getReasonsByIsocAndType(@RequestParam String isoCountryCode,
             @RequestParam ReasonType refundType) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(
-                reasonService.findByIsoCountryCodeAndType(isoCountryCode, refundType));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(reasonService.findByIsoCountryCodeAndType(isoCountryCode, refundType));
     }
 
     /**
@@ -92,8 +93,8 @@ public class ReasonController {
      * Updates a reason.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Reason> updateReason(
-            @PathVariable("id") Long id, @RequestBody Reason reason) {
+    public ResponseEntity<Reason> updateReason(@PathVariable("id") Long id,
+            @RequestBody Reason reason) {
 
         reason.setId(id);
 
@@ -110,8 +111,7 @@ public class ReasonController {
      * Retrieves a Reason by id.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Reason> getReason(
-            @PathVariable("id") Optional<Reason> optionalReason) {
+    public ResponseEntity<Reason> getReason(@PathVariable("id") Optional<Reason> optionalReason) {
 
         if (!optionalReason.isPresent()) {
             return ResponseEntity.notFound().build();

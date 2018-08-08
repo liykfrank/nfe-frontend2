@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/refunds/indirects/permissions")
+@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*")
 public class RefundIssuePermissionController {
 
     @Autowired
@@ -78,9 +80,8 @@ public class RefundIssuePermissionController {
     /**
      * Deletes a RefundIssuePermission by id.
      */
-    @ApiOperation(
-            value = "Deletes the permission of an agency to "
-                    + "issue indirect refunds for a specific airline")
+    @ApiOperation(value = "Deletes the permission of an agency to "
+            + "issue indirect refunds for a specific airline")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "RefundIssuePermission")})
     @DeleteMapping("/{id}")
     public ResponseEntity<RefundIssuePermission> deleteRefundIssuePermission(

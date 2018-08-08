@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
 @RequestMapping("/v1/configurations")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*")
 public class ConfigController {
 
     @Autowired
@@ -37,7 +37,7 @@ public class ConfigController {
      * Configurations for refunds.
      */
     @ApiOperation(value = "Configuration for refunds")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Config") })
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Config")})
     @GetMapping("/{isoc}")
     public ResponseEntity<Config> getConfig(@PathVariable String isoc) {
 
@@ -59,8 +59,8 @@ public class ConfigController {
      */
     @ApiOperation(value = "Save a configuration")
     @PostMapping
-    @ApiImplicitParams({ @ApiImplicitParam(name = "body", value = "The configuration to save.",
-            paramType = "body", required = true, dataType = "Config") })
+    @ApiImplicitParams({@ApiImplicitParam(name = "body", value = "The configuration to save.",
+            paramType = "body", required = true, dataType = "Config")})
     public ResponseEntity<Config> save(@Valid @RequestBody Config config, Errors errors) {
 
         if (errors.hasErrors()) {

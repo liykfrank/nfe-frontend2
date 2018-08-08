@@ -283,7 +283,7 @@ public class RefundController {
                 errors.rejectValue("status", "incorrect_status", "The refund status is incorrect.");
             }
         }
-        
+
         if (errors.hasErrors()) {
             throw new ApplicationValidationException(errors);
         }
@@ -482,11 +482,10 @@ public class RefundController {
     public ResponseEntity<Refund> changeRefundStatusViaMassload(
             @RequestParam(required = true) String fileName,
             @PathVariable(value = "id") Refund refund,
-            @Valid @RequestBody RefundStatusRequest refundStatusRequest,
-            Errors errors) {
+            @Valid @RequestBody RefundStatusRequest refundStatusRequest, Errors errors) {
 
-        log.info("received request to change refund's status via massload file: "
-                + refund + " " + fileName);
+        log.info("received request to change refund's status via massload file: " + refund + " "
+                + fileName);
 
         if (refund == null || RefundStatus.DRAFT.equals(refund.getStatus())
                 || RefundStatus.PENDING_SUPERVISION.equals(refund.getStatus())) {

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
 @RequestMapping("/v1/agents")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*")
 public class AgentController {
 
     @Autowired
@@ -26,12 +26,9 @@ public class AgentController {
      * Get basic Agent Data.
      */
     @ApiOperation(value = "Get basic Agent Data")
-    @ApiResponses(
-            value = {@ApiResponse(code = 200,
-            message = "Agent Data")})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Agent Data")})
     @GetMapping("/{code}")
-    public ResponseEntity<Agent> getAgent(
-            @PathVariable("code") String code) {
+    public ResponseEntity<Agent> getAgent(@PathVariable("code") String code) {
 
         return agentService.findAgentResponse(code);
     }
