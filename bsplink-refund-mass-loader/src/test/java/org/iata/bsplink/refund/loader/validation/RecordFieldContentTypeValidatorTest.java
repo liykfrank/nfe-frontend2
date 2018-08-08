@@ -1,12 +1,12 @@
 package org.iata.bsplink.refund.loader.validation;
 
-import static org.apache.commons.beanutils.PropertyUtils.getProperty;
-import static org.apache.commons.beanutils.PropertyUtils.setProperty;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
 import static org.iata.bsplink.refund.loader.test.RecordUtils.initializeRecordFieldsWithEmptyStrings;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.TRANSACTION_NUMBER_1;
+import static org.iata.bsplink.refund.loader.utils.BeanPropertyUtils.getProperty;
+import static org.iata.bsplink.refund.loader.utils.BeanPropertyUtils.setProperty;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;

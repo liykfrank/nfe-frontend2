@@ -2,6 +2,7 @@ package org.iata.bsplink.refund.loader.validation;
 
 import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.iata.bsplink.refund.loader.utils.BeanPropertyUtils.setProperty;
 import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.COMMISSION_AMOUNT_ON_FIRST_IT05;
 import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.COMMISSION_RATE_ON_FIRST_IT05;
 import static org.iata.bsplink.refund.loader.validation.RefundDocumentValidator.COMMISSION_TDAM_ON_FIRST_IT05;
@@ -24,7 +25,6 @@ import java.util.List;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
 import org.iata.bsplink.refund.loader.error.ValidationPhase;
@@ -116,13 +116,12 @@ public class RefundDocumentValidatorTest {
             throws Exception {
 
         RecordIt05 it05 = refundDocument.getRecordsIt05().get(recordNumber);
-        BeanUtils.setProperty(it05, field, value);
+        setProperty(it05, field, value);
         assertFalse(executeValidation(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
         assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(
                 refundLoaderError(it05, field, message)));
     }
-
 
     @Test
     @Parameters
@@ -130,7 +129,7 @@ public class RefundDocumentValidatorTest {
             throws Exception {
 
         RecordIt08 it08 = refundDocument.getRecordsIt08().get(recordNumber);
-        BeanUtils.setProperty(it08, field, value);
+        setProperty(it08, field, value);
         assertFalse(executeValidation(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
         assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(
@@ -144,7 +143,7 @@ public class RefundDocumentValidatorTest {
 
         RecordIt08 it08 = refundDocument.getRecordsIt08().get(recordNumber);
         it08.setFormOfPaymentAmount2("12");
-        BeanUtils.setProperty(refundDocument.getRecordsIt08().get(recordNumber), field, value);
+        setProperty(refundDocument.getRecordsIt08().get(recordNumber), field, value);
         assertFalse(executeValidation(refundDocument));
         assertThat(refundLoaderErrors, hasSize(1));
         assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(

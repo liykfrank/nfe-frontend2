@@ -1,6 +1,6 @@
 package org.iata.bsplink.refund.loader.test;
 
-import static org.apache.commons.beanutils.PropertyUtils.setProperty;
+import static org.iata.bsplink.refund.loader.utils.BeanPropertyUtils.setProperty;
 
 import org.iata.bsplink.refund.loader.model.record.Record;
 

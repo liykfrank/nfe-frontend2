@@ -1,9 +1,9 @@
 package org.iata.bsplink.refund.loader.validation;
 
-import static org.apache.commons.beanutils.PropertyUtils.getProperty;
 import static org.apache.commons.lang.StringUtils.isAlpha;
 import static org.apache.commons.lang.StringUtils.isAlphanumeric;
 import static org.apache.commons.lang.StringUtils.isNumeric;
+import static org.iata.bsplink.refund.loader.utils.BeanPropertyUtils.getProperty;
 
 import java.util.List;
 

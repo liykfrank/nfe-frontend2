@@ -1,6 +1,9 @@
 package org.iata.bsplink.refund.loader.model.record;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -11,6 +14,7 @@ import org.springframework.batch.item.file.transform.Range;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @RequiredArgsConstructor
 public class FieldLayout {
 
@@ -27,6 +31,7 @@ public class FieldLayout {
     @NonNull
     private Integer length;
 
+    @JsonIgnore
     public Range getRange() {
 
         return new Range(startPosition, startPosition + length - 1);
