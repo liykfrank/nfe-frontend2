@@ -1,6 +1,9 @@
 spring:
   main:
     banner-mode: "off"
+  batch:
+    schema: classpath:sql/schema-@@platform@@.sql
+    table-prefix: REFUND_MASS_LOADER_BATCH_
 
 feign:
   refund:
