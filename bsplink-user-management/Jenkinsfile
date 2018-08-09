@@ -36,7 +36,7 @@ pipeline {
                 echo "config file provider"
 				configFileProvider([configFile(fileId: 'gradle.properties', targetLocation: '.')]) {
                     sh 'push_to_iata2.bash $WORKSPACE $JOB_BASE_NAME'
-                	sh './gradlew clean build -x test -x itest'
+                	sh './gradlew clean build'
                 }
 				dir('build/libs') {
                     stash name: 'user-management-artifact'
