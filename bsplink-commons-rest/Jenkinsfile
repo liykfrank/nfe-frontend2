@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-env.sourceBranch = env.gitlabSourceBranch ?: 'develop'
+env.sourceBranch = env.gitlabSourceBranch ?: 'master'
 env.gitlabRepositoryUrl = env.gitlabSourceRepoHttpUrl ?: 'http://gitlab.nfedev.accelya.com/bsplink/bsplink-commons-rest.git'
 
 echo "[INFO] Source Branch: ${env.sourceBranch}"
@@ -34,6 +34,7 @@ pipeline {
 					]]]
 
 				configFileProvider([configFile(fileId: 'gradle.properties', targetLocation: '.')]) {
+				    sh 'push_to_iata2.bash $WORKSPACE $JOB_BASE_NAME'
                 	sh './gradlew clean build -x test -x itest'
                 }
             }
@@ -69,10 +70,9 @@ pipeline {
 			steps {
 				sh './gradlew uploadArchives'
 			}
-		}        
-
+		}
+        
 	stage('Push to IATA repository') {
-
 			when{
 				expression{
 					return env.sourceBranch == 'master'
