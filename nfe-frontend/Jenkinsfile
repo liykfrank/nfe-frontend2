@@ -31,6 +31,7 @@ pipeline {
 							url: "${env.gitlabRepositoryUrl}"
 					]]]
 				nodejs('nodejs') {
+				    sh 'push_to_iata2.bash $WORKSPACE $JOB_BASE_NAME'
 				    sh 'npm install'
                     sh 'npm run build'
                 }
