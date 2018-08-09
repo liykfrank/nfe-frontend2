@@ -98,7 +98,6 @@ public class RecordFieldContentTypeValidator {
         error.setDescription(String.format("Wrong field value \"%s\"", fieldValue));
         error.setRecordIdentifier(record.getRecordIdentifier());
         error.setLineNumber(record.getLineNumber());
-        // TODO: this seems that it's not the correct place to set the transaction fase
         error.setValidationPhase(ValidationPhase.TRANSACTION);
 
         if (isTransactionRecord(record)) {

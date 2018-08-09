@@ -94,7 +94,6 @@ public class BatchConfiguration {
 
         return stepBuilderFactory.get(VALIDATION_STEP_NAME)
                 .tasklet(validatorTasklet)
-                // TODO: add test that ensures that this step executes always
                 .allowStartIfComplete(true)
                 .listener(errorReportPrinterStepListener)
                 .build();

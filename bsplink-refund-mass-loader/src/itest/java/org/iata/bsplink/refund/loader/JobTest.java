@@ -28,6 +28,7 @@ import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.Step;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -55,6 +56,9 @@ public class JobTest {
 
     @MockBean
     private RefundClient client;
+
+    @Autowired
+    private Step validationStep;
 
     private static String tmpDirectory;
 
@@ -170,5 +174,11 @@ public class JobTest {
         Resource actual = new FileSystemResource(tmpDirectory + "/FRe80302_20150602_003");
 
         assertFileEquals(expected, actual);
+    }
+
+    @Test
+    public void testValidationStepIsAllowStartIfComplete() throws Exception {
+
+        assertThat(validationStep.isAllowStartIfComplete(), equalTo(true));
     }
 }

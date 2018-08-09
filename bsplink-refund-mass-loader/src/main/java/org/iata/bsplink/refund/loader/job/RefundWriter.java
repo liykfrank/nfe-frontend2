@@ -1,14 +1,12 @@
 package org.iata.bsplink.refund.loader.job;
 
 import static org.iata.bsplink.refund.loader.job.RefundJobParametersConverter.JOBID_PARAMETER_NAME;
-import static org.iata.bsplink.refund.loader.job.ReportPrinterStepListener.VALIDATION_ERRORS_KEY;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import feign.Response;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +22,6 @@ import org.iata.bsplink.refund.loader.exception.RefundLoaderException;
 import org.iata.bsplink.refund.loader.response.ValidationErrorResponse;
 import org.iata.bsplink.refund.loader.restclient.RefundClient;
 import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.annotation.BeforeStep;
-import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -37,11 +33,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @CommonsLog
-public class RefundWriter implements ItemWriter<Refund> {
+public class RefundWriter extends RefundLoaderErrorsAware implements ItemWriter<Refund> {
 
     private RefundClient client;
     private String fileName;
-    private List<RefundLoaderError> refundLoaderErrors = new ArrayList<>();
     private ObjectMapper objectMapper;
 
     /**
@@ -56,23 +51,13 @@ public class RefundWriter implements ItemWriter<Refund> {
     /**
      * Before the first step is executed, jobid is read.
      */
-    @SuppressWarnings("unchecked")
-    @BeforeStep
+    @Override
     public void beforeStep(StepExecution stepExecution) {
 
         fileName = stepExecution.getJobExecution().getJobParameters()
                 .getString(JOBID_PARAMETER_NAME);
 
-        // TODO: refactorize next lines, it is a repetition from RefundItemProcessor
-        ExecutionContext executionContext = stepExecution.getExecutionContext();
-
-        if (!executionContext.containsKey(VALIDATION_ERRORS_KEY)) {
-
-            executionContext.put(VALIDATION_ERRORS_KEY, new ArrayList<>());
-        }
-
-        refundLoaderErrors = (List<RefundLoaderError>) executionContext.get(VALIDATION_ERRORS_KEY);
-        // refactorize next lines, it is a repetition from RefundItemProcessor
+        super.beforeStep(stepExecution);
     }
 
     @Override
