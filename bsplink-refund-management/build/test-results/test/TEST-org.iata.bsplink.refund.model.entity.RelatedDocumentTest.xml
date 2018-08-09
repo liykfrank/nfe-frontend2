@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.iata.bsplink.refund.model.entity.RelatedDocumentTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2018-08-09T11:36:37" hostname="a2ljenkins1" time="0.036">
-  <properties/>
-  <testcase name="equalsContract" classname="org.iata.bsplink.refund.model.entity.RelatedDocumentTest" time="0.036"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.iata.bsplink.refund.validation.RefundCompositeValidatorTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2018-08-09T11:36:39" hostname="a2ljenkins1" time="0.079">
-  <properties/>
-  <testcase name="testInvokesValidationOnValidatorsWhichSupportTarget" classname="org.iata.bsplink.refund.validation.RefundCompositeValidatorTest" time="0.078"/>
-  <testcase name="testIsAwareOfSupportedClasses" classname="org.iata.bsplink.refund.validation.RefundCompositeValidatorTest" time="0.0"/>
-  <testcase name="testIsAwareOfUnsupportedClasses" classname="org.iata.bsplink.refund.validation.RefundCompositeValidatorTest" time="0.0"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
