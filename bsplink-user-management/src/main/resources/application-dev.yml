@@ -1,0 +1,60 @@
+###
+#   Server Settings
+###
+server:
+  port: 8080
+
+###
+#   Application Settings
+###
+spring:
+  application:
+    name: bsplink-user-management
+       
+  ###
+  #   Database Settings
+  ###
+  datasource:
+    url: jdbc:postgresql://10.5.0.217:5432/nfedatadev1
+    username:
+    password:
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+        ddl-auto: none  
+        default_schema: bsplink_user
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        
+  ###
+  #   H2 Settings
+  ###
+  h2:
+    console:
+      enabled: true
+  
+  ###
+  #  Flyway Settings
+  ###
+  flyway:
+    enabled: true
+    locations: classpath:/db/migration,/db/data/dev
+    schemas: bsplink_user
+
+###
+#   Logging Settings
+###
+logging:
+  file: ${spring.application.name}.log
+  level:
+    org:
+      hibernate:
+        type: trace
+  
