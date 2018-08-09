@@ -134,4 +134,15 @@ public class RefundJobParametersConverterTest {
         converter.getJobParameters(properties);
     }
 
+    @Test
+    public void testThrowsExceptionIfOutputPathIsDefinedButEmpty() {
+
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(String.format("Parameter \"%s\" must have a value", OUTPUT_PATH));
+
+        properties.put(OUTPUT_PATH, "");
+
+        converter.getJobParameters(properties);
+    }
+
 }

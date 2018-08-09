@@ -37,6 +37,7 @@ public class RefundJobParametersConverter implements JobParametersConverter {
         getJobParameters(properties, parameters);
 
         throwExceptionIfRequiredParameterDoesNotExist(parameters);
+        throwExceptionIfOutputPathWasDefinedEmpty(parameters);
 
         addDefaultOutputPathIfItIsNotDefined(parameters);
 
@@ -73,6 +74,16 @@ public class RefundJobParametersConverter implements JobParametersConverter {
 
         throw new IllegalArgumentException(
                 String.format("Parameter \"%s\" is required", REQUIRED_PARAMETER));
+    }
+
+    private void throwExceptionIfOutputPathWasDefinedEmpty(Map<String, JobParameter> parameters) {
+
+        if (parameters.containsKey(OUTPUT_PATH)
+                && ((String) parameters.get(OUTPUT_PATH).getValue()).isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    String.format("Parameter \"%s\" must have a value", OUTPUT_PATH));
+        }
     }
 
     private void addDefaultOutputPathIfItIsNotDefined(Map<String, JobParameter> parameters) {
