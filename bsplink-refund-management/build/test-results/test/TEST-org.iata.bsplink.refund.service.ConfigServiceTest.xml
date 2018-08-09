@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.iata.bsplink.refund.service.ConfigServiceTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2018-08-09T11:36:38" hostname="a2ljenkins1" time="0.109">
+  <properties/>
+  <testcase name="testFindAllIsoCountryCodes" classname="org.iata.bsplink.refund.service.ConfigServiceTest" time="0.093"/>
+  <testcase name="testFindAll" classname="org.iata.bsplink.refund.service.ConfigServiceTest" time="0.001"/>
+  <testcase name="testFind" classname="org.iata.bsplink.refund.service.ConfigServiceTest" time="0.001"/>
+  <testcase name="testSave" classname="org.iata.bsplink.refund.service.ConfigServiceTest" time="0.014"/>
+  <testcase name="testFindDefault" classname="org.iata.bsplink.refund.service.ConfigServiceTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

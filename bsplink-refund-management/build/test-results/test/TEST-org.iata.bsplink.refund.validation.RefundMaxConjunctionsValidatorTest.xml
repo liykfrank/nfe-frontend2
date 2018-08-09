@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.iata.bsplink.refund.validation.RefundMaxConjunctionsValidatorTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2018-08-09T11:36:40" hostname="a2ljenkins1" time="0.021">
+  <properties/>
+  <testcase name="testAddExpectedMessageWhenNotValid" classname="org.iata.bsplink.refund.validation.RefundMaxConjunctionsValidatorTest" time="0.001"/>
+  <testcase name="testSupports" classname="org.iata.bsplink.refund.validation.RefundMaxConjunctionsValidatorTest" time="0.0"/>
+  <testcase name="testValidatesMaxConjunctions([RelatedDocument[relatedTicketDocumentNumber=null, relatedTicketCoupon1=false, relatedTicketCoupon2=false, relatedTicketCoupon3=false, relatedTicketCoupon4=false], RelatedDocument[relatedTicketDocumentNumber=null, relatedTicketCoupon1=false, relatedTicketCoupon2=false, relatedTicketCoupon3=false, relatedTicketCoupon4=false]], false) [0]" classname="org.iata.bsplink.refund.validation.RefundMaxConjunctionsValidatorTest" time="0.0"/>
+  <testcase name="testValidatesMaxConjunctions([RelatedDocument[relatedTicketDocumentNumber=null, relatedTicketCoupon1=false, relatedTicketCoupon2=false, relatedTicketCoupon3=false, relatedTicketCoupon4=false]], false) [1]" classname="org.iata.bsplink.refund.validation.RefundMaxConjunctionsValidatorTest" time="0.001"/>
+  <testcase name="testValidatesMaxConjunctions([RelatedDocument[relatedTicketDocumentNumber=null, relatedTicketCoupon1=false, relatedTicketCoupon2=false, relatedTicketCoupon3=false, relatedTicketCoupon4=false], RelatedDocument[relatedTicketDocumentNumber=null, relatedTicketCoupon1=false, relatedTicketCoupon2=false, relatedTicketCoupon3=false, relatedTicketCoupon4=false], RelatedDocument[relatedTicketDocumentNumber=null, relatedTicketCoupon1=false, relatedTicketCoupon2=false, relatedTicketCoupon3=false, relatedTicketCoupon4=false]], true) [2]" classname="org.iata.bsplink.refund.validation.RefundMaxConjunctionsValidatorTest" time="0.017"/>
+  <testcase name="testResultIsValidIfDoesntHaveIsoCountryCode" classname="org.iata.bsplink.refund.validation.RefundMaxConjunctionsValidatorTest" time="0.0"/>
+  <testcase name="testCanManageNullValueInConjuntions" classname="org.iata.bsplink.refund.validation.RefundMaxConjunctionsValidatorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

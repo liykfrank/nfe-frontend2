@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.iata.bsplink.refund.validation.PartialRefundValidatorTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2018-08-09T11:36:39" hostname="a2ljenkins1" time="0.013">
+  <properties/>
+  <testcase name="testIsValidPartialCouponNull" classname="org.iata.bsplink.refund.validation.PartialRefundValidatorTest" time="0.001"/>
+  <testcase name="testIsValidPartialConjunctionCouponFalse" classname="org.iata.bsplink.refund.validation.PartialRefundValidatorTest" time="0.001"/>
+  <testcase name="testSupports" classname="org.iata.bsplink.refund.validation.PartialRefundValidatorTest" time="0.0"/>
+  <testcase name="testIsValidPartialConjunctionCouponNull" classname="org.iata.bsplink.refund.validation.PartialRefundValidatorTest" time="0.0"/>
+  <testcase name="testIsNotValidPartial" classname="org.iata.bsplink.refund.validation.PartialRefundValidatorTest" time="0.001"/>
+  <testcase name="testIsValidLessGrossFareUsed" classname="org.iata.bsplink.refund.validation.PartialRefundValidatorTest" time="0.0"/>
+  <testcase name="testIsValidPartialCouponFalse" classname="org.iata.bsplink.refund.validation.PartialRefundValidatorTest" time="0.0"/>
+  <testcase name="testIsValidNoPartial" classname="org.iata.bsplink.refund.validation.PartialRefundValidatorTest" time="0.0"/>
+  <testcase name="testIsNotValidLessGrossFareUsed" classname="org.iata.bsplink.refund.validation.PartialRefundValidatorTest" time="0.0"/>
+  <testcase name="testIsValidPartialRelatedDocumentNull" classname="org.iata.bsplink.refund.validation.PartialRefundValidatorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

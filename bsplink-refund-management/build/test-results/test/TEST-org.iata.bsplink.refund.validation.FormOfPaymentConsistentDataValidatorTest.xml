@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" tests="33" skipped="0" failures="0" errors="0" timestamp="2018-08-09T11:36:39" hostname="a2ljenkins1" time="0.027">
+  <properties/>
+  <testcase name="testValidatesObject(CC, 0000000000000000000, 00, true) [0]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.01"/>
+  <testcase name="testValidatesObject(CC, null, null, false) [1]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(CC, , , false) [2]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(CC, 0000000000000000000, null, false) [3]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(CC, 0000000000000000000, , false) [4]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.001"/>
+  <testcase name="testValidatesObject(CC, null, 00, false) [5]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(CC, , 00, false) [6]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(EP, 0000000000000000000, 00, true) [7]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(EP, null, null, false) [8]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(EP, , , false) [9]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(EP, 0000000000000000000, null, false) [10]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(EP, 0000000000000000000, , false) [11]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(EP, null, 00, false) [12]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(EP, , 00, false) [13]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(MSCC, 0000000000000000000, 00, true) [14]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(MSCC, null, null, false) [15]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.001"/>
+  <testcase name="testValidatesObject(MSCC, , , false) [16]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(MSCC, 0000000000000000000, null, false) [17]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(MSCC, 0000000000000000000, , false) [18]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(MSCC, null, 00, false) [19]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.001"/>
+  <testcase name="testValidatesObject(MSCC, , 00, false) [20]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(CA, null, null, true) [21]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.008"/>
+  <testcase name="testValidatesObject(CA, , , true) [22]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.001"/>
+  <testcase name="testValidatesObject(CA, 0000000000000000000, null, false) [23]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(CA, 0000000000000000000, , false) [24]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(CA, null, 00, false) [25]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(CA, , 00, false) [26]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.001"/>
+  <testcase name="testValidatesObject(MSCA, null, null, true) [27]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(MSCA, , , true) [28]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(MSCA, 0000000000000000000, null, false) [29]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(MSCA, 0000000000000000000, , false) [30]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(MSCA, null, 00, false) [31]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(MSCA, , 00, false) [32]" classname="org.iata.bsplink.refund.validation.FormOfPaymentConsistentDataValidatorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

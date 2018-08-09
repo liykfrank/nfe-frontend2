@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.iata.bsplink.refund.validation.RefundCreditCardEnabledValidatorTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2018-08-09T11:36:39" hostname="a2ljenkins1" time="0.004">
+  <properties/>
+  <testcase name="testAddExpectedMessageWhenNotValid" classname="org.iata.bsplink.refund.validation.RefundCreditCardEnabledValidatorTest" time="0.001"/>
+  <testcase name="testSupports" classname="org.iata.bsplink.refund.validation.RefundCreditCardEnabledValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject([FormOfPaymentAmount[type=CA, amount=0, vendorCode=null, number=null], FormOfPaymentAmount[type=CC, amount=0, vendorCode=null, number=null]], true, false) [0]" classname="org.iata.bsplink.refund.validation.RefundCreditCardEnabledValidatorTest" time="0.001"/>
+  <testcase name="testValidatesObject([FormOfPaymentAmount[type=CA, amount=0, vendorCode=null, number=null], FormOfPaymentAmount[type=CC, amount=0, vendorCode=null, number=null]], false, true) [1]" classname="org.iata.bsplink.refund.validation.RefundCreditCardEnabledValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject([FormOfPaymentAmount[type=CA, amount=0, vendorCode=null, number=null], FormOfPaymentAmount[type=MSCC, amount=0, vendorCode=null, number=null]], true, false) [2]" classname="org.iata.bsplink.refund.validation.RefundCreditCardEnabledValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject([FormOfPaymentAmount[type=CA, amount=0, vendorCode=null, number=null], FormOfPaymentAmount[type=MSCC, amount=0, vendorCode=null, number=null]], false, true) [3]" classname="org.iata.bsplink.refund.validation.RefundCreditCardEnabledValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject(null, true, false) [4]" classname="org.iata.bsplink.refund.validation.RefundCreditCardEnabledValidatorTest" time="0.0"/>
+  <testcase name="testValidatesObject([FormOfPaymentAmount[type=CA, amount=0, vendorCode=null, number=null], FormOfPaymentAmount[type=EP, amount=0, vendorCode=null, number=null]], true, false) [5]" classname="org.iata.bsplink.refund.validation.RefundCreditCardEnabledValidatorTest" time="0.0"/>
+  <testcase name="testResultIsValidIfDoesntHaveIsoCountryCode" classname="org.iata.bsplink.refund.validation.RefundCreditCardEnabledValidatorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

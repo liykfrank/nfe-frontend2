@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.iata.bsplink.refund.validation.DecimalsValidatorTest" tests="22" skipped="0" failures="0" errors="0" timestamp="2018-08-09T11:36:39" hostname="a2ljenkins1" time="0.078">
+  <properties/>
+  <testcase name="testIsValidForNullCurrency" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.0"/>
+  <testcase name="testIsValidTaxesIsNull" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.001"/>
+  <testcase name="testIsNotValidTaxAmount" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.001"/>
+  <testcase name="testIsValidTaxAmount" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.001"/>
+  <testcase name="testIsValidTaxIsNull" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.0"/>
+  <testcase name="testIsValidAmounts(grossFare, 0.23, 2, true, null) [0]" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.051"/>
+  <testcase name="testIsValidAmounts(cancellationPenalty, 0.23, 3, true, null) [1]" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.001"/>
+  <testcase name="testIsValidAmounts(commissionAmount, 0.23, 0, false, Incorrect number of amount's decimals for the specified currency.) [2]" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.001"/>
+  <testcase name="testIsValidAmounts(commissionOnCpAndMfAmount, 1.234, 3, true, null) [3]" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.0"/>
+  <testcase name="testIsValidAmounts(lessGrossFareUsed, 1.234, 0, false, Incorrect number of amount's decimals for the specified currency.) [4]" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.001"/>
+  <testcase name="testIsValidAmounts(miscellaneousFee, 1234.0, 0, true, null) [5]" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.0"/>
+  <testcase name="testIsValidAmounts(refundToPassenger, 1234.0, 0, true, null) [6]" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.001"/>
+  <testcase name="testIsValidAmounts(spam, 1.234, 2, false, Incorrect number of amount's decimals for the specified currency.) [7]" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.001"/>
+  <testcase name="testIsValidAmounts(tax, 1234.0, 7, true, null) [8]" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.001"/>
+  <testcase name="testIsValidAmounts(taxOnCancellationPenalty, 1234.0, 0, true, null) [9]" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.0"/>
+  <testcase name="testIsValidAmounts(taxOnMiscellaneousFee, 1234.0, 0, true, null) [10]" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.001"/>
+  <testcase name="testIsValidForNullCurrencyDecimals" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.001"/>
+  <testcase name="testIsValidFormOfPaymentAmountIsNull" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.003"/>
+  <testcase name="testIsNotValidFormOfPaymentAmount" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.001"/>
+  <testcase name="testIsValidFormOfPaymentAmountsIsNull" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.0"/>
+  <testcase name="testIsValidNullAmount" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.001"/>
+  <testcase name="testIsValidFormOfPaymentAmount" classname="org.iata.bsplink.refund.validation.DecimalsValidatorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

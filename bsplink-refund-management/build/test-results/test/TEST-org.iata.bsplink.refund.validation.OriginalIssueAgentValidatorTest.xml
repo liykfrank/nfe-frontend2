@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.iata.bsplink.refund.validation.OriginalIssueAgentValidatorTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2018-08-09T11:36:39" hostname="a2ljenkins1" time="0.01">
+  <properties/>
+  <testcase name="testIsNotValid(ABCDEFGH, Incorrect Format.) [0]" classname="org.iata.bsplink.refund.validation.OriginalIssueAgentValidatorTest" time="0.001"/>
+  <testcase name="testIsNotValid(123, Incorrect Format.) [1]" classname="org.iata.bsplink.refund.validation.OriginalIssueAgentValidatorTest" time="0.0"/>
+  <testcase name="testIsNotValid(78200007, Incorrect Format. Expected: 7 digit agent code + Check-Digit) [2]" classname="org.iata.bsplink.refund.validation.OriginalIssueAgentValidatorTest" time="0.0"/>
+  <testcase name="testIsNotValid(78200103, Incorrect Check-Digit) [3]" classname="org.iata.bsplink.refund.validation.OriginalIssueAgentValidatorTest" time="0.006"/>
+  <testcase name="testIsValid(null) [0]" classname="org.iata.bsplink.refund.validation.OriginalIssueAgentValidatorTest" time="0.0"/>
+  <testcase name="testIsValid(78200102) [1]" classname="org.iata.bsplink.refund.validation.OriginalIssueAgentValidatorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

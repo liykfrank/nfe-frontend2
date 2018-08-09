@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.iata.bsplink.refund.service.AgentServiceTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2018-08-09T11:36:37" hostname="a2ljenkins1" time="0.648">
+  <properties/>
+  <testcase name="findAllAgentResponse" classname="org.iata.bsplink.refund.service.AgentServiceTest" time="0.644"/>
+  <testcase name="testFindAgentBadRequest" classname="org.iata.bsplink.refund.service.AgentServiceTest" time="0.002"/>
+  <testcase name="testFindAgentNotFound" classname="org.iata.bsplink.refund.service.AgentServiceTest" time="0.0"/>
+  <testcase name="testFindAgentResponseNotFound" classname="org.iata.bsplink.refund.service.AgentServiceTest" time="0.001"/>
+  <testcase name="testFindAgent" classname="org.iata.bsplink.refund.service.AgentServiceTest" time="0.001"/>
+  <testcase name="testFindAgentResponse" classname="org.iata.bsplink.refund.service.AgentServiceTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

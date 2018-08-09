@@ -1,0 +1,28 @@
+app:
+  refund_update_ignored_fields: id,history,attachedFiles,comments,agentCode,status,ticketDocumentNumber,dateOfAirlineAction,rejectionReason
+  local_attached_files_directory: attached_files
+  remote_full_path_file: attached_files/%s/refund/%d/%s
+  remote_attached_files_directory: attached_files/%s/refund/%d
+  host:
+    sftp:
+      name: null
+      username: null
+      password: null
+      port: null
+      protocol: sftp
+    local:
+      name: null
+      username: null
+      password: null
+      port: null
+      protocol: local
+spring:
+  jpa:
+    properties:
+      hibernate:
+        default_schema: refund
+feign:
+  agents:
+    url: http://localhost:8082/v1/agents
+  airlines:
+    url: http://localhost:8083/v1/airlines

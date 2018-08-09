@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.iata.bsplink.refund.validation.RefundAmountsValidatorTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2018-08-09T11:36:39" hostname="a2ljenkins1" time="0.014">
+  <properties/>
+  <testcase name="testIsInValidCommission" classname="org.iata.bsplink.refund.validation.RefundAmountsValidatorTest" time="0.001"/>
+  <testcase name="testIsInValidLessGross" classname="org.iata.bsplink.refund.validation.RefundAmountsValidatorTest" time="0.0"/>
+  <testcase name="testIsInValidCpMfCommission" classname="org.iata.bsplink.refund.validation.RefundAmountsValidatorTest" time="0.001"/>
+  <testcase name="testIsNotValid(30, 2, 3, 5, 4, 7, 6, 8, refundToPassenger, The amount for 'Refund to Passenger' is incorrect.) [0]" classname="org.iata.bsplink.refund.validation.RefundAmountsValidatorTest" time="0.001"/>
+  <testcase name="testIsNotValid(30, 2, 3, 4, 5, 7, 6, 9, taxOnCancellationPenalty, The tax on cancellation penalty has to be inferior to cancellation penalty amount) [1]" classname="org.iata.bsplink.refund.validation.RefundAmountsValidatorTest" time="0.001"/>
+  <testcase name="testIsNotValid(30, 2, 3, 5, 4, 6, 7, 9, taxOnMiscellaneousFee, The tax on miscellaneous fee has to be inferior to miscellaneous fee amount) [2]" classname="org.iata.bsplink.refund.validation.RefundAmountsValidatorTest" time="0.001"/>
+  <testcase name="testIsValidLessGross" classname="org.iata.bsplink.refund.validation.RefundAmountsValidatorTest" time="0.0"/>
+  <testcase name="testIsValidCpMfCommission" classname="org.iata.bsplink.refund.validation.RefundAmountsValidatorTest" time="0.001"/>
+  <testcase name="testIsValidCommission" classname="org.iata.bsplink.refund.validation.RefundAmountsValidatorTest" time="0.0"/>
+  <testcase name="testIsValidWithDefaultValues" classname="org.iata.bsplink.refund.validation.RefundAmountsValidatorTest" time="0.001"/>
+  <testcase name="testIsValid(1, 2, null, 4, 5, 6, 7, 8) [0]" classname="org.iata.bsplink.refund.validation.RefundAmountsValidatorTest" time="0.0"/>
+  <testcase name="testIsValid(1, 2, 3, 4, -5, 6, 7, 8) [1]" classname="org.iata.bsplink.refund.validation.RefundAmountsValidatorTest" time="0.001"/>
+  <testcase name="testIsValid(1000, 400, 100, 20, 2, 10, 1, 667) [2]" classname="org.iata.bsplink.refund.validation.RefundAmountsValidatorTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

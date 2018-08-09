@@ -1,0 +1,6 @@
+projectKey=org.iata.bsplink:bsplink-refund-management
+serverUrl=http://sonarinterno.nfedev.accelya.com
+serverVersion=7.0.0.36138
+dashboardUrl=http://sonarinterno.nfedev.accelya.com/dashboard/index/org.iata.bsplink:bsplink-refund-management
+ceTaskId=AWUeek4vqZP8Ernwnb8P
+ceTaskUrl=http://sonarinterno.nfedev.accelya.com/api/ce/task?id=AWUeek4vqZP8Ernwnb8P

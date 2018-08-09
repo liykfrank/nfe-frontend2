@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.iata.bsplink.refund.validation.RefundIssuePermissionValidatorTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2018-08-09T11:36:39" hostname="a2ljenkins1" time="0.02">
+  <properties/>
+  <testcase name="testIsNotValidAirlineNotFound" classname="org.iata.bsplink.refund.validation.RefundIssuePermissionValidatorTest" time="0.015"/>
+  <testcase name="testIsNotValidAgentIncorrectCountry" classname="org.iata.bsplink.refund.validation.RefundIssuePermissionValidatorTest" time="0.001"/>
+  <testcase name="testIsValidAgentNull" classname="org.iata.bsplink.refund.validation.RefundIssuePermissionValidatorTest" time="0.001"/>
+  <testcase name="testIsValidAirlineNull" classname="org.iata.bsplink.refund.validation.RefundIssuePermissionValidatorTest" time="0.0"/>
+  <testcase name="testIsNotValidAgentNotFound" classname="org.iata.bsplink.refund.validation.RefundIssuePermissionValidatorTest" time="0.001"/>
+  <testcase name="testIsNotValidAgentDigitIncorrect" classname="org.iata.bsplink.refund.validation.RefundIssuePermissionValidatorTest" time="0.001"/>
+  <testcase name="testIsValid" classname="org.iata.bsplink.refund.validation.RefundIssuePermissionValidatorTest" time="0.0"/>
+  <testcase name="testIsValidIsocNull" classname="org.iata.bsplink.refund.validation.RefundIssuePermissionValidatorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
