@@ -46,6 +46,11 @@ public class RefundJobParametersConverter implements JobParametersConverter {
 
     private void getJobParameters(Properties properties, Map<String, JobParameter> parameters) {
 
+        if (properties == null) {
+
+            return;
+        }
+
         for (Object key : Collections.list(properties.keys())) {
 
             if (REQUIRED_PARAMETER.equals(key)) {

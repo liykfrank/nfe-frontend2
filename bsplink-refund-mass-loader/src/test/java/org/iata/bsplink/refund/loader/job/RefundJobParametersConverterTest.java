@@ -145,4 +145,15 @@ public class RefundJobParametersConverterTest {
         converter.getJobParameters(properties);
     }
 
+    @Test
+    public void testThrowsExceptionIfNoPropertyIsDefined() {
+
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(String.format("Parameter \"%s\" is required", REQUIRED_PARAMETER));
+
+        properties = null;
+
+        converter.getJobParameters(properties);
+    }
+
 }
