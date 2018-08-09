@@ -29,6 +29,7 @@ app:
   zip:
     name: test.zip
   yade:  
+    save_in_bbdd_and_user_outbox_enable: true
     inbox:
     outbox:
     host:

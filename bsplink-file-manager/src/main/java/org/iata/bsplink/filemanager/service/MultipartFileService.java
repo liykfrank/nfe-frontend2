@@ -21,6 +21,7 @@ import org.iata.bsplink.filemanager.model.repository.BsplinkFileRepository;
 import org.iata.bsplink.filemanager.response.SimpleResponse;
 import org.iata.bsplink.filemanager.utils.BsplinkFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,6 +49,9 @@ public class MultipartFileService {
 
     @Autowired
     private BsplinkFileRepository bsplinkFileRepository;
+
+    @Value("${app.yade.save_in_bbdd_and_user_outbox_enable}")
+    private boolean saveInBbddAndUserOutboxEnable;
 
     /**
      * Save MultipartFiles in FS.
@@ -112,7 +116,7 @@ public class MultipartFileService {
                 Paths.get(applicationConfiguration.getLocalUploadedFilesDirectory());
 
         File dirUploadedFiles = new File(uploadedFilesDirectory.toString());
-        
+
         if (!dirUploadedFiles.exists() && dirUploadedFiles.mkdir()) {
             log.info("Directory " + dirUploadedFiles + " created.");
         }
@@ -146,7 +150,9 @@ public class MultipartFileService {
 
         }
 
-        bsplinkFileRepository.save(bsplinkFile);
+        if (saveInBbddAndUserOutboxEnable) {
+            bsplinkFileRepository.save(bsplinkFile);
+        }
 
         bsplinkFileUtils.uploadSingleFileFromLocalToRemote(file.getOriginalFilename());
     }

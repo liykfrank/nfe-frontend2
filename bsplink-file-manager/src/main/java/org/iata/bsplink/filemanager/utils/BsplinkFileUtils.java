@@ -110,6 +110,9 @@ public class BsplinkFileUtils {
     @Value("${app.file_name_type_replacement}")
     private String fileNameTypeReplacement;
 
+    @Value("${app.yade.save_in_bbdd_and_user_outbox_enable}")
+    private boolean saveInBbddAndUserOutboxEnable;
+
     @Autowired
     private BsplinkFileConfigService bsplinkFileConfigService;
 
@@ -283,7 +286,10 @@ public class BsplinkFileUtils {
                 YadeProtocol.valueOf(yadeHostLocalProtocol.toUpperCase()));
 
         // TEMPORARILY THE FILE WILL BE SAVED IN THE USER OUTBOX DIRECTORY
-        String pathToFile = getOutboxPathFromFileName(fileName);
+        String pathToFile = yadeInbox;
+        if (saveInBbddAndUserOutboxEnable) {
+            pathToFile = getOutboxPathFromFileName(fileName);
+        }
 
         // Creates the remote sftp source host where files will be saved
         // The file will be move to the user outbox directory

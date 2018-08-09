@@ -22,6 +22,7 @@ logging:
         type: trace
 app:
   yade:
+    save_in_bbdd_and_user_outbox_enable: false
     inbox: /data/nfe/jobscheduler_inbox
     outbox: /data/nfe/jobscheduler_outbox
     host:

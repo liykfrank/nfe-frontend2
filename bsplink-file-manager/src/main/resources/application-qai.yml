@@ -33,6 +33,7 @@ logging:
         type: trace
 app:
   yade:
+    save_in_bbdd_and_user_outbox_enable: false
     inbox: /jobscheduler_inbox
     outbox: /jobscheduler_outbox
     host:
