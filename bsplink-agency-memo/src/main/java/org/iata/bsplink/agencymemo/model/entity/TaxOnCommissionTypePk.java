@@ -18,6 +18,8 @@ public class TaxOnCommissionTypePk implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public static final String CODE_FORMAT = "Only alphanumeric characters accepted.";
+
     @ApiModelProperty(value = "ISO Country Code", required = true)
     @NotNull
     @Size(min = 2, max = 2)
@@ -29,7 +31,7 @@ public class TaxOnCommissionTypePk implements Serializable {
             required = true)
     @NotNull
     @Size(min = 1, max = 6)
-    @Pattern(regexp = "^[A-Za-z0-9]*$", message = "Only alphanumeric characters accepted.")
+    @Pattern(regexp = "^[A-Za-z0-9]*$", message = CODE_FORMAT)
     @Column(length = 6)
     private String code;
 }

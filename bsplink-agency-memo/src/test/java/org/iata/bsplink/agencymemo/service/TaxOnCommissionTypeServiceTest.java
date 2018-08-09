@@ -41,9 +41,10 @@ public class TaxOnCommissionTypeServiceTest {
 
     @Test
     public void testFindByIsoCountryCode() throws Exception {
-        String isoc = getTaxOnCommissionTypes().get(0).getIsoCountryCode();
+        String isoc = getTaxOnCommissionTypes().get(0).getPk().getIsoCountryCode();
         List<TaxOnCommissionType> tctps = getTaxOnCommissionTypes().stream()
-                .filter(tctp -> isoc.equals(tctp.getIsoCountryCode())).collect(Collectors.toList());
+                .filter(tctp -> isoc.equals(tctp.getPk().getIsoCountryCode()))
+                .collect(Collectors.toList());
         when(taxOnCommissionTypeRepository.findByPkIsoCountryCode(isoc)).thenReturn(tctps);
         List<TaxOnCommissionType> found = taxOnCommissionTypeService.findByIsoCountryCode(isoc);
         verify(taxOnCommissionTypeRepository).findByPkIsoCountryCode(isoc);
