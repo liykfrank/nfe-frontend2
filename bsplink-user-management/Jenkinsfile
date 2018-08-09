@@ -36,6 +36,7 @@ pipeline {
                 echo "config file provider"
 				configFileProvider([configFile(fileId: 'gradle.properties', targetLocation: '.')]) {
                     sh 'push_to_iata2.bash $WORKSPACE $JOB_BASE_NAME'
+                    sh 'chmod 755 -R *'
                 	sh './gradlew clean build'
                 }
 				dir('build/libs') {
