@@ -3,6 +3,7 @@
 config/application*.yml
 .checkstyle
 *.log
+*.log.*
 *.db
 test_tmp/
 /*e8*
