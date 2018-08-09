@@ -38,7 +38,7 @@ public class SwaggerConfig {
     @SuppressWarnings("rawtypes")
     private ApiInfo apiInfo() {
 
-        return new ApiInfo("@projectName@", "@projectName@", "1", null, new Contact("", "", ""),
+        return new ApiInfo("user-management", "user-management", "1", null, new Contact("", "", ""),
                 null, null, new ArrayList<VendorExtension>());
     }
 }

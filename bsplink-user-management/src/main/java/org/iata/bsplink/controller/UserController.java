@@ -61,7 +61,6 @@ public class UserController {
                         .ifPresent(o -> binder.addValidators(validator)));
     }
 
-
     /**
      * Exposes a REST endpoint that returns the user matching the provided id.
      *
@@ -95,7 +94,7 @@ public class UserController {
      * @param request details for creating the user
      * 
      * @return the created user
-     */
+     */    
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE},
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})

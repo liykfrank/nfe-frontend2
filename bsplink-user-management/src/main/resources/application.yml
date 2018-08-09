@@ -4,3 +4,10 @@ feign:
     url: http://localhost:8082/v1/agents
   airlines:
     url: http://localhost:8083/v1/airlines
+
+keycloak:
+  auth-server-url: http://keycloak-dev.nfedev.accelya.com/auth
+  realm: NFE
+  public-client: true
+  resource: user-management
+  principal-attribute: preferred_username
