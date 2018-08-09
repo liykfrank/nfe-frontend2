@@ -1,5 +1,6 @@
 package org.iata.bsplink.agencymemo.controller;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.iata.bsplink.agencymemo.test.fixtures.TaxOnCommissionTypeFixtures.getTaxOnCommissionTypes;
@@ -103,6 +104,22 @@ public class TaxOnCommissionTypeControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", equalTo("Validation error")));
+    }
+
+    @Test
+    public void testValidatesTaxOnCommissionTypeCodeLength() throws Exception {
+
+        taxOnCommissionType.getPk().setCode("1234567898912235445");
+
+        String taxOnCommissionTypeJson = mapper.writeValueAsString(taxOnCommissionType);
+
+        mockMvc.perform(post(BASE_URI).content(taxOnCommissionTypeJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", equalTo("Validation error")))
+                .andExpect(jsonPath("$.validationErrors[0].fieldName", containsString("ode")))
+                .andExpect(jsonPath("$.validationErrors[0].message",
+                        equalTo("size must be between 1 and 6")));
     }
 
     @Test

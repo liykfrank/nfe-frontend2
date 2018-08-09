@@ -1,16 +1,13 @@
 package org.iata.bsplink.agencymemo.model.entity;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.iata.bsplink.agencymemo.test.fixtures.TaxOnCommissionTypeFixtures.getTaxOnCommissionTypes;
-import static org.junit.Assert.assertThat;
-
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 
+import org.iata.bsplink.agencymemo.test.validation.ValidationContraintTestCase;
 import org.junit.Test;
 
 
-public class TaxOnCommissionTypeTest {
+public class TaxOnCommissionTypeTest extends ValidationContraintTestCase<TaxOnCommissionType> {
 
     @Test
     public void equalsContract() {
@@ -19,15 +16,30 @@ public class TaxOnCommissionTypeTest {
             .suppress(Warning.NONFINAL_FIELDS).verify();
     }
 
-    @Test
-    public void testGetCode() {
-        TaxOnCommissionType tctp = getTaxOnCommissionTypes().get(0);
-        assertThat(tctp.getCode(), equalTo(tctp.getPk().getCode()));
+
+    @Override
+    protected TaxOnCommissionType getObjectToValidate() {
+
+        TaxOnCommissionTypePk pk = new TaxOnCommissionTypePk();
+        pk.setIsoCountryCode("AA");
+        pk.setCode("CODE");
+        TaxOnCommissionType tctp = new TaxOnCommissionType();
+        tctp.setPk(pk);
+        tctp.setDescription("description");
+        return tctp;
     }
 
-    @Test
-    public void testGetIsoCountryCode() {
-        TaxOnCommissionType tctp = getTaxOnCommissionTypes().get(0);
-        assertThat(tctp.getIsoCountryCode(), equalTo(tctp.getPk().getIsoCountryCode()));
+
+    @Override
+    protected Object[][] parametersForTestValidationConstraints() {
+
+        return new Object[][] {
+            { "description", null, MUST_NOT_BE_NULL_MESSAGE },
+            { "description", "ABCD !", TaxOnCommissionType.DESCRIPTION_FORMAT },
+            { "pk.code", null, MUST_NOT_BE_NULL_MESSAGE },
+            { "pk.code", "1234567890", "size must be between 1 and 6" },
+            { "pk.code", "abcd$#", TaxOnCommissionTypePk.CODE_FORMAT },
+            { "pk.isoCountryCode", null, MUST_NOT_BE_NULL_MESSAGE },
+        };
     }
 }
