@@ -1,0 +1,22 @@
+<div *ngIf="reactiveFormReady()"  class="ceil-input form-group" [formGroup]="inputForm">
+  <label *ngIf="label != undefined" [ngClass]="{'text-nowrap': wrapText}" [innerHTML]="label"></label>
+  <div class="input-group-inline">
+
+    <input [ngClass]="{'error': checkIfErrorExist()}" [disabled]="disabledInput" *ngIf="type=='pattern'" class="form-control" ownPattern
+      [typingPattern]="typingPattern" [maxLength]="inputMaxTextLength" [formControlName]="INPUT_FORM_CONTROL_NAME" type="text">
+
+    <input [ngClass]="{'error': checkIfErrorExist()}" [disabled]="disabledInput" *ngIf="type=='decimal'" class="form-control" decimalsFormatterDirective
+      [decimals]="decimalsNumber" [maxLength]="inputMaxTextLength" [formControlName]="INPUT_FORM_CONTROL_NAME" type="text">
+
+    <input [ngClass]="{'error': checkIfErrorExist()}" [disabled]="disabledInput" *ngIf="type=='regex'" bsplInputRegex [regexPattern]="typingPattern" class="form-control" [formControlName]="INPUT_FORM_CONTROL_NAME"
+      [maxLength]="inputMaxTextLength" type="text">
+
+    <input [ngClass]="{'error': checkIfErrorExist()}" [disabled]="disabledInput" *ngIf="!type" class="form-control" [formControlName]="INPUT_FORM_CONTROL_NAME"
+      [maxLength]="inputMaxTextLength" type="text">
+
+    <!-- Errors -->
+    <div *ngIf="checkIfErrorExist()" class="tooltip-container">
+      <bspl-field-error [errors]="formControlParent.errors"></bspl-field-error>
+    </div>
+  </div>
+</div>

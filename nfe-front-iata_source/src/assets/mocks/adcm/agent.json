@@ -1,0 +1,11 @@
+{
+  "billingCity": "City1",
+  "billingCountry": "Country1",
+  "billingPostalCode": "00000",
+  "billingStreet": "Street1",
+  "defaultDate": "01/01/2018",
+  "iataCode": "SS",
+  "isoCountryCode": "SS",
+  "name": "Agent",
+  "vatNumber": "ABC123"
+}

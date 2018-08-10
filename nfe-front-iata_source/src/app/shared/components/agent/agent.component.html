@@ -1,0 +1,77 @@
+<form [formGroup]="agentFormModelGroup">
+  <div class="form-row">
+
+    <div class="form-group col-3">
+      <bspl-input-form-control
+        l10nTranslate [error]="''"
+        [disabledInput]="disabledAgentCode"
+        [wrapText]="true"
+        [label]="'AGENT.code'"
+        [type]="'pattern'"
+        [typingPattern]="'[0-9]{7}$'"
+        [inputMaxTextLength]="'7'"
+        [formGroupParent]="agentFormModelGroup"
+        [formControlParentName]="'agentCode'">
+      </bspl-input-form-control>
+    </div>
+
+    <div class="form-group col-2 col-xl-1">
+      <bspl-input-form-control
+        l10nTranslate
+        [error]="''" 
+        [disabledInput]="disabledAgentCode"
+        [label]="'&nbsp;'" 
+        [type]="'pattern'" 
+        [typingPattern]="'[0-9]{1}$'"
+        [inputMaxTextLength]="'1'"
+        [formGroupParent]="agentFormModelGroup"
+        [formControlParentName]="'agentControlDigit'">
+      </bspl-input-form-control>
+    </div>
+
+    <div class="form-group col-3">
+      <label>&nbsp;</label>
+      <button *ngIf="showMoreDetails" class="form-control button-default details-button" [disabled]="disabledMoreDetails" (click)="onClickMoreDetails()"
+        l10nTranslate>
+        AGENT.more
+      </button>
+    </div>
+  </div>
+
+  <div class="form-row" *ngIf="showAgentName">
+      <div class="ceil-input form-group">
+          <label  l10nTranslate >AGENT.name</label>
+            <input  [disabled]="true"  class="form-control"  type="text" [value]="agent.name">
+        </div>
+  </div>
+
+  <div class="form-row" *ngIf="agentVatNumberEnabled">
+    <div class="form-group col-12 col-xl-12">
+      <bspl-input-form-control 
+        l10nTranslate 
+        [error]="''" [wrapText]="true" 
+        [label]="'AGENT.agentVAT'" 
+        [inputMaxTextLength]="'15'"
+        [formGroupParent]="agentFormModelGroup" 
+        [formControlParentName]="'agentVatNumber'">
+      </bspl-input-form-control>
+    </div>
+  </div>
+
+  <div class="form-row" *ngIf="companyRegistrationNumberEnabled">
+    <div class="form-group col-12 col-xl-12">
+      <bspl-input-form-control 
+        l10nTranslate 
+        [error]="''" 
+        [wrapText]="true" 
+        [label]="'AGENT.companyReg'" 
+        [inputMaxTextLength]="'20'"
+        [formGroupParent]="agentFormModelGroup" 
+        [formControlParentName]="'agentRegistrationNumber'">
+      </bspl-input-form-control>
+    </div>
+  </div>
+
+  <bspl-contact *ngIf="showContact" [disabledComponent]="disabledContact" (returnForm)="onChangeContact($event)">
+  </bspl-contact>
+</form>

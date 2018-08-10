@@ -1,0 +1,22 @@
+<div class="accordion" [id]="idCollapsable">
+  <div class="card-collapse">
+    <div class="header-collapse"
+      [ngClass]="getOpenClass()">
+      <div>
+        <a class="title-collapse"
+          (click)="onShowHide()"
+          l10nTranslate>
+            {{title}}
+            <img class="collapse-expand-arrow" src="{{ getCollapseImgSrc() }}" alt="">
+        </a>
+      </div>
+    </div>
+    <div class="collapse"
+      [ngClass]="getOpenClass()">
+      <div class="body-collapse">
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </div>
+</div>
+

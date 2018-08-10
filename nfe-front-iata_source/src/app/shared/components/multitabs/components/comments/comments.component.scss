@@ -1,0 +1,75 @@
+$theme-color: #EF8540;
+
+.tab-content-header {
+  color: #002A51;
+
+  .title {
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .color-bullet {
+    height: 18px;
+    border-left: 6px solid $theme-color;
+    border-right: 6px solid $theme-color;
+    margin-right: 3px;
+  }
+
+  border-bottom: 2px solid $theme-color;
+}
+
+.comment-component {
+  .comment-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    .row.comment {
+      background-color: #f2f2f2;
+      padding-top: 12px;
+      padding-bottom: 12px;
+      color: #152c5a;
+      font-size: 14px;
+      line-height: 16px;
+
+      .comment-date {
+        text-align: right;
+      }
+    }
+
+    .row.comment:nth-child(2n) {
+      background-color: #ffffff;
+    }
+
+    .icon-bullet {
+      width: 15px;
+      height: auto;
+    }
+
+    .no-comment {
+      text-align: center;
+      color: #667380;
+      border: 1px solid #BDC3C9;
+      background-color: #FFFFFF;
+
+      .no-comment-image {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 21px;
+        margin-bottom: 16px;
+      }
+    }
+  }
+}
+
+.comment-input-container {
+  background-color: #FFFFFF; 
+
+  .comment-input {
+    border-radius: 100px;
+    border: 1px solid #E2E3E5;
+    padding: 8px 10px;
+    font-size: 12px;
+    line-height: 14px;
+  }
+}

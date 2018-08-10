@@ -1,0 +1,20 @@
+[
+  {
+    "detail": "Prueba1",
+    "id": 0,
+    "isoCountryCode": "AAA",
+    "title": "Prueba1 Tit"
+  },
+  {
+    "detail": "Prueba2",
+    "id": 1,
+    "isoCountryCode": "BBB",
+    "title": "Prueba2 Tit"
+  },
+  {
+    "detail": "Prueba3",
+    "id": 2,
+    "isoCountryCode": "CCC",
+    "title": "Prueba3 Tit"
+  }
+]

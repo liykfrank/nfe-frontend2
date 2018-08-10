@@ -1,0 +1,41 @@
+@import './theme/_variables';
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+@import './theme/content';
+@import './theme/general/mixins';
+@import './theme/general/media-querys';
+@import './theme/general.scss';
+
+/* You can add global styles to this file, and also import other style files */
+body {
+  margin: 0px;
+  // min-height: 100vh;
+  // overflow: auto !important;
+  // position: static !important;
+  // width: 100vh;
+  // display: flex;
+  // flex-direction: row;
+
+  * {
+    font-family: Roboto;
+  }
+
+  select {
+    margin: 0; 
+    padding-right: 30px !important;     
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image: url("./assets/images/utils/icono_dropdown.svg");
+    background-position:
+      calc(100% - 15px) calc(50%),
+      calc(100% - 10px) calc(50%);
+    background-repeat: no-repeat;
+  }
+
+}
+

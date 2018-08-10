@@ -1,0 +1,29 @@
+<div class="row" [id]="resume_bar">
+  <div class="col-12">
+    <div class="resume-bar-table" [ngClass]="{'sticky': isSticky}">
+      {{isSticky}}
+      <div class="resume-info">
+        <table>
+          <thead>
+            <tr>
+              <th class="text-nowrap" *ngFor="let e of elementsResumeBar" l10nTranslate>{{e.title}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td *ngFor="let e of elementsResumeBar">{{e.value || '-'}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="buttons-resume">
+        <button (click)="onClickSave()" l10nTranslate class="btn btn-s btn-light">
+          save
+        </button>
+        <button (click)="OnClickIssue()" l10nTranslate class="btn btn-s btn-primary">
+          issue
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

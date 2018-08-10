@@ -1,0 +1,41 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/spec",
+    "baseUrl": "./",
+    "module": "commonjs",
+    "types": [
+      "jasmine",
+      "node"
+    ]
+  },
+  "files": [
+    "test.ts",
+    "mytest.ts",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxtabs",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxcheckbox",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxmenu",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxinput",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxnumberinput",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxcalendar",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxradiobutton",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxprogressbar",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxnotification",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdatatable",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxtextarea",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxexpander",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxfileupload",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxpopover",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttongroup",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdocking",
+    "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxmaskedinput"
+ ],
+  "include": [
+    "**/*.spec.ts",
+    "**/*.d.ts"
+  ]
+}

@@ -1,0 +1,35 @@
+.footer {
+    width: 100%;
+    display: inline-flex;
+    background-color: #152C5A;
+    color: #FFFFFF;
+    align-items: center;
+
+    .left-footer {
+        width: 85%;
+        margin: 25px 0;
+        padding: 0 20px;
+        float: left;
+        display: flex;
+        align-items: center;
+
+        .logo {
+            width: auto;
+            .footer-logo {
+                height: 45px;
+                width: auto;
+            }
+        }
+
+        .brand {
+            margin-left: 5px;
+        }
+    }
+
+    .right-footer {
+        margin: 25px 0;
+        padding: 0 20px;    
+        width: 15%;
+        float: right;
+    }
+}

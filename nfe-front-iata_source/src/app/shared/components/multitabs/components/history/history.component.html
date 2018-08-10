@@ -1,0 +1,54 @@
+<div class="row">
+  <div class="col-12">
+    <div class="row no-gutters tab-content-header">
+      <div class="col-6 pl-3 pr-3 pt-4 pb-2 title" l10nTranslate>
+        <span class="color-bullet"></span>
+        <span l10nTranslate>MULTITABS.HISTORY.title</span>
+      </div>
+    
+      <div class="col-6 pl-3 pr-3 pt-4 pb-2">
+        <div *ngIf="listExcludes.length > 0">
+          <input type="checkbox" [(ngModel)]="checkFilter" (change)="filter()">
+          <img class="icon" src="assets/images/utils/ico-history_blue.svg">
+        </div>
+      </div>
+    
+      <div class="col-12 pt-2">
+        <div class="row no-gutters subtitle">
+          <div class="col-2"></div>
+          <div class="col-3">
+            <span l10nTranslate>Date</span>
+          </div>
+          <div class="col-7">
+            <span l10nTranslate>MULTITABS.HISTORY.operation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class='col-12 history-component'>
+    <p-scrollPanel 
+      [style]="{width: '100%', height: '363px'}" 
+      styleClass="custom">
+      <div class="row no-gutters">
+        <div class="col-12 mb-2 history-table">
+          <div class="row no-gutters history" *ngFor="let aux of history; let i = index">
+            <div class="col-2 pl-3">
+              <img class="icon-bullet" src="assets/images/utils/ico-files_blue.svg" *ngIf="aux.action == 'ATTACH_FILE'">
+            </div>
+            <div class="col-3">
+              <!-- TODO FIX TOOLTIP: change date to show date + time NOT TIMEZONE -->
+               {{ aux.insertDateTime | date:'shortDate' }}
+              <span class="tooltip">{{ aux.insertDateTime }}</span>
+            </div>
+            <div class="col-7">
+              <span class="subtitle">{{ 'MULTITABS.HISTORY.' + aux.action | translate }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </p-scrollPanel>
+  </div>
+</div>
+

@@ -1,0 +1,48 @@
+// borrar
+.content-container {
+  padding: 10px 40px 10px 20px;
+}
+
+.title-collapse {
+  display: block;
+  width: 100%;
+  border: none;
+  text-decoration:none;
+  color: #152C5A;
+  padding: 10px 15px;
+  font-size: 18px;
+}
+
+.header-collapse {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  letter-spacing: -0.6px;
+  line-height: 21px;
+  background-color: #F4F0F0;
+  border: #F4F0F0;
+  
+  &.show {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+}
+
+
+.body-collapse {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border: #F4F0F0;
+  background-color: #F4F0F0;
+  padding: 10px 40px 10px 20px;
+}
+
+.collapse-expand-arrow {
+  float: right;
+}
+
+.card-collapse {
+  display: block;
+  margin-bottom: 10px;
+}

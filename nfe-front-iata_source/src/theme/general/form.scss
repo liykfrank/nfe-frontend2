@@ -1,0 +1,41 @@
+//TODO REVISAR EN
+/*FICHERO GENERAL
+REVISAR EN ADM-ACM ESPECIFICO
+AGENTCOMPONENT Y AIRLINECOMPONENT
+*/
+
+%form-entry {
+  margin-bottom: 1rem;
+
+  label {
+    display: inline-block;
+    margin-bottom: .5rem;
+  }
+}
+
+.form-entry {
+  @extend %form-entry;
+}
+
+.form-entry-row {
+  @extend %form-entry;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+
+  label {
+    color: #152C5A;
+    min-height: 12px;
+    white-space: nowrap;
+  }
+
+  .form-group {
+    margin-right: 5px;
+
+    &.settings {
+      margin-right: 30px;
+    }
+  }
+}

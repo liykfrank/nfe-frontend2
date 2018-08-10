@@ -1,0 +1,111 @@
+%jqx-button-custom {
+  background: #014E81;
+  color: white;
+  width: 155px;
+  height: 30px;
+  border-radius: 5px;
+  cursor: pointer !important ;
+  border-radius: 2px;
+  font-size: 16px;
+}
+
+.jqx-button-custom {
+  @extend %jqx-button-custom;
+}
+
+.jqx-button-add {
+  @extend %jqx-button-custom;
+  background-color: #1989CF;
+
+  .inverse-color {
+      color: #1989CF;
+  }
+
+  .small-font-awesome {
+      font-size: 0.4em;
+  }
+}
+
+%jqx-button-default {
+  @extend %jqx-button-custom;
+  line-height: 0px;
+  background-color: #FFFFFF;
+  color: #152C5A;
+  border: 1px solid #152C5A;
+}
+
+.jqx-button-default {
+  @extend %jqx-button-default;
+}
+
+.jqx-button-default.details-button {
+  @extend %jqx-button-default;
+  margin-top: 18px;
+}
+
+%jqx-button-primary {
+  @extend %jqx-button-custom;
+  line-height: 0px;
+  background-color: #152C5A;
+  color: #FFFFFF;
+  border: 1px solid #152C5A;
+}
+
+.jqx-button-primary {
+  @extend %jqx-button-primary;
+}
+
+.jqx-button-primary-right {
+  @extend %jqx-button-primary;
+  float: right;
+}
+
+.jqx-button-switch-pill {
+  color: #1989CF;
+  border: solid 1px #1989CF;
+  background-color: #FFFFFF;
+  font-size: 14px;
+  border-radius: 100px;
+  text-align: right;
+  padding-left: 5px;
+  padding-right: 5px;
+
+  .icon-fa-custom {
+    font-size: 10px;
+    float: left;
+    margin-right: 5px;
+  }
+}
+
+// TODO: modificar estas clases para utilizar la propiedad THEME de jqxButton
+.no_background {
+  .jqx-button {
+    background: none;
+    color: #014E81;
+    border: 0px;
+  }
+}
+
+.white_background {
+  .jqx-button {
+    background: white;
+    color: #014E81;
+    border: 1px solid #014E81;
+  }
+}
+
+%jqx-button-bin {
+  border: none;
+  cursor: pointer;
+}
+
+.jqx-button-bin {
+  @extend %jqx-button-bin;
+}
+
+.jqx-button-bin-float-left {
+  @extend %jqx-button-bin;
+  float: left;
+}
+
+// -------------------------------------------------------------------------

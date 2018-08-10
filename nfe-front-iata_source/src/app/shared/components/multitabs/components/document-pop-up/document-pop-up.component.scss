@@ -1,0 +1,132 @@
+.container {
+  padding: 23px;
+}
+
+.panel {
+  display: flex;
+
+  .left {
+    float: left;
+    width: 22%;
+    color: #000000;
+
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+    border-bottom: 1px solid #033e78;
+    border-left: 1px solid #033e78;
+    border-top: 1px solid #033e78;
+    background-color: #a5d6f4;
+    
+    .left-white {
+      text-align: center;
+      padding: 21px 0;
+      font-size: 16px;
+      line-height: 9px;
+      background-color: #FFFFFF;
+      border-top-left-radius: 10px;
+    }
+
+    .left-blue {
+      border-top: 1px solid #033e78;
+      font-size: 14px;
+      line-height: 15px;
+      /* height: auto; */
+      padding: 40px 17px;
+      text-align: left;
+    }
+  }
+
+  .right {
+    float: left;
+    width: 78%;
+
+    .type1 {
+      width: 100%;
+      /* border-collapse: collapse; */
+      border-spacing: 0;
+      empty-cells: show;
+      td {
+        border: 1px solid #033e78;
+        padding: 20px 8px;
+        color: #667380;
+        font-size: 14px;
+        line-height: 16px;
+        width: auto;
+        .cell-data {
+          color: #152c5a;
+          font-size: 16px;
+          font-weight: bold;
+          line-height: 19px;
+        }
+      }
+    }
+
+    .type1:first-child {
+      tr:first-child {
+        td:last-child {
+          border-top-right-radius: 10px;
+        }
+      }
+    }
+
+    .type1:last-child {
+      tr:last-child {
+        td:last-child {
+          border-bottom-right-radius: 10px;
+        }
+      }
+    }
+
+    .type2 {
+      /* box-sizing: border-box; */
+      width: 100%;
+      border-collapse: collapse;
+      /* border: 1px solid #033e78; */
+      border-top: none;
+      border-bottom: none;
+      thead {
+        /* border: 1px solid #033e78; */
+        /* height: 1.7%; */
+        color: #000000;
+        font-size: 14px;
+        letter-spacing: -0.3px;
+        line-height: 16px;
+        th {
+          width: auto;
+          border: 1px solid #033e78;
+        }
+      }
+
+      /* tr {
+        width: auto;
+        border: 1px solid #033e78;
+      } */
+      td {
+        color: #152c5a;
+        border: 1px solid #033e78;
+        font-size: 14px;
+        line-height: 16px;
+      }
+    }
+
+    .special {
+      background-color: #033e78;
+      padding: 2px;
+    }
+
+    .boxlist {
+      box-sizing: border-box;
+      display: flex;
+      .box {
+        margin-right: 2px;
+        background-color: #a5d6f4;
+        float: left;
+        min-width: 4.27%;
+        width: 10%;
+      }
+      .box:last {
+        margin-right: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+.table {
+  display: flex;
+  flex-flow: column nowrap;
+  margin: 0.5rem;
+  line-height: 1.5;
+  border-bottom: 1px solid #d0d0d0;
+}
+
+.th {
+  display: none;
+  font-weight: 700;
+}
+
+.th > .td {
+  white-space: normal;
+  justify-content: center;
+}
+
+.tr {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+}
+
+.td {
+  display: flex;
+  flex-flow: row nowrap;
+  padding: 0.5em;
+  word-break: break-word;
+  white-space: nowrap;
+  border-bottom: 1px solid #d0d0d0;
+}

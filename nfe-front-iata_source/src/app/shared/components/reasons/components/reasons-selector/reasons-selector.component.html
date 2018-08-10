@@ -1,0 +1,7 @@
+<div *ngIf="hide">
+  <label class="text-nowrap" for="reason_refund" l10nTranslate>{{dropdownTitle}}</label>
+  <select class="form-control" (change)="onChangeSelector($event.target.value)">
+    <option value="-1" selected>Select an option</option>
+    <option *ngFor="let reason of dropdownOptions" [value]="reason.detail">{{reason.title}}</option>
+  </select>
+</div>

@@ -1,0 +1,19 @@
+
+<div  class="filterResults">
+   <div *ngFor="let elem of elementsFilter">
+     <div  class="resultTag" *ngIf="isElemShowed(elem)">
+        <p>
+          {{elem.name | translate: lang}} :
+          <ng-container [ngSwitch]="elem.type">
+            <ng-template [ngSwitchCase]="'RANGE_DATE'">
+              {{elem.newValue.from | date:'shortDate'}} - {{elem.newValue.to | date:'shortDate'}}
+            </ng-template>
+            <ng-template  ngSwitchDefault>
+              {{elem.newValue}}
+            </ng-template>
+          </ng-container>
+        </p>
+        <img (click)="resetElem(elem)"  src="../../../assets/images/close_button.png" alt="" >
+     </div>
+    </div>
+  </div>

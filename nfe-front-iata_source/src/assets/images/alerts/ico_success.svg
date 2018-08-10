@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="55px" height="51px" viewBox="0 0 55 51" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>18BE5CBC-9779-435E-BAC7-03B0084DCAAA</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <rect id="path-1" x="0.996563574" y="0" width="289.003436" height="215" rx="6"></rect>
+        <filter x="-3.5%" y="-3.7%" width="106.9%" height="109.3%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.15 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <polygon id="path-3" points="9.333 0.933 8.4 0 4.667 3.733 0.933 0 0 0.933 3.733 4.666 0 8.4 0.933 9.333 4.667 5.6 8.4 9.333 9.333 8.4 5.6 4.667"></polygon>
+    </defs>
+    <g id="components" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Alerts" transform="translate(-454.000000, -173.000000)">
+            <g id="message_congratulations" transform="translate(336.000000, 134.000000)">
+                <g id="alert/NOT01---Alert_-modal_congrats">
+                    <g id="Rectangle">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                        <rect stroke="#1B6100" stroke-width="1" stroke-linejoin="square" fill="#FFFFFF" fill-rule="evenodd" x="1.49656357" y="0.5" width="288.003436" height="214" rx="6"></rect>
+                    </g>
+                    <g id="close_blue" transform="translate(249.000000, 0.000000)" fill-rule="evenodd" stroke-width="1">
+                        <g id="icons/close-tab" transform="translate(15.000000, 15.000000)">
+                            <g id="background">
+                                <mask id="mask-4" fill="white">
+                                    <use xlink:href="#path-3"></use>
+                                </mask>
+                                <use id="Mask" fill="#757575" fill-rule="nonzero" xlink:href="#path-3"></use>
+                                <g id="backgrounds/grey" mask="url(#mask-4)" fill="#757575">
+                                    <rect id="Rectangle-3" x="0" y="0" width="10" height="10"></rect>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                    <g id="icons/ico-congrats" transform="translate(120.584192, 39.000000)" fill="#1B6100" fill-rule="evenodd" stroke-width="1">
+                        <g id="ico-congrats">
+                            <path d="M24.991,0 C11.1888518,-8.4513783e-16 1.69027566e-15,11.1888518 0,24.991 C-1.69027566e-15,38.7931482 11.1888518,49.982 24.991,49.982 C38.7931482,49.982 49.982,38.7931482 49.982,24.991 C49.9803435,11.189538 38.792462,0.00165647362 24.991,0 Z M24.991,46.722 C12.9893001,46.722 3.26,36.9926999 3.26,24.991 C3.26,12.9893001 12.9893001,3.26 24.991,3.26 C36.9926999,3.26 46.722,12.9893001 46.722,24.991 C46.7235921,30.7549075 44.4345939,36.2831974 40.3588957,40.3588957 C36.2831974,44.4345939 30.7549075,46.7235921 24.991,46.722 Z" id="Path_20359" fill-rule="nonzero"></path>
+                            <path d="M32.216,16.298 L22.709,30.206 L17.602,24.72 C17.3192779,24.3939237 16.9154084,24.1977804 16.4843242,24.1771896 C16.0532401,24.1565988 15.6325142,24.3133552 15.32,24.611 C14.6924561,25.226101 14.6449401,26.2208863 15.211,26.893 L21.73,33.901 C22.0544636,34.2088107 22.4828088,34.3833614 22.93,34.39 L23.039,34.39 C23.5323082,34.3715592 23.9832643,34.1062468 24.239,33.684 L35.046,18.2 C35.5706705,17.4198978 35.3636022,16.3621705 34.5835,15.8375 C33.8033978,15.3128295 32.7456705,15.5198978 32.221,16.3 L32.216,16.298 Z" id="Path_20360" fill-rule="nonzero"></path>
+                        </g>
+                    </g>
+                    <g id="buttons/BUTT02_alert_congrats" transform="translate(105.635739, 164.000000)" fill-rule="evenodd" stroke-width="1">
+                        <g id="Group">
+                            <rect id="Rectangle-2" fill="#1B6100" x="0" y="0" width="80" height="30" rx="2"></rect>
+                            <text id="label" font-family="Roboto-Regular, Roboto" font-size="14" font-weight="normal" fill="#FFFFFF">
+                                <tspan x="12.1743164" y="20.4285714">Continue</tspan>
+                            </text>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

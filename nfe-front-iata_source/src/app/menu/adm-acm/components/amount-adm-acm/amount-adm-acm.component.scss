@@ -1,0 +1,120 @@
+.resume-amount {
+    text-align: right;
+    margin: 10px 20px;
+    color: #152C5A;
+
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 16px;
+
+    span {
+        margin-left: 20px;
+    }
+}
+
+.table-amount {
+    thead {
+        background-color: #46A0D8;
+        border-bottom: 1px solid #46A0D8;
+
+        tr  {
+            th:first-child {
+                border-top-left-radius: 6px;
+
+            }
+
+            th:last-child {
+                border-top-right-radius: 6px;
+            }
+        }
+
+        th {
+            padding: 27px 21px;
+            color: #FFFFFF;
+            width: 25%;
+        }
+    }
+
+    tbody {
+        tr {
+            background-color: #F2F2F2;
+
+            th {
+                padding: 27px 21px;
+                vertical-align: middle;
+                font-size: 14px;	
+                line-height: 16px;
+                font-weight: normal;
+
+                &:first-child {
+                    border-left: 1px solid #BDC3C9;
+                }
+            }
+            
+            td:first-child {
+                border-left: 1px solid #BDC3C9;
+            }
+
+            td:last-child {
+                border-right: 1px solid #BDC3C9;
+
+                input {
+                    border-top-right-radius: 0.25rem;
+                    border-bottom-right-radius: 0.25rem;
+                }
+
+                button:hover {
+                    color: #6c757d;
+                    background-color: #fff;
+                    border-color: #fff;
+                }
+            }
+        }
+
+        tr:nth-child(2n) {
+            background-color: #FFFFFF;
+        }
+
+        td {
+            padding: 17px 21px;
+        }
+
+        td.title {
+            color: #152C5A;
+            font-size: 14px;
+            line-height: 16px;
+        }
+    }
+
+    tfoot {
+        background-color: #BDC3C9;
+
+        tr  {
+            td:first-child {
+                border-bottom-left-radius: 6px;
+            }
+
+            td:last-child {
+                border-bottom-right-radius: 6px;
+            }
+        }
+
+        td {
+            padding: 27px 21px;
+        }
+        
+        .float-left {
+            float: left;
+        }
+        
+        .float-right {
+            float: right;
+        }
+        
+        .isNumber {
+            text-align: left;
+            padding: 27px 33px;
+          /* padding: 17px 60px; */
+        }
+    }
+}

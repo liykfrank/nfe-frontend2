@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-6">
+    <bspl-airline
+      (returnForm)="onReturnAirlineFormModel($event)"
+      [airlineVatNumberEnabled]="refundConfiguration.airlineVatNumberEnabled"
+      [companyRegistrationNumberEnabled]="refundConfiguration.companyRegistrationNumberEnabled"
+      [showAirlineName] = "true"
+      [showContact]= "true"
+      [disabledContact] = "true"
+      [isoCountryCode]="user.isoc">
+    </bspl-airline>
+  </div>
+  <div class="col-6">
+    <bspl-agent  
+      (returnForm)="onReturnAgentFormModel($event)"
+      [agentVatNumberEnabled]="refundConfiguration.agentVatNumberEnabled"
+      [companyRegistrationNumberEnabled]="refundConfiguration.companyRegistrationNumberEnabled"
+      [showAgentName] = "true"
+      [disabledAgentCode] = "true"
+      [showContact]= "true"
+      [showMoreDetails] = "false"
+      [agentCode] = "user.iataCode">
+    </bspl-agent>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+%input-custom {
+  height: 38px;
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  padding: 0 5px;
+  border: 1px solid #BDC3C9;
+  outline: none;
+}
+
+.input-custom {
+  @extend %input-custom;
+}
+
+%input-custom-number {
+  @extend %input-custom;
+  text-align: right;
+}
+
+.input-custom-number {
+  @extend %input-custom-number;
+}
+
+.input-custom-number-float-left {
+  @extend %input-custom-number;
+  float: left;
+}
+
+.input-custom:disabled,
+.input-custom-number:disabled,
+.input-custom-number-float-left:disabled {
+  background-color: #F0F0F0;
+}
+
+.input-custom-number::-webkit-inner-spin-button, 
+.input-custom-number::-webkit-outer-spin-button,
+.input-custom-number-float-left::-webkit-inner-spin-button, 
+.input-custom-number-float-left::-webkit-outer-spin-button {
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.input-custom-number.amount-table,
+.input-custom-number-float-left.amount-table {
+  @extend %input-custom-number;
+  border: 1px solid #E2E3E5;
+  color: #152C5A;
+  font-size: 14px;	
+  line-height: 16px;
+  width: 58.2%;
+}
+
+.input-custom.error,
+.input-custom-number.error {
+  border-color: red;
+}
+
+.input-date {
+  @extend %input-custom;
+}
+
+.input-checkbox {
+  @extend %input-custom;
+  -webkit-appearance: checkbox;
+  width: auto;
+  height: 15px;
+}
+
+.input-date::-webkit-inner-spin-button {
+  @extend %input-custom;
+  opacity: 0;
+}
+
+.input-date::-webkit-calendar-picker-indicator {
+  background: url('/assets/images/glyph/svg/si-glyph-calendar-3.svg') center/80% no-repeat;
+  color: rgba(0, 0, 0, 0);
+  opacity: 0.5
+}
+
+.input-date::-webkit-calendar-picker-indicator:hover {
+  background: url('/assets/images/glyph/svg/si-glyph-calendar-3.svg') center/80% no-repeat;
+  opacity: 0.8
+}

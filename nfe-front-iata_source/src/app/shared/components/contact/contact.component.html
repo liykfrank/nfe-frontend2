@@ -1,0 +1,25 @@
+<form [formGroup]="contactFormModelGroup">
+  <div class="form-row">
+    <div class="form-group col-5">
+      <bspl-input-form-control l10nTranslate [error]="''" [wrapText]="true" [label]="'CONTACT.telephone'" [inputMaxTextLength]="15" [formGroupParent]="contactFormModelGroup"
+        [formControlParentName]="'phoneFaxNumber'">
+      </bspl-input-form-control>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-10">
+      <bspl-input-form-control l10nTranslate [error]="''" [wrapText]="true" [label]="'CONTACT.name'" [inputMaxTextLength]="49" [formGroupParent]="contactFormModelGroup"
+        [formControlParentName]="'contactName'">
+      </bspl-input-form-control>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-10">
+      <bspl-input-form-control l10nTranslate [error]="''" [wrapText]="true" [label]="'CONTACT.email'" [inputMaxTextLength]="200" [formGroupParent]="contactFormModelGroup"
+        [formControlParentName]="'email'">
+      </bspl-input-form-control>
+    </div>
+  </div>
+</form>

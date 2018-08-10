@@ -1,0 +1,44 @@
+.jqx-menu-custom {
+    background: #002A51 !important;
+    height: 60px;
+    border-radius: 0;
+
+    .jqx-menu-item-top-custom {
+        background-color: #002A51 !important;
+        padding: 23px 25px;
+        border: 0 !important;
+        color: #FFFFFF !important;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 19px;
+        text-align: right;
+
+        &:last-child {
+            float: right !important;
+            padding: 13px 25px;
+            display: inline-flex;
+
+            .search-input {
+                float: left;
+                height: 34px;
+                /* width: 360px; */
+                padding: 0 15px;
+                font-style: italic;
+            }
+
+            .search-button {
+                float: left;
+                width: 40px;
+                background-color: #1989CF;
+                border: solid #1989CF;
+                cursor: pointer;
+                color: #FFFFFF;
+            }
+        }
+    }
+
+    .jqx-menu-item-arrow-down-custom {
+        color: #FFFFFF !important;
+    }
+
+}

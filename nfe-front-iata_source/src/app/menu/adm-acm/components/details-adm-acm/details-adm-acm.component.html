@@ -1,0 +1,66 @@
+<div class="row">
+  <div class="col-6">
+
+    <div class="form-row">
+      <div class="form-group col-6">
+        <label class="text-nowrap" l10nTranslate>ADM_ACM.DETAILS.ticketIssueDate</label>
+        <!-- [(ngModel)]="relatedDocument"  -->
+        <p-calendar styleClass="custom form-control"
+          panelStyleClass="custom"
+          readonlyInput="true"
+          appendTo="body"
+          showIcon="true"
+          (onSelect)="onRelatedDocumentChange()">
+        </p-calendar>
+        <bspl-field-error error=""></bspl-field-error>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-10">
+        <label l10nTranslate>ADM_ACM.DETAILS.passenger</label>
+        <input type="text" class="form-control"/>
+        <bspl-field-error error=""></bspl-field-error>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-7">
+        <label class="text-nowrap" l10nTranslate>ADM_ACM.DETAILS.documents</label>
+        <input class='form-control' type="text"/>
+      </div>
+
+      <div class="form-group col-4">
+        <label>&nbsp;</label>
+        <button l10nTranslate class="form-control button-add">
+          <span class="small-font-awesome fa-stack">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-plus inverse-color fa-stack-1x"></i>
+          </span>
+          ADM_ACM.DETAILS.addDocument
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-6">
+
+    <div class="form-row">
+      <div class="form-group col-6">
+        <label class="text-nowrap" l10nTranslate>ADM_ACM.DETAILS.reasonIssue</label>
+        <input type="text" class='form-control'/>
+        <bspl-field-error error=""></bspl-field-error>
+      </div>
+    </div>
+
+    <bspl-reasons
+        [dropdownTitle]="'ADM_ACM.DETAILS.topTen'"
+        [textAreaTitle]="'ADM_ACM.DETAILS.reasonMemo'"
+        [alignment]="reasonsAlignment"
+        [type]="type"
+        [isoCode]="configuration.isoCountryCode || null"
+        (returnForm)="onReturnFormReasons($event)">
+      </bspl-reasons>
+  </div>
+</div>

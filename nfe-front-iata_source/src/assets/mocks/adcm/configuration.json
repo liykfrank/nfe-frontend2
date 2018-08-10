@@ -1,0 +1,16 @@
+{
+  "agentVatNumberEnabled": "false",
+  "airlineVatNumberEnabled": "false",
+  "companyRegistrationNumberEnabled": "false",
+  "cpPermittedForConcerningIssue": "false",
+  "cpPermittedForConcerningRefund": "false",
+  "defaultStat": "false",
+  "freeStat": "false",
+  "isoc": "",
+  "maxNumberOfRelatedDocuments": 3,
+  "mfPermittedForConcerningIssue": "false",
+  "mfPermittedForConcerningRefund": "false",
+  "nridAndSpamEnabled": "false",
+  "taxOnCommissionEnabled": "false",
+  "taxOnCommissionSign": -1
+}

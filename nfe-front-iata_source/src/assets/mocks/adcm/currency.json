@@ -1,0 +1,8 @@
+[
+  {"isoc":"BB",
+  "currencies":
+    [
+      {"name":"ZZZ","numDecimals":0,"expirationDate":"2017-01-01"}
+    ]
+  }
+]

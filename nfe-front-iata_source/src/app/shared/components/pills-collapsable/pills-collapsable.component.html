@@ -1,0 +1,18 @@
+<div class="row pills-bar" [id]="link_bar">
+  <div class="col-9">
+    <div class="btn-group pills-links" role="group">
+      <button *ngFor="let pill of pills; let first = first; let last = last" class="btn btn-secondary pill"
+        (click)="clickPill(pill)"
+        [ngClass]="{'active': pill.active, 'pill-first': first, 'pill-last': last}"
+        l10nTranslate>
+        {{pill.label}}
+      </button>
+    </div>
+    <button class="button-switch-pill" (click)="clickCollapse()">
+      <img class="mr-2" src="{{getCollapseImgSrc()}}">
+      <span l10nTranslate>{{ collapseAll ? 'collapse' : 'expand'}}</span>
+    </button>
+  </div>
+  <div class="col-3"></div>
+</div>
+

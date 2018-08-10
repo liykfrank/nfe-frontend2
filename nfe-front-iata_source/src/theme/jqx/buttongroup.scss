@@ -1,0 +1,36 @@
+.jqx-buttongroup-pills {		
+    text-align: center;
+
+    .jqx-button-pills {
+        cursor: pointer;
+        width: 123px;
+        color: #1989CF;
+        border: solid 1px #1989CF;
+        background-color: #FFFFFF;
+        vertical-align: middle;
+        font-size: 14px;	
+        line-height: 16px;
+        padding: 4px 4px;
+    }
+    
+    .jqx-fill-state-pressed-pills {
+        color: #FFFFFF;
+        background-color: #1989CF;     
+    }
+
+    .jqx-rc-tl-pills {
+        border-top-left-radius: 100px;
+    } 
+    
+    .jqx-rc-bl-pills {
+        border-bottom-left-radius: 100px;
+    }
+
+    .jqx-rc-tr-pills {
+        border-top-right-radius: 100px;
+    } 
+
+    .jqx-rc-br-pills {
+        border-bottom-right-radius: 100px;
+    }
+}

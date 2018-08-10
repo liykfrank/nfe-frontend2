@@ -1,0 +1,58 @@
+.navigation {
+    color: #033E78;
+    align-items: center;
+    margin: 0px;
+    
+    .section {
+        padding-top: 25px;
+        padding-bottom: 25px;
+    }
+
+    .header-logo {
+        height: 45px;
+        width: auto;
+    }
+
+    .brand {
+        font-size: 22px;
+    }
+
+    .combos {
+        .special-selector {
+            padding: 3px 14px;
+            border: 1px solid #022F5B;
+            border-radius: 15px;
+            background-color: #FFFFFF;
+            color: #022F5B;
+            font-size: 14px;
+            line-height: 16px;
+        }
+    }
+
+    .actions {
+        .single-action {
+            text-align: center;
+            font-size: 14px;
+        }
+    }
+
+    .notification {
+        text-align: center;
+        position: relative;
+
+        .badge {
+            position: absolute;
+            background: #E72017;
+            color: white;
+            text-align: center;
+            border-radius: 50%;
+            font-size: 14px;
+            padding: 4px 8px;
+            top: -10px;
+        }
+    }
+
+    .user-section {
+        border-left: 1px solid #707070;
+    }
+}

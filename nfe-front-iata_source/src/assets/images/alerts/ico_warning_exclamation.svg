@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="55px" height="51px" viewBox="0 0 55 51" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>CE58E94C-F215-4192-9B45-4E20EF2605DF</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <rect id="path-1" x="0.996563574" y="0" width="289.003436" height="215" rx="6"></rect>
+        <filter x="-3.5%" y="-3.7%" width="106.9%" height="109.3%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.15 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <polygon id="path-3" points="9.333 0.933 8.4 0 4.667 3.733 0.933 0 0 0.933 3.733 4.666 0 8.4 0.933 9.333 4.667 5.6 8.4 9.333 9.333 8.4 5.6 4.667"></polygon>
+    </defs>
+    <g id="components" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Alerts" transform="translate(-768.000000, -173.000000)">
+            <g id="message_info" transform="translate(650.000000, 134.000000)">
+                <g id="alert/NOT01---Alert_-modal_modify_one_button">
+                    <g id="Rectangle">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                        <rect stroke="#AD5A00" stroke-width="1" stroke-linejoin="square" fill="#FFFFFF" fill-rule="evenodd" x="1.49656357" y="0.5" width="288.003436" height="214" rx="6"></rect>
+                    </g>
+                    <g id="close_blue" transform="translate(249.000000, 0.000000)" fill-rule="evenodd" stroke-width="1">
+                        <g id="icons/close-tab" transform="translate(15.000000, 15.000000)">
+                            <g id="background">
+                                <mask id="mask-4" fill="white">
+                                    <use xlink:href="#path-3"></use>
+                                </mask>
+                                <use id="Mask" fill="#757575" fill-rule="nonzero" xlink:href="#path-3"></use>
+                                <g id="backgrounds/grey" mask="url(#mask-4)" fill="#757575">
+                                    <rect id="Rectangle-3" x="0" y="0" width="10" height="10"></rect>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                    <g id="icons/ico-alert-yellow" transform="translate(120.584192, 39.000000)" fill="#AD5A00" fill-rule="evenodd" stroke-width="1">
+                        <g id="ico-alert-yellow">
+                            <path d="M24.991,0 C11.1888518,-8.4513783e-16 1.69027566e-15,11.1888518 0,24.991 C-1.69027566e-15,38.7931482 11.1888518,49.982 24.991,49.982 C38.7931482,49.982 49.982,38.7931482 49.982,24.991 C49.9770329,11.1909098 38.7910902,0.00496713887 24.991,0 Z M24.991,46.877 C16.1283412,46.8875103 8.13204378,41.5581971 4.73083141,33.3741526 C1.32961903,25.190108 3.19331626,15.7630732 9.45286936,9.48893373 C15.7124225,3.21479427 25.1350939,1.32916027 33.3270327,4.71131473 C41.5189716,8.09346918 46.8668821,16.0773408 46.877,24.94 C46.8814366,37.0374024 37.08838,46.8532793 24.991,46.877 Z M22.548,39.344 L27.332,39.344 L27.332,34.713 L22.548,34.713 L22.548,39.345 L22.548,39.344 Z M22.548,29.673 L27.332,29.673 L27.332,10.587 L22.548,10.587 L22.548,29.674 L22.548,29.673 Z" id="Path_20853" fill-rule="nonzero"></path>
+                        </g>
+                    </g>
+                    <g id="buttons/BUTT02_alert_modify" transform="translate(85.704467, 164.000000)" fill-rule="evenodd" stroke-width="1">
+                        <g id="Group">
+                            <rect id="Rectangle-2" fill="#AD5A00" x="0" y="0" width="120" height="30" rx="2"></rect>
+                            <text id="label" font-family="Roboto-Regular, Roboto" font-size="14" font-weight="normal" fill="#FFFFFF">
+                                <tspan x="9.15771484" y="20.4285714">Remind me later</tspan>
+                            </text>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

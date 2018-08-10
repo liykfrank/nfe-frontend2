@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>310E3B9B-055F-44BE-B8A1-20CA6358F868</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <rect id="path-1" x="20" y="244" width="1240" height="1859"></rect>
+        <filter x="-0.8%" y="-0.4%" width="101.7%" height="101.1%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="3" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.15 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="ADM-Issue" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ADM_all_1280" transform="translate(-116.000000, -1059.000000)">
+            <g id="Rectangle">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <g id="Amount" transform="translate(39.000000, 839.000000)">
+                <g id="Bloque/GR01_Sections_Accordion">
+                    <rect id="Background" x="1" y="0" width="885" height="912"></rect>
+                    <path d="M10.0231788,0 L875.023179,0 C880.546026,6.27540309e-14 885.023179,4.4771525 885.023179,10 L885.023179,902 C885.023179,907.522847 880.546026,912 875.023179,912 L10.0231788,912 C4.50033131,912 0.0231788079,907.522847 0.0231788079,902 L0.0231788079,10 C0.0231788079,4.4771525 4.50033131,1.01453063e-15 10.0231788,0 Z" id="Rectangle-3" fill="#F4F0F0" opacity="0.600000024"></path>
+                </g>
+                <g id="TABLE04_data_sheet" transform="translate(21.000000, 80.000000)">
+                    <rect id="fondo-pestañas" stroke="#E0E1E5" fill="#FFFFFF" x="0.5" y="0.5" width="829" height="339" rx="6"></rect>
+                    <g id="tables/TABLE03_detail_row" transform="translate(1.000000, 120.666667)">
+                        <rect id="Background" x="0" y="0" width="828" height="50"></rect>
+                        <g id="tablas/query-impar" transform="translate(34.123636, 18.000000)" font-family="Roboto-Regular, Roboto" font-size="14" font-weight="normal" letter-spacing="-0.4666666">
+                            <text id="Código-Copy-2"></text>
+                        </g>
+                    </g>
+                    <text id="TCF" font-family="Roboto-Regular, Roboto" font-size="14" font-weight="normal" fill="#152C5A">
+                        <tspan x="22" y="151">TCF</tspan>
+                    </text>
+                </g>
+                <g id="help" transform="translate(77.000000, 220.000000)">
+                    <rect id="Background" x="0" y="0" width="13" height="13"></rect>
+                    <rect id="Rectangle" fill="#BDC3C9" x="3" y="2" width="6" height="9"></rect>
+                    <g id="Help" fill="#667380" fill-rule="nonzero">
+                        <path d="M6.50000176,3.52685839e-06 C10.0898517,3.52685845e-06 13,2.91015186 13,6.50000176 C13,10.0898517 10.0898517,13 6.50000176,13 C2.91015186,13 3.52685831e-06,10.0898517 3.52685831e-06,6.50000176 C-0.00179251639,4.77554507 0.682449988,3.12120135 1.90182567,1.90182567 C3.12120135,0.682449988 4.77554507,-0.00179251639 6.50000176,3.52685828e-06 Z M6.49999942,2.88908052 C5.31006304,2.90524409 4.34935346,3.86595366 4.3331899,5.05589005 C4.3331899,5.25533936 4.49487551,5.41702497 4.69432482,5.41702497 C4.89377413,5.41702497 5.05545974,5.25533936 5.05545974,5.05589005 L5.05545974,5.03786549 C5.08313564,4.2518173 5.71395124,3.6210017 6.49999942,3.5933258 C7.28604761,3.6210017 7.91686321,4.2518173 7.94453911,5.03786549 C7.94453911,5.67001253 7.61966788,5.99488376 7.16819559,6.39228238 C6.92326109,6.598459 6.69942853,6.82847319 6.49999942,7.07893226 C6.27468669,7.3687073 6.14819158,7.72307411 6.13907908,8.0900242 L6.13907908,8.28872351 C6.13907908,8.48817282 6.30076469,8.64985843 6.500214,8.64985843 C6.69966331,8.64985843 6.86134892,8.48817282 6.86134892,8.28872351 L6.86134892,8.07414542 C6.85828854,7.86156738 6.93482634,7.6555276 7.07592701,7.49650121 C7.249889,7.28622324 7.44329325,7.09281899 7.65357122,6.918857 C8.26445503,6.47486265 8.63854103,5.77570444 8.66895473,5.0211284 C8.64405009,3.83973615 7.68164509,2.89370765 6.49999942,2.88908052 Z M6.49999942,9.20883435 C6.20088471,9.20883435 5.95840433,9.45131473 5.95840433,9.75042944 C5.95840433,10.0495442 6.20088471,10.2920245 6.49999942,10.2920245 C6.79911413,10.2920245 7.04159452,10.0495442 7.04159452,9.75042944 C7.04429826,9.60593856 6.98812035,9.46656186 6.88597246,9.36433303 C6.78382457,9.26210419 6.6444924,9.2058159 6.49999942,9.20840519 L6.49999942,9.20883435 Z" id="Path_20848"></path>
+                    </g>
+                </g>
+                <g id="tooltip/TOOLTIP01_-up" transform="translate(22.000000, 231.000000)">
+                    <rect id="Background" x="0" y="0" width="123" height="35"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
