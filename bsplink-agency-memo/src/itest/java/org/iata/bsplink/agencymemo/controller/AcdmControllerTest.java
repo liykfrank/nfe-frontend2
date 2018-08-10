@@ -2,6 +2,8 @@ package org.iata.bsplink.agencymemo.controller;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.not;
 import static org.iata.bsplink.agencymemo.test.fixtures.AcdmFixtures.getAcdms;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -128,9 +130,27 @@ public class AcdmControllerTest {
     public void testCreatesAcdm() throws Exception {
         mockMvc.perform(post(BASE_URI).content(acdmJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
+
+        assertSavedAcdm();
+    }
+
+    private void assertSavedAcdm() {
+
         List<Acdm> findAll = acdmRepository.findAll();
         assertThat(findAll, hasSize(1));
-        assertThat(findAll.get(0), equalTo(acdm));
+
+        Acdm savedAcdm = findAll.get(0);
+        updateAcdmFixtureIdFromSavedAcdm(savedAcdm);
+
+        assertThat(savedAcdm, equalTo(acdm));
+    }
+
+    /**
+     * So as to the ticketDocumentNumber equals work.
+     */
+    private void updateAcdmFixtureIdFromSavedAcdm(Acdm savedAcdm) {
+
+        acdm.setId(savedAcdm.getId());
     }
 
     @Test
@@ -199,18 +219,17 @@ public class AcdmControllerTest {
                 .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
 
         Acdm savedAcdm = readAcdmFromJson(responseBody);
+        updateAcdmFixtureIdFromSavedAcdm(savedAcdm);
 
         assertThat(savedAcdm, equalTo(acdm));
-
     }
 
     @Test
     public void testCreatesAcdmMassload() throws Exception {
         mockMvc.perform(post(BASE_URI + "?fileName=file.txt").content(acdmJson)
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
-        List<Acdm> findAll = acdmRepository.findAll();
-        assertThat(findAll, hasSize(1));
-        assertThat(findAll.get(0), equalTo(acdm));
+
+        assertSavedAcdm();
     }
 
     @Test
@@ -482,6 +501,22 @@ public class AcdmControllerTest {
         fileList.add(fileTwo);
 
         return bskplinkFileRepository.saveAll(fileList);
+    }
+
+    @Test
+    public void testWhenCreatesAcdmReturnsTicketDocumentNumber() throws Exception {
+
+        String responseBody = mockMvc.perform(post(BASE_URI).content(acdmJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+
+        Acdm responseAcdm = readAcdmFromJson(responseBody);
+
+        String ticketDocumentNumber = acdmRepository.findAll().get(0).getTicketDocumentNumber();
+
+        assertThat(responseAcdm.getTicketDocumentNumber(), not(isEmptyOrNullString()));
+        assertThat(responseAcdm.getTicketDocumentNumber(), equalTo(ticketDocumentNumber));
     }
 
 }
