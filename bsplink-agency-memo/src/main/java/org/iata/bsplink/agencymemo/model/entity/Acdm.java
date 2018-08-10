@@ -25,7 +25,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.OrderColumn;
-import javax.persistence.PostLoad;
 import javax.persistence.Transient;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -237,8 +236,12 @@ public class Acdm {
     @Size(max = 20)
     private String airlineRegistrationNumber;
 
-    @PostLoad
-    public void postLoad() {
-        ticketDocumentNumber = String.format("%s%010d", airlineCode, id);
+    /**
+     * Creates a faked ticketDocumentNumber.
+     */
+    public String getTicketDocumentNumber() {
+
+        return (id == null || airlineCode == null) ? null
+                : String.format("%s%010d", airlineCode, id);
     }
 }
