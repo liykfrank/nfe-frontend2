@@ -1,35 +1,37 @@
-import { HeaderComponent } from './../../../core/components/header/header.component';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Contact } from '../../models/contact.model';
+import { Component, Input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+
+import { ReactiveFormHandler } from '../../base/reactive-form-handler';
+import { ContactFormModel } from './models/contact-form-model';
 
 @Component({
-  selector: 'app-contact',
+  selector: 'bspl-contact',
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss']
 })
-export class ContactComponent implements OnInit {
-  @Input('style') style: string = '';
+export class ContactComponent extends ReactiveFormHandler {
+  contactFormModelGroup: FormGroup = new ContactFormModel()
+    .contactFormModelGroup;
 
-  @Input('name')name: string;
-  @Input('telephone')telephone: string;
-  @Input('email')email: string;
+  private _disabledComponent = false;
 
-  @Input('disabled')disabled: boolean = true;
+  @Input()
+  set disabledComponent(bool: boolean) {
+    this._disabledComponent = bool;
 
-  // tslint:disable-next-line:no-output-on-prefix
-  @Output() onChange: EventEmitter<any> = new EventEmitter();
-
-  constructor() { }
-
-  ngOnInit() { }
-
-  change() {
-    const contact: Contact = new Contact();
-    contact.contactName = this.name;
-    contact.phoneFaxNumber = this.telephone;
-    contact.email = this.email;
-    this.onChange.emit(contact);
+    if (bool) {
+      this.contactFormModelGroup.disable();
+    } else {
+      this.contactFormModelGroup.enable();
+    }
   }
 
+  get disabledComponent(): boolean {
+    return this._disabledComponent;
+  }
 
+  constructor() {
+    super();
+    this.subscribe(this.contactFormModelGroup);
+  }
 }

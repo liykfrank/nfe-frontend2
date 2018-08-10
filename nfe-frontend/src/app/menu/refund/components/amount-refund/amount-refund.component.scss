@@ -1,0 +1,29 @@
+@import '/../../../../../theme/general.scss';
+
+
+#amount-refund{
+    .ceil-input{
+        width: 60% !important;
+    }
+
+    .centered{
+        overflow: auto;
+        height: 100%;
+        //@include centerDiv();
+    }
+
+    .centered-left{
+        overflow: auto;
+        height: 100%;
+        @include centerLeftDiv();
+    }
+
+    .btn-blue{
+        background-color: #1989CF !important;
+
+        i{
+            font-size:14px;
+        }
+    }
+}
+

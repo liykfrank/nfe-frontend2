@@ -1,12 +1,24 @@
-import { Log } from "ng2-logger";
-import { Logger } from "ng2-logger/src/logger";
-import { NwBaseAbstract } from "./nw-base-abstract";
-import { Injector } from "@angular/core";
-import { Language } from "angular-l10n";
+import { Subscription } from 'rxjs/Subscription';
+import { OnDestroy } from '@angular/core';
 
-export abstract class NwAbstractComponent extends NwBaseAbstract{
 
-  constructor(protected injector: Injector) {
-    super(injector);
+export abstract class AbstractComponent implements OnDestroy {
+
+  protected subscriptions: Subscription[] = [];
+
+  constructor() {}
+
+  /**
+   * Removes all current subscriptions for this component.
+   */
+  protected removeSubscriptions() {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
+    this.subscriptions = [];
+  }
+
+  ngOnDestroy(): void {
+    this.removeSubscriptions();
   }
 }

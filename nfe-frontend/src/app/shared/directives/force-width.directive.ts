@@ -1,5 +1,5 @@
 
-import { Directive, Input, ElementRef, Renderer2, HostBinding, OnInit, RendererStyleFlags2 } from '@angular/core';
+import { Directive, Input, ElementRef, Renderer2, OnInit, RendererStyleFlags2 } from '@angular/core';
 
 @Directive({
   selector: '[forceWidth]'

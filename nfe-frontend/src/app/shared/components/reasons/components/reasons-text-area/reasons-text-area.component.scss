@@ -1,0 +1,12 @@
+textarea {
+  resize: none;
+
+  &.error {
+    border-color: red !important;
+  }
+}
+
+
+.label-text {
+  float: left;
+}

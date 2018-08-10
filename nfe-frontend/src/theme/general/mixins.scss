@@ -1,0 +1,44 @@
+@mixin clearfix{
+  &:after{
+    content: "";
+    display:block;
+    clear:both;
+  }
+}
+
+@mixin fixed {
+  &:after {
+    content: "";
+    display: inline-block;
+    clear: both;
+  }
+}
+
+@mixin centerDiv($justify: center){
+  display: flex;
+  align-items: $justify;
+  justify-content: $justify;
+  flex-direction: column !important;
+}
+
+@mixin centerLeftDiv($justify: center){
+  display: flex;
+  align-items: flex-start;
+  justify-content: $justify;
+  flex-direction: column !important;
+}
+
+@mixin centerRightDiv($justify: center){
+  display: flex;
+  align-items: flex-end;
+  justify-content: $justify;
+  flex-direction: column !important;
+}
+
+@mixin imageBackground($image, $height: 100vh, $position: center center){
+  background: url($image);
+  background-repeat: no-repeat;
+  background-position: $position;
+  background-size: cover;
+  height:$height !important;
+}

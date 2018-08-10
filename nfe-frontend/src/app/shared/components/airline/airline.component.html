@@ -1,66 +1,68 @@
+<form [formGroup]="airlineFormModelGroup">
+  <div class="form-row">
 
-<div class="form-entry-row">
-  <div class="form-group"
-   forceWidth [setWidth]="'10%'">
-    <label l10nTranslate>AIRLINE.code</label>
-    <input
-      ownPattern
-      [typingPattern]="'[A-Z0-9]{3}$'"
-      (patternOnBlur)="changeAirline()"
-      [ngClass]="{'error': style == 'error' && (!airlineCode || airlineCode.length == 0)}"
+    <div class="form-group col-2">
+      <bspl-input-form-control
+        l10nTranslate
+        [error]="''"
+        [wrapText]="true"
+        [label]="'AIRLINE.code'"
+        [inputMaxTextLength]="'3'"
+        [formGroupParent]="airlineFormModelGroup"
+        [formControlParentName]="'airlineCode'">
+      </bspl-input-form-control>
+    </div>
 
-      class="input-custom form-control"
-      [disabled]="disabled"
-      [(ngModel)]="airlineCode"
-    />
+    <div class="form-group col-3" *ngIf="showMoreDetails">
+      <label>&nbsp;</label>
+      <button 
+        l10nTranslate 
+        class="form-control button-default details-button"
+        [disabled]="disabledMoreDetails"
+        (click)="onClickMoreDetails()">AIRLINE.more
+      </button>
+    </div>
   </div>
-  <div class="form-group" >
-    <label></label>
-    <button l10nTranslate *ngIf="showMoreDetails"
-      class="form-control button-default details-button"
-      [disabled]="disabled || !airlineCode || airlineCode.length != 3"
-      (click)="clickMoreDetails()">
-      AIRLINE.more
-    </button>
+  
+  <div class="form-row" *ngIf="showAirlineName">
+      <div class="ceil-input form-group">
+          <label l10nTranslate >AIRLINE.name</label>
+            <input [disabled]="true" class="form-control" type="text" [value]="airline.globalName">
+        </div>
   </div>
-</div>
 
-<div class="form-entry-row" *ngIf="showVat" >
-  <div class="form-group">
-    <label l10nTranslate>AIRLINE.airlineVAT</label>
-    <input
-      [ngClass]="{'error': style == 'error' && (!vatNumber || vatNumber.length == 0)}"
-      class="input-custom form-control"
-      maxlength="15"
-      [disabled]="disabled || (!airlineCode || airlineCode.length == 0)"
-      [(ngModel)]="vatNumber"
-      (onChange)="changeVatNumber()"
-    />
+  <div class="form-row" *ngIf="airlineVatNumberEnabled">
+    <div class="form-group col-5 col-xl-4">
+      <bspl-input-form-control
+        l10nTranslate
+        [error]="''"
+        [wrapText]="true" 
+        [label]="'AIRLINE.airlineVAT'"
+        [type]="'pattern'"
+        [typingPattern]="'[A-Z0-9]{3}$'"
+        [inputMaxTextLength]="'15'"
+        [formGroupParent]="airlineFormModelGroup"
+        [formControlParentName]="'airlineVatNumber'">
+      </bspl-input-form-control>
+    </div>
   </div>
-</div>
 
-<div class="form-entry-row" *ngIf="showCompanyReg">
-  <div class="form-group">
-    <label l10nTranslate>AIRLINE.companyReg</label>
-    <input
-      [ngClass]="{'error': style == 'error' && (!companyReg || companyReg.length == 0)}"
-      class="input-custom form-control"
-      maxlength="20"
-      [disabled]="disabled || (!airlineCode || airlineCode.length == 0)"
-      [(ngModel)]="companyReg"
-      (onChange)="changeCompanyReg()"
-    />
+  <div class="form-row" *ngIf="companyRegistrationNumberEnabled">
+    <div class="form-group col-6 col-xl-5">
+      <bspl-input-form-control
+        l10nTranslate [error]="''"
+        [wrapText]="true" 
+        [label]="'AIRLINE.companyReg'" 
+        [type]="'pattern'" 
+        [typingPattern]="'[A-Z0-9]{3}$'"
+        [inputMaxTextLength]="'20'"
+        [formGroupParent]="airlineFormModelGroup"
+        [formControlParentName]="'airlineRegistrationNumber'">
+      </bspl-input-form-control>
+    </div>
   </div>
-</div>
 
-<div *ngIf="showContact">
-  <app-contact
-    [style]="(style == 'error' && airlineCode && airlineCode.length > 0) ? 'error' : '' "
-    [disabled]="disabled || (!airlineCode || airlineCode.length == 0)"
-    [(name)]="name"
-    [(telephone)]="telephone"
-    [(email)]="email"
-    (onChange)="changeContact($event)"
-    >
-  </app-contact>
-</div>
+  <bspl-contact *ngIf="showContact" [disabledComponent]="true" (returnForm)="onChangeContact($event)">
+  </bspl-contact>
+  
+</form>

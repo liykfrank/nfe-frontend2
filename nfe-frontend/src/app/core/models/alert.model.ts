@@ -1,6 +1,4 @@
-import { AlertType } from './alert-type.enum';
-import { EventEmitter } from '@angular/core';
-import { TranslationService } from 'angular-l10n';
+import { AlertType } from '../enums/alert-type.enum';
 
 export class AlertModel {
     title: string;

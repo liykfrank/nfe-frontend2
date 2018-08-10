@@ -5,7 +5,6 @@ import { DebugElement } from '@angular/core';
 
 import { HeaderComponent } from './header.component';
 import { MenuComponent } from '../menu/menu.component';
-import { TabsStateService } from '../../services/tabs-state.service';
 import { SharedModule } from '../../../shared/shared.module';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { SftpModifyPasswordService } from '../../services/sftp-modify-password.service';
@@ -16,18 +15,7 @@ describe('HeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        SharedModule
-      ],
-      declarations: [
-        HeaderComponent,
-        MenuComponent
-      ],
-      providers: [
-        TabsStateService,
-        MessageService,
-        SftpModifyPasswordService
-      ]
+      declarations: [ HeaderComponent ]
     })
     .compileComponents();
   }));

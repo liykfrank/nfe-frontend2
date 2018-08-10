@@ -3,7 +3,7 @@ import { Message } from 'primeng/primeng';
 import { MessageService } from 'primeng/components/common/messageservice';
 
 @Component({
-  selector: 'app-notifications',
+  selector: 'bspl-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss']
 })

@@ -1,102 +1,58 @@
 .navigation {
-    display: inline-flex;
-    width: 100%;
-
     color: #033E78;
-
-    .left-side {
-        margin: 25px 0;
-        float: left;
-        display: flex;
-        width: 70%;
-        padding: 0 20px;
-        align-items: center;
-
-        .logo {
-            width: auto;
-
-            .header-logo {
-                height: 45px;
-                width: auto;
-            }
-        }
-
-        .brand {
-            width: 10%;
-            font-size: 22px;
-            margin-left: 5px;
-            color: #033E78;
-        }
-
-        .combos {
-            width: 55%;
-            .special-selector {
-                padding: 3px 14px;
-                border: 1px solid #022F5B;
-                border-radius: 15px;
-                background-color: #FFFFFF;
-                color: #022F5B;
-                font-size: 14px;
-                line-height: 16px;
-                -moz-appearance: none;
-            }
-        }
-
-        .actions {
-            width: 30%;
-            .single-action {
-                text-align: center;
-                float: left;
-                padding: 0 8px;
-            }
-        }
+    align-items: center;
+    margin: 0px;
+    
+    .section {
+        padding-top: 25px;
+        padding-bottom: 25px;
     }
 
-    .divisor {
-        width: 4px;
-        float: left;
-        background-color: #C6C6C6;
-    }
-
-    .right-side {
-        margin: 25px 0;
+    .header-logo {
+        height: 45px;
         width: auto;
-        display: flex;
-        padding: 0 20px;
-        float: left;
-        align-items: center;
+    }
 
-        .notification {
-            padding: 0 10px;
-            text-align: center;
-            float: left;
-            position: relative;
+    .brand {
+        font-size: 22px;
+    }
 
-            .badge {
-                position: absolute;
-                padding: 1px 4px;
-                top: -5px;
-                background: #E72017;
-                color: white;
-                text-align: center;
-                border-radius: 50%;
-                font-size: 9px;
-                right: 35px;
-            }
-        }
-
-        .user-icon {
-            padding: 0 10px;
-
-        }
-
-        .user {
-            float: left;
-            padding: 0 10px;
+    .combos {
+        .special-selector {
+            padding: 3px 14px;
+            border: 1px solid #022F5B;
+            border-radius: 15px;
+            background-color: #FFFFFF;
+            color: #022F5B;
+            font-size: 14px;
+            line-height: 16px;
         }
     }
-}
 
-.clear {
-    clear: both;
+    .actions {
+        .single-action {
+            text-align: center;
+            font-size: 14px;
+        }
+    }
+
+    .notification {
+        text-align: center;
+        position: relative;
+
+        .badge {
+            position: absolute;
+            background: #E72017;
+            color: white;
+            text-align: center;
+            border-radius: 50%;
+            font-size: 14px;
+            padding: 4px 8px;
+            top: -10px;
+        }
+    }
+
+    .user-section {
+        border-left: 1px solid #707070;
+    }
 }

@@ -1,0 +1,305 @@
+<form [formGroup]="amountRefundFormModel.amountRefundGroup">
+
+  <div class="row">
+    <div class="col-12">
+      <div class="row">
+        <!-- PARTIAL REFUND -->
+        <div class="col-3 mb-2">
+          <label class="custom-checkbox text-nowrap" l10nTranslate>REFUNDS.AMOUNT.partial_refund
+            <input type="checkbox" [checked]="getPartialRefundConfig()" formControlName="partialRefund">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <!-- NET REMIT -->
+        <div class="col-3 mb-2">
+          <label class="custom-checkbox text-nowrap" l10nTranslate>REFUNDS.AMOUNT.net_remit
+            <input type="checkbox" [checked]="getNetRemitConfig()" formControlName="netRemit">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="amount-refund" class="row" formGroupName="amounts">
+    <div class="col-6">
+      <div class="row">
+        <!-- GROSS FARE -->
+        <div class="col-12 mb-2">
+          <div class="row">
+            <div class="form-group col-3 pr-1">
+              <bspl-input-form-control l10nTranslate
+                [formGroupParent]="amountRefundFormModel.amounts"
+                [formControlParentName]="'grossFare'"
+                [wrapText]="true"
+                [type]="'decimal'"
+                [decimalsNumber]="2"
+                [error]="''"
+                [label]="'REFUNDS.AMOUNT.gross_fare'">
+              </bspl-input-form-control>
+            </div>
+          </div>
+        </div>
+
+        <!-- LESS GROSS FARE USED -->
+        <div class="col-12 mb-2">
+          <div class="row">
+            <div class="form-group col-3 pr-1">
+              <bspl-input-form-control l10nTranslate
+                [formGroupParent]="amountRefundFormModel.amounts"
+                [formControlParentName]="'lessGrossFareUsed'"
+                [wrapText]="true"
+                [type]="'decimal'"
+                [decimalsNumber]="2"
+                [error]="''"
+                [label]="'REFUNDS.AMOUNT.less_gross_fare_used'">
+              </bspl-input-form-control>
+            </div>
+          </div>
+        </div>
+
+        <!-- TOTAL GROSS FARE REFUNDED -->
+        <div class="col-12 mb-2">
+          <div class="row">
+            <div class="form-group col-3 pr-1">
+              <!-- <label class="text-nowrap" l10nTranslate>REFUNDS.AMOUNT.total_gross_fare_refunded</label>
+              <input class="form-control" type="text" value="0.00"> -->
+              <bspl-input-form-control l10nTranslate
+                [formGroupParent]="amountRefundFormModel.amounts"
+                [formControlParentName]="'lessGrossFareUsed'"
+                [wrapText]="true"
+                [type]="'decimal'"
+                [decimalsNumber]="2"
+                [error]="''"
+                [label]="'REFUNDS.AMOUNT.total_gross_fare_refunded'">
+              </bspl-input-form-control>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION COMMISSION -->
+        <div class="col-12 mb-2">
+          <div class="row">
+            <div class="form-group col-2 pr-1">
+              <label class="text-nowrap" l10nTranslate>REFUNDS.AMOUNT.commission</label>
+              <div class="input-group pt-1">
+                <div class="custom-radio">
+                  <input id="radio_percent" type="radio" name="percent" value="0" checked (change)="onChangeCommission($event)">
+                  <label for="radio_percent" class="text-nowrap" l10nTranslate><span></span>REFUNDS.AMOUNT.percent</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-3 pr-1 pl-1">
+              <label>&nbsp;</label>
+              <input class="form-control" type="text" value="0.00" formControlName="commissionRate">
+            </div>
+
+            <div class="form-group col-3 pr-1">
+              <label>&nbsp;</label>
+              <div class="input-group pt-1">
+                <div class="custom-radio">
+                  <input id="radio_amount" type="radio" name="percent" value="1" (change)="onChangeCommission($event)">
+                  <label for="radio_amount" class="text-nowrap" l10nTranslate><span></span>REFUNDS.AMOUNT.title</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-3 pr-1 pl-1">
+              <label>&nbsp;</label>
+              <input class="form-control" type="text" value="0.00" formControlName="commissionAmount">
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SECTION DISCOUNT AMOUNT -->
+        <div class="col-12 mb-2">
+          <div class="row">
+            <div class="form-group col-3 pr-1">
+              <bspl-input-form-control l10nTranslate
+                [formGroupParent]="amountRefundFormModel.amounts"
+                [formControlParentName]="'spam'"
+                [wrapText]="true"
+                [type]="'decimal'"
+                [decimalsNumber]="2"
+                [error]="''"
+                [label]="'REFUNDS.AMOUNT.discountAmount'">
+              </bspl-input-form-control>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION TAXES -->
+        <div class="col-12 mb-2">
+          <div class="row">
+            <div class="form-group col-3 pr-1">
+              <label class="text-nowrap" l10nTranslate>REFUNDS.AMOUNT.total_taxes</label>
+              <input class="form-control" type="text" value="0.00">
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 mb-2">
+          <div class="row">
+
+            <div class="form-group col-3 pr-1">
+              <label class="text-nowrap" l10nTranslate>REFUNDS.AMOUNT.taxes</label>
+              <input class="form-control" type="text" value="">
+            </div>
+
+            <div class="form-group col-3 pr-1">
+              <label>&nbsp;</label>
+              <input class="form-control" type="text" value="0.00">
+            </div>
+
+            <div class="form-group col-3 pr-1">
+              <label>&nbsp;</label>
+              <button class="form-control btn btn-primary btn-blue" l10nTranslate>
+                <i class="fa fa-plus-circle"></i> REFUNDS.AMOUNT.tax
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="row">
+        <!-- SECTION CANCELATION PENALTY-->
+        <div class="col-12 mb-2">
+          <div class="row">
+            <div class="form-group col-3 pr-1">
+              <bspl-input-form-control l10nTranslate
+                [formGroupParent]="amountRefundFormModel.amounts"
+                [formControlParentName]="'cancellationPenalty'"
+                [wrapText]="true"
+                [type]="'decimal'"
+                [decimalsNumber]="2"
+                [error]="''"
+                [label]="'REFUNDS.AMOUNT.cancellationPenalty'">
+              </bspl-input-form-control>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAX ON CANCELATION PENALTY-->
+        <div class="col-12 mb-2">
+          <div class="row">
+            <div class="form-group col-3 pr-1">
+              <bspl-input-form-control l10nTranslate
+                [formGroupParent]="amountRefundFormModel.amounts"
+                [formControlParentName]="'taxOnCancellationPenalty'"
+                [wrapText]="true"
+                [type]="'decimal'"
+                [decimalsNumber]="2"
+                [error]="''"
+                [label]="'REFUNDS.AMOUNT.taxCP'">
+              </bspl-input-form-control>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION MISCELLANEOUS FEE -->
+        <div class="col-12 mb-2">
+          <div class="row">
+            <div class="form-group col-3 pr-1">
+              <bspl-input-form-control l10nTranslate
+                [formGroupParent]="amountRefundFormModel.amounts"
+                [formControlParentName]="'miscellaneousFee'"
+                [wrapText]="true"
+                [type]="'decimal'"
+                [decimalsNumber]="2"
+                [error]="''"
+                [label]="'REFUNDS.AMOUNT.miscFee'">
+              </bspl-input-form-control>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAX ON MISCELLANEOUS FEE -->
+        <div class="col-12 mb-2">
+          <div class="row">
+            <div class="form-group col-3 pr-1">
+              <bspl-input-form-control l10nTranslate
+                [formGroupParent]="amountRefundFormModel.amounts"
+                [formControlParentName]="'taxOnMiscellaneousFee'"
+                [wrapText]="true"
+                [type]="'decimal'"
+                [decimalsNumber]="2"
+                [error]="''"
+                [label]="'REFUNDS.AMOUNT.taxMF'">
+              </bspl-input-form-control>
+            </div>
+          </div>
+        </div>
+
+        <!-- Prueba -->
+        <!-- <div class="col-12 mb-2">
+          <div class="row">
+            <div class="col-4 col-xl-4">
+              <bspl-input-form-control [formGroupParent]="amountRefundFormModel.amount" formControlParentName="prueba" [error]="'Ha habido un error'"
+                [wrapText]="false" [type]="'pattern'" [typingPattern]="'^[a-zA-Z]*$'" [label]="''">
+              </bspl-input-form-control>
+            </div>
+          </div>
+        </div> -->
+
+        <!-- SECTION TOTAL COMMISSION ON CP AND MF-->
+        <div class="col-12 mb-2">
+          <div class="row">
+            <div class="form-group col-2 pr-1">
+              <label class="text-nowrap" l10nTranslate>REFUNDS.AMOUNT.totalCommissionCPMF</label>
+              <div class="input-group pt-1">
+                <div class="custom-radio">
+                  <input id="radio_percent_CPMF" type="radio" name="percent" value="0" checked (change)="onChangeCommission($event)">
+                  <label for="radio_amount_CPMF" class="text-nowrap" l10nTranslate><span></span>REFUNDS.AMOUNT.percent</label>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="form-group col-3 pr-1 pl-1">
+              <label>&nbsp;</label>
+              <input class="form-control" type="text" value="0.00" formControlName="commissionOnCpAndMfRate">
+            </div>
+
+            <div class="form-group col-3 pr-1">
+              <label>&nbsp;</label>
+              <div class="input-group pt-1">
+                <div class="custom-radio">
+                  <input id="radio_amount_CPMF" type="radio" name="percent_CPMF" value="1">
+                  <label for="radio_amount_CPMF" class="text-nowrap" l10nTranslate><span></span>REFUNDS.AMOUNT.title</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-3 pr-1 pl-1">
+              <label>&nbsp;</label>
+              <input class="form-control" type="text" value="0.00" formControlName="commissionOnCpAndMfAmount">
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="row">
+        <!-- REFUND TO PASSENGER -->
+        <div class="col-6 mb-2">
+          <div class="row">
+            <div class="form-group col-3 pr-1">
+              <label class="font-weight-bold text-nowrap" l10nTranslate>REFUNDS.AMOUNT.refund_to_passenger</label>
+              <input class="form-control" type="text" value="0.00" disabled="true">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</form>

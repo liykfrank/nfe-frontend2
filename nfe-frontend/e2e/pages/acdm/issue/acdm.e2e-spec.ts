@@ -12,7 +12,7 @@ describe('ACDM Issue', () => {
   beforeEach(() => {
     browser.waitForAngularEnabled(false);
     _UTILSMENU.navigateToHome();
-    _UTILSMENU.navigateToMenu(ActionsEnum.ACDM, ActionsEnum.DISPUTE_ADM);
+    _UTILSMENU.navigateToMenu(ActionsEnum.ADM_ACM, ActionsEnum.DISPUTE_ADM);
   });
 
   it('check screen, dropdown has data', () => {

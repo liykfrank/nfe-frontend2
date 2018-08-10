@@ -1,8 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MessageService } from 'primeng/components/common/messageservice';
+import { GrowlModule } from 'primeng/primeng';
 
 import { NotificationsComponent } from './notifications.component';
-import { MessageService } from 'primeng/components/common/messageservice';
-import { SharedModule } from '../../../shared/shared.module';
 
 describe('NotificationsComponent', () => {
   let component: NotificationsComponent;
@@ -10,11 +11,10 @@ describe('NotificationsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ SharedModule ],
-      providers: [ MessageService ],
-      declarations: [ NotificationsComponent ]
-    })
-    .compileComponents();
+      imports: [BrowserAnimationsModule, GrowlModule],
+      providers: [MessageService],
+      declarations: [NotificationsComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,12 +1,8 @@
-import { environment } from '../../../environments/environment';
+
 import { DownFilesResource } from './services/resources/downfiles.resource';
 import { FilesRoutingModule } from './files-routing.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TabsFileComponent } from './components/tabs-file/tabs-file.component';
-import { FilesUploadComponent } from './components/files-upload/files-upload.component';
-import { SharedModule } from '../../shared/shared.module';
-import { FilesDownloadComponent } from './components/files-download/files-download.component';
 import { FilesFilterComponent } from './components/files-filter/files-filter.component';
 import { ListFilesResource } from './services/resources/listfiles.resopurce';
 import { ListFilesService } from './services/list-files.service';
@@ -16,32 +12,58 @@ import { RemoveFileResource } from './services/resources/removefile.resource';
 import { UtilsService } from '../../shared/services/utils.service';
 import { ConfigurationService } from '../files/services/configuration.service';
 import { FormsModule } from '@angular/forms';
-import { ListFilesMockResource } from './services/resources/mocks/listfiles.resopurce';
-import { DownFileMockResource } from './services/resources/mocks/downfile.resource';
+import { QueryFilesComponent } from './components/query-files/query-files.component';
+import { UploadFilesComponent } from './components/upload-files/upload-files.component';
+import { TablePaginationComponent } from '../../shared/components/table-pagination/table-pagination.component';
+import { FilterCrumbsComponent } from '../../shared/components/filter-crumbs/filter-crumbs.component';
+import { jqxButtonComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
+import { jqxDropDownListComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist';
+import { jqxGridComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
+import { GrowlModule } from 'primeng/growl';
+import { FileUploadModule } from 'primeng/fileupload';
+import { jqxInputComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxinput';
+import { jqxDateTimeInputComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
+import { JqxNwComboComponent } from '../../shared/components/jqx-nw-combo/jqx-nw-combo.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { TranslationModule } from 'angular-l10n';
 
-const utils=new UtilsService();
-utils.env=environment;
 @NgModule({
-  imports: [CommonModule, FormsModule, SharedModule, FilesRoutingModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    FilesRoutingModule,
+    GrowlModule,
+    FileUploadModule,
+    DropdownModule,
+    TranslationModule
+  ],
   declarations: [
-    TabsFileComponent,
-    FilesUploadComponent,
-    FilesDownloadComponent,
-    FilesFilterComponent
+    QueryFilesComponent,
+    UploadFilesComponent,
+    FilesFilterComponent,
+    TablePaginationComponent,
+    FilterCrumbsComponent,
+    jqxGridComponent,
+    jqxButtonComponent,
+    jqxDropDownListComponent,
+    jqxInputComponent,
+    jqxDateTimeInputComponent,
+    JqxNwComboComponent,
   ],
   entryComponents: [
-    FilesUploadComponent,
-    FilesDownloadComponent,
-    FilesFilterComponent
+    QueryFilesComponent,
+    UploadFilesComponent,
   ],
   providers: [
-    utils.getProv(ListFilesResource,ListFilesMockResource),
-    utils.getProv(DownFileResource,DownFileMockResource),
+    ListFilesResource,
     DownFilesResource,
-    RemoveFileResource,
+    DownFileResource,
     RemoveFilesResource,
+    RemoveFileResource,
     ListFilesService,
-    ConfigurationService
+    ConfigurationService,
+    UtilsService
   ]
 })
-export class FilesModule {}
+export class FilesModule {
+ }

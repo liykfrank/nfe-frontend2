@@ -5,27 +5,25 @@ import {
   OnChanges,
   SimpleChanges,
   Injector
-} from "@angular/core";
-import { IElementFilter } from "./ielement-filter.model";
-import { EnumTypesFilter } from "./enum-types-filter.enum";
-import { NwAbstractComponent } from "../../base/abstract-component";
+} from '@angular/core';
+import { IElementFilter } from './ielement-filter.model';
+import { EnumTypesFilter } from './enum-types-filter.enum';
 
 @Component({
-  selector: "app-filter-crumbs",
-  templateUrl: "./filter-crumbs.component.html",
-  styleUrls: ["./filter-crumbs.component.scss"]
+  selector: 'bspl-filter-crumbs',
+  templateUrl: './filter-crumbs.component.html',
+  styleUrls: ['./filter-crumbs.component.scss']
 })
-export class FilterCrumbsComponent extends NwAbstractComponent implements OnInit, OnChanges {
+export class FilterCrumbsComponent  implements OnInit, OnChanges {
   @Input() elementsFilter: Array<IElementFilter>;
 
-  constructor(injector: Injector) {
-    super(injector);
+  constructor() {
   }
 
   ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    // throw new Error("Method not implemented.");
+    // throw new Error('Method not implemented.');
   }
 
   isElemShowed(elem: IElementFilter): boolean {

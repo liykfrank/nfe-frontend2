@@ -1,71 +1,77 @@
-<div class="form-entry-row">
-  <div class="form-group"
-      forceWidth
-      [setWidth]="'20%'">
-    <label l10nTranslate>AGENT.code</label>
-    <input class="form-control input-custom"
-      ownPattern
-      [typingPattern]="'[0-9]{7}$'"
-      (patternOnBlur)="onValueChanged()"
-      [ngClass]="{'error': setStyle(agentCode)}"
-      maxlength="7"
-      [(ngModel)]="agentCode"/>
+<form [formGroup]="agentFormModelGroup">
+  <div class="form-row">
+
+    <div class="form-group col-3">
+      <bspl-input-form-control
+        l10nTranslate [error]="''"
+        [disabledInput]="disabledAgentCode"
+        [wrapText]="true"
+        [label]="'AGENT.code'"
+        [type]="'pattern'"
+        [typingPattern]="'[0-9]{7}$'"
+        [inputMaxTextLength]="'7'"
+        [formGroupParent]="agentFormModelGroup"
+        [formControlParentName]="'agentCode'">
+      </bspl-input-form-control>
+    </div>
+
+    <div class="form-group col-2 col-xl-1">
+      <bspl-input-form-control
+        l10nTranslate
+        [error]="''" 
+        [disabledInput]="disabledAgentCode"
+        [label]="'&nbsp;'" 
+        [type]="'pattern'" 
+        [typingPattern]="'[0-9]{1}$'"
+        [inputMaxTextLength]="'1'"
+        [formGroupParent]="agentFormModelGroup"
+        [formControlParentName]="'agentControlDigit'">
+      </bspl-input-form-control>
+    </div>
+
+    <div class="form-group col-3">
+      <label>&nbsp;</label>
+      <button *ngIf="showMoreDetails" class="form-control button-default details-button" [disabled]="disabledMoreDetails" (click)="onClickMoreDetails()"
+        l10nTranslate>
+        AGENT.more
+      </button>
+    </div>
   </div>
 
-  <div class="form-group"
-      forceWidth
-      [setWidth]="'10%'">
-    <label></label>
-    <input
-      ownPattern
-      [typingPattern]="'[0-9]{1}$'"
-      (patternOnBlur)="onValueChanged()"
-
-      maxlength="1"
-      class="form-control input-custom"
-      [(ngModel)]="agentCheckDigit"
-    />
+  <div class="form-row" *ngIf="showAgentName">
+      <div class="ceil-input form-group">
+          <label  l10nTranslate >AGENT.name</label>
+            <input  [disabled]="true"  class="form-control"  type="text" [value]="agent.name">
+        </div>
   </div>
 
-  <div class="form-group">
-    <label></label>
-    <button *ngIf="showMoreDetails" class="form-control button-default details-button"
-      [disabled]="checkDisableShowDetails()"
-      (click)="clickMoreDetails()"
-      l10nTranslate>
-      AGENT.more
-    </button>
+  <div class="form-row" *ngIf="agentVatNumberEnabled">
+    <div class="form-group col-12 col-xl-12">
+      <bspl-input-form-control 
+        l10nTranslate 
+        [error]="''" [wrapText]="true" 
+        [label]="'AGENT.agentVAT'" 
+        [inputMaxTextLength]="'15'"
+        [formGroupParent]="agentFormModelGroup" 
+        [formControlParentName]="'agentVatNumber'">
+      </bspl-input-form-control>
+    </div>
   </div>
-</div>
 
-<div class="form-entry-row" *ngIf="showVat">
-  <div class="form-group">
-    <label l10nTranslate>AGENT.agentVAT</label>
-    <input class="form-control input-custom"
-      [ngClass]="{'error': setStyle(vatNumber)}"
-      maxlength="15"
-      [(ngModel)]="vatNumber"
-      (change)="changeVatNumber()"/>
+  <div class="form-row" *ngIf="companyRegistrationNumberEnabled">
+    <div class="form-group col-12 col-xl-12">
+      <bspl-input-form-control 
+        l10nTranslate 
+        [error]="''" 
+        [wrapText]="true" 
+        [label]="'AGENT.companyReg'" 
+        [inputMaxTextLength]="'20'"
+        [formGroupParent]="agentFormModelGroup" 
+        [formControlParentName]="'agentRegistrationNumber'">
+      </bspl-input-form-control>
+    </div>
   </div>
-</div>
 
-<div class="form-entry-row" *ngIf="showCompanyReg">
-  <div class="form-group">
-    <label l10nTranslate>AGENT.companyReg</label>
-    <input class="form-control input-custom"
-      [ngClass]="{'error': setStyle(companyReg)}"
-      maxlength="20"
-      [(ngModel)]="companyReg"
-      (change)="changeCompanyReg()"/>
-  </div>
-</div>
-
-<div *ngIf="showContact">
-  <app-contact
-    [style]="(setStyle(agentCode)) ? 'error' : '' "
-    [(name)]="name"
-    [(telephone)]="telephone"
-    [(email)]="email"
-    (onChange)="changeContact($event)">
-  </app-contact>
-</div>
+  <bspl-contact *ngIf="showContact" [disabledComponent]="disabledContact" (returnForm)="onChangeContact($event)">
+  </bspl-contact>
+</form>

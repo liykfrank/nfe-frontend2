@@ -16,10 +16,7 @@ export class DashboardService {
       new Card('ADM', STATS1),
       new Card('Files', STATS1),
       new Card('Refunds', STATS2),
-      new Card('Alerts', STATS2)//,
-      // new Card('Alerts2', STATS2),
-      // new Card('Alerts3', STATS2),
-      // new Card('Alerts4', STATS2)
+      new Card('Alerts', STATS2)
     ];
   }
 

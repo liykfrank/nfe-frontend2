@@ -3,6 +3,7 @@
     "node_modules/codelyzer"
   ],
   "rules": {
+    "no-unused-variable": [true, {"ignore-pattern": "^_"}],
     "arrow-return-shorthand": true,
     "callable-types": true,
     "class-name": true,
@@ -30,7 +31,7 @@
     "label-position": true,
     "max-line-length": [
       true,
-      140
+      160
     ],
     "member-access": false,
     "member-ordering": [
@@ -126,7 +127,7 @@
     "component-selector": [
       true,
       "element",
-      "app",
+      "bspl",
       "kebab-case"
     ],
     "no-output-on-prefix": true,

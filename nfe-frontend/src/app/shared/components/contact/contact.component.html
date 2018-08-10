@@ -1,32 +1,25 @@
-<div class="form-entry-row">
-  <div class="form-group">
-    <label l10nTranslate>CONTACT.name</label>
-    <input class="form-control input-custom"
-      [ngClass]="{'error': style == 'error' && (!name || name.length == 0)}"
-      [(ngModel)]="name"
-      [disabled]="disabled"
-      (change)="change()"/>
+<form [formGroup]="contactFormModelGroup">
+  <div class="form-row">
+    <div class="form-group col-5">
+      <bspl-input-form-control l10nTranslate [error]="''" [wrapText]="true" [label]="'CONTACT.telephone'" [inputMaxTextLength]="15" [formGroupParent]="contactFormModelGroup"
+        [formControlParentName]="'phoneFaxNumber'">
+      </bspl-input-form-control>
+    </div>
   </div>
-</div>
 
-<div class="form-entry-row">
-  <div class="form-group">
-    <label l10nTranslate>CONTACT.telephone</label>
-    <input class="form-control input-custom"
-      [ngClass]="{'error': style == 'error' && (!telephone || telephone.length == 0)}"
-      [(ngModel)]="telephone"
-      [disabled]="disabled"
-      (change)="change()"/>
+  <div class="form-row">
+    <div class="form-group col-10">
+      <bspl-input-form-control l10nTranslate [error]="''" [wrapText]="true" [label]="'CONTACT.name'" [inputMaxTextLength]="49" [formGroupParent]="contactFormModelGroup"
+        [formControlParentName]="'contactName'">
+      </bspl-input-form-control>
+    </div>
   </div>
-</div>
-  
-<div class="form-entry-row">
-  <div class="form-group">
-    <label l10nTranslate>CONTACT.email</label>
-    <input class="form-control input-custom"
-      [ngClass]="{'error': style == 'error' && (!email || email.length == 0)}"
-      [(ngModel)]="email"
-      [disabled]="disabled"
-      (change)="change()"/>
+
+  <div class="form-row">
+    <div class="form-group col-10">
+      <bspl-input-form-control l10nTranslate [error]="''" [wrapText]="true" [label]="'CONTACT.email'" [inputMaxTextLength]="200" [formGroupParent]="contactFormModelGroup"
+        [formControlParentName]="'email'">
+      </bspl-input-form-control>
+    </div>
   </div>
-</div>
+</form>

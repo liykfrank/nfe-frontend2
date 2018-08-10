@@ -1,0 +1,40 @@
+.parent-tab {
+    background-color: #E3E3E3 !important;
+    margin-bottom: 0;
+}
+
+.parent-tab > li {
+    cursor: pointer;
+    margin-right: 2px;
+    font-size: 16px;
+    padding: 20px;
+    border-radius: 6px 6px 0 0;
+    text-align: center;
+    min-width: 100px;
+    position: relative;
+
+    color: #FFFFFF;
+    font-weight: 500;
+    background-color: #B1B8BF;
+    margin-top: 9px;
+
+    a {
+        border-color: transparent !important;
+        padding: 0px;
+    }
+
+    .aspa {
+        position: absolute;
+        top: 0px;
+        right: 5px;
+    }
+
+    &.selected-tab {
+        color: #00A3E0;
+        background-color: #FFFFFF;
+        border-bottom: 2px solid #FFFFFF;
+    }
+    
+}
+
+

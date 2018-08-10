@@ -1,0 +1,131 @@
+<form [formGroup]="basicInfoFormModelGroup">
+  <div class="row">
+    <div class="col-6">
+      <div class="form-row">
+        <div class="form-group col-6">
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.BSP.label</label>
+          <select class="form-control pr-1" formControlName="isoCountryCode">
+            <option *ngFor="let item of countryList" [value]="item.isoCountryCode">{{item.name}}</option>
+          </select>
+          <bspl-field-error error=""></bspl-field-error>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-2">
+          <label class="text-nowrap" l10nTranslate>ADM_ACM.BASIC_INFO.billingPeriod</label>
+          <select class="form-control pr-1" name="selectPeriodNumber" (change)="setPeriod($event)">
+            <option *ngFor="let item of periodNumber" [value]="item">{{item}}</option>
+          </select>
+          <bspl-field-error error=""></bspl-field-error>
+        </div>
+
+        <div class="form-group col-4">
+          <label>&nbsp;</label>
+          <select class="form-control pr-1" name="selectPeriodMonth" (change)="setPeriod($event)">
+            <option *ngFor="let item of periodMonth" [value]="item.code">{{item.description}}</option>
+          </select>
+          <bspl-field-error error=""></bspl-field-error>
+        </div>
+
+        <div class="form-group col-3">
+          <label>&nbsp;</label>
+          <select class="form-control pr-1" name="selectPeriodYear" (change)="setPeriod($event)">
+            <option *ngFor="let item of periodYear" [value]="item">{{item}}</option>
+          </select>
+          <bspl-field-error error=""></bspl-field-error>
+        </div>
+      </div>
+
+      <bspl-agent
+        [disabledContact]="true"
+        [showMoreDetails]="true"
+        [agentVatNumberEnabled]="configuration.agentVatNumberEnabled"
+        [companyRegistrationNumberEnabled]="configuration.companyRegistrationNumberEnabled">
+      </bspl-agent>
+
+    </div>
+
+    <div class="col-6">
+
+      <div class="form-row">
+        <div class="form-group col-6">
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.type</label>
+          <select class="form-control pr-1">
+            <option *ngFor="let item of typeList" [value]="item">{{item}}</option>
+          </select>
+          <bspl-field-error error=""></bspl-field-error>
+        </div>
+      </div>
+
+
+      <div class="form-row">
+        <div class="form-group col-6">
+          <label>Number</label>
+          <input type="text" class="form-control" />
+          <bspl-field-error error=""></bspl-field-error>
+        </div>
+      </div>
+
+      <bspl-airline
+        [isoCountryCode]="configuration.isoCountryCode"
+        [disabledContact]="true"
+        [showMoreDetails]="true"
+        [airlineVatNumberEnabled]="configuration.airlineVatNumberEnabled"
+        [companyRegistrationNumberEnabled]="configuration.companyRegistrationNumberEnabled">
+      </bspl-airline>
+
+    </div>
+
+    <div class="col-12">
+      <div class="form-row">
+        <div class="form-group col-2">
+          <label class="text-nowrap">{{isAdm ? 'ADM': 'ACM'}} {{'ADM_ACM.BASIC_INFO.FORCombo.label' | translate}}</label>
+          <select class="form-control pr-1" formControlName="concernsIndicator">
+            <option *ngFor="let item of forList" [value]="item" l10nTranslate>{{'ADM_ACM.BASIC_INFO.FORCombo.' + item}}</option>
+          </select>
+          <bspl-field-error error=""></bspl-field-error>
+        </div>
+
+        <div class="form-group col-2" *ngIf="showTOCA()">
+          <label class="text-nowrap" l10nTranslate>ADM_ACM.BASIC_INFO.TOCACombo.label</label>
+          <select class="form-control pr-1" formControlName="taxOnCommissionType">
+            <option *ngFor="let item of tocaList" [value]="item.code">{{ item.description }}</option>
+          </select>
+          <bspl-field-error error=""></bspl-field-error>
+        </div>
+
+        <div class="form-group col-2">
+          <bspl-currency
+            [iso]="configuration.isoCountryCode || null"
+            [type]="type"
+            (returnForm)="onReturnFormCurrency($event)">
+          </bspl-currency>
+        </div>
+
+        <bspl-stat class="form-group col-2"
+          [label]="'ADM_ACM.BASIC_INFO.statCombo.label'"
+          [domesticLabel]="'ADM_ACM.BASIC_INFO.statCombo.domestic'"
+          [internacionalLabel]="'ADM_ACM.BASIC_INFO.statCombo.internacional'"
+          [freeStat]="configuration.freeStat"
+          [defaultStat]="configuration.defaultStat"
+          [formGroupParent]="basicInfoFormModelGroup"
+          [formControlParentName]="'statisticalCode'">
+        </bspl-stat>
+
+        <div class="form-group col-2" *ngIf="showNRID()">
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.nr</label>
+          <div class="row no-gutters mt-2 pl-1">
+            <label class="custom-checkbox col-3">
+              <input type="checkbox">
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <bspl-field-error error=""></bspl-field-error>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</form>

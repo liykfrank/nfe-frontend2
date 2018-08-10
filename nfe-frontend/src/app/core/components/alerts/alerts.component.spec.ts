@@ -1,38 +1,38 @@
-import { Observable } from 'rxjs';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TranslationModule } from 'angular-l10n';
+import { DialogModule } from 'primeng/dialog';
+import { GrowlModule } from 'primeng/primeng';
+import { Observable } from 'rxjs';
 
-import { AlertsComponent } from './alerts.component';
-
-import { AlertsService } from '../../services/alerts.service';
-import { SharedModule } from '../../../shared/shared.module';
-
+import { AlertType } from '../../enums/alert-type.enum';
 import { AlertModel } from '../../models/alert.model';
-import { AlertType } from './../../models/alert-type.enum';
+import { AlertsService } from '../../services/alerts.service';
+import { AlertsComponent } from './alerts.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AlertsComponent', () => {
   let component: AlertsComponent;
   let fixture: ComponentFixture<AlertsComponent>;
 
-  const alert: AlertModel = new AlertModel('TEXT', 'TEXT', AlertType.ERROR);
-  const _AlertsService = jasmine.createSpyObj<AlertsService>('AlertsService',
-    [
-      'getAlert',
-      'setAccept',
-      'getAccept'
-    ]);
+  const _AlertsService = jasmine.createSpyObj<AlertsService>('AlertsService', [
+    'getAlert',
+    'setAccept',
+    'getAccept'
+  ]);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ SharedModule, BrowserAnimationsModule ],
-      providers: [
-        {provide: AlertsService, useValue: _AlertsService}
+      imports: [
+        BrowserAnimationsModule,
+        GrowlModule,
+        DialogModule
       ],
-      declarations: [ AlertsComponent ]
-    })
-    .compileComponents();
+      providers: [{ provide: AlertsService, useValue: _AlertsService }],
+      declarations: [AlertsComponent]
+    }).compileComponents();
   }));
 
+  const alert: AlertModel = new AlertModel('TEXT', 'TEXT', AlertType.ERROR);
   _AlertsService.getAlert.and.returnValue(Observable.of(alert));
   _AlertsService.setAccept.and.callThrough();
   _AlertsService.getAccept.and.returnValue(Observable.of(true));
@@ -59,6 +59,12 @@ describe('AlertsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should create CONFIRM', () => {
+    alert.alert_type = AlertType.CONFIRM;
+    _AlertsService.getAlert.and.returnValue(Observable.of(alert));
+    expect(component).toBeTruthy();
+  });
+
   it('onClickAccept', () => {
     expect(component.display).toBe(true);
     component.onClickAccept();
@@ -70,7 +76,4 @@ describe('AlertsComponent', () => {
     component.onClickCancel();
     expect(component.display).toBe(false);
   });
-
-
-
 });

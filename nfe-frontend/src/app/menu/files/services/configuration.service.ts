@@ -1,22 +1,18 @@
-import { Logger } from 'ng2-logger/src/logger';
-import { Injectable, Injector } from '@angular/core';
-import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
+import { environment } from '../../../../environments/environment';
+import { HttpServiceAbstract } from '../../../shared/base/http-service-abstract';
 import { Configuration } from '../models/configuration';
-import { Observable } from 'rxjs/Observable';
-import { NwRepositoryAbstract } from '../../../shared/base/nwe-repository.abstract';
 
 @Injectable()
-export class ConfigurationService extends NwRepositoryAbstract<any, Configuration> {
-
-  constructor(private http: HttpClient, protected injector: Injector) {
+export class ConfigurationService extends HttpServiceAbstract<any, Configuration> {
+  constructor(private http: HttpClient) {
     super(
       http,
       environment.basePath +
         environment.files.basePath +
-        environment.files.api.apiConfiguration,
-      injector
+        environment.files.api.apiConfiguration
     );
   }
-
 }

@@ -1,0 +1,25 @@
+.custom-nav-grey {
+  background-color: #EFF0F2;
+  border: 1px solid #E0E1E5;
+
+  min-width: 45px;
+  text-align: center;
+  padding: 10px;
+
+  &.disabled {
+    background-color: #EFF0F2;
+  }
+}
+
+.icon {
+  height: 20px;
+  width: auto;
+}
+
+.content-tab {
+  // margin: 0px;
+  // border-radius: 4px;
+  background-color: #FFFFFF;
+  box-shadow: 0 3px 6px 0 rgba(0,0,0,0.15);
+}
+

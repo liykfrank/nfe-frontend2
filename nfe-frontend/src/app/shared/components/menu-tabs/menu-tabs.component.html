@@ -1,0 +1,10 @@
+<ul class="nav nav-tabs parent-tab"> 
+  <li class="nav-item" *ngFor="let tab of tabList; let i = index" 
+    [ngClass]="checkTabClass(tab)"
+    [routerLink]="tab.url">
+    <a class="nav-link">{{tab.label}}</a>
+    <span class="aspa" *ngIf="i!=0">
+      <i class="fa fa-times" (click)="closeTab(tab, i)"></i>
+    </span>  
+  </li>
+</ul>

@@ -1,20 +1,17 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
+
 import { environment } from '../../../../../environments/environment';
-import { NwRepositoryAbstract } from '../../../../shared/base/nwe-repository.abstract';
-import { IListFiles } from '../../models/contract/list-files';
+import { HttpServiceAbstract } from '../../../../shared/base/http-service-abstract';
 
 @Injectable()
-export class DownFilesResource extends NwRepositoryAbstract<any, Object> {
-  constructor( http: HttpClient, injector: Injector) {
+export class DownFilesResource extends HttpServiceAbstract<any, Object> {
+  constructor(http: HttpClient) {
     super(
       http,
       environment.basePath +
         environment.files.basePath +
-        environment.files.api.downloadFiles,
-      injector
+        environment.files.api.downloadFiles
     );
   }
-
-
 }

@@ -1,15 +1,13 @@
 import { Injectable, Injector } from '@angular/core';
-import { NwRepositoryAbstract } from '../../shared/base/nwe-repository.abstract';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpServiceAbstract } from '../../shared/base/http-service-abstract';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
-export class SftpModifyPasswordService extends NwRepositoryAbstract<string, any> {
+export class SftpModifyPasswordService extends HttpServiceAbstract<string, any> {
 
-  constructor(private _HttpClient: HttpClient, private _Injector: Injector) {
-    super(_HttpClient,
-      environment.sftAccount.basePath + environment.sftAccount.api.modify,
-      _Injector);
+  constructor(private _HttpClient: HttpClient) {
+    super(_HttpClient, environment.sftAccount.basePath + environment.sftAccount.api.modify);
   }
 
 }

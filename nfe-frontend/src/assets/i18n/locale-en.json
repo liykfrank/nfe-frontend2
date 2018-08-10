@@ -12,13 +12,11 @@
   "File": "File",
   "Size": "Size",
   "Date": "Date",
-
   "support": "Support",
   "resource": "Resources",
   "shop": "Shop",
   "help": "Help",
   "notifications": "Notifications",
-
   "clear": "Clear",
   "save": "Save",
   "issue": "Issue",
@@ -26,19 +24,78 @@
   "search_button": "Search",
   "close_button": "Close",
   "error": "Error",
-
   "privacy": "Privacy",
   "terms": "Terms & Conditions",
-
+  "expand": "Expand All",
+  "collapse": "Collapse All",
+  "ERROR404": {
+    "title": "ERROR",
+    "desc": "Resource not found"
+  },
+  "date": {
+    "firstDayOfWeek": 0,
+    "dayNames": [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ],
+    "dayNamesShort": [
+      "Sun",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat"
+    ],
+    "dayNamesMin": [
+      "Su",
+      "Mo",
+      "Tu",
+      "We",
+      "Th",
+      "Fr",
+      "Sa"
+    ],
+    "monthNames": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "monthNamesShort": [
+      "JAN",
+      "FEB",
+      "MAR",
+      "APR",
+      "MAY",
+      "JUN",
+      "JUL",
+      "AUG",
+      "SEP",
+      "OCT",
+      "NOV",
+      "DEC"
+    ],
+    "today": "Today",
+    "clear": "Clear"
+  },
   "ADM_ACM": {
     "ADMTitle": "ADM Issue",
     "ACMTitle": "ACM Issue",
-
-    "expand": "Expand All",
-    "collapse": "Collapse All",
-
     "error": "Can not create ADM/ACM ",
-
     "RESUME": {
       "status": "Stastus",
       "bsp": "BSP",
@@ -47,7 +104,6 @@
       "issue_date": "Issue Date",
       "amount": "Amount"
     },
-
     "BASIC_INFO": {
       "title": "Basic Information",
       "amount": "Amount",
@@ -58,10 +114,8 @@
       "number": "Number",
       "airlineCode": "Airline Code",
       "nr": "NR",
-
       "ADM": "ADM",
       "ACM": "ACM",
-
       "airline": {
         "title": "Airline information",
         "address": "Address",
@@ -69,7 +123,6 @@
         "city": "City",
         "country": "Country/Territory"
       },
-
       "agent": {
         "title": "Agent information",
         "address": "Address",
@@ -78,31 +131,28 @@
         "country": "Country/Territory"
       },
 
-      "SPDRCombo": {
+      "FORCombo": {
         "label": " for",
         "I": "Issue",
         "R": "Refund",
         "X": "Exchange",
         "E": "EMD"
       },
-
       "TOCACombo": {
         "label": "TOCA Type"
       },
-
       "currencyCombo": {
         "label": "Currency"
       },
-
       "statCombo": {
-        "label": "Stat"
+        "label": "Stat",
+        "domestic": "DOM",
+        "internacional": "INT"
       },
-
       "BSP": {
         "label": "BSP"
       }
     },
-
     "AMOUNT": {
       "title": "Amount",
       "adm_amount": "AMOUNT DUE TO AIRLINE",
@@ -114,12 +164,12 @@
       "addTax": "Tax",
       "clear": "Clear",
       "populate": "Populate",
-      "fare" : "Fare",
-      "tfc" : "TFC",
+      "fare": "Fare",
+      "tfc": "TFC",
       "tfc_toggle": "Tax, fees and charges",
-      "comission" : "Comission",
-      "spam" : "Spam",
-      "toca" : "TOCA",
+      "comission": "Comission",
+      "spam": "Spam",
+      "toca": "TOCA",
       "CP": "CP",
       "RF": "RF",
       "CA": "CA",
@@ -128,9 +178,7 @@
       "DE": "DE",
       "tax_error": "There are error in tax table",
       "total_error": "Total is wrong"
-
     },
-
     "DETAILS": {
       "title": "Details",
       "ticketIssueDate": "Related Document Issue Date",
@@ -147,9 +195,8 @@
         "alredy-added": "This tickect is alredy added"
       }
     },
-
     "SVCS": {
-      "COMPANY": {
+      "AIRLINE": {
         "title": "Airline",
         "desc": "Airline not found in this country"
       },
@@ -170,62 +217,145 @@
         "title": "Period",
         "desc": "Does not exist list periods in this country"
       }
-
-    },
-
-    "MULTITABS": {
-      "comments": "Comments",
-      "files": "Files",
-      "files_subtitle": "Recent files",
-      "attach_new_file": "Attach new file"
-    },
-
-    "DOCS": {
-      "title": "Documents",
-      "recent": "Recent documents"
     }
-
   },
-
+  "REFUNDS": {
+    "RESUME": {
+      "status": "status",
+      "bsp": "BSP",
+      "airline_code": "Airline Code",
+      "agent_code": "Agent Code",
+      "refund_number": "Refund Number",
+      "issue_date": "Issue Date",
+      "refund_passenger": "Refund Passenger"
+    },
+    "BASIC_INFO": {
+      "title": "Basic Information"
+    },
+    "DETAILS": {
+      "title": "Details",
+      "category": "Category",
+      "domestic": "Domestic",
+      "internacional": "Internacional",
+      "passenger_name": "Passenger Name",
+      "reason_for_refund": "Reason for Refund",
+      "detailed_reasons": "Detailed Reasons",
+      "document_number": "Document Number",
+      "issue_date": "Issue Date",
+      "waiver_code": "Waiver Code",
+      "cnj": "CNJ",
+      "exchange": "Exchange",
+      "original_issue_details": "Original Issue Details",
+      "issuing_agent": "Issuing Agent",
+      "place_city_code": "Place (city code)"
+    },
+    "FORM_OF_PAYMENT": {
+      "title": "Form of Payment",
+      "cash": "Cash",
+      "creditCard": "Credit Card",
+      "msca": "MSCA",
+      "mscc": "MSCC",
+      "easyPay": "Easy Pay",
+      "amount": "Amount",
+      "type": "Type",
+      "creditCardNumber": "Card Number",
+      "formOfPayment": "Form of Payment",
+      "subTotalCreditEp": "Sub Total Credit + EP",
+      "totalRefundAmount": "Total Refund Amount",
+      "currency": "Currency",
+      "tourCode": "Tour Code",
+      "customerRef": "Customer Ref",
+      "electronicTicketAuthCode": "Electronic Ticket Auth Code"
+    },
+    "AMOUNT": {
+      "title": "Amount",
+      "partial_refund": "Partial Refund",
+      "net_remit": "Net Remit",
+      "gross_fare": "Gross Fare",
+      "less_gross_fare_used": "Less Gross Fare Used",
+      "total_gross_fare_refunded": "Total Gross Fare Refunded",
+      "total_commission": "Total Commission",
+      "commission": "Commision",
+      "discountAmount": "Discount Amount",
+      "cancellationPenalty": "Cancellation Penalty",
+      "taxCP": "Tax on CP",
+      "miscFee": "Misc. Fee",
+      "taxMF": "Tax on MF",
+      "totalCommissionCPMF": "Total Comm. CP and MF",
+      "commissionCPMF": "Comm. CP and MF",
+      "total_taxes": "Total Taxes",
+      "taxes": "Taxes",
+      "percent": "%",
+      "tax": "Tax",
+      "refund_to_passenger": "Refund to Passenger"
+    }
+  },
   "FILES": {
     "upload_file": "Drag and Drop files here",
     "upload": "Upload files",
     "download": "Download",
     "delete": "Delete"
   },
-
   "SFTP_ACCOUNT": {
     "modify": {
       "title": "Change password sftp account",
       "err": "Problems calling service"
     }
   },
-
   "CONTACT": {
     "name": "Contact Name",
     "telephone": "Contact Telephone/Fax",
     "email": "Contact Email"
   },
-
   "AIRLINE": {
     "code": "Airline Code",
     "more": "More details",
+    "name": "Airline name",
     "airlineVAT": "Airline VAT Nº",
     "companyReg": "Company Registration Number"
   },
-
   "AGENT": {
     "code": "Agent Code",
     "more": "More details",
+    "name": "Agent name",
     "agentVAT": "Agent VAT Nº",
     "companyReg": "Company Registration Number",
     "title_error": "Agent",
     "check_digit_error": "Wrong check digit"
   },
+  "MULTITABS": {
+    "HISTORY": {
+      "title": "History",
+      "operation": "Operation",
 
+
+      "REFUND_ISSUE": "Refund issue",
+      "MODIFY": "Modify",
+      "ATTACH_FILE": "Attach file",
+      "ADD_COMMENT": "Add comment",
+      "MASSLOAD_UPDATE": "Refund update via File Massload"
+    },
+    "DOCS": {
+      "title": "Documents",
+      "subtitle": "Recent documents"
+    },
+    "FILES": {
+      "title": "Files",
+      "subtitle": "Recent files",
+      "attach": "Attach new file",
+      "select": "Select from your computer"
+    },
+    "COMMENTS": {
+      "title": "Comments",
+      "no_comment": "No comments yet"
+    }
+  },
+  "CURRENCY": {
+    "label": "Currency"
+  },
   "MONTHS": {
     "1": "January",
-    "2": "February" ,
+    "2": "February",
     "3": "March",
     "4": "April",
     "5": "May",
@@ -237,11 +367,15 @@
     "11": "November",
     "12": "December"
   },
-
-
   "combo": {
     "placeholder": "Choose"
+  },
+
+  "FORM_CONTROL_VALIDATORS": {
+    "required": "This field is required",
+    "pattern": "The pattern of this field is invalid",
+    "maxLength": "The length length should be lower than",
+    "minLength": "The length should be grater than",
+    "airline": "The airline is invalid"
   }
-
-
 }
