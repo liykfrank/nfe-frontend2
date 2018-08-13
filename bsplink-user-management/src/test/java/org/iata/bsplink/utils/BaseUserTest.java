@@ -3,9 +3,9 @@ package org.iata.bsplink.utils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.iata.bsplink.model.entity.Address;
-import org.iata.bsplink.model.entity.User;
-import org.iata.bsplink.model.entity.UserType;
+import org.iata.bsplink.user.model.entity.Address;
+import org.iata.bsplink.user.model.entity.User;
+import org.iata.bsplink.user.model.entity.UserType;
 
 public abstract class BaseUserTest {
 

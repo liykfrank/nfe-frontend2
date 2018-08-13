@@ -10,9 +10,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import org.iata.bsplink.exception.FeignClientException;
-import org.iata.bsplink.pojo.Agent;
-import org.iata.bsplink.restclient.AgentClient;
+
+import org.iata.bsplink.user.exception.FeignClientException;
+import org.iata.bsplink.user.pojo.Agent;
+import org.iata.bsplink.user.restclient.AgentClient;
+import org.iata.bsplink.user.service.AgentService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;

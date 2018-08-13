@@ -9,9 +9,10 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.iata.bsplink.exception.FeignClientException;
-import org.iata.bsplink.pojo.Airline;
-import org.iata.bsplink.restclient.AirlineClient;
+import org.iata.bsplink.user.exception.FeignClientException;
+import org.iata.bsplink.user.pojo.Airline;
+import org.iata.bsplink.user.restclient.AirlineClient;
+import org.iata.bsplink.user.service.AirlineService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;

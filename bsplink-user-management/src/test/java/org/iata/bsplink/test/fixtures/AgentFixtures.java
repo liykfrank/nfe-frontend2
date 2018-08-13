@@ -3,7 +3,7 @@ package org.iata.bsplink.test.fixtures;
 import java.util.Arrays;
 import java.util.List;
 
-import org.iata.bsplink.pojo.Agent;
+import org.iata.bsplink.user.pojo.Agent;
 
 
 public class AgentFixtures {

@@ -10,8 +10,9 @@ import static org.mockito.Mockito.verify;
 import java.util.Optional;
 
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
-import org.iata.bsplink.model.entity.User;
-import org.iata.bsplink.model.repository.UserRepository;
+import org.iata.bsplink.user.model.entity.User;
+import org.iata.bsplink.user.model.repository.UserRepository;
+import org.iata.bsplink.user.service.UserServiceImpl;
 import org.iata.bsplink.utils.BaseUserTest;
 import org.junit.Before;
 import org.junit.Rule;
