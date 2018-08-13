@@ -9,5 +9,5 @@ keycloak:
   auth-server-url: http://keycloak-dev.nfedev.accelya.com/auth
   realm: NFE
   public-client: true
-  resource: user-management
+  resource: nfe-users
   principal-attribute: preferred_username
