@@ -52,17 +52,19 @@ public class RefundIssuePermissionService {
      */
     public Boolean isPermitted(Refund refund) {
 
+        Boolean result = null;
+
         if (refund.getAirlineCode() == null
                 || refund.getIsoCountryCode() == null
                 || refund.getAgentCode() == null) {
-            return null;
+            return result;
         }
 
-        Optional<RefundIssuePermission> permission =
-                findByIsoCountryCodeAndAirlineCodeAndAgentCode(
-                        refund.getIsoCountryCode(), refund.getAirlineCode(), refund.getAgentCode());
+        result = findByIsoCountryCodeAndAirlineCodeAndAgentCode(
+                        refund.getIsoCountryCode(), refund.getAirlineCode(), refund.getAgentCode())
+                        .isPresent();
 
-        return permission.isPresent();
+        return result;
     }
 
 

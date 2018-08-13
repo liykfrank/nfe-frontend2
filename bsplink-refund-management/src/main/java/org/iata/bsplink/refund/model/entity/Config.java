@@ -1,5 +1,7 @@
 package org.iata.bsplink.refund.model.entity;
 
+import static org.iata.bsplink.refund.validation.ValidationMessages.INCORRECT_FORMAT;
+
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
@@ -137,7 +139,7 @@ public class Config {
     private Boolean allGdsAgentsIssueRefundNoticeAllowed = false;
 
     @ApiModelProperty(value = "Default Currency")
-    @Pattern(regexp = "^[A-Z]{3}$")
+    @Pattern(regexp = "^[A-Z]{3}$", message = INCORRECT_FORMAT)
     @Size(min = 3, max = 3)
     private String defaultCurrency;
 

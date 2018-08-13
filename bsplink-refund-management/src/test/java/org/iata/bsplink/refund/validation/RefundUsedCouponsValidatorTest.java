@@ -84,12 +84,14 @@ public class RefundUsedCouponsValidatorTest {
         validator.validate(refund, errors);
 
         assertTrue(errors.hasErrors());
+        assertTrue(errors.hasFieldErrors());
 
         String expectedMessage =
                 String.format("number of used coupons must be between %d and %d: %d used", 1,
                         MAX_NUMBER_USED_COUPONS, 0);
 
-        assertEquals(expectedMessage, errors.getGlobalError().getDefaultMessage());
+        assertEquals(expectedMessage, errors.getFieldError().getDefaultMessage());
+        assertEquals("conjunctions", errors.getFieldError().getField());
     }
 
     @Test

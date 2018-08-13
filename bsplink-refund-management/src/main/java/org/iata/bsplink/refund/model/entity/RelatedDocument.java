@@ -1,5 +1,6 @@
 package org.iata.bsplink.refund.model.entity;
 
+import static org.iata.bsplink.refund.validation.ValidationMessages.INCORRECT_FORMAT;
 import static org.iata.bsplink.refund.validation.ValidationMessages.INCORRECT_SIZE;
 import static org.iata.bsplink.refund.validation.ValidationMessages.NON_NULL_MESSAGE;
 
@@ -8,6 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lombok.Data;
@@ -21,6 +23,7 @@ public class RelatedDocument {
             required = true)
     @Size(min = 10, max = 10, message = INCORRECT_SIZE + 10)
     @NotNull(message = NON_NULL_MESSAGE)
+    @Pattern(regexp = "\\d{10}", message = INCORRECT_FORMAT)
     @Column(length = 10)
     private String relatedTicketDocumentNumber;
 

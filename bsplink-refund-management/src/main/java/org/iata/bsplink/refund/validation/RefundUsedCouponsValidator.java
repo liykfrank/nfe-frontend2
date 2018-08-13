@@ -31,7 +31,8 @@ public class RefundUsedCouponsValidator extends RefundBaseValidator {
 
         if (!(minCoupons <= totalUsed && totalUsed <= maxCoupons)) {
 
-            errors.rejectValue(null, ERROR_CODE, getMessage(minCoupons, maxCoupons, totalUsed));
+            errors.rejectValue("conjunctions", ERROR_CODE,
+                    getMessage(minCoupons, maxCoupons, totalUsed));
         }
     }
 

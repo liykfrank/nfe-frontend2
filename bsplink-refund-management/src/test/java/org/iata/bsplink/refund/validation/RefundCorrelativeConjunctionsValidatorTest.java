@@ -82,10 +82,11 @@ public class RefundCorrelativeConjunctionsValidatorTest {
         validator.validate(refund, errors);
 
         assertTrue(errors.hasErrors());
+        assertTrue(errors.hasFieldErrors());
 
         String expectedMessage = "conjunctions numbers must be correlatives";
 
-        assertEquals(expectedMessage, errors.getGlobalError().getDefaultMessage());
+        assertEquals(expectedMessage, errors.getFieldError().getDefaultMessage());
     }
 
     private RelatedDocument createRelatedDocument(String number) {
@@ -99,15 +100,22 @@ public class RefundCorrelativeConjunctionsValidatorTest {
     @Test
     @Parameters
     public void testValidatesMaxConjunctions(RelatedDocument relatedDocument,
-            List<RelatedDocument> conjunctions, boolean hasErrors) {
+            List<RelatedDocument> conjunctions, boolean hasErrors, int cnjIndex) {
 
         refund.setRelatedDocument(relatedDocument);
         refund.setConjunctions(conjunctions);
 
         validator.validate(refund, errors);
 
-        assertEquals(hasErrors, errors.hasErrors());
+        assertEquals(hasErrors, errors.hasFieldErrors());
+
+        if (hasErrors) {
+
+            assertEquals("conjunctions[" + cnjIndex + "].relatedTicketDocumentNumber",
+                    errors.getFieldError().getField());
+        }
     }
+
 
     @SuppressWarnings("unused")
     private Object[][] parametersForTestValidatesMaxConjunctions() {
@@ -129,12 +137,12 @@ public class RefundCorrelativeConjunctionsValidatorTest {
 
         return new Object[][] {
 
-            { relatedDocument, correlativeConjunctions, false },
-            { relatedDocument, notCorrelativeConjunctionsCase1, true },
-            { relatedDocument, notCorrelativeConjunctionsCase2, true },
-            { relatedDocument, notCorrelativeConjunctionsCase3, true },
-            { relatedDocumentNan, correlativeConjunctions, true },
-            { new RelatedDocument(), correlativeConjunctions, true }
+            { relatedDocument, correlativeConjunctions, false, -1 },
+            { relatedDocument, notCorrelativeConjunctionsCase1, true, 1 },
+            { relatedDocument, notCorrelativeConjunctionsCase2, true, 0 },
+            { relatedDocument, notCorrelativeConjunctionsCase3, false, -1 },
+            { relatedDocumentNan, correlativeConjunctions, false, -1 },
+            { new RelatedDocument(), correlativeConjunctions, false, -1 }
         };
     }
 

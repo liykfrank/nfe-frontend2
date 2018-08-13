@@ -30,21 +30,28 @@ public class RefundCorrelativeConjunctionsValidator extends RefundBaseValidator 
                 .map(RelatedDocument::getRelatedTicketDocumentNumber)
                 .collect(Collectors.toList());
 
-        if (!numbersAreCorrelatives(documentNumbers)) {
+        int cnjNonCorrelativyPosition = nonCorrelativyConjunctionPosition(documentNumbers);
 
-            errors.rejectValue(null, ERROR_CODE, "conjunctions numbers must be correlatives");
+        if (cnjNonCorrelativyPosition >= 0) {
+
+            errors.rejectValue(
+                    "conjunctions[" + cnjNonCorrelativyPosition + "].relatedTicketDocumentNumber",
+                    ERROR_CODE, "conjunctions numbers must be correlatives");
         }
     }
 
-    private boolean numbersAreCorrelatives(List<String> documentNumbers) {
+    private int nonCorrelativyConjunctionPosition(List<String> documentNumbers) {
 
         Long expectedNumber = null;
+        int cnjPosition = -2;
 
         for (String documentNumber : documentNumbers) {
 
+            cnjPosition++;
+
             if (!StringUtils.isNumeric(documentNumber)) {
 
-                return false;
+                return -1;
             }
 
             long currentNumber = Long.parseLong(documentNumber);
@@ -53,11 +60,11 @@ public class RefundCorrelativeConjunctionsValidator extends RefundBaseValidator 
 
             if (currentNumber != expectedNumber) {
 
-                return false;
+                return cnjPosition;
             }
         }
 
-        return true;
+        return -1;
     }
 
     private List<RelatedDocument> getRelatedDocuments(Refund refund) {
