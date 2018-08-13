@@ -37,3 +37,10 @@ app:
       password:
       port:
       protocol: 
+      
+keycloak:
+  auth-server-url: 
+  realm: 
+  public-client: true
+  resource: 
+  principal-attribute: 
