@@ -26,3 +26,10 @@ feign:
     url: http://localhost:8082/v1/agents
   airlines:
     url: http://localhost:8083/v1/airlines
+    
+keycloak:
+  auth-server-url: 
+  realm: 
+  public-client: true
+  resource: 
+  principal-attribute:
