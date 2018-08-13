@@ -29,7 +29,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.OrderColumn;
-import javax.persistence.PostLoad;
 import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -265,8 +264,11 @@ public class Refund {
     @Size(max = 20)
     private String airlineRegistrationNumber;
 
-    @PostLoad
-    public void postLoad() {
-        ticketDocumentNumber = String.format("%010d", id);
+    /**
+     * Creates a faked ticketDocumentNumber.
+     */
+    public String getTicketDocumentNumber() {
+
+        return id == null ? null : String.format("%010d", id);
     }
 }

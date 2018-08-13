@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.iata.bsplink.refund.test.fixtures.RefundFixtures.getRefunds;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -875,7 +876,6 @@ public class RefundControllerTest {
     @Test
     public void testGetRefundByIsoCountryCodeAirlineCodeTicketDocumentNumber() throws Exception {
         refundRepository.save(refund);
-        refund.postLoad();
         String params = String.format("isoCountryCode=%s&airlineCode=%s&ticketDocumentNumber=%s",
                 refund.getIsoCountryCode(), refund.getAirlineCode(),
                 refund.getTicketDocumentNumber());
@@ -889,7 +889,6 @@ public class RefundControllerTest {
     public void testGetRefundByIsoCountryCodeAirlineCodeTicketDocumentNumberNotFound()
             throws Exception {
         refundRepository.save(refund);
-        refund.postLoad();
         String params = String.format("isoCountryCode=%s&airlineCode=%s&ticketDocumentNumber=%s",
                 refund.getIsoCountryCode(), refund.getAirlineCode(), "1234567890");
         mockMvc.perform(get(BASE_URI + "?" + params)).andExpect(status().isNotFound());
@@ -1114,6 +1113,24 @@ public class RefundControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
 
         verify(massloadValidator, never()).validate(any(), any(), any(), any());
+    }
+
+    @Test
+    public void testWhenCreatesIndirectRefundReturnsTicketDocumentNumber() throws Exception {
+
+        refundRepository.deleteAll();
+
+        String responseBody = mockMvc.perform(post(BASE_URI).content(getRefundJson())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+
+        Refund retrievedRefund = mapper.readValue(responseBody, Refund.class);
+
+        String ticketDocumentNumber = refundRepository.findAll().get(0).getTicketDocumentNumber();
+
+        assertThat(retrievedRefund.getTicketDocumentNumber(), not(isEmptyOrNullString()));
+        assertThat(retrievedRefund.getTicketDocumentNumber(), equalTo(ticketDocumentNumber));
     }
 
 }
