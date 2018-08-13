@@ -36,6 +36,7 @@ import org.iata.bsplink.refund.validation.IssuePermissionValidator;
 import org.iata.bsplink.refund.validation.MassloadFileNameValidator;
 import org.iata.bsplink.refund.validation.MassloadValidator;
 import org.iata.bsplink.refund.validation.PartialRefundValidator;
+import org.iata.bsplink.refund.validation.PendingRefundValidator;
 import org.iata.bsplink.refund.validation.RefundCompositeValidator;
 import org.iata.bsplink.refund.validation.RefundStatusValidator;
 import org.iata.bsplink.refund.validation.RefundUpdateValidator;
@@ -110,6 +111,9 @@ public class RefundController {
 
     @Autowired
     private MassloadFileNameValidator fileNameValidator;
+
+    @Autowired
+    private PendingRefundValidator pendingValidator;
 
     private static final String RESPONDING_WITH = "responding with response: ";
 
@@ -277,7 +281,7 @@ public class RefundController {
 
         if (refund.getStatus().equals(RefundStatus.PENDING)
                 || refund.getStatus().equals(RefundStatus.PENDING_SUPERVISION)) {
-            refundStatusValidator.validatePendingRefund(refund, errors);
+            pendingValidator.validate(refund, errors);
         } else {
             if (!refund.getStatus().equals(RefundStatus.DRAFT)) {
                 errors.rejectValue("status", "incorrect_status", "The refund status is incorrect.");
@@ -391,10 +395,6 @@ public class RefundController {
 
         if (refund == null) {
             return ResponseEntity.notFound().build();
-        }
-
-        if (refundStatusRequest.getStatus().equals(RefundStatus.PENDING)) {
-            issuePermissionValidator.validate(refund, errors);
         }
 
         if (errors.hasErrors()) {

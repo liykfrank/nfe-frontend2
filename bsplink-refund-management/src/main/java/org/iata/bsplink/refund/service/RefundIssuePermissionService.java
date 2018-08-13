@@ -3,6 +3,7 @@ package org.iata.bsplink.refund.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.iata.bsplink.refund.model.entity.Refund;
 import org.iata.bsplink.refund.model.entity.RefundIssuePermission;
 import org.iata.bsplink.refund.model.repository.RefundIssuePermissionRepository;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,25 @@ public class RefundIssuePermissionService {
             String isoCountryCode, String airlineCode) {
         return refundIssuePermissionRepository.findByIsoCountryCodeAndAirlineCode(
                 isoCountryCode, airlineCode);
+    }
+
+
+    /**
+     * Returns true if the agent of the refund has permission to issue forthe airline of the refund.
+     */
+    public Boolean isPermitted(Refund refund) {
+
+        if (refund.getAirlineCode() == null
+                || refund.getIsoCountryCode() == null
+                || refund.getAgentCode() == null) {
+            return null;
+        }
+
+        Optional<RefundIssuePermission> permission =
+                findByIsoCountryCodeAndAirlineCodeAndAgentCode(
+                        refund.getIsoCountryCode(), refund.getAirlineCode(), refund.getAgentCode());
+
+        return permission.isPresent();
     }
 
 

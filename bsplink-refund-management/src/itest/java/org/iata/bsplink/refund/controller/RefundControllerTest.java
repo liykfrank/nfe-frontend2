@@ -48,7 +48,6 @@ import org.iata.bsplink.refund.model.entity.FormOfPaymentType;
 import org.iata.bsplink.refund.model.entity.Refund;
 import org.iata.bsplink.refund.model.entity.RefundAction;
 import org.iata.bsplink.refund.model.entity.RefundHistory;
-import org.iata.bsplink.refund.model.entity.RefundIssuePermission;
 import org.iata.bsplink.refund.model.entity.RefundStatus;
 import org.iata.bsplink.refund.model.repository.BsplinkFileRepository;
 import org.iata.bsplink.refund.model.repository.CommentRepository;
@@ -65,7 +64,9 @@ import org.iata.bsplink.refund.validation.IssuePermissionValidator;
 import org.iata.bsplink.refund.validation.MassloadFileNameValidator;
 import org.iata.bsplink.refund.validation.MassloadValidator;
 import org.iata.bsplink.refund.validation.PartialRefundValidator;
+import org.iata.bsplink.refund.validation.PendingRefundValidator;
 import org.iata.bsplink.refund.validation.RefundCompositeValidator;
+import org.iata.bsplink.refund.validation.RefundStatusValidator;
 import org.iata.bsplink.refund.validation.RefundUpdateValidator;
 import org.iata.bsplink.yadeutils.YadeUtils;
 import org.junit.Before;
@@ -135,16 +136,18 @@ public class RefundControllerTest {
     @MockBean
     private AgentService agentService;
 
-    private RefundIssuePermission refundIssuePermission;
-
     @SpyBean
     private RefundCompositeValidator refundValidator;
 
     @SpyBean
     private RefundUpdateValidator refundUpdateValidator;
 
+    @MockBean
+    private PendingRefundValidator pendingValidator;
+
     @SpyBean
     private MassloadValidator massloadValidator;
+
 
     private Refund refund;
 
@@ -155,11 +158,12 @@ public class RefundControllerTest {
         refund = getRefunds().get(0);
         massloadFileName =
                 refund.getIsoCountryCode() + "e9EARS_20001224_" + refund.getAirlineCode() + "9_123";
-        refundIssuePermission = new RefundIssuePermission();
-        when(refundIssuePermissionService.findByIsoCountryCodeAndAirlineCodeAndAgentCode(any(),
-                any(), any())).thenReturn(Optional.of(refundIssuePermission));
+
+        when(refundIssuePermissionService.isPermitted(refund)).thenReturn(Boolean.TRUE);
 
         when(agentService.findAgent(any())).thenReturn(new Agent());
+
+        when(pendingValidator.supports(Refund.class)).thenReturn(true);
     }
 
     @Test
@@ -440,8 +444,7 @@ public class RefundControllerTest {
     @Test
     public void testSaveIndirectRefundWithoutPermission() throws Exception {
 
-        when(refundIssuePermissionService.findByIsoCountryCodeAndAirlineCodeAndAgentCode(any(),
-                any(), any())).thenReturn(Optional.empty());
+        when(refundIssuePermissionService.isPermitted(refund)).thenReturn(Boolean.FALSE);
 
         String refundJson = getRefundJson();
         mockMvc.perform(post(BASE_URI).content(refundJson).contentType(MediaType.APPLICATION_JSON))
@@ -712,6 +715,7 @@ public class RefundControllerTest {
     public void testUpdateRefundStatusNotAllowed() throws Exception {
         RefundStatusRequest request = getRefundStatusRequest();
         request.setStatus(RefundStatus.PENDING);
+        when(refundIssuePermissionService.isPermitted(any())).thenReturn(Boolean.TRUE);
         Refund refundSaved = refundService.saveIndirectRefund(getRefunds().get(0));
         mockMvc.perform(post(BASE_URI + "/" + refundSaved.getId() + "/status")
                 .content(mapper.writeValueAsString(request))
@@ -719,7 +723,7 @@ public class RefundControllerTest {
                 .andExpect(jsonPath("$.message", equalTo("Validation error")))
                 .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("status")))
                 .andExpect(jsonPath("$.validationErrors[0].message",
-                        equalTo("Change of status not allowed")));;
+                        equalTo(RefundStatusValidator.STATUS_CHANGE_NOT_ALLOWED)));;
     }
 
     @Test
@@ -729,11 +733,31 @@ public class RefundControllerTest {
         RefundStatusRequest request = getRefundStatusRequest();
         request.setStatus(RefundStatus.PENDING);
         Refund refundSaved = refundService.saveIndirectRefund(refundToSave);
+        when(refundIssuePermissionService.isPermitted(any())).thenReturn(Boolean.TRUE);
         mockMvc.perform(post(BASE_URI + "/" + refundSaved.getId() + "/status")
                 .content(mapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
     }
+
+
+    @Test
+    public void testUpdateRefundStatusToPendingWithoutPermission() throws Exception {
+        Refund refundToSave = getRefunds().get(0);
+        refundToSave.setStatus(RefundStatus.DRAFT);
+        RefundStatusRequest request = getRefundStatusRequest();
+        request.setStatus(RefundStatus.PENDING);
+        Refund refundSaved = refundService.saveIndirectRefund(refundToSave);
+        when(refundIssuePermissionService.isPermitted(any())).thenReturn(Boolean.FALSE);
+        mockMvc.perform(post(BASE_URI + "/" + refundSaved.getId() + "/status")
+                .content(mapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", equalTo("Validation error")))
+                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("status")))
+                .andExpect(jsonPath("$.validationErrors[0].message",
+                        equalTo(RefundStatusValidator.NO_PERMISSION)));
+    }
+
 
     @Test
     public void testUpdateRefundStatusToPendingFieldsNotFilled() throws Exception {
@@ -748,28 +772,35 @@ public class RefundControllerTest {
         RefundStatusRequest request = getRefundStatusRequest();
         request.setStatus(RefundStatus.PENDING);
 
+        when(refundIssuePermissionService.isPermitted(any())).thenReturn(Boolean.TRUE);
+
+        String fieldName = "status";
+
         Refund refundSaved = refundService.saveIndirectRefund(refundToSave);
         mockMvc.perform(post(BASE_URI + "/" + refundSaved.getId() + "/status")
                 .content(mapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", equalTo("Validation error")))
-                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("status")))
+                .andExpect(jsonPath("$.validationErrors[0].fieldName",
+                        equalTo(fieldName)))
                 .andExpect(jsonPath("$.validationErrors[0].message",
-                        equalTo("For a pending refund the Airline Code is required.")))
-                .andExpect(jsonPath("$.validationErrors[1].fieldName", equalTo("status")))
+                        equalTo(RefundStatusValidator.AIRLINE_CODE_REQUIRED)))
+                .andExpect(jsonPath("$.validationErrors[1].fieldName",
+                        equalTo(fieldName)))
                 .andExpect(jsonPath("$.validationErrors[1].message",
-                        equalTo("For a pending refund the Passenger is required.")))
-                .andExpect(jsonPath("$.validationErrors[2].fieldName", equalTo("status")))
+                        equalTo(RefundStatusValidator.PASSENGER_REQUIRED)))
+                .andExpect(jsonPath("$.validationErrors[2].fieldName",
+                        equalTo(fieldName)))
                 .andExpect(jsonPath("$.validationErrors[2].message",
-                        equalTo("For a pending refund the Airline Code of the related document "
-                                + "is required.")))
-                .andExpect(jsonPath("$.validationErrors[3].fieldName", equalTo("status")))
+                        equalTo(RefundStatusValidator.AIRLINE_CODE_RELATED_DOCUMENT_REQUIRED)))
+                .andExpect(jsonPath("$.validationErrors[3].fieldName",
+                        equalTo(fieldName)))
                 .andExpect(jsonPath("$.validationErrors[3].message",
-                        equalTo("For a pending refund the Issue Reason is required.")))
-                .andExpect(jsonPath("$.validationErrors[4].fieldName", equalTo("status")))
+                        equalTo(RefundStatusValidator.REASON_REQUIRED)))
+                .andExpect(jsonPath("$.validationErrors[4].fieldName",
+                        equalTo(fieldName)))
                 .andExpect(jsonPath("$.validationErrors[4].message",
-                        equalTo("For a pending refund the Issue Date of the related document "
-                                + "is required.")));
+                        equalTo(RefundStatusValidator.DATE_OF_ISSUE_RELATED_DOCUMENT_REQUIRED)));
 
     }
 
@@ -784,10 +815,10 @@ public class RefundControllerTest {
                 .content(mapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", equalTo("Validation error")))
-                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("status")))
+                .andExpect(jsonPath("$.validationErrors[0].fieldName",
+                        equalTo("status")))
                 .andExpect(jsonPath("$.validationErrors[0].message",
-                        equalTo("An authorized refund's total amount is expected to be "
-                                + "greater than cero")));
+                        equalTo(RefundStatusValidator.TOTAL_AMOUNT_GREATRER_ZERO)));
 
     }
 

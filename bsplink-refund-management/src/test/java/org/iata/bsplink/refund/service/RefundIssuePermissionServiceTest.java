@@ -1,6 +1,8 @@
 package org.iata.bsplink.refund.service;
 
 import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -11,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.iata.bsplink.refund.model.entity.Refund;
 import org.iata.bsplink.refund.model.entity.RefundIssuePermission;
 import org.iata.bsplink.refund.model.repository.RefundIssuePermissionRepository;
 import org.junit.Before;
@@ -90,11 +93,66 @@ public class RefundIssuePermissionServiceTest {
         String isoCountryCode = "AA";
         List<RefundIssuePermission> permissions = new ArrayList<>();
         when(refundIssuePermissionRepository.findByIsoCountryCodeAndAirlineCode(
-                airlineCode, isoCountryCode))
+                isoCountryCode, airlineCode))
                 .thenReturn(permissions);
         assertThat(refundIssuePermissionService.findByIsoCountryCodeAndAirlineCode(
-                airlineCode, isoCountryCode), sameInstance(permissions));
+                isoCountryCode, airlineCode), sameInstance(permissions));
         verify(refundIssuePermissionRepository).findByIsoCountryCodeAndAirlineCode(
-                airlineCode, isoCountryCode);
+                isoCountryCode, airlineCode);
+    }
+
+
+    @Test
+    public void testIsPermittedNullBecauseIsoCountryCodeIsNull() {
+        Refund refund = new Refund();
+        refund.setAgentCode("1");
+        refund.setAirlineCode("2");
+        assertNull(refundIssuePermissionService.isPermitted(refund));
+    }
+
+
+    @Test
+    public void testIsPermittedNullBecauseAirlineCodeIsNull() {
+        Refund refund = new Refund();
+        refund.setAgentCode("1");
+        refund.setIsoCountryCode("X");
+        assertNull(refundIssuePermissionService.isPermitted(refund));
+    }
+
+
+    @Test
+    public void testIsPermittedNullBecauseAgentCodeIsNull() {
+        Refund refund = new Refund();
+        refund.setAirlineCode("1");
+        refund.setIsoCountryCode("X");
+        assertNull(refundIssuePermissionService.isPermitted(refund));
+    }
+
+
+    @Test
+    public void testIsPermitted() {
+        Refund refund = new Refund();
+        refund.setAgentCode("1");
+        refund.setAirlineCode("1");
+        refund.setIsoCountryCode("X");
+
+        when(refundIssuePermissionRepository.findByIsoCountryCodeAndAirlineCodeAndAgentCode(
+                refund.getIsoCountryCode(), refund.getAirlineCode(), refund.getAgentCode()))
+                .thenReturn(Optional.of(permission));
+        assertTrue(refundIssuePermissionService.isPermitted(refund));
+    }
+
+
+    @Test
+    public void testIsNotPermitted() {
+        Refund refund = new Refund();
+        refund.setAgentCode("1");
+        refund.setAirlineCode("1");
+        refund.setIsoCountryCode("X");
+
+        when(refundIssuePermissionRepository.findByIsoCountryCodeAndAirlineCodeAndAgentCode(
+                refund.getIsoCountryCode(), refund.getAirlineCode(), refund.getAgentCode()))
+                .thenReturn(Optional.empty());
+        assertFalse(refundIssuePermissionService.isPermitted(refund));
     }
 }

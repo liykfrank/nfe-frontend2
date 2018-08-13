@@ -64,6 +64,12 @@ public class RefundIssuePermissionValidatorTest  {
 
 
     @Test
+    public void testSupports() {
+        assertTrue(validator.supports(RefundIssuePermission.class));
+        assertFalse(validator.supports(Object.class));
+    }
+
+    @Test
     public void testIsValid() {
         RefundIssuePermission permission = new RefundIssuePermission();
         permission.setIsoCountryCode(agent1.getIsoCountryCode());

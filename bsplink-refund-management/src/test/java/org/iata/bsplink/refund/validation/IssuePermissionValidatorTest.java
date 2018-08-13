@@ -6,10 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
-
 import org.iata.bsplink.refund.model.entity.Refund;
-import org.iata.bsplink.refund.model.entity.RefundIssuePermission;
 import org.iata.bsplink.refund.service.RefundIssuePermissionService;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,44 +18,26 @@ public class IssuePermissionValidatorTest {
     private RefundIssuePermissionService service;
     private Errors errors;
     private Refund refund;
-    private String notFoundAirline;
 
     @Before
     public void setUp() {
-        String isoc = "AA";
-        String airline = "220";
-        String agent = "78200102";
-
-        RefundIssuePermission refundIssuePermission = new RefundIssuePermission();
-        refundIssuePermission.setIsoCountryCode(isoc);
-        refundIssuePermission.setAirlineCode(airline);
-        refundIssuePermission.setAgentCode(agent);
-
-        notFoundAirline = "777";
-
         refund = new Refund();
-        refund.setIsoCountryCode(isoc);
-        refund.setAirlineCode(airline);
-        refund.setAgentCode(agent);
 
         service = mock(RefundIssuePermissionService.class);
-        when(service.findByIsoCountryCodeAndAirlineCodeAndAgentCode(isoc, airline, agent))
-                .thenReturn(Optional.of(refundIssuePermission));
-        when(service.findByIsoCountryCodeAndAirlineCodeAndAgentCode(isoc, notFoundAirline, agent))
-                .thenReturn(Optional.empty());
         errors = new BeanPropertyBindingResult(refund, "refund");
         validator = new IssuePermissionValidator(service);
     }
 
     @Test
     public void testIsValid() {
+        when(service.isPermitted(refund)).thenReturn(Boolean.TRUE);
         validator.validate(refund, errors);
         assertFalse(errors.hasErrors());
     }
 
     @Test
-    public void testIsValidAirlineNotFound() {
-        refund.setAirlineCode(notFoundAirline);
+    public void testIsNotValidAirlineNotFound() {
+        when(service.isPermitted(refund)).thenReturn(Boolean.FALSE);
         validator.validate(refund, errors);
         assertTrue(errors.hasErrors());
         assertEquals(1, errors.getErrorCount());
@@ -67,22 +46,8 @@ public class IssuePermissionValidatorTest {
     }
 
     @Test
-    public void testIsValidNullAirline() {
-        refund.setAirlineCode(null);
-        validator.validate(refund, errors);
-        assertFalse(errors.hasErrors());
-    }
-
-    @Test
-    public void testIsValidNullAgent() {
-        refund.setAgentCode(null);
-        validator.validate(refund, errors);
-        assertFalse(errors.hasErrors());
-    }
-
-    @Test
-    public void testIsValidNullCountry() {
-        refund.setIsoCountryCode(null);
+    public void testIsValidNull() {
+        when(service.isPermitted(refund)).thenReturn(null);
         validator.validate(refund, errors);
         assertFalse(errors.hasErrors());
     }

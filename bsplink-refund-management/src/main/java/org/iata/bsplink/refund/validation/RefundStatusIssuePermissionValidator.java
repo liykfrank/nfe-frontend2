@@ -7,13 +7,13 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
-public class IssuePermissionValidator implements Validator {
+public class RefundStatusIssuePermissionValidator implements Validator {
 
     public static final String NO_PERMISSION = "No permission to issue refunds for the airline.";
 
     private RefundIssuePermissionService permissionService;
 
-    public IssuePermissionValidator(RefundIssuePermissionService permissionService) {
+    public RefundStatusIssuePermissionValidator(RefundIssuePermissionService permissionService) {
         this.permissionService = permissionService;
     }
 
@@ -28,7 +28,7 @@ public class IssuePermissionValidator implements Validator {
         Boolean permission = permissionService.isPermitted((Refund) target);
 
         if (permission != null && !permission) {
-            errors.rejectValue("airlineCode", "field.no_permission", NO_PERMISSION);
+            errors.rejectValue("airlineCode", "field.not_found", NO_PERMISSION);
         }
     }
 }

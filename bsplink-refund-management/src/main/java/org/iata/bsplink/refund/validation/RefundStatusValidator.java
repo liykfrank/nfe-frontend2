@@ -12,12 +12,15 @@ import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.iata.bsplink.refund.dto.RefundStatusRequest;
 import org.iata.bsplink.refund.model.entity.Refund;
 import org.iata.bsplink.refund.model.entity.RefundStatus;
+import org.iata.bsplink.refund.service.RefundIssuePermissionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 @Log
 @Component
 public class RefundStatusValidator {
+
     public static final String AIRLINE_CODE_REQUIRED =
             "For a pending refund the Airline Code is required.";
     public static final String PASSENGER_REQUIRED =
@@ -28,8 +31,16 @@ public class RefundStatusValidator {
             "For a pending refund the Issue Date of the related document is required.";
     public static final String AIRLINE_CODE_RELATED_DOCUMENT_REQUIRED =
             "For a pending refund the Airline Code of the related document is required.";
+    public static final String TOTAL_AMOUNT_GREATRER_ZERO =
+            "An authorized refund's total amount is expected to be greater than cero";
+    public static final String NO_PERMISSION = "No permission to issue refunds for the airline.";
+    public static final String STATUS_CHANGE_NOT_ALLOWED = "Change of status not allowed";
 
     private static final String STATUS = "status";
+
+
+    @Autowired
+    private RefundIssuePermissionService permissionService;
 
     /**
      * Validates that refund's status is correct. Validating that the origin and final status are
@@ -42,13 +53,21 @@ public class RefundStatusValidator {
      */
     public Refund validate(Refund refund, RefundStatusRequest refundStatusRequest, Errors errors) {
 
+        if (refundStatusRequest.getStatus().equals(RefundStatus.PENDING)) {
+            validatePermission(refund, errors);
+
+            if (errors.hasErrors()) {
+                throw new ApplicationValidationException(errors);
+            }
+        }
+
         log.info(String.format("Validating status from %s to %s", refund.getStatus(),
                 refundStatusRequest.getStatus()));
 
         if (!checkStatus(refund.getStatus(), refundStatusRequest.getStatus())) {
             log.info(String.format("Change of status not allowed from %s to %s", refund.getStatus(),
                     refundStatusRequest.getStatus()));
-            errors.rejectValue(STATUS, "", "Change of status not allowed");
+            errors.rejectValue(STATUS, "", STATUS_CHANGE_NOT_ALLOWED);
             throw new ApplicationValidationException(errors);
         }
 
@@ -72,14 +91,23 @@ public class RefundStatusValidator {
     }
 
 
+    private void validatePermission(Refund refund, Errors errors) {
+
+        Boolean permission = permissionService.isPermitted(refund);
+
+        if (permission != null && !permission) {
+            errors.rejectValue(STATUS, "", NO_PERMISSION);
+        }
+    }
+
+
     private void validateAirlineStatusChange(
             Refund refund, RefundStatusRequest refundStatusRequest, Errors errors) {
 
         if (refundStatusRequest.getStatus().equals(RefundStatus.AUTHORIZED)) {
             if (refund.getAmounts().getRefundToPassenger().signum() < 1) {
                 log.info("Refund to passenger must be greater than cero");
-                errors.rejectValue(STATUS, "",
-                        "An authorized refund's total amount is expected to be greater than cero");
+                errors.rejectValue(STATUS, "", TOTAL_AMOUNT_GREATRER_ZERO);
                 throw new ApplicationValidationException(errors);
             }
             log.info("Setting billing period");
@@ -123,7 +151,8 @@ public class RefundStatusValidator {
         }
 
         if (refund.getAirlineCodeRelatedDocument() == null) {
-            errors.rejectValue(STATUS, missingData, AIRLINE_CODE_RELATED_DOCUMENT_REQUIRED);
+            errors.rejectValue(STATUS, missingData,
+                    AIRLINE_CODE_RELATED_DOCUMENT_REQUIRED);
         }
 
         if (StringUtils.isBlank(refund.getIssueReason())) {
@@ -131,7 +160,8 @@ public class RefundStatusValidator {
         }
 
         if (refund.getDateOfIssueRelatedDocument() == null) {
-            errors.rejectValue(STATUS, missingData, DATE_OF_ISSUE_RELATED_DOCUMENT_REQUIRED);
+            errors.rejectValue(STATUS, missingData,
+                    DATE_OF_ISSUE_RELATED_DOCUMENT_REQUIRED);
         }
     }
 
