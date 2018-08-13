@@ -1,5 +1,5 @@
-spring:      
-  flyway:  
+spring:
+  flyway:
     schemas: filemanagement
   devtools:
     restart:
@@ -14,8 +14,6 @@ spring:
         ddl-auto: none
         default_schema: filemanagement
         temp:
-          # Gets rid of PostgreSql's related exception:
-          # Disabling contextual LOB creation as createClob() method threw error
           use_jdbc_metadata_defaults: false
 app:
   file_name_rex: ^([A-Z]{2})([a-z0-9]{2})([^_]+)_.*$
@@ -26,3 +24,28 @@ app:
   local_downloaded_files_directory: downloaded_files
   zip:
     name: test.zip
+  yade:
+    save_in_bbdd_and_user_outbox_enable: false
+    inbox: /data/nfe/jobscheduler_inbox
+    outbox: /data/nfe/jobscheduler_outbox
+    host:
+      sftp:
+        name: sftp
+        user: jobsch
+        password: null
+        directory: null
+        protocol: sftp
+        port: 22
+      local:
+        name: localhost
+        user: null
+        password: null
+        directory: null
+        protocol: local
+        port: null
+keycloak:
+  auth-server-url: null
+  realm: null
+  public-client: true
+  resource: null
+  principal-attribute: null

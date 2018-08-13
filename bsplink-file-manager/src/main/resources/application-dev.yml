@@ -38,4 +38,10 @@ app:
         directory: /data/nfe/jobscheduler_outbox
         protocol: local
         port:
-        
+
+keycloak:
+  auth-server-url: http://keycloak-dev.nfedev.accelya.com/auth
+  realm: NFE
+  public-client: true
+  resource: bsplink-file-manager
+  principal-attribute: preferred_username        

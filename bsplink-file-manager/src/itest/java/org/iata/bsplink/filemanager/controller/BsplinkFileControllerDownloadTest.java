@@ -18,6 +18,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.iata.bsplink.filemanager.configuration.ApplicationConfiguration;
 import org.iata.bsplink.filemanager.configuration.BsplinkFileBasicConfig;
+import org.iata.bsplink.filemanager.configuration.SecurityConfig;
 import org.iata.bsplink.filemanager.exception.BsplinkValidationException;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFile;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFileStatus;
@@ -30,8 +31,10 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -39,6 +42,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -68,9 +73,17 @@ public class BsplinkFileControllerDownloadTest {
     private Path uploadedFilesDirectory;
 
     private static File dirUploadedFiles;
+    
+    @Autowired
+    protected WebApplicationContext webAppContext;
 
     @Before
     public void setUp() throws IOException, BsplinkValidationException {
+        
+        MockitoAnnotations.initMocks(this);
+
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
+        
         File uploadFolder = new File(applicationConfiguration.getLocalUploadedFilesDirectory());
         if (uploadFolder.exists()) {
             FileUtils.cleanDirectory(uploadFolder);

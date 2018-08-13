@@ -41,6 +41,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,15 +50,15 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
 @Sql("/fixtures/sql/user_files.sql")
 public class BsplinkFileControllerTest {
 
@@ -79,8 +80,16 @@ public class BsplinkFileControllerTest {
     @MockBean
     private YadeUtils yadeUtils;
 
+    @Autowired
+    protected WebApplicationContext webAppContext;
+
     @Before
     public void setUp() throws IOException, BsplinkValidationException {
+
+        MockitoAnnotations.initMocks(this);
+
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
+
         File uploadFolder = new File(applicationConfiguration.getLocalUploadedFilesDirectory());
         if (uploadFolder.exists()) {
             FileUtils.cleanDirectory(uploadFolder);

@@ -21,6 +21,7 @@ import org.iata.bsplink.filemanager.service.BsplinkFileConfigService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,6 +30,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -44,9 +47,18 @@ public class BsplinkFileConfigurationControllerTest {
 
     @Autowired
     private MultipartProperties multipartProperties;
+    
+    @Autowired
+    protected WebApplicationContext webAppContext;
+
 
     @Before
     public void setUp() throws IOException, BsplinkValidationException {
+        
+        MockitoAnnotations.initMocks(this);
+
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
+        
         bsplinkFileConfigurationService.update(testConfiguration().getBsplinkFileBasicConfig());
     }
 

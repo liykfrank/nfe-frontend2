@@ -23,6 +23,7 @@ import org.iata.bsplink.yadeutils.YadeUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +32,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -50,9 +53,17 @@ public class BsplinkFileControllerTrashTest {
 
     @Autowired
     private BsplinkFileConfigService bsplinkFileConfigurationService;
+    
+    @Autowired
+    protected WebApplicationContext webAppContext;
 
     @Before
     public void setUp() throws IOException, BsplinkValidationException {
+        
+        MockitoAnnotations.initMocks(this);
+
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
+        
         bsplinkFileRepository.deleteAll();
         bsplinkFileConfigurationService.update(testConfiguration());
     }
