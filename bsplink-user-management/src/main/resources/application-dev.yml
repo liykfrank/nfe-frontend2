@@ -57,4 +57,10 @@ logging:
     org:
       hibernate:
         type: trace
-  
+
+keycloak:
+  auth-server-url: http://keycloak-dev.nfedev.accelya.com/auth
+  realm: NFE
+  public-client: true
+  resource: bsplink-user-management
+  principal-attribute: preferred_username  
