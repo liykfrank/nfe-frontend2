@@ -32,20 +32,21 @@ app:
       sftp:
         name: sftp
         user: jobsch
-        password: null
-        directory: null
+        password: 
+        directory: 
         protocol: sftp
         port: 22
       local:
         name: localhost
-        user: null
-        password: null
-        directory: null
+        user: 
+        password: 
+        directory: 
         protocol: local
-        port: null
+        port: 
+        
 keycloak:
-  auth-server-url: null
-  realm: null
+  auth-server-url: 
+  realm: 
   public-client: true
-  resource: null
-  principal-attribute: null
+  resource: 
+  principal-attribute: 
