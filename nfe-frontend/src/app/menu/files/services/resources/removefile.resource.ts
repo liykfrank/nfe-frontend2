@@ -1,19 +1,18 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable, Injector } from "@angular/core";
-import { environment } from "../../../../../environments/environment";
-import { NwRepositoryAbstract } from "../../../../shared/base/nwe-repository.abstract";
-import { IListFiles } from "../../models/contract/list-files";
-import { Observable } from "rxjs/Observable";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+
+import { environment } from '../../../../../environments/environment';
+import { HttpServiceAbstract } from '../../../../shared/base/http-service-abstract';
 
 @Injectable()
-export class RemoveFileResource extends NwRepositoryAbstract<any, Object> {
-  constructor(private http: HttpClient, injector: Injector) {
+export class RemoveFileResource extends HttpServiceAbstract<any, Object> {
+  constructor(private http: HttpClient) {
     super(
       http,
       environment.basePath +
         environment.files.basePath +
-        environment.files.api.removeFile,
-      injector
+        environment.files.api.removeFile
     );
   }
 

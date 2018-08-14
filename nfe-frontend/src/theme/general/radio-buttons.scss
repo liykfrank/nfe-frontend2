@@ -1,0 +1,25 @@
+.custom-radio{
+    input[type="radio"] {
+        display: none;
+    }
+
+    input[type="radio"] + label {
+        color:	#152C5A;
+    }
+    
+    input[type="radio"] + label span {
+        background: url('/assets/images/radio.png');
+        cursor: pointer;
+        display: inline-block;
+        height: 16px;
+        margin: -1px 10px 0 0;
+        vertical-align: middle;
+        width: 16px;
+
+    }
+
+    input[type="radio"]:checked + label span {
+        background:url('/assets/images/radio-check.png');
+    }
+
+}

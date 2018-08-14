@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FilterCrumbsComponent } from './filter-crumbs.component';
 import { SharedModule } from '../../shared.module';
 
-describe('FilterCrumbsComponent', () => {
+xdescribe('FilterCrumbsComponent', () => {
   let component: FilterCrumbsComponent;
   let fixture: ComponentFixture<FilterCrumbsComponent>;
 

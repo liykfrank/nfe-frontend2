@@ -5,11 +5,12 @@
   padding: 0;
 
   .ui-inputtext {
-    height: 40px;
+    width: 82%;
+    height: 38px;
     border-radius: 4px 0 0 4px;
     background-color: #FFFFFF;
     padding: 0 5px;
-    border: 1px solid #BDC3C9;
+    border: 1px solid #ced4da;
     border-right: 0px;
   }
 
@@ -19,9 +20,10 @@
   }
   
   .ui-calendar-button {
+    width: auto;
     border-radius: 0 4px 4px 0;
     background-color: #FFFFFF !important;
-    border: 1px solid #BDC3C9 !important;
+    border: 1px solid #ced4da !important;
     color: #BDC3C9 !important;
     border-left: 0px !important;
   }

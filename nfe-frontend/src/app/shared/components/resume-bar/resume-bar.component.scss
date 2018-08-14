@@ -1,0 +1,36 @@
+table {
+    th {
+        font-weight: normal;
+        padding-top: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    td {
+        font-weight: bold;
+        padding-bottom: 11px;
+        padding-left: 20px;
+        padding-right: 20px;
+  
+    }
+  }
+  
+  .resume-bar-table {
+    background-color: #1989CF;
+    border-radius: 10px;
+    border: 1px solid #1989CF;
+    color: #FFFFFF;
+    display: flex;
+    width: 100%;
+    margin-bottom: 21px;
+  
+    .resume-info {
+      margin-right: auto;
+    }
+  
+    .buttons-resume {
+      margin: auto 0;
+      margin-right: 20px;
+      float: right;
+    }
+  }

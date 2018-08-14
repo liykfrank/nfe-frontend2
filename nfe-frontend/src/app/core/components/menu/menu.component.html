@@ -1,48 +1,149 @@
-<jqxMenu [theme]="'custom'"
-  [showTopLevelArrows]="true" 
-  [autoOpen]="true">
-  <ul>
-    <li [id]="_utilsService.wrapperMenuID(actions.ACDM)">ADM/ACM
-        <ul>
-            <li (click)="openTab('adm_acm')">Query ADM</li>
+<nav class="navbar navbar-expand-lg navbar-light navigation">
 
-            <li [id]="_utilsService.wrapperMenuID(actions.DISPUTE_ADM)" (click)="openTab('dispute_adm')" l10nTranslate>ADM_ACM.ADMTitle</li>
-            <li [id]="_utilsService.wrapperMenuID(actions.DISPUTE_ACM)" (click)="openTab('dispute_acm')" l10nTranslate>ADM_ACM.ACMTitle</li>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+    <ul class="navbar-nav mr-auto">
+
+      <!-- ADM/ACM -->
+      <li class="nav-item dropdown">
+
+        <a class="nav-link dropdown-toggle" id="adm-acm-dropdowm" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ADM/ACM</a>
+
+        <div class="dropdown-menu" aria-labelledby="adm-acm-dropdowm">
+
+          <a class="dropdown-item">Query Files</a>
+          <a class="dropdown-item" [routerLink]="routes.ADM_ISSUE.URL" l10nTranslate>ADM_ACM.ADMTitle</a>
+          <a class="dropdown-item" [routerLink]="routes.ACM_ISSUE.URL" l10nTranslate>ADM_ACM.ACMTitle</a>
+
+        </div>
+
+      </li>
+
+      <!-- REFUNDS -->
+      <li class="nav-item">
+
+        <a class="nav-link" [routerLink]="routes.REFUNDS.URL">REFUNDS</a>
+
+      </li>
+
+      <!-- REPORTS -->
+      <li class="nav-item dropdown">
+
+        <a class="nav-link dropdown-toggle" id="reportsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          REPORTS
+        </a>
+
+        <ul class="dropdown-menu multi-level">
+
+          <li class="dropdown-submenu dropright">
+
+            <a class="dropdown-item dropdown-toggle" id="filesDropright" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">FILES</a>
+
+            <ul class="dropdown-menu " aria-labelledby="filesDropright">
+
+              <li>
+
+                <a class="dropdown-item" [routerLink]="routes.QUERY_FILES.URL">Query Files</a>
+
+              </li>
+
+              <li>
+
+                <a class="dropdown-item" [routerLink]="routes.QUERY_FILES_READ_ONLY.URL">Query Files Read Only</a>
+
+              </li>
+
+              <li>
+
+                <a class="dropdown-item" [routerLink]="routes.UPLOAD_FILES.URL">Upload Files</a>
+
+              </li>
+
+            </ul>
+
+          </li>
+
+          <li class="dropdown-submenu">
+
+            <a class="dropdown-item dropdown-toggle" id="sftpDropright" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SFTP Accounts</a>
+
+            <ul class="dropdown-menu" aria-labelledby="sftpDropright">
+
+              <li>
+
+                <a class="dropdown-item" [routerLink]="routes.CREATE_ACCOUNT.URL">Create Account</a>
+
+              </li>
+
+              <li>
+
+                <a class="dropdown-item" >Modify pass</a> <!-- TODO (click)="sftpModifyPass()" -->
+
+              </li>
+
+            </ul>
+
+          </li>
+
         </ul>
-    </li>
-    <li (click)="openTab('refunds')">REFUNDS</li>
-    <li (click)="openTab('reports')">REPORTS
-      <ul>
-        <li [id]="_utilsService.wrapperMenuID(actions.FILES)">FILES
-          <ul>
-            <li [id]="_utilsService.wrapperMenuID(actions.QUERY_FILES)" (click)="openTab('query_files')">Query Files</li>
-            <li [id]="_utilsService.wrapperMenuID(actions.QUERY_FILES_READ_ONLY)" (click)="openTab('query_files/readOnly')">Query Files Read Only</li>
-            <li [id]="_utilsService.wrapperMenuID(actions.UPLOAD_FILES)" (click)="openTab('upload_files')">Upload Files</li>
-          </ul>
-        </li>
-        <li [id]="_utilsService.wrapperMenuID(actions.SFTP_ACCOUNTS)">SFTP Accounts
-          <ul>
-            <li [id]="_utilsService.wrapperMenuID(actions.CREATE_SFTP_ACCOUNT)" (click)="openTab('sftp_accounts')">Create Account</li>
-            <li (click)="sftpModifyPass()">Modify Pass</li>
-          </ul>
-        </li>
-      </ul>
-    </li>
 
-    <li (click)="openTab('ticketing')">TICKETING</li>
-    <li (click)="openTab('general_info')">GENERAL INFO</li>
-    <li (click)="openTab('self_service')">SELF SERVICE</li>
-    <li (click)="openTab('admin')">ADMIN
-      <ul>
-        <li (click)="openTab('monitor')">MONITOR</li>
-      </ul>
-    </li>
-    <li>
-      <input class="search-input" placeholder="Search" type="text">
-      <button class="search-button">
-        <i class="fa fa-search" aria-hidden="true"></i>
-      </button>
-    </li>
-  </ul>
+      </li>
 
-</jqxMenu>
+      <!-- TICKETING -->
+      <li class="nav-item">
+
+        <a class="nav-link" [routerLink]="routes.TICKETING.URL">TICKETING</a>
+
+      </li>
+
+      <!-- GENERAL INFO -->
+      <li class="nav-item">
+
+        <a class="nav-link" [routerLink]="routes.GENERAL_INFO.URL">GENERAL INFO</a>
+
+      </li>
+
+      <!-- SELF SERVICE -->
+      <li class="nav-item">
+
+        <a class="nav-link" [routerLink]="routes.SELF_SERVICE.URL">SELF SERVICE</a>
+
+      </li>
+
+      <!-- ADMIN -->
+      <li class="nav-item dropdown">
+
+        <a class="nav-link dropdown-toggle" id="admin-dropdowm" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ADMIN</a>
+
+        <div class="dropdown-menu" aria-labelledby="admin-dropdowm">
+
+          <a class="dropdown-item" [routerLink]="routes.MONITOR.URL">MONITOR</a>
+
+        </div>
+
+      </li>
+
+    </ul>
+
+     <form class="form-inline my-2 my-lg-0">
+
+      <div class="input-group btn-search">
+
+        <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon2">
+
+        <div class="input-group-append">
+
+          <span class="input-group-text  btn-search" id="basic-addon2">
+
+            <i class="fa fa-search" aria-hidden="true"></i>
+
+          </span>
+
+        </div>
+
+      </div>
+    </form>
+
+  </div>
+
+</nav>

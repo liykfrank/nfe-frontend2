@@ -1,14 +1,14 @@
-import { Component, OnInit, Output } from '@angular/core';
-import { AlertsService } from './../../services/alerts.service';
+import { Component, OnInit } from '@angular/core';
+
 import { AlertModel } from './../../models/alert.model';
+import { AlertsService } from './../../services/alerts.service';
 
 @Component({
-  selector: 'app-alerts',
+  selector: 'bspl-alerts',
   templateUrl: './alerts.component.html',
   styleUrls: ['./alerts.component.scss']
 })
 export class AlertsComponent implements OnInit {
-
   alert: AlertModel;
   display = false;
   style_class = '';
@@ -17,9 +17,7 @@ export class AlertsComponent implements OnInit {
   private show_accept_button: boolean;
   private show_cancel_button: boolean;
 
-  constructor(
-    private _AlertsService: AlertsService
-  ) { }
+  constructor(private _AlertsService: AlertsService) {}
 
   ngOnInit() {
     this._AlertsService.getAlert().subscribe(alert => {

@@ -1,83 +1,75 @@
-import { UtilsService } from './../../../../shared/services/utils.service';
-import { ListFilesFilter } from "./../../models/list-files-filter";
 import {
-  Component,
-  OnInit,
-  Renderer2,
-  ViewChild,
-  Output,
-  EventEmitter,
-  Injector,
   AfterViewInit,
+  Component,
+  EventEmitter,
   Input,
   OnChanges,
-  SimpleChanges
-} from "@angular/core";
-import { jqxDropDownListComponent } from "jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist";
-import { NwAbstractComponent } from "../../../../shared/base/abstract-component";
-import { jqxDateTimeInputComponent } from "jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput";
-import { jqxInputComponent } from "jqwidgets-scripts/jqwidgets-ts/angular_jqxinput";
-import { IListItem } from "../../../../shared/base/ilist-item.model";
-import { JqxNwComboComponent } from '../../../../shared/components/jqx-nw-combo/jqx-nw-combo.component';
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { jqxDateTimeInputComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
+import { jqxInputComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxinput';
+
+import { IListItem } from '../../../../shared/base/ilist-item.model';
+import { JqxNwComboComponent } from '../../../../shared/components/jqx-nw-combo/jqx-nw-combo.component';
+import { UtilsService } from './../../../../shared/services/utils.service';
+import { ListFilesFilter } from './../../models/list-files-filter';
 
 @Component({
-  selector: "app-files-filter",
-  templateUrl: "./files-filter.component.html",
-  styleUrls: ["./files-filter.component.scss"]
+  selector: 'bspl-files-filter',
+  templateUrl: './files-filter.component.html',
+  styleUrls: ['./files-filter.component.scss']
 })
-export class FilesFilterComponent extends NwAbstractComponent
-  implements OnInit, AfterViewInit, OnChanges {
+export class FilesFilterComponent implements OnInit, AfterViewInit, OnChanges {
   /////////////////////////////
   public showFilterResults: boolean;
-  @Output("searchCl") searchCl = new EventEmitter<ListFilesFilter>();
-  @Output("resetCl") resetCl = new EventEmitter();
-  @Input() dataFilters: ListFilesFilter=new ListFilesFilter();
-  @Input() statusList: string[]=[];
-  @ViewChild("downListStatus")
-  downStatusComp: JqxNwComboComponent;
-  @ViewChild("myDateTimeInput")
-   myDateTimeInput: jqxDateTimeInputComponent;
+  @Output('searchCl') searchCl = new EventEmitter<ListFilesFilter>();
+  @Output('resetCl') resetCl = new EventEmitter();
+  @Input() dataFilters: ListFilesFilter = new ListFilesFilter();
+  @Input() statusList: string[] = [];
+  @ViewChild('downListStatus') downStatusComp: JqxNwComboComponent;
+  @ViewChild('myDateTimeInput') myDateTimeInput: jqxDateTimeInputComponent;
 
-  @ViewChild("inputTypeFile")
-   inputTypeFile: jqxInputComponent;
-  @ViewChild("filesForm") form: NgForm;
+  @ViewChild('inputTypeFile') inputTypeFile: jqxInputComponent;
+  @ViewChild('filesForm') form: NgForm;
   statusListItems: IListItem[];
-  constructor(injector: Injector,private utils:UtilsService) {
-    super(injector);
+  constructor(private utils: UtilsService) {
     this.showFilterResults = false;
 
-    //   this.listSource = ["ADM", "ACM", "Reports", "Refunds"];
+    //   this.listSource = ['ADM', 'ACM', 'Reports', 'Refunds'];
   }
 
   ngOnInit(): void {
-     this.statusListItems = this.statusList.map<IListItem>(data => {
+    this.statusListItems = this.statusList.map<IListItem>(data => {
       return { name: data, code: data };
     });
   }
   ngAfterViewInit(): void {
     this.updateWidgets();
   }
+
   ngOnChanges(changes: SimpleChanges): void {
-     for (let propName in changes) {
+    for (let propName in changes) {
       let change = changes[propName];
       let curVal = JSON.stringify(change.currentValue);
       let prevVal = JSON.stringify(change.previousValue);
       if (!change.isFirstChange()) {
-        this.updateWidgets()}
+        this.updateWidgets();
+      }
     }
   }
 
-  updateWidgets(){
-     /*  this.downStatusComp.selectItem(this.dataFilters
-      .status as jqwidgets.DropDownListItem); */
-   setTimeout(_ =>
-    this.myDateTimeInput.setRange(
-      this.dataFilters.minUploadDate,
-      this.dataFilters.maxUploadDate
-    )
-  );
-   this.inputTypeFile.value(this.dataFilters.type);
+  updateWidgets() {
+    setTimeout(_ =>
+      this.myDateTimeInput.setRange(
+        this.dataFilters.minUploadDate,
+        this.dataFilters.maxUploadDate
+      )
+    );
+    this.inputTypeFile.value(this.dataFilters.type);
   }
 
   reset() {
@@ -96,7 +88,6 @@ export class FilesFilterComponent extends NwAbstractComponent
     filterData.maxUploadDate = this.dataFilters.maxUploadDate;
     this.searchCl.emit(filterData);
     this.form.form.markAsPristine();
-
   }
 
   dateOnChange() {
@@ -105,7 +96,7 @@ export class FilesFilterComponent extends NwAbstractComponent
     this.form.form.markAsDirty();
   }
 
- /*  setValue() {
+  /*  setValue() {
     //this.statusSelected_='DELETED';
     this.dataFilters.status='DELETED';
     this.dataFilters.type='lllll';

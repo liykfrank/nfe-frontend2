@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="7px" height="5px" viewBox="0 0 7 5" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.1 (57501) - http://www.bohemiancoding.com/sketch -->
+    <title>icono_dropdown</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icons/triangle-dropdown" transform="translate(-17.000000, -18.000000)" fill="#666666">
+            <g id="icono_dropdown" transform="translate(17.000000, 17.000000)">
+                <path d="M6.859,1.457 C6.86058505,1.57654839 6.81494888,1.6918965 6.732,1.778 L3.732,4.978 C3.65606678,5.06410017 3.54680023,5.11342487 3.432,5.11342487 C3.31719977,5.11342487 3.20793322,5.06410017 3.132,4.978 L0.132,1.778 C-0.0380458783,1.59739404 -0.0380458783,1.31560596 0.132,1.135 C0.207827937,1.0486863 0.317109139,0.999145487 0.432,0.999 L6.432,0.999 C6.54689086,0.999145487 6.65617206,1.0486863 6.732,1.135 C6.81494888,1.2211035 6.86058505,1.33645161 6.859,1.456 L6.859,1.457 Z" id="Caret"></path>
+            </g>
+        </g>
+    </g>
+</svg>

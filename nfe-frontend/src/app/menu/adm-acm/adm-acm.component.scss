@@ -1,0 +1,31 @@
+.custom-container {
+  padding: 20px;
+}
+
+.hidden-header {
+  height: 122px;
+}
+
+%sticky {
+  position: fixed;
+  z-index: 21000;
+}
+
+#acdm-header.sticky {
+  @extend %sticky;
+  top: 0;
+  left: 0px;
+  right: 0px;
+  margin-left: 20px;
+  margin-right: 20px;
+  padding-top: 20px;
+  background-color: #FFFFFF;
+}
+
+#multitabs.sticky {
+  @extend %sticky;
+  top: 158px;
+  margin-right: 20px;
+  padding-left: 30px;
+  right: 0px;
+}

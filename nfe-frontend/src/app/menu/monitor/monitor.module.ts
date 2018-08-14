@@ -1,11 +1,12 @@
-import { SharedModule } from "../../shared/shared.module";
-import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { MonitorUrlComponent } from "./monitor-url/monitor-url.component";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MonitorComponent } from './monitor.component';
+import { MonitorRoutingModule } from './monitor-routing.module';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
-  imports: [CommonModule, SharedModule],
-  entryComponents: [MonitorUrlComponent],
-  declarations: [MonitorUrlComponent]
+  imports: [MonitorRoutingModule, SharedModule],
+  declarations: [MonitorComponent],
+  entryComponents: [MonitorComponent]
 })
-export class MonitorModule {}
+export class MonitorModule { }

@@ -10,9 +10,10 @@
 
         .ui-fileupload-choose {
             display: block;
-            background-color: #FFFFFF;
+            background-color: #152C5A;
             border: 1px solid #152C5A;
             border-radius: 2px;
+            margin: 0;
 
             .ui-button-icon-left {
                 display: none;
@@ -20,7 +21,7 @@
 
             .ui-button-text {
                 padding: 8px 0px;
-                color: #152C5A;
+                color: #FFFFFF;
             }
         }
     }

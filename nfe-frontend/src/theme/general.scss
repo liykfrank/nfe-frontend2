@@ -4,4 +4,32 @@
 @import 'general/input.scss';
 @import 'general/button.scss';
 @import 'general/textarea.scss';
+@import 'general/mixins';
+@import 'general/media-querys';
+@import 'general/checkboxs';
+@import 'general/radio-buttons';
+
+
+.centered-left{
+  overflow: auto;
+  height: 100%;
+  @include centerLeftDiv();
+}
+
+.centered{
+  overflow: auto;
+  height: 100%;
+  @include centerDiv();
+}
+
+.ico-trash-container {
+  background-image:url("/assets/images/utils/ico_trash.svg");
+  background-repeat: no-repeat;
+  background-position-x: 2px;
+  background-position-y: 6px;
+  background-size: 20px;
+  cursor: pointer;
+}
+
+
 

@@ -6,7 +6,7 @@ env.gitlabRepositoryUrl = env.gitlabSourceRepoHttpUrl ?: 'http://gitlab.nfedev.a
 echo "[INFO] Source Branch: ${env.sourceBranch}"
 echo "[INFO] Source Repository URL: ${env.gitlabRepositoryUrl}"
 
-// add source branch to description
+// add source branch to description ss
 def sourceBranch = "Source Branch: " + env.sourceBranch
 currentBuild.description = currentBuild.description ? currentBuild.description + "\n${sourceBranch}" : sourceBranch
 
@@ -31,7 +31,6 @@ pipeline {
 							url: "${env.gitlabRepositoryUrl}"
 					]]]
 				nodejs('nodejs') {
-				    sh 'push_to_iata2.bash $WORKSPACE $JOB_BASE_NAME'
 				    sh 'npm install'
                     sh 'npm run build'
                 }
@@ -40,7 +39,7 @@ pipeline {
                 }
             }
         }
-
+/*
          stage('Test') {
             steps {
                 nodejs('nodejs') {
@@ -61,7 +60,7 @@ pipeline {
                     }
                 }
 	        }
-	  	}
+	  	}*/
 
         stage('Nexus') {
             steps {

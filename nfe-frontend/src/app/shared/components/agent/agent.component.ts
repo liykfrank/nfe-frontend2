@@ -1,92 +1,132 @@
-import { jqxPopoverComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxpopover';
-import { ViewChild, Input, Output, EventEmitter } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
-import { Contact } from '../../models/contact.model';
-import { AlertsService } from '../../../core/services/alerts.service';
-import { AlertType } from '../../../core/models/alert-type.enum';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, OnChanges } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+
+import { ReactiveFormHandler } from '../../base/reactive-form-handler';
+import { AgentFormModel } from './models/agent-form-model';
+import { Agent } from './models/agent.model';
+import { AgentService } from './services/agent.service';
+
 @Component({
-  selector: 'app-agent',
+  selector: 'bspl-agent',
   templateUrl: './agent.component.html',
   styleUrls: ['./agent.component.scss']
 })
-export class AgentComponent implements OnInit {
-  private MODULE = 7;
-  private CODE_LENGTH = 7;
+export class AgentComponent extends ReactiveFormHandler implements OnInit, OnChanges {
 
-  @Input('style') style: string = '';
+  @Input() agentFormModelGroup: FormGroup;
 
+  @Input() role;
+  @Input() agentCode: string;
+  @Input() agentVatNumberEnabled: boolean;
+  @Input() companyRegistrationNumberEnabled: boolean;
+  private _disabledContact: boolean;
+  @Input()
+  set disabledContact(val: boolean) {
+    this._disabledContact = val;
+    if (val) {
+      this.agentFormModelGroup.get('agentContact').enable();
+    } else {
+      this.agentFormModelGroup.get('agentContact').disable();
+    }
+  }
+  get disabledContact(): boolean {
+    return this._disabledContact;
+  }
 
-  @Input('agentCode') agentCode: string;
-  @Input('agentCheckDigit') agentCheckDigit: string;
-  @Input('vatNumber') vatNumber: string;
-  @Input('companyReg') companyReg; //PREGUNTAR
+  @Input() showAgentName: boolean;
 
-  @Input('showVat') showVat: boolean = true;
-  @Input('showMoreDetails') showMoreDetails: boolean = true;
-  @Input('showCompanyReg') showCompanyReg: boolean = true;
-  @Input('showContact') showContact: boolean = true;
+  private _showContact: boolean = true;
+  @Input()
+  set showContact(val: boolean) {
+    this._showContact = val;
+    if (val) {
+      this.agentFormModelGroup.get('agentContact').enable();
+    } else {
+      this.agentFormModelGroup.get('agentContact').disable();
+    }
+  }
+  get showContact(): boolean {
+    return this._showContact;
+  }
+  @Input() showMoreDetails = true;
+  @Output() clickMoreDetails: EventEmitter<any> = new EventEmitter();
+  @Output() changeAgent: EventEmitter<Agent> = new EventEmitter();
+  @Output() changeAgentFormModel: EventEmitter<AgentFormModel> = new EventEmitter();
+  disabledMoreDetails = true;
+  agent: Agent = new Agent();
 
-  @Input('name') name: string;
-  @Input('telephone') telephone: string;
-  @Input('email') email: string;
-  @Input('height') height: number = 40;
+  display = false;
 
+  constructor(private _agentService: AgentService) {
+    super();
+  }
 
-  // tslint:disable-next-line:no-output-on-prefix
-  @Output() onClickMoreDetails: EventEmitter<any> = new EventEmitter();
-  // tslint:disable-next-line:no-output-on-prefix
-  @Output() onChangeAgentCode: EventEmitter<any> = new EventEmitter();
-  // tslint:disable-next-line:no-output-on-prefix
-  @Output() onChangeVatNumber: EventEmitter<any> = new EventEmitter();
-  // tslint:disable-next-line:no-output-on-prefix
-  @Output() onChangeCompanyReg: EventEmitter<any> = new EventEmitter();
-  // tslint:disable-next-line:no-output-on-prefix
-  @Output() onChangeContact: EventEmitter<any> = new EventEmitter();
+  ngOnInit() {
+    this.subscribe(this.agentFormModelGroup);
+    this.subscriptions.push(this.agentFormModelGroup.get('agentCode').valueChanges.subscribe((agentCode: string) => {
+      this.agentFormModelGroup.get('agentCode').valid ?  this._validateAgent() : this._clean();
+     }));
+  }
 
-  constructor(private _AlertsService: AlertsService) {}
-
-  ngOnInit() {}
-
-  onValueChanged() {
-    if (this.agentCode.toString().length == this.CODE_LENGTH && this.agentCheckDigit != null) {
-      const control = Number(this.agentCode) % this.MODULE;
-
-      if (control == Number(this.agentCheckDigit)) {
-        const concatCode = Number(this.agentCode.toString() + this.agentCheckDigit.toString());
-
-        this.onChangeAgentCode.emit(concatCode.toString());
-      } else {
-        this._AlertsService.setAlertTranslate('AGENT.title_error', 'AGENT.check_digit_error', AlertType.ERROR);
-        this.agentCheckDigit = null;
-      }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.agentCode != '' && changes.agentCode) {
+      this.agentFormModelGroup.get('agentCode').setValue(this.agentCode.substring(0, 7));
+      this.agentFormModelGroup.get('agentControlDigit').setValue(this.agentCode.substring(7, 8));
+      this._validateAgent();
     }
   }
 
-  changeVatNumber() {
-    this.onChangeVatNumber.emit(this.vatNumber);
+  onClickMoreDetails() {
+    this.clickMoreDetails.emit(true);
+    this.display = true;
   }
 
-  changeCompanyReg() {
-    this.onChangeCompanyReg.emit(this.companyReg);
+  onChangeContact(value) {
+    this.agentFormModelGroup.setControl('agentContact', value);
   }
 
-  changeContact(value) {
-    this.onChangeContact.emit(value);
+  onClose() {
+    this.clickMoreDetails.emit(false);
+    this.display = false;
   }
 
-  clickMoreDetails() {
-    this.onClickMoreDetails.emit();
+  private _validateAgent() {
+    this._agentService.validateAgent(true, this.getIataCode())
+    .subscribe((agent) => {
+
+        this.changeAgent.emit(agent);
+        this.agent = agent;
+
+        if (this.agentVatNumberEnabled) {
+          this.agentFormModelGroup.get('agentVatNumber').setValue(agent.vatNumber);
+        }
+
+        this.agentCode = agent.iataCode;
+        this.disabledMoreDetails = false;
+      }, error => {
+        this._clean();
+        this._setErros();
+      });
   }
 
-  checkDisableShowDetails () {
-    return  !this.agentCode ||
-            this.agentCode.length != this.CODE_LENGTH ||
-            !this.agentCheckDigit ||
-            this.agentCheckDigit.length != 1;
+  private _clean() {
+    this.agentFormModelGroup.get('agentVatNumber').reset();
+    this.agent = new Agent();
+    this.disabledMoreDetails = true;
   }
 
-  setStyle(text: string): boolean {
-    return this.style == 'error' && (!text || text.length == 0);
+  private _setErros() {
+    this.agentFormModelGroup.get('agentCode').setErrors({
+      customError: {
+        invalid: true,
+        message: 'FORM_CONTROL_VALIDATORS.agent'
+      }
+    });
+
+  }
+
+ private getIataCode(): string {
+    return this.agentFormModelGroup.get('agentCode').value + this.agentFormModelGroup.get('agentControlDigit').value;
   }
 
 }

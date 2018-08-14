@@ -1,0 +1,80 @@
+<div class="row">
+  <div class="col-12">
+    <div class="row no-gutters tab-content-header">
+      <div class="col-12 pl-3 pr-3 pt-4 pb-4 title" l10nTranslate>
+        <span class="color-bullet"></span>
+        <span l10nTranslate>MULTITABS.COMMENTS.title</span>
+      </div>
+    </div>
+  </div>
+
+  <div class='col-12 comment-component'>
+    <p-scrollPanel [style]="{width: '100%', height: '307px'}" styleClass="custom">
+      <div class="row no-gutters">
+        <div class="col-12 mb-2 comment-table">
+          <div class="row no-gutters comment" *ngFor="let com of comments; let i = index">
+            <div class="col-12 pr-3 pl-3">
+              <div class="row no-gutters align-items-center">
+                <div class="col-1 pb-2">
+                  <img src="assets/images/comments/icon-user.svg">
+                </div>
+                <div class="col-11 pb-2 pl-2">
+                  user owner
+                </div>
+                <div class="col-1 pb-2"></div>
+                <div class="col-11 pb-2 pl-2">{{com.text}}</div>
+                <div class="col-12 pb-2 pr-4 comment-date">
+                  <span>{{com.insertDateTime | date:'dd/MM/yy - hh:mm'}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row no-gutters comment" *ngIf="commentToUpload">
+            <div class="col-12 pr-3 pl-3">
+              <div class="row no-gutters align-items-center">
+                <div class="col-1 pb-2">
+                  <img src="assets/images/comments/icon-user.svg">
+                </div>
+                <div class="col-11 pb-2 pl-2">
+                  user owner
+                </div>
+                <div class="col-1 pb-2"></div>
+                <div class="col-11 pb-2 pl-2">{{commentToUpload.text}}</div>
+                <div class="col-12 pb-2 pr-4 comment-date">
+                  <span>{{commentToUpload.insertDateTime | date:'dd/MM/yy - hh:mm'}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row no-gutters" *ngIf="!checkComments()">
+            <div class="col-12 pr-5 pl-4 pt-4">
+              <div class="no-comment justify-content-center">
+                <img class="no-comment-image" src="assets/images/comments/ico-no_comment.png">
+                <p l10nTranslate>MULTITABS.COMMENTS.no_comment</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </p-scrollPanel>
+  </div>
+
+  <div class="col-12">
+    <div class="row no-gutters align-items-center comment-input-container">
+      <div class="col-10 pl-3 pr-3 pt-3 pb-3">
+        <input type="text" class="form-control comment-input"
+          (keyup)="saveCommentWithEnter($event)"
+          [(ngModel)]="text"
+          [disabled]="disabled">
+      </div>
+      <div class="col-2 pt-3 pb-3 pl-2">
+        <span id="basic-addon2" (click)="saveCommentWithClick()">
+          <img src="assets/images/utils/ico-send.svg">
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>

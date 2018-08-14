@@ -1,3 +1,12 @@
 .form-entry-row .form-group {
     margin-right: 20px;
 }
+
+.details-button[disabled] {
+    cursor: default;
+    opacity: 0.5;
+}
+
+.minWidth {
+      min-width: 80px;
+  }

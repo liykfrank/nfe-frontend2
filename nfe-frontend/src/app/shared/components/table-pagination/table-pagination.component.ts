@@ -1,4 +1,4 @@
-import { PageSizeList } from './../../models/page-size-list';
+import { PageSizeList } from './../../models/page-size-list.model';
 import { FilterPaginationAbstract } from './../../base/filter-pagination-abstract';
 import {
   Component,
@@ -11,7 +11,6 @@ import {
   EventEmitter,
   AfterViewInit
 } from '@angular/core';
-import { NwAbstractComponent } from '../../base/abstract-component';
 import { Pagination } from '../../../menu/files/models/pagination';
 import { ListData } from '../../../menu/files/models/list-data';
 import { PageRowsHelper } from './rows/page-rows-helper';
@@ -19,11 +18,11 @@ import { SortType } from '../../../menu/files/models/sort-type.enum';
 import { jqxGridComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 
 @Component({
-  selector: 'app-table-pagination',
+  selector: 'bspl-table-pagination',
   templateUrl: './table-pagination.component.html',
   styleUrls: ['./table-pagination.component.scss']
 })
-export class TablePaginationComponent extends NwAbstractComponent
+export class TablePaginationComponent
   implements OnInit, AfterContentInit, AfterViewInit {
   @Output() pageChange = new EventEmitter<number>();
   @Output() reload = new EventEmitter<any>();
@@ -39,7 +38,6 @@ export class TablePaginationComponent extends NwAbstractComponent
   public ready: Boolean = false;
 
   constructor(injector: Injector) {
-    super(injector);
     this.rowsHelper = new PageRowsHelper();
 
     this.pagination = new Pagination({});
@@ -56,10 +54,7 @@ export class TablePaginationComponent extends NwAbstractComponent
   }
 
   clNumPage(num: number) {
-    console.log('on clNumPage');
-    this.log.info('number page click ' + num);
     this.pageChange.emit(num);
-    this.log.info('grid rows ' + this.table.getrows().length);
     this.showMask_ = true;
   }
 
@@ -75,7 +70,6 @@ export class TablePaginationComponent extends NwAbstractComponent
 
   getPages() {
     if (this.pagination) {
-      this.log.info('total pages getpages ' + this.pagination.totalPages);
       this.pagesar.length = 0;
       for (let i = 0; i < this.pagination.totalPages; i++) {
         this.pagesar.push({});
@@ -115,9 +109,6 @@ export class TablePaginationComponent extends NwAbstractComponent
     if (pageRows) {
       pageRows.rows.forEach(row => {
         this.table.selectrow(row);
-        this.log.info(
-          'refresh row selected ' + row + ' page ' + this.pageCurrent
-        );
       });
     }
   }
@@ -129,8 +120,6 @@ export class TablePaginationComponent extends NwAbstractComponent
       this.table.getselectedrowindexes().forEach(num => {
         const data = this.table.getrowdata(num);
         this.rowsHelper.addRowPage(this.pageCurrent, num, data);
-        //this.log.info('add row selected '+ num+ ' page '+ this.pageCurrent);
-        //console.log(this.rowsHelper.listPagesRows);
       });
     }
   }
@@ -160,8 +149,6 @@ export class TablePaginationComponent extends NwAbstractComponent
     dataFilterCurrent: FilterPaginationAbstract,
     dataFilterIni: FilterPaginationAbstract
   ): void => {
-    this.log.info('custom sort ' + column + ' ' + direction);
-    this.log.info('current sort ' + dataFilterCurrent.sort);
     //reset pagination
     dataFilterCurrent.sizePage = dataFilterIni.sizePage;
     dataFilterCurrent.numberPage = dataFilterIni.numberPage;
@@ -180,7 +167,7 @@ export class TablePaginationComponent extends NwAbstractComponent
       });
       this.reload.emit({ filter: dataFilterCurrent });
     }
-  };
+    };
 
   hideMask() {
     this.showMask_ = false;

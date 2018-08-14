@@ -1,35 +1,29 @@
-
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
-import { NwRepositoryAbstract } from '../../../../shared/base/nwe-repository.abstract';
-import { IListFiles } from '../../models/contract/list-files';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { environment } from '../../../../../environments/environment';
+import { HttpServiceAbstract } from '../../../../shared/base/http-service-abstract';
+
 @Injectable()
-export class DownFileResource extends NwRepositoryAbstract<any, Object> {
-  constructor(private http: HttpClient, injector: Injector) {
+export class DownFileResource extends HttpServiceAbstract<any, Object> {
+  constructor(private http: HttpClient) {
     super(
       http,
       environment.basePath +
         environment.files.basePath +
-        environment.files.api.downloadFile,
-      injector
+        environment.files.api.downloadFile
     );
-
-    console.log('CABRON')
-    console.log(environment)
   }
 
-  public getFile(params?: HttpParams, idFile?:string): Observable<Blob> {
+  public getFile(params?: HttpParams, idFile?: string): Observable<Blob> {
     return this.httpService
       .get(this.getUrl([idFile]), {
         params: params,
         observe: 'response',
-        responseType: "blob"
+        responseType: 'blob'
       })
-       .map(resp=>{
-        this.log.info(resp.headers.get('Content-Disposition'));
+      .map(resp => {
         return resp.body;
       });
   }

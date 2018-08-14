@@ -1,0 +1,36 @@
+<div class="files-download-container">
+  <div class="top_buttons" *ngIf="!readOnly">
+    <jqxButton l10nTranslate id="uploadFiles" [theme]="'primary'" (click)="tabsService.addTabAction(actions.UPLOAD_FILES)" >FILES.upload</jqxButton>
+  </div>
+  <p-growl  [life]="3000"  ></p-growl>
+  <bspl-files-filter [dataFilters]="dataFilterLoad" (searchCl)="searchCl($event)"
+  (resetCl)="resetAllFilters()" [statusList]="statusList" >
+  </bspl-files-filter>
+  <bspl-filter-crumbs [elementsFilter]="elementsFilter" ></bspl-filter-crumbs>
+
+  <bspl-table-pagination
+      (pageSizeChange)="pageSizeChange($event)"
+      (pageChange)="pageChange($event)"
+      (reload)="loadDataTable($event.filter,true)"
+
+      >
+    <jqxGrid #gridReference id="grid"
+        [width]="'100%'" [source]="dataAdapter" [columns]="columns"
+        [pageable]="false" [autoheight]="true" [sortable]="true"
+        [altrows]="true" [enabletooltips]="true" [editable]="false"
+        [selectionmode]="!readOnly ? 'checkbox' : 'none'"
+        [selectedrowindexes]="[]"
+        (onRowclick)="select($event)"
+      >
+
+    </jqxGrid>
+  </bspl-table-pagination>
+
+  <div class="bottom_buttons" *ngIf="!readOnly">
+    <!-- <bspl-buttons id="downloadFiles" [title]="'Download'" (clickBut)="download()" [disabled]="isSelected()" ></bspl-buttons> -->
+    <jqxButton l10nTranslate id="downloadFiles" [theme]="'primary'" (click)="download()" [disabled]="isSelected()">FILES.download</jqxButton>
+    <jqxButton [hidden]="true">Print</jqxButton>
+    <jqxButton l10nTranslate id="deleteFiles" [theme]="'primary'" (click)="remove()" [disabled]="isSelected()">FILES.delete</jqxButton>
+    <!-- <bspl-buttons id="deleteFiles" [title]="'Delete'" (clickBut)="remove()" [disabled]="isSelected()"></bspl-buttons> -->
+  </div>
+</div>

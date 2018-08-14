@@ -1,15 +1,9 @@
 import { Component } from '@angular/core';
-import { environment } from '../environments/environment';
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'bspl-root',
+  template: `<router-outlet></router-outlet>`,
+  styles: []
 })
-export class AppComponent {
-  title = 'app';
-  ionic = false;
-
-  ngOnInit(): void {
-    this.ionic = environment.ionic;
-  }
+export class AppComponent  {
+  title = 'bsp-link';
 }

@@ -1,4 +1,4 @@
-import { ISortField } from "../../menu/files/models/isort.model";
+import { ISortField } from '../../menu/files/models/isort.model';
 
 export class FilterPaginationAbstract {
   sizePage: number;

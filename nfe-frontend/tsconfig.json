@@ -5,6 +5,13 @@
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
+    /*
+    uncomment variables for checking unused imports
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+        */
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
@@ -20,7 +27,6 @@
     "src/**/*"
   ],
   "files": [
-    // For all widgets used, add the relevant .ts file.
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxtabs",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxcheckbox",
@@ -42,5 +48,5 @@
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttongroup",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdocking",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxmaskedinput"
- ]
+  ]
 }

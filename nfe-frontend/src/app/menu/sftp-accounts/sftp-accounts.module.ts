@@ -1,12 +1,12 @@
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { SftpAccountComponent } from './sftp-account.component';
+import { SftpAccountsRoutingModule } from './sftp-accounts-routing.module';
+import { SharedModule } from '../../shared/shared.module';
 
-import { SharedModule } from "../../shared/shared.module";
-import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-
-import { SftpAccountComponent } from "./components/sftp-account/sftp-account.component";
 
 @NgModule({
-  imports: [CommonModule, SharedModule],
+  imports: [SftpAccountsRoutingModule, SharedModule],
   declarations: [ SftpAccountComponent ],
   entryComponents: [ SftpAccountComponent ]
 })

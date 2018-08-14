@@ -1,64 +1,98 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Contact } from '../../models/contact.model';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { ReactiveFormHandler } from '../../base/reactive-form-handler';
+import { AirlineFormModel } from './models/airline-form.model';
+import { Airline } from './models/ariline.model';
+import { AbstractComponent } from '../../base/abstract-component';
+import { AirlineService } from './services/airline.service';
 
 @Component({
-  selector: 'app-airline',
+  selector: 'bspl-airline',
   templateUrl: './airline.component.html',
   styleUrls: ['./airline.component.scss']
 })
-export class AirlineComponent implements OnInit {
-  @Input('style') style: string = '';
-  @Input('disabled')disabled: boolean = false;
+export class AirlineComponent extends ReactiveFormHandler implements OnInit {
 
-  @Input('airlineCode')airlineCode: string;
-  @Input('showMoreDetails')showMoreDetails : boolean = true;
+  @Input() airlineFormModelGroup: FormGroup;
+  @Input() role;
+  @Input() isoCountryCode: string;
+  @Input() agentCode: string;
+  @Input() airlineVatNumberEnabled: boolean;
+  @Input() companyRegistrationNumberEnabled: boolean;
+  @Input() disabledContact: boolean;
+  @Input() showContact: boolean = true;
+  @Input() showAirlineName: boolean;
+  @Input() showMoreDetails = true;
+  @Output() changeAirlineFormModel: EventEmitter<FormGroup> = new EventEmitter();
+  @Output() changeAirlineModel: EventEmitter<Airline> = new EventEmitter();
+  @Output() clickMoreDetails: EventEmitter<boolean> = new EventEmitter();
 
-  @Input('showVat')showVat: boolean = false;
-  @Input('vatNumber')vatNumber: string;
+  disabledMoreDetails = true;
+  airline: Airline = new Airline();
 
-  @Input('showCompanyReg')showCompanyReg: boolean = false;
-  @Input('companyReg')companyReg;
+  display = false;
 
-  @Input('showContact')showContact: boolean = false;
-  @Input('name')name: string;
-  @Input('telephone')telephone: string;
-  @Input('email')email: string;
-
-  // tslint:disable-next-line:no-output-on-prefix
-  @Output()onClickMoreDetails: EventEmitter<any> = new EventEmitter();
-  // tslint:disable-next-line:no-output-on-prefix
-  @Output()onChangeAirlineCode: EventEmitter<any> = new EventEmitter();
-  // tslint:disable-next-line:no-output-on-prefix
-  @Output()onChangeVatNumber: EventEmitter<any> = new EventEmitter();
-  // tslint:disable-next-line:no-output-on-prefix
-  @Output()onChangeCompanyReg: EventEmitter<any> = new EventEmitter();
-  // tslint:disable-next-line:no-output-on-prefix
-  @Output()onChangeContact: EventEmitter<any> = new EventEmitter();
-
-  constructor() { }
-
-  ngOnInit() { }
-
-  changeAirline() {
-    if (this.airlineCode.length == 3) {
-      this.onChangeAirlineCode.emit(this.airlineCode);
-    }
+  constructor(private _airlineService: AirlineService) {
+    super();
   }
 
-  changeVatNumber() {
-    this.onChangeVatNumber.emit(this.vatNumber);
+  ngOnInit() {
+    this.subscribe(this.airlineFormModelGroup);
+    this.subscriptions.push(
+      this.airlineFormModelGroup
+        .get('airlineCode')
+        .valueChanges.subscribe((airlineCode: string) => {
+          if (this.airlineFormModelGroup.get('airlineCode').valid) {
+            this._validateAirline(airlineCode);
+          } else {
+            this._clean();
+          }
+        })
+    );
   }
 
-  changeCompanyReg() {
-    this.onChangeCompanyReg.emit(this.companyReg);
+  private _validateAirline(airlineCode: string) {
+    this._airlineService
+      .validateAirlinet(true, this.isoCountryCode, airlineCode)
+      .subscribe(
+        airline => {
+          this.airline = airline;
+          this.changeAirlineModel.emit(airline);
+          this.disabledMoreDetails = false;
+
+          if (this.airlineVatNumberEnabled) {
+            this.airlineFormModelGroup.get('airlineVatNumber').setValue(airline.taxNumber);
+          }
+        },
+        error => {
+          this._clean();
+          this.airlineFormModelGroup.get('airlineCode').setErrors({
+            customError: {
+              invalid: true,
+              message: 'FORM_CONTROL_VALIDATORS.airline'
+            }
+          });
+        }
+      );
   }
 
-  changeContact(contact) {
-    this.onChangeContact.emit(contact);
+  onClickMoreDetails() {
+    this.clickMoreDetails.emit(true);
+    this.display = true;
   }
 
-  clickMoreDetails() {
-    this.onClickMoreDetails.emit();
+  onChangeContact(value) {
+    this.airlineFormModelGroup.setControl('airlineContact', value);
   }
 
+  onClose() {
+    this.clickMoreDetails.emit(false);
+    this.display = false;
+  }
+
+  private _clean() {
+    this.airlineFormModelGroup.get('airlineVatNumber').reset();
+    this.airline = new Airline();
+    this.disabledMoreDetails = true;
+  }
 }

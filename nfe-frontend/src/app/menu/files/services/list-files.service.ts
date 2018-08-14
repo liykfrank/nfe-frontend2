@@ -1,22 +1,21 @@
-import { DownFileResource } from "./resources/downfile.resource";
-import { HttpParams } from "@angular/common/http";
-import { FileNw } from "./../models/file";
-import { ListData } from "./../models/list-data";
-import { Observable } from "rxjs/Observable";
-import { ListFilesFilter } from "./../models/list-files-filter";
-import { ListFilesResource } from "./resources/listfiles.resopurce";
-import { Injectable, Injector } from "@angular/core";
-import { NwBaseAbstract } from "../../../shared/base/nw-base-abstract";
-import { Pagination } from "../models/pagination";
-import { UtilsService } from "../../../shared/services/utils.service";
-import { RemoveFilesResource } from "./resources/removefiles.resource";
-import { RemoveFileResource } from "./resources/removefile.resource";
-import { ParamsEnum } from "../models/params.enum";
-import { DownFilesResource } from "./resources/downfiles.resource";
-import { SortType } from "../models/sort-type.enum";
+import { HttpParams } from '@angular/common/http';
+import { Injectable, Injector } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { UtilsService } from '../../../shared/services/utils.service';
+import { Pagination } from '../models/pagination';
+import { ParamsEnum } from '../models/params.enum';
+import { SortType } from '../models/sort-type.enum';
+import { FileNw } from './../models/file';
+import { ListData } from './../models/list-data';
+import { ListFilesFilter } from './../models/list-files-filter';
+import { DownFileResource } from './resources/downfile.resource';
+import { DownFilesResource } from './resources/downfiles.resource';
+import { ListFilesResource } from './resources/listfiles.resopurce';
+import { RemoveFileResource } from './resources/removefile.resource';
+import { RemoveFilesResource } from './resources/removefiles.resource';
 
 @Injectable()
-export class ListFilesService extends NwBaseAbstract {
+export class ListFilesService  {
   constructor(
     injector: Injector,
     private listFilesRes: ListFilesResource,
@@ -26,7 +25,6 @@ export class ListFilesService extends NwBaseAbstract {
     private remFileRes: RemoveFileResource,
     private utils: UtilsService
   ) {
-    super(injector);
   }
 
   listFiles(filter: ListFilesFilter) {
@@ -65,7 +63,13 @@ export class ListFilesService extends NwBaseAbstract {
   }
 
   getStatusCodes(bool: Boolean): Array<string> {
-    let list: string[] = ["ALL STATUS", "DELETED", "DOWNLOADED", "SENT", "UNREAD"];
+    let list: string[] = [
+      'ALL STATUS',
+      'DELETED',
+      'DOWNLOADED',
+      'SENT',
+      'UNREAD'
+    ];
 
     /*
     if (bool) {
@@ -142,7 +146,7 @@ export class ListFilesService extends NwBaseAbstract {
       () => (params = params.append(ParamsEnum.TYPE, filter.type))
     );
     this.utils.execFn(
-      filter.status && filter.status != "ALL STATUS",
+      filter.status && filter.status != 'ALL STATUS',
       () => (params = params.append(ParamsEnum.STATUS, filter.status))
     );
     return params;

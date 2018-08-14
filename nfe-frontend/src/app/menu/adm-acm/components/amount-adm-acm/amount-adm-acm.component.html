@@ -1,0 +1,327 @@
+
+<form [formGroup]="amountForm">
+  <div class="resume-amount">
+    <label>{{ subType }}</label>
+    <label l10nTranslate *ngIf="isAdm" >ADM_ACM.AMOUNT.adm_amount</label>
+    <label l10nTranslate *ngIf="!isAdm">ADM_ACM.AMOUNT.acm_amount</label>
+    <span>{{ total | decimalsFormatter : currency.decimals }}</span>
+    <span>{{ currency.code }}</span>
+  </div>
+
+  <div *ngIf="!showSimpleView()">
+
+    <div class="form-group col-4" *ngIf="isAdm">
+      <bspl-input-form-control l10nTranslate
+        [formGroupParent]="this.amountForm.get('airlineCalculations')"
+        [formControlParentName]="'fare'"
+        [inputMaxTextLength]="'12'"
+        [wrapText]="true"
+        [type]="'decimal'"
+        [decimalsNumber]="currency.decimals"
+        [label]="'ADM_ACM.AMOUNT.fare'">
+      </bspl-input-form-control>
+    </div>
+
+    <div class="form-group col-4" *ngIf="!isAdm">
+        <bspl-input-form-control l10nTranslate
+          [formGroupParent]="this.amountForm.get('agentCalculations')"
+          [formControlParentName]="'fare'"
+          [inputMaxTextLength]="'12'"
+          [wrapText]="true"
+          [type]="'decimal'"
+          [decimalsNumber]="currency.decimals"
+          [label]="'ADM_ACM.AMOUNT.fare'">
+        </bspl-input-form-control>
+      </div>
+  </div>
+
+  <div *ngIf="showSimpleView()">
+
+    <table class="table table-borderless table-amount">
+      <thead>
+        <tr>
+          <th></th>
+          <th l10nTranslate>ADM_ACM.AMOUNT.agentInput</th>
+          <th l10nTranslate>ADM_ACM.AMOUNT.airlineInput</th>
+          <th l10nTranslate>ADM_ACM.AMOUNT.difference</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th class="title" l10nTranslate>ADM_ACM.AMOUNT.fare</th>
+          <td>
+            <!-- [(ngModel)]="agentCalculations.fare"> -->
+            <form [formGroup]="amountForm.get('agentCalculations')">
+              <input
+                [ngClass]="{'error': checkIfErrorExist('agentCalculations', 'fare')}"
+                class="form-control"
+                decimalsFormatterDirective
+                [decimals]="currency.decimals"
+                [maxLength]="11"
+                formControlName="fare"
+                type="text">
+            </form>
+
+          </td>
+          <td>
+            <!-- [(ngModel)]="airlineCalculations.fare"> -->
+            <form [formGroup]="amountForm.get('airlineCalculations')">
+                <input
+                  [ngClass]="{'error': checkIfErrorExist('airlineCalculations', 'fare')}"
+                  class="form-control"
+                  decimalsFormatterDirective
+                  [decimals]="currency.decimals"
+                  [maxLength]="11"
+                  formControlName="fare"
+                  type="text">
+              </form>
+          </td>
+          <td>
+            <!-- [value]="totalCalculations.fare"> -->
+            <input class="form-control" disabled="true" [value]="totalInputAmount.fare | abs | decimalsFormatter:currency.decimals">
+          </td>
+        </tr>
+        <tr>
+          <th class="title" l10nTranslate>ADM_ACM.AMOUNT.tfc
+            <img src="assets/images/utils/ico_tooltip.svg"/>
+          </th>
+          <td>
+            <!-- [(ngModel)]="agentCalculations.tax"> -->
+            <form [formGroup]="amountForm.get('agentCalculations')">
+              <input
+                [ngClass]="{'error': checkIfErrorExist('agentCalculations', 'tax')}"
+                class="form-control"
+                decimalsFormatterDirective
+                [decimals]="currency.decimals"
+                [maxLength]="11"
+                formControlName="tax"
+                type="text">
+            </form>
+          </td>
+          <td>
+            <!-- [(ngModel)]="airlineCalculations.tax"> -->
+            <form [formGroup]="amountForm.get('airlineCalculations')">
+              <input
+                [ngClass]="{'error': checkIfErrorExist('airlineCalculations', 'tax')}"
+                class="form-control"
+                decimalsFormatterDirective
+                [decimals]="currency.decimals"
+                [maxLength]="11"
+                formControlName="tax"
+                type="text">
+            </form>
+          </td>
+          <td>
+            <!-- [value]="totalCalculations.tax"> -->
+            <input class="form-control" disabled="true" [value]="totalInputAmount.tax | abs | decimalsFormatter:currency.decimals">
+          </td>
+        </tr>
+        <tr>
+          <th class="title" l10nTranslate>ADM_ACM.AMOUNT.comission</th>
+          <td>
+            <!-- [(ngModel)]="agentCalculations.commission"> -->
+            <form [formGroup]="amountForm.get('agentCalculations')">
+              <input
+                [ngClass]="{'error': checkIfErrorExist('agentCalculations', 'commission')}"
+                class="form-control"
+                decimalsFormatterDirective
+                [decimals]="currency.decimals"
+                [maxLength]="11"
+                formControlName="commission"
+                type="text">
+            </form>
+          </td>
+          <td>
+            <!-- [(ngModel)]="airlineCalculations.commission"> -->
+            <form [formGroup]="amountForm.get('airlineCalculations')">
+              <input
+                [ngClass]="{'error': checkIfErrorExist('airlineCalculations', 'commission')}"
+                class="form-control"
+                decimalsFormatterDirective
+                [decimals]="currency.decimals"
+                [maxLength]="11"
+                formControlName="commission"
+                type="text">
+            </form>
+          </td>
+          <td>
+            <!-- [value]="totalCalculations.commission"> -->
+            <input class="form-control" disabled="true" [value]="totalInputAmount.commission | abs | decimalsFormatter:currency.decimals">
+          </td>
+        </tr>
+        <tr *ngIf="showSpam">
+          <th class="title" l10nTranslate>ADM_ACM.AMOUNT.spam</th>
+          <td>
+            <!-- [(ngModel)]="agentCalculations.spam"> -->
+            <form [formGroup]="amountForm.get('agentCalculations')">
+              <input
+                [ngClass]="{'error': checkIfErrorExist('agentCalculations', 'spam')}"
+                class="form-control"
+                decimalsFormatterDirective
+                [decimals]="currency.decimals"
+                [maxLength]="11"
+                formControlName="spam"
+                type="text">
+            </form>
+          </td>
+          <td>
+            <!-- [(ngModel)]="airlineCalculations.spam"> -->
+            <form [formGroup]="amountForm.get('airlineCalculations')">
+              <input
+                [ngClass]="{'error': checkIfErrorExist('airlineCalculations', 'spam')}"
+                class="form-control"
+                decimalsFormatterDirective
+                [decimals]="currency.decimals"
+                [maxLength]="11"
+                formControlName="spam"
+                type="text">
+            </form>
+          </td>
+          <td>
+            <!-- [value]="totalCalculations.spam"> -->
+            <input class="form-control" disabled="true" [value]="totalInputAmount.spam | abs | decimalsFormatter:currency.decimals">
+          </td>
+        </tr>
+        <tr *ngIf="true"> <!-- show TOCA -->
+          <th class="title" l10nTranslate>ADM_ACM.AMOUNT.toca</th>
+          <td>
+            <!-- [(ngModel)]="agentCalculations.taxOnCommission"> -->
+            <form [formGroup]="amountForm.get('agentCalculations')">
+              <input
+                [ngClass]="{'error': checkIfErrorExist('agentCalculations', 'taxOnCommission')}"
+                class="form-control"
+                decimalsFormatterDirective
+                [decimals]="currency.decimals"
+                [maxLength]="11"
+                formControlName="taxOnCommission"
+                type="text">
+            </form>
+          </td>
+          <td>
+            <!-- [(ngModel)]="airlineCalculations.taxOnCommission"> -->
+            <form [formGroup]="amountForm.get('airlineCalculations')">
+              <input
+                [ngClass]="{'error': checkIfErrorExist('airlineCalculations', 'taxOnCommission')}"
+                class="form-control"
+                decimalsFormatterDirective
+                [decimals]="currency.decimals"
+                [maxLength]="11"
+                formControlName="taxOnCommission"
+                type="text">
+            </form>
+          </td>
+          <td>
+            <!-- [value]="totalCalculations.taxOnCommission"> -->
+            <input class="form-control" disabled="true" [value]="totalInputAmount.taxOnCommission  | abs | decimalsFormatter:currency.decimals">
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td l10nTranslate>total</td>
+          <td class="isNumber">
+            <span>{{ totalAgent | decimalsFormatter : currency.decimals }}</span>
+            <span>{{ currency.code }}</span>
+          </td>
+          <td class="isNumber">
+            <span>{{ totalAirline | decimalsFormatter : currency.decimals }}</span>
+            <span>{{ currency.code }}</span>
+          </td>
+          <td class="isNumber">
+            <span>{{ total | decimalsFormatter : currency.decimals }}</span>
+            <span>{{ currency.code }}</span>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <table class="table table-borderless table-amount">
+      <thead>
+        <tr>
+          <th l10nTranslate>ADM_ACM.AMOUNT.taxcode</th>
+          <th l10nTranslate>ADM_ACM.AMOUNT.agentInput</th>
+          <th l10nTranslate>ADM_ACM.AMOUNT.airlineInput</th>
+          <th l10nTranslate>ADM_ACM.AMOUNT.difference</th>
+        </tr>
+      </thead>
+      <tbody formArrayName="taxMiscellaneousFees" >
+          <tr *ngFor="let item of getFormArray(); let i=index" [formGroupName]="i">
+            <td>
+              <!-- [(ngModel)]="item.name"> -->
+              <div class="input-group-inline">
+                <input
+                  [ngClass]="{'error': checkIfErrorOnTaxExist('taxMiscellaneousFees', i, 'type')}"
+                  class="form-control"
+                  formControlName="type"
+                  type="text">
+                <!-- <div *ngIf="checkIfErrorOnTaxExist('taxMiscellaneousFees', i, 'type')" class="tooltip-container">
+                  <bspl-field-error [errors]="this.amountForm.controls['taxMiscellaneousFees']['controls'][i].get('type').errors"></bspl-field-error>
+                </div> -->
+              </div>
+            </td>
+            <td>
+              <!-- [(ngModel)]="item.agentValue"> -->
+              <input
+                [ngClass]="{'error': checkIfErrorOnTaxExist('taxMiscellaneousFees', i, 'agentAmount')}"
+                class="form-control"
+                decimalsFormatterDirective
+                [decimals]="currency.decimals"
+                [maxLength]="11"
+                formControlName="agentAmount"
+                type="text">
+            </td>
+            <td>
+              <!-- [(ngModel)]="item.airlineValue"> -->
+              <input
+                [ngClass]="{'error': checkIfErrorOnTaxExist('taxMiscellaneousFees', i, 'airlineAmount')}"
+                class="form-control"
+                decimalsFormatterDirective
+                [decimals]="currency.decimals"
+                [maxLength]="11"
+                formControlName="airlineAmount"
+                type="text">
+            </td>
+            <td>
+              <!-- [value]="item.dif"> -->
+              <div class="input-group">
+                <input class="form-control" disabled="true" [value]="getTaxValue(i) | abs">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary button-bin-float-right ml-1" (click)="removeTax(i)">
+                    <i class="fa fa-trash-o fa-lg"></i>
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <td colspan="4">
+            <!-- TODO: cambiar la forma de hacer flotantes los divs -->
+            <div class="float-left">
+              <button l10nTranslate class="button-add" (click)="addTax()">
+                <span class="small-font-awesome fa-stack">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-plus inverse-color fa-stack-1x"></i>
+                </span>
+                ADM_ACM.AMOUNT.addTax
+              </button>
+            </div>
+
+            <div class="float-right">
+              <button class="button-default" (click)="clean()" l10nTranslate>
+                clear
+              </button>
+
+              <button class="button-primary" (click)="populate()" [disabled]="true" l10nTranslate>
+                ADM_ACM.AMOUNT.populate
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+
+  </div>
+</form>

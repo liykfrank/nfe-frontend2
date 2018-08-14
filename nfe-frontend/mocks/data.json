@@ -1,0 +1,313 @@
+{
+  "user": {
+    "id": "2d9429f0-fb99-4237-b2ce-bbfbb3e00ae9",
+    "name": "Accelya User",
+    "lastname": "Accelya Group",
+    "email": "airline@accelya.com",
+    "isoc": "AA",
+    "role": "AGENT"
+  },
+  "remfiles": {
+    "content": [
+      {
+        "id": 1,
+        "name": "file1",
+        "type": "some file type",
+        "bytes": 1024,
+        "uploadDate": "2018-03-23T10:00:00",
+        "status": "UNREADED"
+      },
+      {
+        "id": 2,
+        "name": "file2",
+        "type": "some file type",
+        "bytes": 1024,
+        "uploadDate": "2018-03-23T10:00:00",
+        "status": "UNREADED"
+      },
+      {
+        "id": 3,
+        "name": "file3",
+        "type": "some file type",
+        "bytes": 1024,
+        "uploadDate": "2018-03-23T10:00:00",
+        "status": "UNREADED"
+      },
+      {
+        "id": 4,
+        "name": "file4",
+        "type": "some file type",
+        "bytes": 1024,
+        "uploadDate": "2018-03-23T10:00:00",
+        "status": "UNREADED"
+      },
+      {
+        "id": 5,
+        "name": "file5",
+        "type": "some file type",
+        "bytes": 1024,
+        "uploadDate": "2018-03-23T10:00:00",
+        "status": "UNREADED"
+      }
+    ],
+    "pageable": {
+      "sort": {
+        "sorted": false,
+        "unsorted": true
+      },
+      "offset": 0,
+      "pageSize": 20,
+      "pageNumber": 0,
+      "unpaged": false,
+      "paged": true
+    },
+    "last": true,
+    "totalPages": 1,
+    "totalElements": 5,
+    "size": 20,
+    "number": 0,
+    "sort": {
+      "sorted": false,
+      "unsorted": true
+    },
+    "numberOfElements": 5,
+    "first": true
+  },
+  "remfile": {
+    "content": [
+      {
+        "id": 1,
+        "name": "file1",
+        "type": "some file type",
+        "bytes": 1024,
+        "uploadDate": "2018-03-23T10:00:00",
+        "status": "UNREADED"
+      },
+      {
+        "id": 2,
+        "name": "file2",
+        "type": "some file type",
+        "bytes": 1024,
+        "uploadDate": "2018-03-23T10:00:00",
+        "status": "UNREADED"
+      },
+      {
+        "id": 3,
+        "name": "file3",
+        "type": "some file type",
+        "bytes": 1024,
+        "uploadDate": "2018-03-23T10:00:00",
+        "status": "UNREADED"
+      },
+      {
+        "id": 4,
+        "name": "file4",
+        "type": "some file type",
+        "bytes": 1024,
+        "uploadDate": "2018-03-23T10:00:00",
+        "status": "UNREADED"
+      },
+      {
+        "id": 5,
+        "name": "file5",
+        "type": "some file type",
+        "bytes": 1024,
+        "uploadDate": "2018-03-23T10:00:00",
+        "status": "UNREADED"
+      }
+    ],
+    "pageable": {
+      "sort": {
+        "sorted": false,
+        "unsorted": true
+      },
+      "offset": 0,
+      "pageSize": 20,
+      "pageNumber": 0,
+      "unpaged": false,
+      "paged": true
+    },
+    "last": true,
+    "totalPages": 1,
+    "totalElements": 5,
+    "size": 20,
+    "number": 0,
+    "sort": {
+      "sorted": false,
+      "unsorted": true
+    },
+    "numberOfElements": 5,
+    "first": true
+  },
+  "listfiles": {
+    "content": [
+      {
+        "id": 1,
+        "name": "file1",
+        "type": "some file type",
+        "bytes": 1024,
+        "uploadDate": "2018-03-23T10:00:00",
+        "status": "UNREADED"
+      },
+      {
+        "id": 2,
+        "name": "file2",
+        "type": "some file type",
+        "bytes": 1024,
+        "uploadDate": "2018-03-23T10:00:00",
+        "status": "UNREADED"
+      },
+      {
+        "id": 3,
+        "name": "file3",
+        "type": "some file type",
+        "bytes": 1024,
+        "uploadDate": "2018-03-23T10:00:00",
+        "status": "UNREADED"
+      },
+      {
+        "id": 4,
+        "name": "file4",
+        "type": "some file type",
+        "bytes": 1024,
+        "uploadDate": "2018-03-23T10:00:00",
+        "status": "UNREADED"
+      },
+      {
+        "id": 5,
+        "name": "file5",
+        "type": "some file type",
+        "bytes": 1024,
+        "uploadDate": "2018-03-23T10:00:00",
+        "status": "UNREADED"
+      }
+    ],
+    "pageable": {
+      "sort": {
+        "sorted": false,
+        "unsorted": true
+      },
+      "offset": 0,
+      "pageSize": 20,
+      "pageNumber": 0,
+      "unpaged": false,
+      "paged": true
+    },
+    "last": true,
+    "totalPages": 1,
+    "totalElements": 5,
+    "size": 20,
+    "number": 0,
+    "sort": {
+      "sorted": false,
+      "unsorted": true
+    },
+    "numberOfElements": 5,
+    "first": true
+  },
+  "agent":{
+  "billingCity": "City1",
+  "billingCountry": "Country1",
+  "billingPostalCode": "00000",
+  "billingStreet": "Street1",
+  "defaultDate": "01/01/2018",
+  "iataCode": "SS",
+  "isoCountryCode": "SS",
+  "name": "Agent",
+  "vatNumber": "ABC123"
+},
+"billingPeriod":{
+  "address1": "mi dirección 1",
+  "airlineCode": "ABC",
+  "city": "Ciudad1",
+  "country": "Pais1",
+  "globalName": "Name",
+  "isoCountryCode": "NA",
+  "postalCode": "12345",
+  "taxNumber": "taxNumber",
+  "toDate": "Date"
+},
+"adm-acm-configuration":
+{
+  "agentVatNumberEnabled": "false",
+  "airlineVatNumberEnabled": "false",
+  "companyRegistrationNumberEnabled": "false",
+  "cpPermittedForConcerningIssue": "false",
+  "cpPermittedForConcerningRefund": "false",
+  "defaultStat": "false",
+  "freeStat": "false",
+  "isoc": "",
+  "maxNumberOfRelatedDocuments": 3,
+  "mfPermittedForConcerningIssue": "false",
+  "mfPermittedForConcerningRefund": "false",
+  "nridAndSpamEnabled": "false",
+  "taxOnCommissionEnabled": "false",
+  "taxOnCommissionSign": -1
+},
+"refund-configuration":{},
+"countries": 
+  [
+  {"isoCountryCode":"AA","name":"Country AA"},
+  {"isoCountryCode":"BB","name":"Country BB"},
+  {"isoCountryCode":"CC","name":"Country CC"}
+],
+"curreny": [
+  {"isoc":"BB",
+  "currencies":
+    [
+      {"name":"ZZZ","numDecimals":0,"expirationDate":"2017-01-01"}
+    ]
+  }
+],
+"adm-acm-reasons":
+[
+  {
+    "detail": "Prueba1",
+    "id": 0,
+    "isoCountryCode": "AAA",
+    "title": "Prueba1 Tit"
+  },
+  {
+    "detail": "Prueba2",
+    "id": 1,
+    "isoCountryCode": "BBB",
+    "title": "Prueba2 Tit"
+  },
+  {
+    "detail": "Prueba3",
+    "id": 2,
+    "isoCountryCode": "CCC",
+    "title": "Prueba3 Tit"
+  }
+],
+"refund-reasons":
+[
+  {
+    "detail": "Prueba1",
+    "id": 0,
+    "isoCountryCode": "AAA",
+    "title": "Prueba1 Tit"
+  },
+  {
+    "detail": "Prueba2",
+    "id": 1,
+    "isoCountryCode": "BBB",
+    "title": "Prueba2 Tit"
+  },
+  {
+    "detail": "Prueba3",
+    "id": 2,
+    "isoCountryCode": "CCC",
+    "title": "Prueba3 Tit"
+  }
+],
+"toca":[
+  {
+    "code": "AAA",
+    "description": "pppp",
+    "isoCountryCode": "AA"
+  }
+]
+
+
+}

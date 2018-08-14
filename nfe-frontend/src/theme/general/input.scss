@@ -71,12 +71,12 @@
 }
 
 .input-date::-webkit-calendar-picker-indicator {
-  background: url(assets/images/glyph/svg/si-glyph-calendar-3.svg) center/80% no-repeat;
+  background: url('/assets/images/glyph/svg/si-glyph-calendar-3.svg') center/80% no-repeat;
   color: rgba(0, 0, 0, 0);
   opacity: 0.5
 }
 
 .input-date::-webkit-calendar-picker-indicator:hover {
-  background: url(assets/images/glyph/svg/si-glyph-calendar-3.svg) center/80% no-repeat;
+  background: url('/assets/images/glyph/svg/si-glyph-calendar-3.svg') center/80% no-repeat;
   opacity: 0.8
 }

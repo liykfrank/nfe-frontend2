@@ -1,0 +1,48 @@
+@import "../../../../theme/general/mixins.scss";
+
+.tooltip {
+    position: relative;
+    float: left;
+    height: 100%;
+    @include centerDiv();
+
+    img {
+        color: red;
+        max-width: 15px;
+    }
+}
+
+
+.tooltip:hover .tooltiptext {
+    display: block;
+}
+
+.tooltiptext {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid red;
+    color: red;
+    width: 200px;
+    text-align: left;
+    border-radius: 2px;
+    padding: 5px;
+    font-size: 12px;
+    top: 80%;
+    left: 0%;
+    z-index: 22000;
+}
+
+.tooltip .tooltiptext::after {
+    content: " ";
+    position: absolute;
+    bottom: 100%;
+    top: -24px;
+    left: 1%;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent red transparent;
+}
+
+
+

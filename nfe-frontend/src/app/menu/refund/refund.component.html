@@ -1,0 +1,71 @@
+<div [id]="id_refund" class="container-fluid custom-container">
+  <div class="row" id="refund-header" [ngClass]="checkClassSticky()">
+    <bspl-resume-bar class="col-12"
+      [elementsResumeBar]="elementsResumeBar"
+      (returnSave)="onReturnSave()"
+      (returnIssue)="onReturnIssue()"
+      >
+    </bspl-resume-bar>
+    <bspl-pills-collapsable class="col-12"
+      [pills]="pills"
+      [idReference]="id_refund"
+      (returnRefreshPills)="onReturnRefreshPills($event)">
+    </bspl-pills-collapsable>
+  </div>
+  <div class="row hidden-header" [hidden]="!checkSticky()"></div>
+  <div class="row" >
+    <div class="col-3 order-12" id="multitabs" [ngClass]="checkClassSticky()">
+      <bspl-multitabs
+        [url]="url"
+        [idPk]="id_refund_model"
+        [modelView]="screen"
+        [listExcludesOnHistory]="['ATTACH_FILE', 'ADD_COMMENT']"
+        [disabledDocuments]="true">
+      </bspl-multitabs>
+    </div>
+    <div class="col-9">
+      <div class="row">
+        <div class="col-12">
+          <bspl-collapsable
+            [idCollapsable]="pills[0].id"
+            [title]="'REFUNDS.BASIC_INFO.title'"
+            (showHide)="collapsablePill($event,0)"
+            [open]="pills[0].collapsable">
+              <bspl-basic-info-refund
+                [basicInfoRefundFormModel]="basicInfoRefundFormModel"
+                (clickMoreDetails)="onClickMoreDetails($event)">
+                <!-- (returnForm)="onReturnBasicInfo($event)" -->
+              </bspl-basic-info-refund>
+          </bspl-collapsable>
+          <bspl-collapsable
+            [idCollapsable]="pills[1].id"
+            [title]="'REFUNDS.DETAILS.title'"
+            (showHide)="collapsablePill($event,1)"
+            [open]="pills[1].collapsable">
+              <bspl-details-refund
+                (returnForm)="onReturnDetails($event)">
+              </bspl-details-refund>
+          </bspl-collapsable>
+          <bspl-collapsable
+            [idCollapsable]="pills[2].id"
+            [title]="'REFUNDS.FORM_OF_PAYMENT.title'"
+            (showHide)="collapsablePill($event,2)"
+            [open]="pills[2].collapsable">
+            <bspl-form-of-payment-refund
+             (returnForm)="onReturnFormOfPayment($event)">
+            </bspl-form-of-payment-refund>
+          </bspl-collapsable>
+          <bspl-collapsable
+            [idCollapsable]="pills[3].id"
+            [title]="'REFUNDS.AMOUNT.title'"
+            (showHide)="collapsablePill($event,3)"
+            [open]="pills[3].collapsable">
+           <bspl-amount-refund
+            (returnAmount)="onReturnAmount($event)">
+          </bspl-amount-refund>
+          </bspl-collapsable>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

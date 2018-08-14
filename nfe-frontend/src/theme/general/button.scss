@@ -2,7 +2,7 @@
   background: #014E81;
   color: white;
   width: 83px;
-  height: 40px;
+  height: 37px;
   border-radius: 2px;
   cursor: pointer !important ;
   font-size: 16px;
@@ -11,6 +11,22 @@
 
 %button-custom[disabled] {
   // background-color: #013E66;
+}
+
+%button-structure {
+  height: 40px;
+  border-radius: 2px;
+  font-size: 16px;
+  padding-left: 17px;
+  padding-right: 17px;
+}
+
+.btn-s {
+  @extend %button-structure;
+
+  &.btn-light {
+    border: 1px solid #152C5A;
+  }
 }
 
 .button-custom {
@@ -77,16 +93,20 @@
 }
 
 .button-switch-pill {
+  float: right;
   min-width: 123px;
   color: #1989CF;
   border: solid 1px #1989CF;
   background-color: #FFFFFF;
   font-size: 14px;
   border-radius: 100px;
-  text-align: right;
+  text-align: center;
   padding: 0 4px;
-  margin-top: 4px;
   height: 26px;
+
+  &:focus {
+    outline: none;
+  }
 
   .button-title {
     text-align: center;
@@ -99,10 +119,6 @@
     float: left;
     margin-right: 5px;
   }
-}
-
-.button-switch-pill:focus {
-  outline: none;
 }
 
 %button-bin {
@@ -121,10 +137,59 @@
 
 .button-bin-float-right {
   @extend %button-bin;
-  float: right;
   height: 40px;
   width: 40px;
   background-color: transparent;
 }
 
+%pill {
+  cursor: pointer;
+  min-width: 123px;
+  color: #1989CF;
+  border: solid 1px #1989CF;
+  background-color: #FFFFFF;
+  vertical-align: middle;
+  font-size: 14px;
+  line-height: 16px;
+  padding: 4px 10px;
+  // border-radius: 0;
+  // margin-left: -3px;
+  // margin-right: -3px;
 
+  &.active {
+    background-color: #1989CF !important;
+    border-color: #1989CF !important;
+    color: #FFFFFF !important;
+  }
+
+  &:focus{
+    outline: none !important;
+  }
+}
+
+.pills-links {
+  .pill {
+    @extend %pill;
+  }
+
+  .pill-first {
+    @extend %pill;
+    border-top-left-radius: 100px;
+    border-bottom-left-radius: 100px;
+    // margin-left: 0;
+  }
+
+  .pill-last {
+    @extend %pill;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    // margin-right: 0;
+  }
+}
+
+.btn-plus{
+  width: 27px;
+  font-size: 27px !important;
+  color: 	#1989CF;
+  margin-top: 5px;
+}

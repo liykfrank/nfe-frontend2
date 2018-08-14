@@ -1,0 +1,38 @@
+<div *ngIf="!freeStat && select == false; then freeStatFalse else freeStatTrue"></div>
+
+<ng-template #freeStatTrue>
+  <div [formGroup]="inputForm" class="resizeCategory">
+    <bspl-input-form-control l10nTranslate
+      [label]="label"
+      [wrapText]="true"
+      [inputMaxTextLength]="3"
+      [formGroupParent]="inputForm"
+      [formControlParentName]="'inputFormControl'">
+  </bspl-input-form-control>
+  </div>
+</ng-template>
+
+<ng-template #freeStatFalse>
+  <div [formGroup]="inputForm">
+    <label class="text-nowrap" l10nTranslate>{{label}}</label>
+    <div class="form-row pt-1">
+      <div class="custom-radio col-5 mr-2">
+        <input id="r_domestic" 
+          value="DOM"
+          type="radio" 
+          formControlName="inputFormControl"
+          [checked]="value == 'DOM'">
+        <label for="r_domestic" class="text-nowrap" l10nTranslate><span></span>{{domesticLabel}}</label>
+      </div>
+        
+      <div class="custom-radio col-5">
+        <input id="r_internacional" 
+          value="INT"
+          type="radio" 
+          formControlName="inputFormControl"
+          [checked]="value == 'INT'">
+        <label for="r_internacional" class="text-nowrap" l10nTranslate><span></span>{{internacionalLabel}}</label>
+      </div>
+    </div>
+  </div>
+</ng-template>

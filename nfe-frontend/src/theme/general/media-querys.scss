@@ -1,0 +1,28 @@
+
+$smartphoneHD: 321px;
+$tablet: 577px;
+$desktop: 769px;
+$desktopXL: 1280px;
+
+@mixin smartphoneHD{
+  @media only screen and (min-width: $smartphoneHD){
+    @content;
+  }
+}
+@mixin tablet{
+  @media only screen and (min-width:$tablet){
+    @content;
+  }
+}
+
+@mixin desktop{
+  @media only screen and (min-width: $desktop){
+    @content;
+  }
+}
+
+@mixin desktopXL{
+  @media only screen and (min-width: $desktopXL){
+    @content;
+  }
+}
