@@ -269,6 +269,7 @@ public class Refund {
      */
     public String getTicketDocumentNumber() {
 
-        return id == null ? null : String.format("%010d", id);
+        return (id == null || airlineCode == null) ? null
+                : String.format("%s%010d", airlineCode, id);
     }
 }

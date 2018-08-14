@@ -41,10 +41,10 @@ public class RefundService {
      */
     public Optional<Refund> findByIsoCountryCodeAndAirlineCodeAndTicketDocumentNumber(
             String isoCountryCode, String airlineCode, String ticketDocumentNumber) {
-        if (!ticketDocumentNumber.matches("^\\d{1,10}$")) {
+        if (!ticketDocumentNumber.matches("^\\d{1,13}$")) {
             return Optional.empty();
         }
-        Long id = Long.parseLong(ticketDocumentNumber);
+        Long id = Long.parseLong(ticketDocumentNumber.substring(3));
         Optional<Refund> refund = findById(id);
         if (refund.isPresent()) {
             if (!refund.get().getIsoCountryCode().equals(isoCountryCode)) {
@@ -71,7 +71,7 @@ public class RefundService {
         refund.setAttachedFiles(null);
         refund.setHistory(null);
         refund.setComments(null);
-        
+
         Refund refundSaved = refundRepository.save(refund);
 
         refundSaved.setHistory(saveRefundHistory(refundSaved, RefundAction.REFUND_ISSUE));

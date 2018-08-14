@@ -20,12 +20,16 @@ public class RefundTest {
     @Test
     public void testGetTicketDocumentNumber() {
 
-        Refund acdm = new Refund();
+        Refund refund = new Refund();
 
-        assertThat(acdm.getTicketDocumentNumber(), nullValue());
+        assertThat(refund.getTicketDocumentNumber(), nullValue());
 
-        acdm.setId((long)1);
+        refund.setId((long)1);
 
-        assertThat(acdm.getTicketDocumentNumber(), equalTo("0000000001"));
+        assertThat(refund.getTicketDocumentNumber(), nullValue());
+
+        refund.setAirlineCode("075");
+
+        assertThat(refund.getTicketDocumentNumber(), equalTo("0750000000001"));
     }
 }
