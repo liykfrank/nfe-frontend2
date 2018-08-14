@@ -1,11 +1,10 @@
 @import '/../../../../../theme/general.scss';
 
+input[type=checkbox][disabled]{
+    opacity: 0.5;
+  }
 
 #amount-refund{
-    .ceil-input{
-        width: 60% !important;
-    }
-
     .centered{
         overflow: auto;
         height: 100%;
@@ -25,5 +24,6 @@
             font-size:14px;
         }
     }
+
 }
 

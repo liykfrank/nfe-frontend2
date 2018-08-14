@@ -21,7 +21,6 @@
     <div class="col-12 mb-2">
       <div class="form-group col-5 p-0">
         <bspl-input-form-control l10nTranslate
-          [error]="''"
           [wrapText]="true"
           [label]="'REFUNDS.DETAILS.passenger_name'"
           [inputMaxTextLength]="'49'"
@@ -32,19 +31,25 @@
     </div>
 
     <!-- REASON FOR REFUND AND DETAILED REASONS -->
-    <div class="col-12  mb-2">
-
-      <bspl-reasons
-        [dropdownTitle]="'REFUNDS.DETAILS.reason_for_refund'"
-        [textAreaTitle]="'REFUNDS.DETAILS.detailed_reasons'"
-        [alignment]="reasonsAlignment"
-        [type]="type"
-        [isoCode]="refundConfiguration.isoCountryCode || null"
-        [formGroupParent]="detailsRefundFormModel.detailsRefundGroup"
-        [formControlParentName]="'issueReason'"
-        (returnForm)="onReturnFormReasons($event)">
-      </bspl-reasons>
-
+    <div class="col-12">
+      <div class="row">
+        <div class="form-group col-3">
+          <bspl-reasons-selector
+            [dropdownTitle]="'REFUNDS.DETAILS.reason_for_refund'"
+            [isoCode]="user.isoc"
+            (changeSelect)="onSelectorChange($event)">
+          </bspl-reasons-selector>
+        </div>
+        <div class="col-3"></div>
+        <div class="form-group  col-5">
+          <label l10nTranslate>REFUNDS.DETAILS.detailed_reasons</label>
+            <bspl-field-error
+            *ngIf="(this.detailsRefundFormModel.issueReason.touched || this.detailsRefundFormModel.issueReason.dirty) && this.detailsRefundFormModel.issueReason.errors"
+            [errors]="this.detailsRefundFormModel.issueReason.errors">
+          </bspl-field-error>
+          <textarea id="detailed_reasons" rows="4" class="form-control" formControlName="issueReason"></textarea>
+        </div>
+      </div>
     </div>
 
     <!-- SECTION DOCUMENT NUMBER -->
@@ -58,7 +63,7 @@
             <div class="form-group col-5 pr-1 mb-0">
               <bspl-input-form-control
                 [type]="'regex'"
-                [typingPattern]="'^[0-9]*$'"
+                [typingPattern]="'^[a-zA-Z0-9]*$'"
                 [inputMaxTextLength]="3"
                 [formGroupParent]="detailsRefundFormModel.detailsRefundGroup"
                 [formControlParentName]="'airlineCodeRelatedDocument'">
@@ -67,7 +72,6 @@
 
             <div formGroupName="relatedDocument" class="form-group col-7 pl-0 mb-0">
               <bspl-input-form-control
-                [error]="''"
                 [type]="'regex'"
                 [typingPattern]="'^[0-9]*$'"
                 [inputMaxTextLength]="10"
@@ -85,19 +89,19 @@
           <label>&nbsp;</label>
           <div class="row mt-2">
             <label class="custom-checkbox col-3">1
-              <input type="checkbox" formControlName="relatedTicketCoupon1">
+              <input (ngModelChange)="onChangeCheckCupon($event)" type="checkbox" formControlName="relatedTicketCoupon1">
               <span class="checkmark"></span>
             </label>
             <label class="custom-checkbox col-3">2
-              <input type="checkbox" formControlName="relatedTicketCoupon2">
+              <input (ngModelChange)="onChangeCheckCupon($event)" type="checkbox" formControlName="relatedTicketCoupon2">
               <span class="checkmark"></span>
             </label>
             <label class="custom-checkbox col-3">3
-              <input type="checkbox" formControlName="relatedTicketCoupon3">
+              <input (ngModelChange)="onChangeCheckCupon($event)" type="checkbox" formControlName="relatedTicketCoupon3">
               <span class="checkmark"></span>
             </label>
             <label class="custom-checkbox col-3">4
-              <input type="checkbox" formControlName="relatedTicketCoupon4">
+              <input (ngModelChange)="onChangeCheckCupon($event)" type="checkbox" formControlName="relatedTicketCoupon4">
               <span class="checkmark"></span>
             </label>
           </div>
@@ -121,10 +125,9 @@
         <!-- WAIVER CODE -->
         <div class="form-group col-2 pl-0 mb-0">
           <bspl-input-form-control l10nTranslate
-            [error]="''"
             [wrapText]="true"
             [type]="'regex'"
-            [typingPattern]="'^[A-Z0-9]*$'"
+            [typingPattern]="'^[a-zA-Z0-9]*$'"
             [label]="'REFUNDS.DETAILS.waiver_code'"
             [formGroupParent]="detailsRefundFormModel.detailsRefundGroup"
             [formControlParentName]="'waiverCode'"
@@ -147,7 +150,6 @@
             </div>
             <div class="form-group col-7 pl-0 mb-0">
               <bspl-input-form-control
-                [error]="''"
                 [wrapText]="true"
                 [type]="'regex'"
                 [typingPattern]="'^[0-9]*$'"
@@ -164,28 +166,28 @@
           <label>&nbsp;</label>
           <div class="row mt-2">
             <label class="custom-checkbox col-3">1
-              <input type="checkbox" formControlName="relatedTicketCoupon1">
+              <input (ngModelChange)="onChangeCheckCupon($event)" type="checkbox" formControlName="relatedTicketCoupon1">
               <span class="checkmark"></span>
             </label>
             <label class="custom-checkbox col-3">2
-              <input type="checkbox" formControlName="relatedTicketCoupon2">
+              <input (ngModelChange)="onChangeCheckCupon($event)" type="checkbox" formControlName="relatedTicketCoupon2">
               <span class="checkmark"></span>
             </label>
             <label class="custom-checkbox col-3">3
-              <input type="checkbox" formControlName="relatedTicketCoupon3">
+              <input (ngModelChange)="onChangeCheckCupon($event)" type="checkbox" formControlName="relatedTicketCoupon3">
               <span class="checkmark"></span>
             </label>
             <label class="custom-checkbox col-3">4
-              <input type="checkbox" formControlName="relatedTicketCoupon4">
+              <input (ngModelChange)="onChangeCheckCupon($event)" type="checkbox" formControlName="relatedTicketCoupon4">
               <span class="checkmark"></span>
             </label>
           </div>
         </div>
 
         <!-- BUTTON REMOVE -->
-        <div class="form-group col-1 m-0 pr-0 pl-5 centered" *ngIf="i == detailsRefundFormModel.getFormArray().length-1 && i != 0 ">
+        <div class="form-group col-1 m-0 pr-0 pl-5 centered" *ngIf="detailsRefundFormModel.getFormArray().length  > 1 ">
           <label>&nbsp;</label>
-          <input class=" form-group form-control-plaintext ico-trash-container" readonly="" type="text" (click)="detailsRefundFormModel.removeCNJ()">
+          <input class=" form-group form-control-plaintext ico-trash-container" readonly="" type="text" (click)="detailsRefundFormModel.removeCNJ(i);onRemoveAllCuponsFrom(cnj);">
         </div>
 
         <!-- BUTTON PLUS -->
@@ -224,24 +226,20 @@
 
             <div class="form-group col-5 pr-1">
               <bspl-input-form-control l10nTranslate
-                [error]="''"
                 [wrapText]="true"
                 [type]="'regex'"
                 [typingPattern]="'^[0-9]*$'"
                 [inputMaxTextLength]="'3'"
-                [disabledInput]="true"
                 [formGroupParent]="detailsRefundFormModel.originalIssue"
                 [formControlParentName]="'originalAirlineCode'">
               </bspl-input-form-control>
             </div>
             <div class="form-group col-7 pl-0 pr-1">
               <bspl-input-form-control l10nTranslate
-                [error]="''"
                 [wrapText]="true"
                 [type]="'regex'"
                 [typingPattern]="'^[0-9]*$'"
                 [inputMaxTextLength]="'10'"
-                [disabledInput]="true"
                 [formGroupParent]="detailsRefundFormModel.originalIssue"
                 [formControlParentName]="'originalTicketDocumentNumber'">
               </bspl-input-form-control>
@@ -252,13 +250,11 @@
         <!-- ISSUE AGENT -->
         <div class="form-group col-2 pr-1 pl-1">
           <bspl-input-form-control l10nTranslate
-            [error]="''"
             [label]="'REFUNDS.DETAILS.issuing_agent'"
             [wrapText]="true"
             [type]="'regex'"
             [typingPattern]="'^[0-9]*$'"
             [inputMaxTextLength]="'7'"
-            [disabledInput]="true"
             [formGroupParent]="detailsRefundFormModel.originalIssue"
             [formControlParentName]="'originalAgentCode'">
           </bspl-input-form-control>
@@ -282,12 +278,10 @@
         <!-- PLACE (CITY CODE) -->
         <div class="form-group col-2 pl-0">
           <bspl-input-form-control l10nTranslate
-            [error]="''"
             [label]="'REFUNDS.DETAILS.place_city_code'"
             [wrapText]="true"
             [type]="'regex'"
-            [typingPattern]="'^[A-Z]*$'"
-            [disabledInput]="true"
+            [typingPattern]="'^[a-zA-Z]*$'"
             [inputMaxTextLength]="3"
             [formGroupParent]="detailsRefundFormModel.originalIssue"
             [formControlParentName]="'originalLocationCityCode'">

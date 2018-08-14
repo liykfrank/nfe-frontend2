@@ -30,6 +30,24 @@
             </div>
           </div>
 
+          <div class="row no-gutters comment" *ngIf="commentToUpload">
+            <div class="col-12 pr-3 pl-3">
+              <div class="row no-gutters align-items-center">
+                <div class="col-1 pb-2">
+                  <img src="assets/images/comments/icon-user.svg">
+                </div>
+                <div class="col-11 pb-2 pl-2">
+                  user owner
+                </div>
+                <div class="col-1 pb-2"></div>
+                <div class="col-11 pb-2 pl-2">{{commentToUpload.text}}</div>
+                <div class="col-12 pb-2 pr-4 comment-date">
+                  <span>{{commentToUpload.insertDateTime | date:'dd/MM/yy - hh:mm'}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="row no-gutters" *ngIf="!checkComments()">
             <div class="col-12 pr-5 pl-4 pt-4">
               <div class="no-comment justify-content-center">
@@ -46,8 +64,8 @@
   <div class="col-12">
     <div class="row no-gutters align-items-center comment-input-container">
       <div class="col-10 pl-3 pr-3 pt-3 pb-3">
-        <input type="text" class="form-control comment-input" 
-          (keyup)="saveCommentWithEnter($event)" 
+        <input type="text" class="form-control comment-input"
+          (keyup)="saveCommentWithEnter($event)"
           [(ngModel)]="text"
           [disabled]="disabled">
       </div>
@@ -60,45 +78,3 @@
   </div>
 
 </div>
-
-<!-- <div class="tab-content-header">
-  <div class="title">
-    <span class="color-bullet"></span>
-    <span l10nTranslate >MULTITABS.COMMENTS.title</span>
-  </div>
-  <div class="subtitle">
-
-  </div>
-</div>
-
-<div class='comments-component'>
-  <div class="messages-container">
-    <p-scrollPanel [style]="{width: '100%', height: '100%'}" styleClass="custom">
-      <div class="message" *ngFor="let item of comments">
-        {{ item.text }}
-      </div>
-      <div class="message" *ngIf="commentToUpload">
-        {{ commentToUpload.text }}
-      </div>
-    </p-scrollPanel>
-  </div>
-
-  <div class="message-input">
-
-    <div class="input-group mb-3">
-      <input
-        type="text"
-        class="form-control"
-        aria-describedby="basic-addon2"
-        (keyup)="saveCommentWithEnter($event)"
-        [(ngModel)]="text"
-        [disabled]="disabled"
-        >
-      <div class="input-group-append">
-        <span class="input-group-text" id="basic-addon2" (click)="saveCommentWithClick()">
-          <img src="assets/images/utils/ico-send.svg">
-        </span>
-      </div>
-    </div>
-  </div>
-</div> -->

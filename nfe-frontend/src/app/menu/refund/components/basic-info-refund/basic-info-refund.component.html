@@ -7,7 +7,8 @@
       [showContact]= "true"
       [disabledContact] = "true"
       [airlineFormModelGroup]="basicInfoRefundFormModel.get('airline')"
-      [isoCountryCode]="user.isoc">
+      [isoCountryCode]="user.isoc"
+      (clickMoreDetails)="onClickMoreDetails($event)">
     </bspl-airline>
   </div>
   <div class="col-6">
@@ -15,11 +16,11 @@
     [agentFormModelGroup]="basicInfoRefundFormModel.get('agent')"
       [agentVatNumberEnabled]="refundConfiguration.agentVatNumberEnabled"
       [companyRegistrationNumberEnabled]="refundConfiguration.companyRegistrationNumberEnabled"
-      [showAgentName] = "true"
-      [disabledAgentCode] = "true"
-      [showContact]= "true"
-      [showMoreDetails] = "false"
-      [agentCode] = "user.iataCode">
+      [showAgentName]="true"
+      [showContact]="true"
+      [showMoreDetails]="true"
+      [agentCode]="user.iataCode"
+      (clickMoreDetails)="onClickMoreDetails($event)">
     </bspl-agent>
   </div>
 </div>

@@ -19,7 +19,7 @@ export const environment = {
     adm_acm: {
       configuration: 'agencymemo/v1/configurations',
       airline: 'agencymemo/v1/airlines', // /{isoCountryCode}/{airlineCode}
-      agent: 'agencymemo/v1/agents', // {agentCode}
+      agent: 'agencymemo/v1/agents/', // {agentCode}
       acdm: 'agencymemo/v1/acdms', // {id} | /{id}/files
       country: 'agencymemo/v1/countries',
       toca: 'agencymemo/v1/tctps', // {isoc} | {isoc}/{code}: remove

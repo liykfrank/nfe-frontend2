@@ -16,9 +16,12 @@ export class AirlineFormModel extends ReactiveFormHandlerModel {
     super();
   }
 
+
   createFormControls() {
-    this.airlineCode = new FormControl('', { validators : [Validators.pattern('[A-Z0-9]{3}$')], updateOn: 'blur' } );
-    this.airlineRegistrationNumber = new FormControl('', [Validators.required]);
+    this.airlineCode = new FormControl('', { validators : [Validators.pattern('[a-zA-Z0-9]*$'),
+                                                           Validators.required,
+                                                           Validators.minLength(3)], updateOn: 'blur' } );
+    this.airlineRegistrationNumber = new FormControl('');
     this.airlineVatNumber = new FormControl('', [Validators.required]);
     this.airlineRemark = new FormControl('');
   }

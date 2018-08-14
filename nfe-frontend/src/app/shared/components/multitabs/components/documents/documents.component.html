@@ -21,22 +21,22 @@
   </div>
 
   <div class='col-12 document-component'>
-    <p-scrollPanel 
-      [style]="{width: '100%', height: '363px'}" 
+    <p-scrollPanel
+      [style]="{width: '100%', height: '363px'}"
       styleClass="custom">
       <div class="row no-gutters">
         <div class="col-12 mb-2 document-table">
-          <div class="row no-gutters document" *ngFor="let aux of [1,2,3,4,5,6,7,8]; let i = index">
+          <div class="row no-gutters document" *ngFor="let aux of documents; let i = index">
             <div class="col-2"></div>
             <div class="col-3">
               <!-- TODO FIX TOOLTIP: change date to show date + time NOT TIMEZONE -->
               <!-- {{ aux.insertDateTime | date:'dd/MM/yy' }} -->
               10/10/18
-              <span class="tooltip">{{ aux.insertDateTime }}</span>
+              <span class="tooltip"><!-- {{ aux.date }} --></span>
             </div>
             <div class="col-6 pr-3">
-              <span class="document-link">Document {{i}}</span>
-              <span class="remove-icon">
+              <span class="document-link" (click)="onClickTicket(aux)">{{aux.relatedTicketDocumentNumber}}</span>
+              <span class="remove-icon" (click)="deleteElem(i)" >
                 <i class="fa fa-trash-o"></i>
               </span>
             </div>
@@ -46,37 +46,3 @@
     </p-scrollPanel>
   </div>
 </div>
-
-<!-- <div class="tab-content-header">
-  <div>
-    <span class="color-bullet"></span>
-    <span l10nTranslate >MULTITABS.DOCS.title</span>
-  </div>
-</div>
-
-<div class='documents-component'>
-
-  <div class="title">
-      <span l10nTranslate>MULTITABS.DOCS.subtitle</span>
-  </div>
-
-  <p-scrollPanel [style]="{width: '100%', height: '401px'}" styleClass="custom">
-    <div>
-      <table class="table-amount">
-        <tbody>
-          <tr *ngFor="let item of documents; let i=index" >
-            <td (click)="onClickTicket(item)" >
-                {{ item.relatedTicketDocumentNumber }}
-            </td>
-            <td (click)="deleteElem(i)">
-              <span class="small-font-awesome fa-stack">
-                  <i class="fa fa-trash-o"></i>
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </p-scrollPanel>
-
-</div> -->

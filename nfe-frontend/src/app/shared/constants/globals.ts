@@ -14,5 +14,12 @@ export const GLOBALS = {
     },
     DATE_FORMAT : {
         DATE : 'ddMy'
+    },
+    FORM_OF_PAYMENT : {
+      MSCA_VALUE: 'msca',
+      MSCC_VALUE: 'mscc',
+      CC_VALUE: 'cc', // credit card
+      CA_VALUE: 'ca', // cash
+      EP_VALUE: 'ep' // easy pay
     }
 };

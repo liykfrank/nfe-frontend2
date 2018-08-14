@@ -1,10 +1,12 @@
 import { Directive, HostListener, ElementRef, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { DecimalsFormatterPipe } from '../pipes/decimals-formatter.pipe';
+import { NgControl } from '@angular/forms';
 
 @Directive({
   selector: '[decimalsFormatterDirective]'
 })
 export class DecimalsFormatterDirective implements OnInit, OnChanges {
+
 
   @Input('maxLength') maxLength: number = 11;
   private el: HTMLInputElement;
@@ -14,24 +16,25 @@ export class DecimalsFormatterDirective implements OnInit, OnChanges {
 
   constructor(
     private elemntRef: ElementRef,
-    private _DecimalsFormatterPipe: DecimalsFormatterPipe
+    private _DecimalsFormatterPipe: DecimalsFormatterPipe,
+    private _control: NgControl
   ) {
     this.el = this.elemntRef.nativeElement;
   }
 
   ngOnInit() {
+    this.value_aux = this.el.value;
     this.setValueWithDecimals();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes.decimals) {
-      this.setValueWithDecimals(true);
+      this.onBlur(null);
     }
   }
 
-  setValueWithDecimals(fromOnChange?: boolean) {
+  setValueWithDecimals() {
     if (!this.el.disabled) {
-      this.el.value = fromOnChange ? '0' : this.el.value;
       const transformed = this._DecimalsFormatterPipe.transform(this.el.value, this.decimals);
 
       setTimeout(() => this.el.value = transformed, 0);
@@ -46,6 +49,7 @@ export class DecimalsFormatterDirective implements OnInit, OnChanges {
   @HostListener('blur', ['$event.target.value'])
   onBlur(value) {
     const transformed = this._DecimalsFormatterPipe.transform(this.value_aux, this.decimals);
+    this._control.control.setValue(this._DecimalsFormatterPipe.parse(transformed, this.decimals));
     setTimeout(() => this.el.value = transformed, 0);
   }
 

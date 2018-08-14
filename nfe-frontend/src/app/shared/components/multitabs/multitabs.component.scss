@@ -8,12 +8,17 @@
 
   &.disabled {
     background-color: #EFF0F2;
+    cursor: default;
   }
 }
 
 .icon {
   height: 20px;
   width: auto;
+}
+
+.single-tab {
+  cursor: pointer;
 }
 
 .content-tab {

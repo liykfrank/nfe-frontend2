@@ -5,10 +5,11 @@ import { AirlineFormModel } from '../../../shared/components/airline/models/airl
 import { AgentFormModel } from './../../../shared/components/agent/models/agent-form-model';
 
 export class BasicInfoRefundFormModel extends ReactiveFormHandlerModel {
+
   airline: AirlineFormModel;
   agent: AgentFormModel;
-
   basicInfoRefundGroup: FormGroup;
+
   constructor() {
     super();
   }
@@ -17,7 +18,7 @@ export class BasicInfoRefundFormModel extends ReactiveFormHandlerModel {
 
   public createFormGroups() {
     this.airline = new AirlineFormModel();
-    this.agent = new AgentFormModel();
+    this.agent = new AgentFormModel(true);
   }
 
   public createForm() {

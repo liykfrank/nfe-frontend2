@@ -4,8 +4,8 @@ export class Currency {
   expirationDate: Date;
 
   constructor() {
-    this.name = '';
-    this.numDecimals = 0;
+    this.name = 'EUR';
+    this.numDecimals = 2;
     this.expirationDate = new Date();
   }
 }

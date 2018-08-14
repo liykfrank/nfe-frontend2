@@ -1,26 +1,21 @@
 <div *ngIf="!freeStat && select == false; then freeStatFalse else freeStatTrue"></div>
 
 <ng-template #freeStatTrue>
-  <div [formGroup]="inputForm">
-    <label l10nTranslate>{{label}}</label>
-    <input class="form-control" 
-      type="text" 
-      maxlength="3" 
-      [ngClass]="{'error': error != ''}" 
-      ownPattern 
-      [typingPattern]="'[DI][A-Z0-9]{2}$'" 
-      [withError]="true" 
-      (notifyError)="onError($event)"
-      formControlName="inputFormControl" 
-      [value]="formControlParent.value | uppercase"/>
-    <bspl-field-error [errors]="formControlParent.errors"></bspl-field-error>
+  <div [formGroup]="inputForm" class="resizeCategory">
+    <bspl-input-form-control l10nTranslate
+      [label]="label"
+      [wrapText]="true"
+      [inputMaxTextLength]="3"
+      [formGroupParent]="inputForm"
+      [formControlParentName]="'inputFormControl'">
+  </bspl-input-form-control>
   </div>
 </ng-template>
 
 <ng-template #freeStatFalse>
   <div [formGroup]="inputForm">
     <label class="text-nowrap" l10nTranslate>{{label}}</label>
-    <div class="form-row">
+    <div class="form-row pt-1">
       <div class="custom-radio col-5 mr-2">
         <input id="r_domestic" 
           value="DOM"
@@ -41,18 +36,3 @@
     </div>
   </div>
 </ng-template>
-
-<!-- 
-<form [formGroup]="inputForm" *ngIf="freeStat"></form> 
--->
-
-<!-- 
-<select class="form-control dropdown-custom col-2" *ngIf="!freeStat && select == true" formControlName="inputFormControl">
-  <option value="DOM" l10nTranslate [selected]="defaultStat == 'DOM'" >REFUNDS.DETAILS.domestic</option>
-  <option value="INT" l10nTranslate [selected]="defaultStat == 'INT'">REFUNDS.DETAILS.internacional</option>
-</select> 
--->
-
-<!-- 
-<form [formGroup]="inputForm" *ngIf="!freeStat && select == false" class="col-12 p-0"></form> 
--->

@@ -1,42 +1,56 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { CurrencyService } from './../../../../shared/components/currency/services/currency.service';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  EventEmitter,
+  Output
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { TranslationService } from 'angular-l10n';
 
-import { environment } from '../../../../../environments/environment';
 import { AlertType } from '../../../../core/enums/alert-type.enum';
 import { ReactiveFormHandler } from '../../../../shared/base/reactive-form-handler';
-
+import { Currency } from '../../../../shared/components/currency/models/currency.model';
+import { EnvironmentType } from '../../../../shared/enums/environment-type.enum';
 import { KeyValue } from '../../../../shared/models/key.value.model';
 import { Country } from '../../models/country.model';
 import { TocaType } from '../../models/toca-type.model';
 import { AcdmConfigurationService } from '../../services/adm-acm-configuration.service';
-import { CountryService } from '../../services/country.service';
+import { BasicInfoService } from '../../services/basic-info.service';
 import { AlertsService } from './../../../../core/services/alerts.service';
-
 import { AcdmBasicInfoFormModel } from './../../models/acdm-basic-info-form.model';
 import { AdmAcmConfiguration } from './../../models/adm-acm-configuration.model';
 import { PeriodService } from './../../services/period.service';
 import { TocaService } from './../../services/toca.service';
-import { Currency } from '../../../../shared/components/currency/models/currency.model';
-import { EnvironmentType } from '../../../../shared/enums/environment-type.enum';
+import { CurrencyPost } from '../../../../shared/components/currency/models/currency-post.model';
 
 @Component({
   selector: 'bspl-basic-info-adm-acm',
   templateUrl: './basic-info-adm-acm.component.html',
   styleUrls: ['./basic-info-adm-acm.component.scss']
 })
-export class BasicInfoAdmAcmComponent extends ReactiveFormHandler implements OnInit {
+export class BasicInfoAdmAcmComponent extends ReactiveFormHandler
+  implements OnInit, OnChanges {
   basicInfoFormModelGroup: FormGroup = new AcdmBasicInfoFormModel()
     .basicInfoFormModelGroup;
+
   private listPeriods: number[] = [];
 
-  @Input() isAdm = true;
+  @Input()
+  isAdm = true;
+  @Input()
+  countryList: Country[];
+
+  @Output()
+  clickMoreDetails: EventEmitter<any> = new EventEmitter();
 
   configuration: AdmAcmConfiguration;
 
   type = EnvironmentType.ACDM;
 
-  countryList: Country[];
   typeList: string[] = [];
   forList: string[] = ['I', 'R', 'X', 'E'];
   tocaList: TocaType[] = [];
@@ -49,11 +63,14 @@ export class BasicInfoAdmAcmComponent extends ReactiveFormHandler implements OnI
   private selectPeriodMonth: number;
   private selectPeriodYear: number;
 
+  private lastISO: string;
+
   constructor(
     private _acdmConfigurationService: AcdmConfigurationService,
-    private _countryService: CountryService,
     private _periodService: PeriodService,
     private _tocaService: TocaService,
+    private _basicInfoService: BasicInfoService,
+    private _currencyService: CurrencyService,
     private _alertsService: AlertsService,
     private _translationService: TranslationService
   ) {
@@ -62,11 +79,11 @@ export class BasicInfoAdmAcmComponent extends ReactiveFormHandler implements OnI
     this.subscribe(this.basicInfoFormModelGroup);
 
     this.subscriptions.push(
-      this._acdmConfigurationService
-        .getConfiguration()
-        .subscribe(data => {
-          this.configuration = data;
-        })
+      this._acdmConfigurationService.getConfiguration().subscribe(data => {
+        this.configuration = data;
+
+        this.basicInfoFormModelGroup.get('netReporting').setValue(false);
+      })
     );
 
     if (this.isAdm) {
@@ -74,24 +91,78 @@ export class BasicInfoAdmAcmComponent extends ReactiveFormHandler implements OnI
     } else {
       this.typeList = ['ACMA', 'SPCR', 'ACMD'];
     }
+
+    this.basicInfoFormModelGroup
+      .get('transactionCode')
+      .setValue(this.typeList[0]);
+    this.basicInfoFormModelGroup
+      .get('concernsIndicator')
+      .setValue(this.forList[0]);
+
+    this.basicInfoFormModelGroup.get('id').disable();
   }
-  private lastISO: string;
+
   ngOnInit() {
-    this._countryService.get().subscribe(countries => {
+    this.subscriptions.push(
+      this.basicInfoFormModelGroup
+        .get('transactionCode')
+        .valueChanges.subscribe(transactionCode => {
+          this._basicInfoService.setSubType(transactionCode);
+        })
+    );
+
+    this.subscriptions.push(
+      this.basicInfoFormModelGroup
+        .get('netReporting')
+        .valueChanges.subscribe(showSpam => {
+          this._basicInfoService.setShowSpam(showSpam);
+        })
+    );
+
+    this.subscriptions.push(
+      this.basicInfoFormModelGroup
+        .get('concernsIndicator')
+        .valueChanges.subscribe(concernsIndicator => {
+          this._basicInfoService.setConcernsIndicator(concernsIndicator);
+        })
+    );
+
+    this.subscriptions.push(
+      this._currencyService.getCurrencyState().subscribe(data => {
+        const currencyModel = this.basicInfoFormModelGroup.get('currency');
+
+        currencyModel.get('code').setValue(data.name);
+        currencyModel.get('decimals').setValue(data.numDecimals);
+
+        const currency: CurrencyPost = new CurrencyPost();
+        currency.code = data.name;
+        currency.decimals = data.numDecimals;
+
+        this._basicInfoService.setCurrency(currency);
+      })
+    );
+  }
+
+  onClickMoreDetails(event) {
+    this.clickMoreDetails.emit(event);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.countryList && this.countryList) {
       // Initialize all
-      this.countryList = countries;
       this.basicInfoFormModelGroup
         .get('isoCountryCode')
-        .setValue(countries[0].isoCountryCode);
-      this._changeCountry(countries[0].isoCountryCode);
-      this.lastISO = countries[0].isoCountryCode;
+        .setValue(this.countryList[0].isoCountryCode);
+      this._changeCountry(this.countryList[0].isoCountryCode);
+      this.lastISO = this.countryList[0].isoCountryCode;
 
       // Create subscription on countries
       this.subscriptions.push(
         this.basicInfoFormModelGroup
           .get('isoCountryCode')
           .valueChanges.subscribe(data => {
-            const iso = this.basicInfoFormModelGroup.get('isoCountryCode').value;
+            const iso = this.basicInfoFormModelGroup.get('isoCountryCode')
+              .value;
 
             if (
               this.configuration &&
@@ -119,7 +190,7 @@ export class BasicInfoAdmAcmComponent extends ReactiveFormHandler implements OnI
             }
           })
       );
-    });
+    }
   }
 
   setPeriod(event) {
@@ -161,20 +232,22 @@ export class BasicInfoAdmAcmComponent extends ReactiveFormHandler implements OnI
     }
   }
 
-  onReturnFormCurrency(event) {
-    console.log(event);
-  }
-
   private _changeCountry(iso) {
-    // TODO: set first child, set configuration on basic info, use stat component
     this._acdmConfigurationService.getConfigurationByISO(iso);
     this._periodService
       .getPeriodWithISO(iso)
       .subscribe(periods => this._createPeriods(periods.values));
-    this._tocaService
-      .getTocaWithISO(iso)
-      .subscribe(toca => (this.tocaList = [new TocaType()].concat(toca))); // TODO: si solo 1 disabled
-    // this._currencyService.getCurrencyWithISO(iso).subscribe(currencies => this.currencyList = currencies.currencies);
+    this._tocaService.getTocaWithISO(iso).subscribe(toca => {
+      this.tocaList = [new TocaType()].concat(toca);
+      this.basicInfoFormModelGroup
+        .get('taxOnCommissionType')
+        .setValue(this.tocaList[0].code);
+      if (this.tocaList.length == 1) {
+        this.basicInfoFormModelGroup.get('taxOnCommissionType').disable();
+      } else {
+        this.basicInfoFormModelGroup.get('taxOnCommissionType').enable();
+      }
+    });
   }
 
   private _createPeriods(list: number[]) {

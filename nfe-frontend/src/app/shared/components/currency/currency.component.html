@@ -1,5 +1,7 @@
-<label class="text-nowrap" l10nTranslate>CURRENCY.label</label>
-<select class="form-control pr-1" (change)="onChange($event)">
-  <option *ngFor="let item of currencyList; let i = index" [value]="i">{{ item.name }}</option>
-</select>
-<bspl-field-error error=""></bspl-field-error>
+<div class="form-group">
+  <label class="text-nowrap" l10nTranslate>CURRENCY.label</label>
+  <select class="form-control pr-1" [ngModel]="currencySelected"  (ngModelChange)="onChangeCurrency($event)">
+    <option *ngFor="let currency of currencyList" [ngValue]="currency">{{ currency.name }}</option>
+  </select>
+  <bspl-field-error error=""></bspl-field-error>
+</div>

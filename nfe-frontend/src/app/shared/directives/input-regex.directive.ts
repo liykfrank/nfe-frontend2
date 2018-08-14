@@ -4,48 +4,28 @@ import { Directive, HostListener, ElementRef, Input } from '@angular/core';
   selector: '[bsplInputRegex]'
 })
 export class InputRegexDirective {
-
   private el: HTMLInputElement;
+  private specialKeys: Array<string> = ['Backspace', 'Tab', 'End', 'Home'];
 
-  private lastText = '';
-
-  @Input('regexPattern') regexPattern;
+  @Input('regexPattern')
+  regexPattern;
   constructor(private elemntRef: ElementRef) {
     this.el = this.elemntRef.nativeElement;
   }
 
-  @HostListener('keyup', ['$event'])
-  onKeyup(value) {
+  @HostListener('keypress', ['$event'])
+  onKeypress(event: KeyboardEvent): boolean {
 
-    let text = value.srcElement.value;
-
-    if (text == '') {
-      this.lastText = '';
-      this.el.value = this.lastText;
-      return false;
+    if (this.specialKeys.indexOf(event.key) !== -1) {
+      return;
     }
 
-    const reg = new RegExp(this.regexPattern);
-    text = this.isLowerCase(text);
+    const regex = new RegExp(this.regexPattern);
+    const current: string = this.el.value;
+    const next: string = current.concat(event.key);
 
-    if (reg.test(text)) {
-      this.lastText = text;
-      this.el.value = text;
-      return true;
-    } else {
-      this.el.value = this.lastText;
-      return false;
+    if (next && !String(next).match(regex)) {
+      event.preventDefault();
     }
   }
-
-  isLowerCase(value: string): string {
-
-    const reg = new RegExp('[a-z]');
-
-    if (!this.regexPattern.match(reg)) {
-      value = value.toUpperCase();
-    }
-    return value;
-  }
-
 }

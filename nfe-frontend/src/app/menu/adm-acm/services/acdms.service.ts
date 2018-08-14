@@ -1,21 +1,15 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+
+import { environment } from '../../../../environments/environment';
 import { HttpServiceAbstract } from '../../../shared/base/http-service-abstract';
 import { Acdm } from '../models/acdm.model';
-import { environment } from '../../../../environments/environment';
 
 @Injectable()
 export class AcdmsService extends HttpServiceAbstract<Acdm[], Object> {
-
   constructor(private http: HttpClient) {
-    super(
-      http,
-      environment.basePath +
-        environment.adm_acm.basePath +
-        environment.adm_acm.api.acdm
-    );
+    super(http, environment.basePath + environment.api.adm_acm.acdm);
   }
 
   public postAcdm(acdm: Acdm): Observable<Acdm> {
@@ -24,5 +18,4 @@ export class AcdmsService extends HttpServiceAbstract<Acdm[], Object> {
     });
     return this.postSingle<Acdm>(JSON.stringify(acdm), header);
   }
-
 }

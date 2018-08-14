@@ -28,14 +28,14 @@ pipeline {
             }
         }
 
-         stage('Test') {
-            steps {
-                nodejs('nodejs') {
-                sh 'npm run test --prefix ./$JOB_BASE_NAME'
-                // sh 'npm run e2e'
-                }
-			}
-        }
+        //  stage('Test') {
+        //     steps {
+        //         nodejs('nodejs') {
+        //         sh 'npm run test --prefix ./$JOB_BASE_NAME'
+        //         // sh 'npm run e2e'
+        //         }
+		// 	}
+        // }
 
         stage('Nexus') {
             steps {

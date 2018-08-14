@@ -1,7 +1,9 @@
 <div [id]="id_acdm" class="container-fluid custom-container">
   <div class="row" id="acdm-header" [ngClass]="checkClassSticky()">
     <bspl-resume-bar class="col-12"
-      [elementsResumeBar]="elementsResumeBar">
+      [elementsResumeBar]="elementsResumeBar"
+      (returnSave)="onReturnSave()"
+      (returnIssue)="onReturnIssue()">
     </bspl-resume-bar>
     <bspl-pills-collapsable class="col-12"
       [pills]="pills"
@@ -12,7 +14,16 @@
   <div class="row hidden-header" [hidden]="!checkSticky()"></div>
   <div class="row">
     <div class="col-3 order-12" id="multitabs" [ngClass]="checkClassSticky()">
-      <bspl-multitabs></bspl-multitabs>
+      <bspl-multitabs
+        [url]="url"
+        [idPk]="id_acdm_model"
+        [modelView]="screen"
+        [documents]="ticketDocuments"
+        (removeTicket)="onRemoveTicket($event)"
+        (showTicket)="onClickMoreDetails($event)"
+
+      >
+      </bspl-multitabs>
     </div>
     <div class="col-9">
       <div class="row">
@@ -22,21 +33,31 @@
             [title]="'ADM_ACM.BASIC_INFO.title'"
             (showHide)="collapsablePill($event, 0)"
             [open]="pills[0].collapsable">
-            <bspl-basic-info-adm-acm></bspl-basic-info-adm-acm>
+            <bspl-basic-info-adm-acm
+              [isAdm]="isAdm"
+              [countryList]="countryList"
+              (returnForm)="onReturnFormBasicInfo($event)"
+              (clickMoreDetails)="onClickMoreDetails($event)">
+            </bspl-basic-info-adm-acm>
           </bspl-collapsable>
           <bspl-collapsable
             [idCollapsable]="pills[1].id"
             [title]="'ADM_ACM.AMOUNT.title'"
             (showHide)="collapsablePill($event, 1)"
             [open]="pills[1].collapsable">
-            <bspl-amount-adm-acm></bspl-amount-adm-acm>
+            <bspl-amount-adm-acm
+              [isAdm]="isAdm"
+              (returnForm)="onReturnFormAmount($event)">
+            </bspl-amount-adm-acm>
           </bspl-collapsable>
           <bspl-collapsable
             [idCollapsable]="pills[2].id"
             [title]="'ADM_ACM.DETAILS.title'"
             (showHide)="collapsablePill($event, 2)"
             [open]="pills[2].collapsable">
-            <bspl-details-adm-acm></bspl-details-adm-acm>
+            <bspl-details-adm-acm
+              (returnForm)="onReturnFormDetails($event)">
+            </bspl-details-adm-acm>
           </bspl-collapsable>
         </div>
       </div>

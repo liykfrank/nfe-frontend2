@@ -34,6 +34,6 @@ export class CommentsComponent {
   }
 
   public checkComments() {
-    return this.comments.length > 0;
+    return this.comments.length > 0 || this.commentToUpload;
   }
 }

@@ -20,15 +20,17 @@ export class AirlineComponent extends ReactiveFormHandler implements OnInit {
   @Input() airlineVatNumberEnabled: boolean;
   @Input() companyRegistrationNumberEnabled: boolean;
   @Input() disabledContact: boolean;
-  @Input() showContact: boolean;
+  @Input() showContact: boolean = true;
   @Input() showAirlineName: boolean;
   @Input() showMoreDetails = true;
   @Output() changeAirlineFormModel: EventEmitter<FormGroup> = new EventEmitter();
   @Output() changeAirlineModel: EventEmitter<Airline> = new EventEmitter();
-  @Output() clickMoreDetails: EventEmitter<any> = new EventEmitter();
+  @Output() clickMoreDetails: EventEmitter<boolean> = new EventEmitter();
 
   disabledMoreDetails = true;
   airline: Airline = new Airline();
+
+  display = false;
 
   constructor(private _airlineService: AirlineService) {
     super();
@@ -57,6 +59,10 @@ export class AirlineComponent extends ReactiveFormHandler implements OnInit {
           this.airline = airline;
           this.changeAirlineModel.emit(airline);
           this.disabledMoreDetails = false;
+
+          if (this.airlineVatNumberEnabled) {
+            this.airlineFormModelGroup.get('airlineVatNumber').setValue(airline.taxNumber);
+          }
         },
         error => {
           this._clean();
@@ -71,14 +77,21 @@ export class AirlineComponent extends ReactiveFormHandler implements OnInit {
   }
 
   onClickMoreDetails() {
-    this.clickMoreDetails.emit();
+    this.clickMoreDetails.emit(true);
+    this.display = true;
   }
 
   onChangeContact(value) {
     this.airlineFormModelGroup.setControl('airlineContact', value);
   }
 
+  onClose() {
+    this.clickMoreDetails.emit(false);
+    this.display = false;
+  }
+
   private _clean() {
+    this.airlineFormModelGroup.get('airlineVatNumber').reset();
     this.airline = new Airline();
     this.disabledMoreDetails = true;
   }

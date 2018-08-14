@@ -2,7 +2,10 @@ import { ReactiveFormHandler } from './reactive-form-handler';
 import { FormGroup } from '@angular/forms';
 export abstract class ReactiveFormHandlerModel {
 
-  constructor() {
+  public defaultDisabled = false;
+
+  constructor(defaultDisabled?: boolean) {
+    this.defaultDisabled = defaultDisabled;
     this.createFormControls();
     this.createFormGroups();
     this.createForm();

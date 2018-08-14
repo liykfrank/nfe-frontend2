@@ -50,4 +50,43 @@ export class Acdm {
 
   //Comments
   comments: Comment[];
+
+  constructor() {
+    this.id = 0;
+    this.ticketDocumentNumber = '';
+    this.dateOfIssue = new Date().toISOString();
+
+    this.isoCountryCode = '';
+    this.billingPeriod = 0;
+    this.agentCode = '';
+    this.agentRegistrationNumber = '';
+    this.agentVatNumber = '';
+
+    this.transactionCode = '';
+    this.airlineCode = '';
+    this.airlineRegistrationNumber = '';
+    this.airlineVatNumber = '';
+    this.airlineContact = new Contact();
+
+    this.concernsIndicator = '';
+    this.taxOnCommissionType = '';
+    this.currency = new CurrencyPost();
+    this.netReporting = false;
+    this.statisticalCode = '';
+
+    this.agentCalculations = new InputAmountServer();
+    this.airlineCalculations = new InputAmountServer();
+    this.taxMiscellaneousFees = [];
+    this.amountPaidByCustomer = 0;
+    this.regularized = false;
+
+    this.dateOfIssueRelatedDocument = '';
+    this.passenger = '';
+    this.relatedTicketDocuments = [];
+    this.reasonForMemoIssuanceCode = '';
+    this.reasonForMemo = '';
+
+    this.attachedFiles = [];
+    this.comments = [];
+  }
 }

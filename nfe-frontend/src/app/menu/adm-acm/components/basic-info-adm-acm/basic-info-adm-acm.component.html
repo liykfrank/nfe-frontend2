@@ -38,10 +38,12 @@
       </div>
 
       <bspl-agent
-        [disabledContact]="true"
-        [showMoreDetails]="true"
+        [showMoreDetails]="'true'"
+        [showContact]="false"
+        [agentFormModelGroup]="basicInfoFormModelGroup.get('agent')"
         [agentVatNumberEnabled]="configuration.agentVatNumberEnabled"
-        [companyRegistrationNumberEnabled]="configuration.companyRegistrationNumberEnabled">
+        [companyRegistrationNumberEnabled]="configuration.companyRegistrationNumberEnabled"
+        (clickMoreDetails)="onClickMoreDetails($event)">
       </bspl-agent>
 
     </div>
@@ -51,7 +53,7 @@
       <div class="form-row">
         <div class="form-group col-6">
           <label l10nTranslate>ADM_ACM.BASIC_INFO.type</label>
-          <select class="form-control pr-1">
+          <select class="form-control pr-1" formControlName="transactionCode">
             <option *ngFor="let item of typeList" [value]="item">{{item}}</option>
           </select>
           <bspl-field-error error=""></bspl-field-error>
@@ -61,18 +63,20 @@
 
       <div class="form-row">
         <div class="form-group col-6">
-          <label>Number</label>
-          <input type="text" class="form-control" />
+          <label l10nTranslate>ADM_ACM.BASIC_INFO.number</label>
+          <input type="text" class="form-control" formControlName="id"/>
           <bspl-field-error error=""></bspl-field-error>
         </div>
       </div>
 
       <bspl-airline
-        [isoCountryCode]="configuration.isoCountryCode"
-        [disabledContact]="true"
         [showMoreDetails]="true"
+        [showContact]="true"
+        [isoCountryCode]="configuration.isoCountryCode"
+        [airlineFormModelGroup]="basicInfoFormModelGroup.get('airline')"
         [airlineVatNumberEnabled]="configuration.airlineVatNumberEnabled"
-        [companyRegistrationNumberEnabled]="configuration.companyRegistrationNumberEnabled">
+        [companyRegistrationNumberEnabled]="configuration.companyRegistrationNumberEnabled"
+        (clickMoreDetails)="onClickMoreDetails($event)">
       </bspl-airline>
 
     </div>
@@ -98,8 +102,7 @@
         <div class="form-group col-2">
           <bspl-currency
             [iso]="configuration.isoCountryCode || null"
-            [type]="type"
-            (returnForm)="onReturnFormCurrency($event)">
+            [type]="type">
           </bspl-currency>
         </div>
 
@@ -117,7 +120,7 @@
           <label l10nTranslate>ADM_ACM.BASIC_INFO.nr</label>
           <div class="row no-gutters mt-2 pl-1">
             <label class="custom-checkbox col-3">
-              <input type="checkbox">
+              <input type="checkbox" formControlName="netReporting">
               <span class="checkmark"></span>
             </label>
           </div>

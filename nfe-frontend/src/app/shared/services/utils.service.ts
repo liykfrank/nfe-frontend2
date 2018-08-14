@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormGroup, AbstractControl } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 
 @Injectable()
 export class UtilsService {
@@ -20,16 +20,13 @@ export class UtilsService {
   getProv(real, mock) {
     return { provide: real, useClass: this.env.mock ? mock : real };
   }
-/*
+
   touchAllForms(forms: FormGroup[]) {
     for (const form of forms) {
-      this._travelForm(form, this.fun());
+      this._travelForm(form, null, null, this._touch);
     }
-  } */
-
-  fun(obj) {
-    console.log(obj);
   }
+
   setBackErrorsOnForms(forms: FormGroup[], errors: any[]): any {
     const ret = [];
 
@@ -41,7 +38,7 @@ export class UtilsService {
         const keys = err.fieldName.split(/[.\[\]]+/);
 
         while (!found && i < forms.length) {
-          found = this._findKeysOnForm(forms[i], keys, err.message);
+          found = this._travelForm(forms[i], keys, err.message, this._setError);
           i++;
         }
 
@@ -56,53 +53,54 @@ export class UtilsService {
     return ret;
   }
 
-  private _travelForm(form: FormGroup, fn: Function) {
-    Object.keys(form.controls).forEach(key => {
-
-    });
-  }
-
-  private _findKeysOnForm(form: FormGroup, keys: string[], msg: string): boolean {
+  private _travelForm(
+    form: FormGroup,
+    keys: string[],
+    msg: string,
+    fn: Function
+  ): boolean {
     let ret = false;
-
-    if (form.get(keys[0])) {
-      ret = this._setErrorOnForm(form, keys, this._getCustomError(msg));
-    } else {
-      Object.keys(form.controls).forEach(key => {
-        if (!ret && form.get(key).get(keys[0])) {
-          ret = this._setErrorOnForm(form.get(key), keys, this._getCustomError(msg));
+    Object.keys(form.controls).forEach(key => {
+      if (!ret) {
+        if (form.get(key) instanceof FormGroup) {
+          ret = this._travelForm(form.get(key) as FormGroup, keys, msg, fn);
+        } else {
+          ret = fn(form, keys, msg);
         }
-      });
-    }
+      }
+    });
 
     return ret;
   }
 
-  private _setErrorOnForm(form: AbstractControl, keys: string[], msg: any): boolean {
-    let aux = form;
-
-    let setError = false;
-    for (const x of keys) {
-      if (aux) {
-        aux = aux.get(x);
-        setError = true;
-      } else {
-        setError = false;
-      }
-    }
-    if (setError) {
-      aux.setErrors(msg);
-    }
-
-    return setError;
+  private _touch(form: FormGroup, keys: string[], msg): boolean {
+    Object.keys(form.controls).forEach(key => {
+      form.get(key).markAsDirty();
+    });
+    return false;
   }
 
-  private _getCustomError(msg: string): any {
-    return {
-      backendError: {
-        invalid: true,
-        message: msg
+  private _setError(form: FormGroup, keys: string[], msg: string): boolean {
+    let ret = false;
+    let formAux: AbstractControl = form;
+
+    for (const i of keys) {
+      if (formAux.get(i)) {
+        formAux = formAux.get(i);
+        ret = true;
+      } else {
+        ret = false;
       }
-    };
+    }
+
+    if (ret) {
+      formAux.setErrors({
+        backendError: {
+          invalid: true,
+          message: msg
+        }
+      });
+    }
+    return ret;
   }
 }

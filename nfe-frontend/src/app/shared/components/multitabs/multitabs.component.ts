@@ -39,6 +39,7 @@ export class MultitabsComponent implements OnInit, DoCheck {
 
   @Input() listExcludesOnHistory: string[] = [];
 
+  @Input() disabledDocuments: boolean = false;
   @Input() documents: TicketDocument[] = [];
 
   @Output() removeTicket = new EventEmitter();
@@ -74,60 +75,11 @@ export class MultitabsComponent implements OnInit, DoCheck {
       this.tab_selected = 1;
     } else {
       console.log('load all info here');
+    }
 
-      // TODO Load History
-      // TODO Load Files
-      // TODO Load Comments
-
-      const aux = new HistoryModel();
-      aux.action = 'REFUND_FILE';
-      aux.insertDateTime = new Date();
-
-      const aux1 = new HistoryModel();
-      aux1.action = 'REFUND_ISSUE';
-      aux1.insertDateTime = new Date();
-
-      const aux2 = new HistoryModel();
-      aux2.action = 'MODIFY';
-      aux2.insertDateTime = new Date();
-
-      const aux3 = new HistoryModel();
-      aux3.action = 'ATTACH_FILE';
-      aux3.insertDateTime = new Date();
-
-      const aux4 = new HistoryModel();
-      aux4.action = 'ADD_COMMENT';
-      aux4.insertDateTime = new Date();
-
-      const aux5 = new HistoryModel();
-      aux5.action = 'MASSLOAD_UPDATE';
-      aux5.insertDateTime = new Date();
-
-      this.history.push(aux);
-      this.history.push(aux1);
-      this.history.push(aux2);
-      this.history.push(aux3);
-      this.history.push(aux4);
-      this.history.push(aux5);
-
-      const aux6 = new CommentDataServer();
-      aux6.id = 1;
-      aux6.insertDateTime = new Date().toString();
-      aux6.text = 'TEXTO DE PRUEBA';
-      const aux7 = new CommentDataServer();
-      aux7.id = 2;
-      aux7.insertDateTime = new Date().toString();
-      aux7.text = 'TEXTO DE PRUEBA';
-      const aux8 = new CommentDataServer();
-      aux8.id = 3;
-      aux8.insertDateTime = new Date().toString();
-      aux8.text = 'TEXTO DE PRUEBA';
-
-      this.comments.push(aux6);
-      this.comments.push(aux7);
-      this.comments.push(aux8);
-      this.comments.push(aux8);
-      this.comments.push(aux8);
+    if (this.disabledDocuments) {
+      this.enable_tab[1] = false;
+      this.tab_selected = 2;
     }
   }
 

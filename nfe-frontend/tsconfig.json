@@ -5,11 +5,11 @@
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
-    /*    
+    /*
     uncomment variables for checking unused imports
 
     "noUnusedLocals": true,
-    "noUnusedParameters": true, 
+    "noUnusedParameters": true,
 
         */
     "emitDecoratorMetadata": true,
@@ -27,7 +27,6 @@
     "src/**/*"
   ],
   "files": [
-    // For all widgets used, add the relevant .ts file.
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxtabs",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxcheckbox",

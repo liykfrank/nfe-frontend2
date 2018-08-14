@@ -1,45 +1,68 @@
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-
+import { AmountRefundFormModel } from './../../models/amount-refund-form.model';
 import { ReactiveFormHandler } from '../../../../shared/base/reactive-form-handler';
+import { Component, EventEmitter, OnDestroy, Output, Input, OnInit } from '@angular/core';
 import { RefundConfiguration } from '../../models/refund-configuration.model';
 import { RefundConfigurationService } from '../../services/refund-configuration.service';
-import { AmountRefundFormModel } from './../../models/amount-refund-form.model';
+import { Currency } from '../../../../shared/components/currency/models/currency.model';
+import { CurrencyService } from '../../../../shared/components/currency/services/currency.service';
 
 @Component({
   selector: 'bspl-amount-refund',
   templateUrl: './amount-refund.component.html',
   styleUrls: ['./amount-refund.component.scss']
 })
-export class AmountRefundComponent extends ReactiveFormHandler
-  implements OnDestroy {
-  refundConfiguration: RefundConfiguration;
-  amountRefundFormModel: AmountRefundFormModel = new AmountRefundFormModel();
+export class AmountRefundComponent extends ReactiveFormHandler implements OnInit {
+
+  private refundConfiguration: RefundConfiguration;
+  private amountRefundFormModel: AmountRefundFormModel = new AmountRefundFormModel();
+  private countCuponsState: number;
+  private _currencyState: Currency;
+
+  errorPartialRefund = false;
+
 
   @Output() returnAmount = new EventEmitter();
 
-  constructor(private refundConfigurationService: RefundConfigurationService) {
+  constructor(private _refundConfigurationService: RefundConfigurationService, private _currencyService: CurrencyService) {
     super();
-
-    this.subscriptions.push(
-      this.refundConfigurationService
-        .getConfiguration()
-        .subscribe(config => (this.refundConfiguration = config))
-    );
   }
 
-   /* TODO: este método tiene que implementar toda la lógica del ckeck partial refund
-    hay que comprobar si los cupones del objeto relatedDocument de la vista details están todos seleccionados,
+  ngOnInit(): void {
+    this._refundConfigurationService.getConfiguration().subscribe(config => {
+      this.refundConfiguration = config;
+      this._refreshPartialRefund(this.countCuponsState, config.maxCouponsInRelatedDocuments);
+    });
 
-    si estan seleccionados el checked debe ser false
-    si es false y estan todos los cupones seleccionados y se pone a true hay que mostrar error
+    this._refundConfigurationService.getCountCuponsState().subscribe(count => {
+      this.countCuponsState = count;
+      this._refreshPartialRefund(count, this.refundConfiguration.maxCouponsInRelatedDocuments);
+    });
 
-   */
-   getPartialRefundConfig() {
-    return true;
-   }
+    this._currencyService.getCurrencyState().subscribe(currency => {
+      this._currencyState = currency;
+    });
+  }
 
-   getNetRemitConfig() {
-    return false;
-   }
+
+
+  getNumDecimals() {
+    if (this._currencyState) {
+      return this._currencyState.numDecimals;
+    }
+  }
+
+  private _refreshPartialRefund(countCuponsSelected: number, maxCouponsInRelatedDocuments: number) {
+    if (countCuponsSelected > maxCouponsInRelatedDocuments) {
+      this.amountRefundFormModel.partialRefund.disable();
+      this.errorPartialRefund = true;
+    } else {
+      this.amountRefundFormModel.partialRefund.enable();
+      this.errorPartialRefund = false;
+    }
+  }
+
+  addTaxes() {
+    this.amountRefundFormModel.addTaxes(Number(this.getNumDecimals()));
+  }
 
 }

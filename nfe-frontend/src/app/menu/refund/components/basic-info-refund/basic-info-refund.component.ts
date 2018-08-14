@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { User } from '../../../../core/models/user.model';
@@ -19,6 +19,8 @@ export class BasicInfoRefundComponent extends ReactiveFormHandler implements OnI
   public refundConfiguration: RefundConfiguration;
   public user: User;
   @Input() basicInfoRefundFormModel: FormGroup;
+
+  @Output()clickMoreDetails: EventEmitter<any> = new EventEmitter();
 
   private validDATA = false;
 
@@ -41,9 +43,14 @@ export class BasicInfoRefundComponent extends ReactiveFormHandler implements OnI
           .setValue(config.isoCountryCode);
       })
     );
+
     this.subscriptions.push(
       this._userService.getUser().subscribe(data => (this.user = data))
     );
+  }
+
+  onClickMoreDetails(event) {
+    this.clickMoreDetails.emit(event);
   }
 
   onChangeAirline() {

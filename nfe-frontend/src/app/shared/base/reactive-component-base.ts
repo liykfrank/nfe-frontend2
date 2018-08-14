@@ -33,7 +33,6 @@ export class ReactiveComponentBase {
   }
 
   protected reactiveFormReady(): boolean {
-
     return this.formGroupParent != undefined && this.formControlParentName != undefined;
   }
 

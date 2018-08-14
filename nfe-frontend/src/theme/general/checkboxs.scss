@@ -1,14 +1,15 @@
 .custom-checkbox {
-    display: block;
-    position: relative;
-    padding-left: 25px;
-    cursor: pointer;
-    font-size: 14px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    color: #152C5A;
+  display: block;
+  position: relative;
+  padding-left: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  min-height: 16px;
+  color: #152C5A;
 }
   
 .custom-checkbox input {
@@ -25,7 +26,7 @@
   width: 16px;
   background-color: transparent;
   border: 1px solid  #152C5A;
-  border-radius: 1px;
+  border-radius: 3px;
 }
   
 .custom-checkbox:hover input ~ .checkmark {

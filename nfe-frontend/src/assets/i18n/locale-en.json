@@ -101,6 +101,12 @@
       "bsp": "BSP",
       "agent_code": "Agent Code",
       "for": " for",
+      "ADMA": "ADMA for",
+      "SPDR": "SPDR for",
+      "ADMD": "ADMD for",
+      "ACMA": "ACMA for",
+      "SPCR": "SPCR for",
+      "ACMD": "ACMD for",
       "issue_date": "Issue Date",
       "amount": "Amount"
     },
@@ -116,20 +122,6 @@
       "nr": "NR",
       "ADM": "ADM",
       "ACM": "ACM",
-      "airline": {
-        "title": "Airline information",
-        "address": "Address",
-        "postcode": "Postcode",
-        "city": "City",
-        "country": "Country/Territory"
-      },
-      "agent": {
-        "title": "Agent information",
-        "address": "Address",
-        "postcode": "Postcode",
-        "city": "City",
-        "country": "Country/Territory"
-      },
 
       "FORCombo": {
         "label": " for",
@@ -170,14 +162,9 @@
       "comission": "Comission",
       "spam": "Spam",
       "toca": "TOCA",
-      "CP": "CP",
-      "RF": "RF",
-      "CA": "CA",
-      "TY": "TY",
-      "YQ": "YQ",
-      "DE": "DE",
       "tax_error": "There are error in tax table",
       "total_error": "Total is wrong"
+
     },
     "DETAILS": {
       "title": "Details",
@@ -221,13 +208,13 @@
   },
   "REFUNDS": {
     "RESUME": {
-      "status": "status",
+      "status": "Status",
       "bsp": "BSP",
       "airline_code": "Airline Code",
       "agent_code": "Agent Code",
       "refund_number": "Refund Number",
       "issue_date": "Issue Date",
-      "refund_passenger": "Refund Passenger"
+      "refund_passenger": "Refund to Passenger"
     },
     "BASIC_INFO": {
       "title": "Basic Information"
@@ -252,7 +239,7 @@
     "FORM_OF_PAYMENT": {
       "title": "Form of Payment",
       "cash": "Cash",
-      "creditCard": "Credit Card",
+      "paymentCard": "Payment Card",
       "msca": "MSCA",
       "mscc": "MSCC",
       "easyPay": "Easy Pay",
@@ -312,7 +299,14 @@
     "more": "More details",
     "name": "Airline name",
     "airlineVAT": "Airline VAT Nº",
-    "companyReg": "Company Registration Number"
+    "companyReg": "Company Registration Number",
+    "POPUP": {
+      "title": "Airline information",
+      "address": "Address",
+      "postcode": "Postcode",
+      "city": "City",
+      "country": "Country/Territory"
+    }
   },
   "AGENT": {
     "code": "Agent Code",
@@ -321,7 +315,14 @@
     "agentVAT": "Agent VAT Nº",
     "companyReg": "Company Registration Number",
     "title_error": "Agent",
-    "check_digit_error": "Wrong check digit"
+    "check_digit_error": "Wrong check digit",
+    "POPUP": {
+      "title": "Agent information",
+      "address": "Address",
+      "postcode": "Postcode",
+      "city": "City",
+      "country": "Country/Territory"
+    }
   },
   "MULTITABS": {
     "HISTORY": {
@@ -374,8 +375,15 @@
   "FORM_CONTROL_VALIDATORS": {
     "required": "This field is required",
     "pattern": "The pattern of this field is invalid",
-    "maxLength": "The length length should be lower than",
-    "minLength": "The length should be grater than",
-    "airline": "The airline is invalid"
+    "minLength": "The length must be at least",
+    "airline": "The airline is invalid",
+    "agent": "The agent is invalid",
+    "maxFop": "This form of payment exceeds the maximum allowed",
+    "partialRefund": "The maximum number of coupons in releated document has been exceeded"
+  },
+
+  "STATUS": {
+    "NEW": "NEW",
+    "DETAIL": "DETAIL"
   }
 }

@@ -1,15 +1,16 @@
-import { log } from 'util';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TranslationService } from 'angular-l10n';
 
 import { ReactiveFormHandler } from '../../../../shared/base/reactive-form-handler';
+import { GLOBALS } from '../../../../shared/constants/globals';
 import { EnvironmentType } from '../../../../shared/enums/environment-type.enum';
-import { RefundConfiguration } from '../../models/refund-configuration.model';
 import { FormOfPaymentRefundFormModel } from '../../models/form-of-payment-refund-form.model';
+import { RefundConfiguration } from '../../models/refund-configuration.model';
 import { RefundConfigurationService } from '../../services/refund-configuration.service';
 import { AlertsService } from './../../../../core/services/alerts.service';
-import { AlertType } from '../../../../core/enums/alert-type.enum';
+import { CurrencyService } from '../../../../shared/components/currency/services/currency.service';
+import { Currency } from '../../../../shared/components/currency/models/currency.model';
 
 @Component({
   selector: 'bspl-form-of-payment-refund',
@@ -22,64 +23,94 @@ export class FormOfPaymentRefundComponent extends ReactiveFormHandler
   refundConfiguration: RefundConfiguration;
   formOfPaymentRefundFormModel: FormOfPaymentRefundFormModel = new FormOfPaymentRefundFormModel();
   type = EnvironmentType.REFUND_INDIRECT;
+  validFopSelected = true;
 
+  FOP_MSCA_VALUE = GLOBALS.FORM_OF_PAYMENT.MSCA_VALUE;
+  FOP_MSCC_VALUE = GLOBALS.FORM_OF_PAYMENT.MSCC_VALUE;
+  FOP_CC_VALUE = GLOBALS.FORM_OF_PAYMENT.CC_VALUE; // credit card
+  FOP_CA_VALUE = GLOBALS.FORM_OF_PAYMENT.CA_VALUE; // cash
+  FOP_EP_VALUE = GLOBALS.FORM_OF_PAYMENT.EP_VALUE; // easy pay
 
-  // FOP_MSCA_VALUE: string = 'msca';
-  // FOP_MSCC_VALUE: string = 'mscc';
-  // FOP_CC_VALUE: string = 'cc'; // credit card
-  // FOP_CA_VALUE: string = 'ca'; // cash
+  FOP_MSCC_TEXT = this.translationService.translate(
+    'REFUNDS.FORM_OF_PAYMENT.mscc'
+  );
+  FOP_CC_TEXT = this.translationService.translate(
+    'REFUNDS.FORM_OF_PAYMENT.paymentCard'
+  ); // credit card
 
+  @ViewChild('fopType')
+  fopType: ElementRef;
 
-  @ViewChild('fopType') fopType: ElementRef;
+  private _currencyState: Currency;
 
   constructor(
     private translationService: TranslationService,
     private refundConfigurationService: RefundConfigurationService,
-    private _alertsService: AlertsService
+    private _alertsService: AlertsService,
+    private _currencyService: CurrencyService
   ) {
     super();
-    this.subscriptions.push(this.refundConfigurationService
-      .getConfiguration()
-      .subscribe(config => (this.refundConfiguration = config)));
+
+    this.refundConfigurationService.getConfiguration().subscribe(config => (this.refundConfiguration = config));
+    this._currencyService.getCurrencyState().subscribe(currency => {this._currencyState = currency; });
     this.subscribe(this.formOfPaymentRefundFormModel.formOfPaymentRefundGroup);
+    this._currencyService.getCurrencyState().subscribe(currency => {
+      this._currencyState = currency;
+    });
   }
 
-  ngOnInit(): void {
-    this.subscriptions.push(
-      this.formOfPaymentRefundFormModel.formOfPaymentAmounts.valueChanges.subscribe(
-        (value) => {
-          this.updateTotals();
-        }
-      )
-    );
+  ngOnInit(): void {}
 
-    this.subscriptions.push(
-      this.formOfPaymentRefundFormModel.type.valueChanges.subscribe(
-        (value) => {
+  getNumDecimals() {
+    if (this._currencyState) {
+      return this._currencyState.numDecimals;
+    }
+  }
 
-        }
-      )
+  isFopTypeSelectedCaMscaOrVoid(): boolean {
+    return (
+      this.formOfPaymentRefundFormModel.type.value == this.FOP_CA_VALUE ||
+      this.formOfPaymentRefundFormModel.type.value == this.FOP_MSCA_VALUE ||
+      this.formOfPaymentRefundFormModel.type.value == ''
     );
   }
 
-  onReturnFormCurrency(event) {
-    this.formOfPaymentRefundFormModel.code.setValue(event.get('code').value);
-    this.formOfPaymentRefundFormModel.decimals.setValue(event.get('decimals').value);
+  isFopTypeTextMsccOrCc(fopTypeText: string): boolean {
+    return fopTypeText == this.FOP_MSCC_TEXT || fopTypeText == this.FOP_CC_TEXT;
+  }
+
+  isFopTypeValueMscaOrCash(fopTypeValue: string): boolean {
+    return (
+      fopTypeValue == this.FOP_MSCA_VALUE || fopTypeValue == this.FOP_CA_VALUE
+    );
+  }
+
+  showCustomerRef(): boolean {
+    const fopTypeAmountsNumber = this.formOfPaymentRefundFormModel.formOfPaymentAmounts.controls.filter(
+      elem => {
+        return (
+          this.isFopTypeTextMsccOrCc(elem.value.type) ||
+          this.isFopTypeTextMsccOrCc(elem.value.type)
+        );
+      }
+    ).length;
+    return fopTypeAmountsNumber > 0 ? true : false;
+  }
+
+  onClickPlusIcon(): void {
+    if (this.addFopAmount()) {
+      this.updateTotals();
+      this.formOfPaymentRefundFormModel.selectAmount.reset();
+      this.formOfPaymentRefundFormModel.type.setValue('');
+    }
   }
 
   fopAmountAdditionIsPossible(fopTypeText: string): boolean {
-    const creditCardText = this.sanitize(
-      this.translationService.translate('REFUNDS.FORM_OF_PAYMENT.creditCard')
-    );
-    const msccText = this.sanitize(
-      this.translationService.translate('REFUNDS.FORM_OF_PAYMENT.mscc')
-    );
-    const fopTypeCC: boolean =
-      fopTypeText == creditCardText;
+    const fopTypeCC: boolean = fopTypeText == this.FOP_CC_TEXT;
 
     const fopTypeAmountsNumber = this.formOfPaymentRefundFormModel.formOfPaymentAmounts.controls.filter(
       elem => {
-        return this.sanitize(elem.value.type) == fopTypeText;
+        return elem.value.type == fopTypeText;
       }
     ).length;
 
@@ -89,64 +120,52 @@ export class FormOfPaymentRefundComponent extends ReactiveFormHandler
     );
   }
 
-  showCustomerRef(): boolean {
-    const creditCardText = this.sanitize(
-      this.translationService.translate('REFUNDS.FORM_OF_PAYMENT.creditCard')
-    );
-    const msccText = this.sanitize(
-      this.translationService.translate('REFUNDS.FORM_OF_PAYMENT.mscc')
-    );
-
-    const fopTypeAmountsNumber = this.formOfPaymentRefundFormModel.formOfPaymentAmounts.controls.filter(
-      elem => {
-        return (
-          this.sanitize(elem.value.type) == creditCardText ||
-          this.sanitize(elem.value.type) == msccText
-        );
-      }
-    ).length;
-
-    return fopTypeAmountsNumber > 0 ? true : false;
-  }
-
-  sanitize(text: string): string {
-    return text.toLowerCase().replace(' ', '');
-  }
-
-  addFopAmount(): void {
+  addFopAmount(): boolean {
     const formOfPaymentTypeValue: string = this.formOfPaymentRefundFormModel
       .type.value;
     const formOfPaymentTypeText: string = this.fopType.nativeElement
       .selectedOptions[0].textContent;
-    const amount: number = +this.formOfPaymentRefundFormModel.amount.value;
+    const amount: string = this.formOfPaymentRefundFormModel.selectAmount.get(
+      'amount'
+    ).value;
+    const vendorCode: string = this.formOfPaymentRefundFormModel.selectAmount.get(
+      'vendorCode'
+    ).value;
+    const number: number = this.formOfPaymentRefundFormModel.selectAmount.get(
+      'number'
+    ).value;
 
-    if (
-      this.fopAmountAdditionIsPossible(this.sanitize(formOfPaymentTypeText))
-    ) {
+    if (this.fopAmountAdditionIsPossible(formOfPaymentTypeText)) {
       // msca and cash
       if (
-        formOfPaymentTypeValue == 'msca' ||
-        formOfPaymentTypeValue == 'cash'
+        this.isFopTypeValueMscaOrCash(formOfPaymentTypeValue) ||
+        this.isFopTypeTextMsccOrCc(formOfPaymentTypeValue)
       ) {
         this.formOfPaymentRefundFormModel.addCashAmount(
-          amount.toFixed(2),
+          amount,
           formOfPaymentTypeText
         );
 
         // credic card, mscc, easy pay
       } else if (formOfPaymentTypeValue != '') {
         this.formOfPaymentRefundFormModel.addCreditOrEPAmount(
-          amount.toFixed(2),
-          formOfPaymentTypeText
+          amount,
+          formOfPaymentTypeText,
+          vendorCode,
+          number
         );
       }
-    } else { // TODO: crear etiquetas
-      this._alertsService.setAlertTranslate('REFUNDS.FORM_OF_PAYMENT.addFop.error.title', 'REFUNDS.FORM_OF_PAYMENT.addFop.error.title', AlertType.WARN);
+
+      return true;
     }
+    this.validFopSelected = false;
+    return false;
   }
 
-  deleteAmount(i: number) {
+  onCkickTrashIcon(i: number) {
+    this.validFopSelected = true;
     this.formOfPaymentRefundFormModel.deleteAmountFormArrayElem(i);
+    this.updateTotals();
   }
 
   updateTotals(): void {
@@ -177,18 +196,8 @@ export class FormOfPaymentRefundComponent extends ReactiveFormHandler
     }
 
     this.formOfPaymentRefundFormModel.creditEPSubTotal.setValue(
-      creditEPSubTotal.toFixed(2)
+      creditEPSubTotal
     );
-    this.formOfPaymentRefundFormModel.totalAmount.setValue(
-      totalRefundAmount.toFixed(2)
-    );
-
-    this.formOfPaymentRefundFormModel.amount.setValue(null);
-    this.formOfPaymentRefundFormModel.type.setValue('');
+    this.formOfPaymentRefundFormModel.totalAmount.setValue(totalRefundAmount);
   }
-
-  // isFopTypeCcOrMscc(): boolean {
-  //   return this.formOfPaymentRefundFormModel.type ==
-  // }
-
 }

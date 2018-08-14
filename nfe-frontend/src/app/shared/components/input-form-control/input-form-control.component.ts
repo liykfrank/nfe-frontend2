@@ -11,15 +11,12 @@ import { FormControl, FormGroup } from '@angular/forms';
 @Injectable()
 export class InputFormControlComponent extends ReactiveComponentBase implements OnInit {
 
-  @Input('error') error: string;
-  @Input('currency') currency?: string;
   @Input('label') label;
   @Input('wrapText') wrapText: boolean;
   @Input('type') type?: string;
   @Input('typingPattern') typingPattern?: string;
   @Input('decimalsNumber') decimalsNumber?: number;
   @Input('inputMaxTextLength') inputMaxTextLength ? = 500;
-  @Input('disabledInput') disabledInput = false;
   @Input('inputValue') inputValue?: string;
 
   constructor(_translationService: TranslationService) {
@@ -29,10 +26,6 @@ export class InputFormControlComponent extends ReactiveComponentBase implements 
   ngOnInit() {
     this.label = this.label = '' ? '&nbsp;' : this.label;
     this.createForm();
-
-    if (this.disabledInput) {
-      this.formControlParent.disable();
-    }
 
     if (this.inputValue) {
       this.formControlParent.setValue(this.inputValue);

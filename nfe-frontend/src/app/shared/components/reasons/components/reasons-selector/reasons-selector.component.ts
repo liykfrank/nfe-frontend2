@@ -1,37 +1,47 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 import { Reason } from '../../models/reason.model';
+import { ReasonsService } from '../../services/reasons.service';
+import { EnvironmentType } from '../../../../enums/environment-type.enum';
 
 @Component({
   selector: 'bspl-reasons-selector',
   templateUrl: './reasons-selector.component.html',
   styleUrls: ['./reasons-selector.component.scss']
 })
-export class ReasonsSelectorComponent implements OnInit, OnChanges {
+export class ReasonsSelectorComponent implements  OnChanges {
 
-  @Input() dropdownTitle: string;
-  @Input() dropdownOptions: Reason[];
-
+  private reasonList: Reason[];
+  @Input()
+  public  dropdownTitle: string;
+  @Input()
+  public isoCode: string;
   @Output() changeSelect: EventEmitter<string> = new EventEmitter();
 
-  hide = true;
 
-  constructor() { }
-
-  ngOnInit() {
-    this.hide = this.dropdownOptions.length > 0;
-  }
+  constructor(private _reasonsService: ReasonsService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.dropdownOptions) {
-      this.hide = this.dropdownOptions.length > 0;
+    if ( changes.isoCode) {
+      this._findReasonList();
+    }
+  }
+
+  private _findReasonList() {
+    if ( this.isoCode) {
+      this._reasonsService.getReasonsByIndirectRefund(this.isoCode).subscribe(reasons => {
+          this.reasonList = reasons;
+        });
     }
   }
 
   onChangeSelector(value) {
-    if (value != -1) {
       this.changeSelect.emit(value);
-    }
   }
+
+
+
+
+
 
 }

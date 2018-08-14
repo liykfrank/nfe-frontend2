@@ -16,7 +16,6 @@ export class ReactiveFormHandler extends AbstractComponent {
     this.subscriptions.push(
       this.reactiveFormGroup.valueChanges.subscribe(val => {
         this.returnForm.emit(this.reactiveFormGroup);
-        // console.log(val);
       })
     );
   }

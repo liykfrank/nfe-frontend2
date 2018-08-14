@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { ReactiveFormHandler } from '../../base/reactive-form-handler';
@@ -9,9 +9,9 @@ import { ContactFormModel } from './models/contact-form-model';
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss']
 })
-export class ContactComponent extends ReactiveFormHandler {
-  contactFormModelGroup: FormGroup = new ContactFormModel()
-    .contactFormModelGroup;
+export class ContactComponent extends ReactiveFormHandler implements OnInit {
+
+  @Input() contactFormModelGroup: FormGroup;
 
   private _disabledComponent = false;
 
@@ -32,6 +32,9 @@ export class ContactComponent extends ReactiveFormHandler {
 
   constructor() {
     super();
+  }
+
+  ngOnInit(): void {
     this.subscribe(this.contactFormModelGroup);
   }
 }

@@ -1,31 +1,31 @@
 <div class="row">
   <div class="col-12">
     <ul class="nav nav-tabs pl-2">
-      <li class="nav-item" (click)="selectTab(0)">
+      <li class="nav-item single-tab" (click)="selectTab(0)">
         <div class="nav-link  custom-nav-grey" [ngClass]="status(0)">
           <img class="icon" src="assets/images/utils/ico-history_{{ colorTab(0) }}.svg">
           <span *ngIf="badge_val_tab[0] > 0" class='badge badge-pill badge-danger'> {{ badge_val_tab[0] }} </span>
         </div>
       </li>
-      <li class="nav-item" (click)="selectTab(1)">
+      <li class="nav-item single-tab" (click)="selectTab(1)">
         <div class="nav-link  custom-nav-grey" [ngClass]="status(1)">
           <img class="icon" src="assets/images/utils/ico-documents_{{ colorTab(1) }}.svg">
           <span *ngIf="badge_val_tab[1] > 0" class='badge badge-pill badge-danger'> {{ badge_val_tab[1] }} </span>
         </div>
       </li>
-      <li class="nav-item" (click)="selectTab(2)">
+      <li class="nav-item single-tab" (click)="selectTab(2)">
         <div class="nav-link  custom-nav-grey" [ngClass]="status(2)">
           <img class="icon" src="assets/images/utils/ico-files_{{ colorTab(2) }}.svg">
           <span *ngIf="badge_val_tab[2] > 0" class='badge badge-pill badge-danger'> {{ badge_val_tab[2] }} </span>
         </div>
       </li>
-      <li class="nav-item" (click)="selectTab(3)">
+      <li class="nav-item single-tab" (click)="selectTab(3)">
         <div class="nav-link  custom-nav-grey" [ngClass]="status(3)">
           <img class="icon" src="assets/images/utils/ico-comments_{{ colorTab(3) }}.svg">
           <span *ngIf="badge_val_tab[3] > 0" class='badge badge-pill badge-danger'> {{ badge_val_tab[3] }} </span>
         </div>
       </li>
-      <li class="nav-item" (click)="selectTab(4)">
+      <li class="nav-item single-tab" (click)="selectTab(4)">
         <div class="nav-link  custom-nav-grey" [ngClass]="status(4)">
           <img class="icon" src="assets/images/utils/ico-chat_{{ colorTab(4) }}.svg">
           <span *ngIf="badge_val_tab[4] > 0" class='badge badge-pill badge-danger'> {{badge_val_tab[4] }} </span>
@@ -37,29 +37,29 @@
   <div class="col-12">
     <div class="row no-gutters content-tab" [hidden]="!isSelected(0)">
       <bspl-history class="col-12"
-        [history]="history" 
+        [history]="history"
         [listExcludes]="listExcludesOnHistory">
       </bspl-history>
     </div>
     <div class="row no-gutters content-tab" [hidden]="!isSelected(1)">
       <bspl-documents class="col-12"
-        [documents]="documents" 
-        (removeTicket)="onRemoveTicket($event)" 
+        [documents]="documents"
+        (removeTicket)="onRemoveTicket($event)"
         (showTicket)="onShowTicket($event)">
       </bspl-documents>
     </div>
     <div class="row no-gutters content-tab" [hidden]="!isSelected(2)">
       <bspl-files class="col-12"
-        [files]="files" 
-        [filesToUpload]="filesToUpload" 
+        [files]="files"
+        [filesToUpload]="filesToUpload"
         (pushFiles)="onPushFiles($event)">
       </bspl-files>
     </div>
     <div class="row no-gutters content-tab" [hidden]="!isSelected(3)">
       <bspl-comments class="col-12"
-        [comments]="comments" 
-        [commentToUpload]="commentToUpload" 
-        [disabled]="disabledComment" 
+        [comments]="comments"
+        [commentToUpload]="commentToUpload"
+        [disabled]="disabledComment"
         (saveComment)="onSaveComment($event)">
       </bspl-comments>
     </div>
@@ -67,13 +67,13 @@
   </div>
 </div>
 
-<!-- <p-dialog styleClass="custom" 
-  [(visible)]="display" 
-  [modal]="true" 
-  [responsive]="true" 
-  [minWidth]="200" 
-  [minY]="70" 
+<p-dialog styleClass="custom"
+  [(visible)]="display"
+  [modal]="true"
+  [responsive]="true"
+  [minWidth]="200"
+  [minY]="70"
   appendTo="body"
   (onHide)="onHideTicket()">
   <bspl-document-pop-up></bspl-document-pop-up>
-</p-dialog> -->
+</p-dialog>

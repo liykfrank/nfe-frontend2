@@ -17,6 +17,15 @@
         color: #152C5A;
     }
 
+    textarea {
+        resize: none;
+      
+        &.error {
+          border-color: red !important;
+        }
+      }
+      
+
 }
 
 

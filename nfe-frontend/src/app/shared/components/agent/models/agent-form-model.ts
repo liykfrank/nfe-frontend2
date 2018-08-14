@@ -12,14 +12,22 @@ export class AgentFormModel  extends ReactiveFormHandlerModel {
   agentRegistrationNumber: FormControl; // field company registration number
   agentVatNumber: FormControl; // field agent vat number
 
-  constructor() {
-    super();
+
+
+  constructor(defaultDisabled?: boolean) {
+    super(defaultDisabled);
   }
 
   createFormControls() {
-    this.agentCode = new FormControl('', [Validators.required]);
-    this.agentControlDigit = new FormControl('', [Validators.required]);
-    this.agentRegistrationNumber = new FormControl('', [Validators.required]);
+    this.agentCode = new FormControl({value : null ,
+                                      disabled: this.defaultDisabled
+                                      },
+                                      {validators : [Validators.pattern('[0-9]*$'),
+                                                    Validators.required,
+                                                    Validators.minLength(7)],
+                                      updateOn: 'blur' });
+    this.agentControlDigit = new FormControl({value : null , disabled: this.defaultDisabled},  [Validators.required]);
+    this.agentRegistrationNumber = new FormControl('');
     this.agentVatNumber = new FormControl('', [Validators.required]);
    }
 
