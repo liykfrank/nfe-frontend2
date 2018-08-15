@@ -12,7 +12,7 @@ import org.iata.bsplink.refund.validation.RefundAgentVatNumberValidator;
 import org.iata.bsplink.refund.validation.RefundAirlineRegistrationNumberValidator;
 import org.iata.bsplink.refund.validation.RefundAirlineVatNumberValidator;
 import org.iata.bsplink.refund.validation.RefundCompositeValidator;
-import org.iata.bsplink.refund.validation.RefundCorrelativeConjunctionsValidator;
+import org.iata.bsplink.refund.validation.RefundConjunctionsValidator;
 import org.iata.bsplink.refund.validation.RefundCreditCardEnabledValidator;
 import org.iata.bsplink.refund.validation.RefundEasyPayAuthorizedValidator;
 import org.iata.bsplink.refund.validation.RefundEasyPayEnabledValidator;
@@ -35,7 +35,7 @@ public class RefundValidatorConfiguration {
                 new RefundAgentVatNumberValidator(configService),
                 new RefundAirlineRegistrationNumberValidator(configService),
                 new RefundAirlineVatNumberValidator(configService),
-                new RefundCorrelativeConjunctionsValidator(configService),
+                new RefundConjunctionsValidator(configService),
                 new RefundCreditCardEnabledValidator(configService),
                 new RefundEasyPayEnabledValidator(configService),
                 new RefundMaxConjunctionsValidator(configService),

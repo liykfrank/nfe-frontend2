@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
@@ -38,5 +39,6 @@ public class TaxMiscellaneousFee {
     @NotNull(message = NON_NULL_MESSAGE)
     @PositiveOrZero(message = POSITIVE_OR_ZERO)
     @Column(precision = 20, scale = 9)
+    @Digits(integer = 11, fraction = 9)
     private BigDecimal amount = BigDecimal.ZERO;
 }

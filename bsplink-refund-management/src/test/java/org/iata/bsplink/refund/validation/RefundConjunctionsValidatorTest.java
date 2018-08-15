@@ -25,7 +25,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @RunWith(JUnitParamsRunner.class)
-public class RefundCorrelativeConjunctionsValidatorTest {
+public class RefundConjunctionsValidatorTest {
 
     private static final String ANY_ISO_COUNTRY_CODE = "ES";
 
@@ -41,12 +41,20 @@ public class RefundCorrelativeConjunctionsValidatorTest {
         refund = new Refund();
         refund.setIsoCountryCode(ANY_ISO_COUNTRY_CODE);
 
+
+
+        refund.setIsoCountryCode(ANY_ISO_COUNTRY_CODE);
+
+        config = new Config();
+        config.setMaxConjunctions(5);
+
+
         configService = mock(ConfigService.class);
         when(configService.find(ANY_ISO_COUNTRY_CODE)).thenReturn(config);
 
         errors = new BeanPropertyBindingResult(refund, "refund");
 
-        validator = new RefundCorrelativeConjunctionsValidator(configService);
+        validator = new RefundConjunctionsValidator(configService);
     }
 
     @Test
@@ -84,7 +92,7 @@ public class RefundCorrelativeConjunctionsValidatorTest {
         assertTrue(errors.hasErrors());
         assertTrue(errors.hasFieldErrors());
 
-        String expectedMessage = "conjunctions numbers must be correlatives";
+        String expectedMessage = RefundConjunctionsValidator.CONJUNCTION_MSG;
 
         assertEquals(expectedMessage, errors.getFieldError().getDefaultMessage());
     }
@@ -117,17 +125,59 @@ public class RefundCorrelativeConjunctionsValidatorTest {
     }
 
 
+    @Test
+    public void testValidatesDuplicatedRtdnAndConjunction() {
+
+        refund.setRelatedDocument(createRelatedDocument("123450"));
+        refund.setConjunctions(
+                Arrays.asList(createRelatedDocument("123451"), createRelatedDocument("123450")));
+
+        validator.validate(refund, errors);
+
+        assertTrue(errors.hasErrors());
+        assertTrue(errors.hasFieldErrors());
+
+        String expectedMessage = RefundConjunctionsValidator.DUPLICATED_MSG;
+
+        assertEquals(expectedMessage, errors.getFieldError().getDefaultMessage());
+    }
+
+
+    @Test
+    public void testValidatesDuplicatedConjunctions() {
+
+        refund.setRelatedDocument(createRelatedDocument("123450"));
+        refund.setConjunctions(
+                Arrays.asList(createRelatedDocument("123451"), createRelatedDocument("123451")));
+
+        validator.validate(refund, errors);
+
+        assertTrue(errors.hasErrors());
+        assertTrue(errors.hasFieldErrors());
+
+        String expectedMessage = RefundConjunctionsValidator.DUPLICATED_MSG;
+
+        assertEquals(expectedMessage, errors.getFieldError().getDefaultMessage());
+    }
+
+
     @SuppressWarnings("unused")
     private Object[][] parametersForTestValidatesMaxConjunctions() {
 
         RelatedDocument relatedDocument = createRelatedDocument("123450");
         RelatedDocument relatedDocumentNan = createRelatedDocument("AAAA");
 
-        List<RelatedDocument> correlativeConjunctions =
-                Arrays.asList(createRelatedDocument("123451"), createRelatedDocument("123452"));
+        List<RelatedDocument> correlativeConjunctions1 =
+                Arrays.asList(createRelatedDocument("123451"), createRelatedDocument("123454"));
+
+        List<RelatedDocument> correlativeConjunctions2 = Arrays.asList(
+                createRelatedDocument("123451"),
+                createRelatedDocument("123453"),
+                createRelatedDocument("123452"),
+                createRelatedDocument("123455"));
 
         List<RelatedDocument> notCorrelativeConjunctionsCase1 =
-                Arrays.asList(createRelatedDocument("123451"), createRelatedDocument("123453"));
+                Arrays.asList(createRelatedDocument("123456"), createRelatedDocument("123453"));
 
         List<RelatedDocument> notCorrelativeConjunctionsCase2 =
                 Arrays.asList(createRelatedDocument("123455"), createRelatedDocument("123456"));
@@ -135,14 +185,23 @@ public class RefundCorrelativeConjunctionsValidatorTest {
         List<RelatedDocument> notCorrelativeConjunctionsCase3 =
                 Arrays.asList(createRelatedDocument("123451"), relatedDocumentNan);
 
+        List<RelatedDocument> notCorrelativeConjunctionsCase4 = Arrays.asList(
+                createRelatedDocument("123451"),
+                createRelatedDocument("123453"),
+                createRelatedDocument("123454"),
+                createRelatedDocument("123456"));
+
         return new Object[][] {
 
-            { relatedDocument, correlativeConjunctions, false, -1 },
-            { relatedDocument, notCorrelativeConjunctionsCase1, true, 1 },
-            { relatedDocument, notCorrelativeConjunctionsCase2, true, 0 },
+            { relatedDocument, correlativeConjunctions1, false, -1 },
+            { relatedDocument, correlativeConjunctions2, false, -1 },
+            { relatedDocument, notCorrelativeConjunctionsCase1, true, 0 },
+            { relatedDocument, notCorrelativeConjunctionsCase2, true, 1 },
             { relatedDocument, notCorrelativeConjunctionsCase3, false, -1 },
-            { relatedDocumentNan, correlativeConjunctions, false, -1 },
-            { new RelatedDocument(), correlativeConjunctions, false, -1 }
+            { relatedDocument, notCorrelativeConjunctionsCase3, false, -1 },
+            { relatedDocument, notCorrelativeConjunctionsCase4, true, 3 },
+            { relatedDocumentNan, correlativeConjunctions1, false, -1 },
+            { new RelatedDocument(), correlativeConjunctions1, false, -1 }
         };
     }
 

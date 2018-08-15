@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
@@ -77,6 +78,7 @@ public class Config {
             "Standard MF Fee for Refund Applications issued in the Default Currency.")
     @NotNull
     @Column(precision = 20, scale = 9)
+    @Digits(integer = 11, fraction = 9)
     @PositiveOrZero
     private BigDecimal mfAmount = BigDecimal.ZERO;
 
@@ -150,5 +152,5 @@ public class Config {
 
     @ApiModelProperty(value = "Maximum number of conjunctions")
     @NotNull
-    private Integer maxConjunctions = 99;
+    private Integer maxConjunctions = 5;
 }

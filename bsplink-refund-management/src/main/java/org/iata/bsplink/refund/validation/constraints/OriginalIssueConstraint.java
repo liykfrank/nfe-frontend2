@@ -8,13 +8,13 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import org.iata.bsplink.refund.validation.DecimalsValidator;
+import org.iata.bsplink.refund.validation.OriginalIssueValidator;
 
 
 /**
  * Checks the Decimals.
  */
-@Constraint(validatedBy = DecimalsValidator.class)
+@Constraint(validatedBy = OriginalIssueValidator.class)
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OriginalIssueConstraint {

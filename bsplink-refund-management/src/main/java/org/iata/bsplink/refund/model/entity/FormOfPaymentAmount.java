@@ -12,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
@@ -35,6 +36,7 @@ public class FormOfPaymentAmount {
     @NotNull(message = NON_NULL_MESSAGE)
     @PositiveOrZero(message = POSITIVE_OR_ZERO)
     @Column(precision = 20, scale = 9)
+    @Digits(integer = 11, fraction = 9)
     private BigDecimal amount = BigDecimal.ZERO;
 
     @ApiModelProperty(value = "Credit Card Vendor Code")
