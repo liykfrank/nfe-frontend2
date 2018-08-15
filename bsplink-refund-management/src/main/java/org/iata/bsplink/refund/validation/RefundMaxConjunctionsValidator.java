@@ -32,7 +32,7 @@ public class RefundMaxConjunctionsValidator extends RefundBaseValidator {
 
     private String getMessage(int maxConjunctions, int totalConjunctions) {
 
-        return String.format("number of conjunctions must be less or equal that %d: %d found",
+        return String.format("number of conjunctions must be less or equal than %d: %d found",
                 maxConjunctions, totalConjunctions);
     }
 }
