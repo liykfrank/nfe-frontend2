@@ -19,6 +19,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToOne;
 import javax.validation.Valid;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -142,6 +143,7 @@ public class AcdmRequest {
             required = false)
     @NotNull(message = NON_NULL_MESSAGE)
     @PositiveOrZero(message = POSITIVE_OR_ZERO)
+    @Digits(integer = 11, fraction = 9)
     private BigDecimal amountPaidByCustomer = BigDecimal.ZERO;
 
     @ApiModelProperty(
