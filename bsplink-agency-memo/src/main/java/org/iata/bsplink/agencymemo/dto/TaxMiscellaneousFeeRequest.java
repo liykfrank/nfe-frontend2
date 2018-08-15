@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
@@ -33,10 +34,12 @@ public class TaxMiscellaneousFeeRequest {
     @ApiModelProperty(value = "Airline Tax/Miscellaneous Fee Amount", required = true)
     @NotNull(message = NON_NULL_MESSAGE)
     @PositiveOrZero(message = POSITIVE_OR_ZERO)
+    @Digits(integer = 11, fraction = 9)
     private BigDecimal airlineAmount = BigDecimal.ZERO;
 
     @ApiModelProperty(value = "Agent Tax/Miscellaneous Fee Amount", required = true)
     @NotNull(message = NON_NULL_MESSAGE)
     @PositiveOrZero(message = POSITIVE_OR_ZERO)
+    @Digits(integer = 11, fraction = 9)
     private BigDecimal agentAmount = BigDecimal.ZERO;
 }
