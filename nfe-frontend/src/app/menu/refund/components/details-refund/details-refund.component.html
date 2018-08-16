@@ -37,6 +37,7 @@
           <bspl-reasons-selector
             [dropdownTitle]="'REFUNDS.DETAILS.reason_for_refund'"
             [isoCode]="user.isoc"
+            [type]="type"
             (changeSelect)="onSelectorChange($event)">
           </bspl-reasons-selector>
         </div>

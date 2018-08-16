@@ -20,6 +20,7 @@ export class DetailsRefundComponent extends ReactiveFormHandler {
   public user: User;
   public countCuponsSelected: number;
   public detailsRefundFormModel: DetailsRefundFormModel = new DetailsRefundFormModel();
+  public type = EnvironmentType.REFUND_INDIRECT;
 
   constructor(private _refundConfigurationService: RefundConfigurationService,
               private _userService: UserService) {

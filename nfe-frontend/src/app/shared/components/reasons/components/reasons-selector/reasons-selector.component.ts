@@ -14,8 +14,13 @@ export class ReasonsSelectorComponent implements  OnChanges {
   private reasonList: Reason[];
   @Input()
   public  dropdownTitle: string;
+
+  @Input()
+  public type: EnvironmentType;
+
   @Input()
   public isoCode: string;
+  
   @Output() changeSelect: EventEmitter<string> = new EventEmitter();
 
 
@@ -28,7 +33,11 @@ export class ReasonsSelectorComponent implements  OnChanges {
   }
 
   private _findReasonList() {
-    if ( this.isoCode) {
+    if (this.isoCode && this.type == EnvironmentType.ACDM) {
+      this._reasonsService.getReasonsByAdcms(this.isoCode).subscribe(reasons => {
+        this.reasonList = reasons;
+      });
+    } else if ( this.isoCode  && this.type == EnvironmentType.REFUND_INDIRECT) {
       this._reasonsService.getReasonsByIndirectRefund(this.isoCode).subscribe(reasons => {
           this.reasonList = reasons;
         });

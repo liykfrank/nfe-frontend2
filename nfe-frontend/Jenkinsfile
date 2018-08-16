@@ -104,7 +104,7 @@ pipeline {
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
 
                       script {
-                        docker.image('atsistemas/openshift-cli:1.2').withRun('-v $WORKSPACE/build/libs:$WORKSPACE') { c ->
+                        docker.image('nfedesarrollo/s2i-nfe-frontend').withRun('-v $WORKSPACE/build/libs:$WORKSPACE') { c ->
                             sh "oc login https://$clusterOpenShiftDev -u $USERNAME -p $PASSWORD --insecure-skip-tls-verify=true"
                             sh "oc project nfedesarrollo"
                             sh "oc start-build nfe-frontend --from-dir=$WORKSPACE/build/libs --follow"
