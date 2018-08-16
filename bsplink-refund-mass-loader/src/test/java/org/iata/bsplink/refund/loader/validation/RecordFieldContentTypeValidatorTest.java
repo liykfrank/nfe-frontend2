@@ -157,7 +157,7 @@ public class RecordFieldContentTypeValidatorTest {
                 return "ABC";
 
             case AN:
-                return "...";
+                return "@";
 
             default:
                 return null;
@@ -220,7 +220,7 @@ public class RecordFieldContentTypeValidatorTest {
                 return "123";
 
             case AN:
-                return "123ABC";
+                return "123ABCZabcz -./";
 
             case AX:
                 return " @\\~\\EÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÖÜ£¥áíóúñÑªº¿¡ßØ±ãÃõÕÔÓ~€";

@@ -3,10 +3,12 @@ package org.iata.bsplink.refund.loader.response;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @EqualsAndHashCode
+@ToString
 public class ValidationError {
 
     private String fieldName;

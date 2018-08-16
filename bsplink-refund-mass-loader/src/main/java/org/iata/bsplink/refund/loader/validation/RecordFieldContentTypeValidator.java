@@ -1,7 +1,6 @@
 package org.iata.bsplink.refund.loader.validation;
 
 import static org.apache.commons.lang.StringUtils.isAlpha;
-import static org.apache.commons.lang.StringUtils.isAlphanumeric;
 import static org.apache.commons.lang.StringUtils.isNumeric;
 import static org.iata.bsplink.refund.loader.utils.BeanPropertyUtils.getProperty;
 
@@ -80,7 +79,26 @@ public class RecordFieldContentTypeValidator {
     private boolean hasInvalidCharacters(FieldLayout fieldLayout, String fieldValue) {
 
         return (FieldType.A.equals(fieldLayout.getType()) && !isAlpha(fieldValue))
-                || (FieldType.AN.equals(fieldLayout.getType()) && !isAlphanumeric(fieldValue));
+                || (FieldType.AN.equals(fieldLayout.getType())
+                        && !isAlphanumericWithSpecialCharacters(fieldValue));
+    }
+
+    /**
+     * Return true if the string is alphanumeric or contains some special character.
+     *
+     * <p>
+     * Special characters are:
+     * <ul>
+     * <li>Full stop/period .</li>
+     * <li>Slash /</li>
+     * <li>Minus Sign -</li>
+     * <li>Embedded blank (space)</li>
+     * </ul>
+     * </p>
+     */
+    private boolean isAlphanumericWithSpecialCharacters(String fieldValue) {
+
+        return fieldValue.matches("^[\\x20\\x2D-\\x39\\x41-\\x5A\\x61-\\x7A]*$");
     }
 
     private boolean isNumericWithWrongValue(FieldLayout fieldLayout, String fieldValue) {
