@@ -114,8 +114,9 @@ public class AcdmController {
             @ApiImplicitParam(name = "fileName", value = "Name of the massload file",
                     required = true, dataType = "string", paramType = "query")})
     public ResponseEntity<Acdm> saveAcdmViaMassload(
+            @RequestParam(required = true) String fileName,
             @Valid @RequestBody(required = true) AcdmRequest acdm,
-            @RequestParam(required = true) String fileName, Errors errors) {
+            Errors errors) {
 
         log.info("received request for saving ADM / ACDM via massload file: " + fileName);
 
