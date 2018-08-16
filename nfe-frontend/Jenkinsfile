@@ -88,16 +88,35 @@ pipeline {
         }
 
 
-        stage('Deploy') {
-            agent {
+		stage('Promote artifact to deploy DEV')
+		{
+
+		  agent {
                 label 'a2lyadesch1'
             }
-            steps {
-                dir('dist') {
-                    unstash 'nfe-frontend-artifact'
+
+		  steps {
+
+		    dir('build/libs') {
+                    unstash name: 'nfe-frontend-artifact'
                 }
-                sh './deploy-docker.sh'
-			}
-        }
+              withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'credentials-openshift',
+                    usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+
+                      script {
+                        docker.image('nfedesarrollo/s2i-nfe-frontend').withRun('-v $WORKSPACE/build/libs:$WORKSPACE') { c ->
+                            sh "oc login https://$clusterOpenShiftDev -u $USERNAME -p $PASSWORD --insecure-skip-tls-verify=true"
+                            sh "oc project nfedesarrollo"
+                            sh "oc start-build nfe-frontend --from-dir=$WORKSPACE/build/libs --follow"
+                        }
+                      }
+
+
+               }
+
+
+		  }
+
+		 }
   	}
 }

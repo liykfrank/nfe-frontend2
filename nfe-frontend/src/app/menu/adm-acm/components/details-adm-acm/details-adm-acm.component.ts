@@ -64,7 +64,7 @@ export class DetailsAdmAcmComponent extends ReactiveFormHandler
 
   onSelectorChange(event) {
     const val = this.acdmDetailsForm.get('reasonForMemo');
-    val.setValue(val.value + '\n' + event);
+    val.setValue((val.value ? val.value : '') + '\n' + event);
   }
 
   showError() {
