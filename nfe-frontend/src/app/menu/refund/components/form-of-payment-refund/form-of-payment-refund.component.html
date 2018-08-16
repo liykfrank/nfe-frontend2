@@ -7,7 +7,7 @@
         <div class="form-row" *ngFor="let amountElems of formOfPaymentRefundFormModel.getFormOfPaymentAmount(); let i=index" [formGroupName]="i">
           <div class=" form-group align-bottom col-2 mr-3">
             <label>&nbsp;</label>
-            <input type="text" readonly class="form-control-plaintext" formControlName='type'>
+            <input type="text" readonly class="form-control-plaintext" [value]="'REFUNDS.FORM_OF_PAYMENT.' + formOfPaymentRefundFormModel.getFormOfPaymentAmount(i).get('type').value | translate">
           </div>
           <div class="col">
             <div class="form-row">
@@ -85,11 +85,11 @@
 
           <select (change)="validFopSelected=true"  name="formOfPaymentType" id="formOfPaymentType" class="form-control dropdown-custom" formControlName="type" #fopType>
             <option disabled selected value=''>Choose</option>
-            <option [value]="FOP_CA_VALUE" l10nTranslate>REFUNDS.FORM_OF_PAYMENT.cash</option>
-            <option [value]="FOP_CC_VALUE" l10nTranslate>REFUNDS.FORM_OF_PAYMENT.paymentCard</option>
-            <option [value]="FOP_MSCA_VALUE" l10nTranslate>REFUNDS.FORM_OF_PAYMENT.msca</option>
-            <option [value]="FOP_CC_VALUE" l10nTranslate>REFUNDS.FORM_OF_PAYMENT.mscc</option>
-            <option [value]="FOP_EP_VALUE" *ngIf="refundConfiguration.easyPayEnabled" l10nTranslate>REFUNDS.FORM_OF_PAYMENT.easyPay</option>
+            <option [value]="FOP_CA_VALUE" l10nTranslate>REFUNDS.FORM_OF_PAYMENT.CA</option>
+            <option [value]="FOP_CC_VALUE" l10nTranslate>REFUNDS.FORM_OF_PAYMENT.CC</option>
+            <option [value]="FOP_MSCA_VALUE" l10nTranslate>REFUNDS.FORM_OF_PAYMENT.MSCA</option>
+            <option [value]="FOP_MSCC_VALUE" l10nTranslate>REFUNDS.FORM_OF_PAYMENT.MSCC</option>
+            <option [value]="FOP_EP_VALUE" *ngIf="refundConfiguration.easyPayEnabled" l10nTranslate>REFUNDS.FORM_OF_PAYMENT.EP</option>
           </select>
         </div>
 
@@ -132,7 +132,7 @@
                               <label>&nbsp;</label>
 
                               <div class="form-group pr-1" *ngIf="validFopSelected  && formOfPaymentRefundFormModel.type.value!=''">
-                                  
+
                                   <button class="form-control btn btn-primary btn-blue" l10nTranslate (click)="onClickPlusIcon()">
                                     <i class="fa fa-plus-circle"></i> REFUNDS.FORM_OF_PAYMENT.buttonPlus
                                   </button>
@@ -174,7 +174,7 @@
                           <label>&nbsp;</label>
 
                           <div class="form-group pr-1 mr-2 ml-2" *ngIf="validFopSelected  && formOfPaymentRefundFormModel.type.value!=''">
-                                  
+
                               <button class="form-control btn btn-primary btn-blue" l10nTranslate (click)="onClickPlusIcon()">
                                 <i class="fa fa-plus-circle"></i> REFUNDS.FORM_OF_PAYMENT.buttonPlus
                               </button>

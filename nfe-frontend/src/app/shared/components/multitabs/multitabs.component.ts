@@ -30,8 +30,8 @@ export class MultitabsComponent implements OnInit, DoCheck {
 
       this.enable_tab[0] = true; // TODO download history
 
-      this.postComment();
-      this.postFiles();
+      this._postComment();
+      this._postFiles();
     }
 
     this._modelView = type;
@@ -135,7 +135,7 @@ export class MultitabsComponent implements OnInit, DoCheck {
     this.filesToUpload.push(data);
 
     if (this._modelView === ScreenType.DETAIL) {
-      this.postFiles();
+      this._postFiles();
     }
   }
 
@@ -148,14 +148,14 @@ export class MultitabsComponent implements OnInit, DoCheck {
     this.disabledComment = true;
 
     if (this._modelView === ScreenType.DETAIL) {
-      this.postComment();
+      this._postComment();
     }
   }
 
   // TODO Gets from server
 
   // Utils
-  private postFiles() {
+  private _postFiles() {
     if (this.filesToUpload.length > 0) {
       const formData: FormData = new FormData();
 
@@ -169,31 +169,38 @@ export class MultitabsComponent implements OnInit, DoCheck {
       );
 
       this._FileCommunicationService
-        .postSingle<FileDataServer[]>(formData)
+        .postSingle<any[]>(formData)
         .finally(() => {
           this._FileCommunicationService.configureUrl(this.url);
           this.filesToUpload = [];
         })
         .subscribe(
           data => {
-            this.files = data;
+            this._pushFiles(data);
           },
           err => {
-            for (const aux of err) {
-              this._MessageService.add({
-                // severity: 'error',
-                // summary: this.translation.translate(
-                //   'FileCommunicationService.tittle'
-                // ),
-                detail: aux.path
-              });
-            }
+            this._pushFiles(err);
           }
         );
     }
   }
 
-  private postComment() {
+  private _pushFiles(elems: any[]) {
+    for (const aux of elems) {
+      if (aux.status == 200) {
+        const file = new FileDataServer()
+        file.id = aux.id;
+        file.name = aux.subject;
+        file.path = aux.path;
+
+        this.files.push(file);
+      } else {
+        this._MessageService.add({ severity: 'error', summary: aux.subject});
+      }
+    }
+  }
+
+  private _postComment() {
     if (this.commentToUpload) {
       this._CommentCommunicationService.configureUrl(this.url);
       this._CommentCommunicationService.configureUrl(
