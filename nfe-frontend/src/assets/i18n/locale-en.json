@@ -95,7 +95,9 @@
   "ADM_ACM": {
     "ADMTitle": "ADM Issue",
     "ACMTitle": "ACM Issue",
+    "OK": "Created correctly",
     "error": "Can not create ADM/ACM ",
+    "regularized": "This ADM/ACM is regularized. Check as regularized?",
     "RESUME": {
       "status": "Stastus",
       "bsp": "BSP",
@@ -207,6 +209,9 @@
     }
   },
   "REFUNDS": {
+    "error": "Can not create refund",
+    "error_min_fop": "At least there must be a selected form of payment",
+    "OK": "Refund created",
     "RESUME": {
       "status": "Status",
       "bsp": "BSP",
@@ -234,7 +239,8 @@
       "exchange": "Exchange",
       "original_issue_details": "Original Issue Details",
       "issuing_agent": "Issuing Agent",
-      "place_city_code": "Place (city code)"
+      "place_city_code": "Place (city code)",
+      "buttonPlus": "Cnj"
     },
     "FORM_OF_PAYMENT": {
       "title": "Form of Payment",
@@ -252,7 +258,8 @@
       "currency": "Currency",
       "tourCode": "Tour Code",
       "customerRef": "Customer Ref",
-      "electronicTicketAuthCode": "Electronic Ticket Auth Code"
+      "electronicTicketAuthCode": "Electronic Ticket Auth Code",
+      "buttonPlus": "Fop"
     },
     "AMOUNT": {
       "title": "Amount",

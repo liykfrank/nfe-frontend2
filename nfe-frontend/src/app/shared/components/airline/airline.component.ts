@@ -17,8 +17,35 @@ export class AirlineComponent extends ReactiveFormHandler implements OnInit {
   @Input() role;
   @Input() isoCountryCode: string;
   @Input() agentCode: string;
-  @Input() airlineVatNumberEnabled: boolean;
-  @Input() companyRegistrationNumberEnabled: boolean;
+
+  private _airlineVatNumberEnabled = true;
+  @Input()
+  set airlineVatNumberEnabled(val: boolean) {
+    this._airlineVatNumberEnabled = val;
+    if (val) {
+      this.airlineFormModelGroup.get('airlineVatNumber').enable({emitEvent: false});
+    } else {
+      this.airlineFormModelGroup.get('airlineVatNumber').disable({emitEvent: false});
+    }
+  }
+  get airlineVatNumberEnabled() {
+    return this._airlineVatNumberEnabled;
+  }
+
+  private _companyRegistrationNumberEnabled = true;
+  @Input()
+  set companyRegistrationNumberEnabled(val: boolean) {
+    this._companyRegistrationNumberEnabled = val;
+    if (val) {
+      this.airlineFormModelGroup.get('airlineRegistrationNumber').enable({emitEvent: false});
+    } else {
+      this.airlineFormModelGroup.get('airlineRegistrationNumber').disable({emitEvent: false});
+    }
+  }
+  get companyRegistrationNumberEnabled() {
+    return this._companyRegistrationNumberEnabled;
+  }
+
   @Input() disabledContact: boolean;
   @Input() showContact: boolean = true;
   @Input() showAirlineName: boolean;

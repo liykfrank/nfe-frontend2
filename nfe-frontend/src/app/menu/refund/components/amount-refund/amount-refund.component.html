@@ -12,7 +12,7 @@
                   <span class="checkmark"></span>
                 </label>
                 <div class="caja-error col pl-1 pr-0" *ngIf="errorPartialRefund">
-                  <bspl-field-error [errors]="{customError: {message : 'FORM_CONTROL_VALIDATORS.partialRefund'}}"></bspl-field-error>
+                  <bspl-field-error [errors]="partialRefund.errors"></bspl-field-error>
                 </div>
           </div>
         </div>
@@ -56,7 +56,7 @@
         <div class="col-12 mb-2">
           <div class="row">
             <div class="form-group col-3 pr-1">
-              <bspl-input-form-control l10nTranslate [formGroupParent]="amountRefundFormModel.amounts" [formControlParentName]="'totalGrossFareRefunded'"
+              <bspl-input-form-control l10nTranslate [type]="'decimal'" [decimalsNumber]="getNumDecimals()" [formGroupParent]="amountRefundFormModel.amounts" [formControlParentName]="'totalGrossFareRefunded'"
                 [wrapText]="true" [label]="'REFUNDS.AMOUNT.total_gross_fare_refunded'">
               </bspl-input-form-control>
             </div>
@@ -80,7 +80,7 @@
             <div class="form-group col-3 pr-1 pl-1">
 
               <bspl-input-form-control l10nTranslate [formGroupParent]="amountRefundFormModel.amounts" [formControlParentName]="'commissionRate'"
-                [wrapText]="true" [type]="'decimal'" [decimalsNumber]="getNumDecimals()" [label]="'&nbsp;'">
+                [wrapText]="true" [type]="'regex'" [typingPattern]="'^[.0-9]*$'" [inputMaxTextLength]="5" [label]="'&nbsp;'">
               </bspl-input-form-control>
 
 
@@ -109,7 +109,7 @@
         </div>
 
         <!-- SECTION DISCOUNT AMOUNT -->
-        <div class="col-12 mb-2" *ngIf="nrRefundsAllowed">
+        <div class="col-12 mb-2" *ngIf="refundConfiguration.nrRefundsAllowed">
           <div class="row">
             <div class="form-group col-3 pr-1">
               <bspl-input-form-control l10nTranslate [formGroupParent]="amountRefundFormModel.amounts" [formControlParentName]="'spam'"
@@ -142,7 +142,7 @@
 
 
               <bspl-input-form-control l10nTranslate [formGroupParent]="amountRefundFormModel.getTaxMiscellaneousFees(i)" [formControlParentName]="'type'"
-                [wrapText]="true" [type]="'regex'" [typingPattern]="'^[a-zA-Z0-9]*$'" [inputMaxTextLength]="2" [label]="'REFUNDS.AMOUNT.taxes'">
+                [wrapText]="true" [type]="'regex'" [typingPattern]="'^[a-zA-Z0-9]*$'" [inputMaxTextLength]="8" [label]="'REFUNDS.AMOUNT.taxes'">
               </bspl-input-form-control>
 
             </div>
@@ -150,7 +150,7 @@
             <div class="form-group col-3 pr-1">
 
               <bspl-input-form-control l10nTranslate [formGroupParent]="amountRefundFormModel.getTaxMiscellaneousFees(i)" [formControlParentName]="'amount'"
-                [wrapText]="true" [type]="'decimal'" [decimalsNumber]="getNumDecimals()" [inputMaxTextLength]="2" [label]="'&nbsp;'">
+                [wrapText]="true" [type]="'decimal'" [decimalsNumber]="getNumDecimals()" [label]="'&nbsp;'">
               </bspl-input-form-control>
             </div>
 
@@ -173,7 +173,7 @@
 
 
               <bspl-input-form-control l10nTranslate [formGroupParent]="amountRefundFormModel.amounts" [formControlParentName]="'amountType'"
-                [wrapText]="true" [type]="'regex'" [typingPattern]="'^[a-zA-Z0-9]*$'" [inputMaxTextLength]="2" [label]="'REFUNDS.AMOUNT.taxes'">
+                [wrapText]="true" [type]="'regex'" [typingPattern]="'^[a-zA-Z0-9]*$'" [inputMaxTextLength]="8" [label]="'REFUNDS.AMOUNT.taxes'">
               </bspl-input-form-control>
 
             </div>
@@ -187,7 +187,7 @@
 
             <div class="form-group col-3 pr-1">
               <label>&nbsp;</label>
-              <button class="form-control btn btn-primary btn-blue" l10nTranslate (click)="addTaxes()">
+              <button class="form-control btn btn-primary btn-blue" l10nTranslate (click)="amountRefundFormModel.addTaxes()">
                 <i class="fa fa-plus-circle"></i> REFUNDS.AMOUNT.tax
               </button>
             </div>
@@ -262,9 +262,10 @@
             <div class="form-group col-3 pr-1 pl-1">
 
               <bspl-input-form-control l10nTranslate [formGroupParent]="amountRefundFormModel.amounts" [formControlParentName]="'commissionOnCpAndMfRate'"
-                [wrapText]="true" [label]="'&nbsp;'">
+                [wrapText]="true" [label]="'&nbsp;'" [type]="'regex'" [typingPattern]="'^[.0-9]*$'" [inputMaxTextLength]="5">
               </bspl-input-form-control>
             </div>
+
 
             <div class="form-group col-3 pr-1">
               <label>&nbsp;</label>
@@ -296,9 +297,11 @@
         <div class="col-6 mb-2">
           <div class="row">
             <div class="form-group col-3 pr-1">
-              <bspl-input-form-control l10nTranslate [formGroupParent]="amountRefundFormModel.amounts" [formControlParentName]="'refundToPassenger'"
+              <!-- <bspl-input-form-control l10nTranslate [type]="'decimal'" [decimalsNumber]="getNumDecimals()" [formGroupParent]="amountRefundFormModel.amounts" [formControlParentName]="'refundToPassenger'"
                 [wrapText]="true" [label]="'REFUNDS.AMOUNT.refund_to_passenger'">
-              </bspl-input-form-control>
+              </bspl-input-form-control> -->
+              <label l10nTranslate>REFUNDS.AMOUNT.refund_to_passenger</label>
+              <input disabled="true" [value]="this.amountRefundFormModel.amounts.get('refundToPassenger') | decimalsFormatter:getNumDecimals()">
             </div>
 
 

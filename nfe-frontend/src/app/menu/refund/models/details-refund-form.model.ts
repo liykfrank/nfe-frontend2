@@ -29,7 +29,7 @@ export class DetailsRefundFormModel extends ReactiveFormHandlerModel {
   }
 
   createFormControls() {
-    this.statisticalCode = new FormControl('DOM', [Validators.required, Validators.pattern('[DI][A-Z0-9]*$')]);
+    this.statisticalCode = new FormControl('DOM', [Validators.required]);
     this.passenger = new FormControl('', [Validators.required]);
     this.issueReason = new FormControl('', [Validators.required]);
     this.airlineCodeRelatedDocument = new FormControl('', [Validators.pattern('[a-zA-Z0-9]*$'), Validators.required, Validators.minLength(3)]);

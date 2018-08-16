@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup, FormControl } from '@angular/forms';
 
 @Injectable()
 export class UtilsService {
@@ -93,13 +93,15 @@ export class UtilsService {
       }
     }
 
-    if (ret) {
+    if (ret && !formAux.disabled && formAux instanceof FormControl) {
       formAux.setErrors({
         backendError: {
           invalid: true,
           message: msg
         }
       });
+    } else {
+      ret = false;
     }
     return ret;
   }

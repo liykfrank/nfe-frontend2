@@ -17,20 +17,20 @@
     <label class="text-nowrap" l10nTranslate>{{label}}</label>
     <div class="form-row pt-1">
       <div class="custom-radio col-5 mr-2">
-        <input id="r_domestic" 
-          value="DOM"
-          type="radio" 
+        <input id="r_domestic"
+          value="D"
+          type="radio"
           formControlName="inputFormControl"
-          [checked]="value == 'DOM'">
+          [checked]="value == 'D'">
         <label for="r_domestic" class="text-nowrap" l10nTranslate><span></span>{{domesticLabel}}</label>
       </div>
-        
+
       <div class="custom-radio col-5">
-        <input id="r_internacional" 
-          value="INT"
-          type="radio" 
+        <input id="r_internacional"
+          value="I"
+          type="radio"
           formControlName="inputFormControl"
-          [checked]="value == 'INT'">
+          [checked]="value == 'I'">
         <label for="r_internacional" class="text-nowrap" l10nTranslate><span></span>{{internacionalLabel}}</label>
       </div>
     </div>

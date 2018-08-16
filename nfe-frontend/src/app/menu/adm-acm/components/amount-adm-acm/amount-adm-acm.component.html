@@ -49,9 +49,8 @@
       <tbody>
         <tr>
           <th class="title" l10nTranslate>ADM_ACM.AMOUNT.fare</th>
-          <td>
+          <td [formGroup]="agentCalcFormGroup">
             <!-- [(ngModel)]="agentCalculations.fare"> -->
-            <form [formGroup]="amountForm.get('agentCalculations')">
               <input
                 [ngClass]="{'error': checkIfErrorExist('agentCalculations', 'fare')}"
                 class="form-control"
@@ -60,12 +59,10 @@
                 [maxLength]="11"
                 formControlName="fare"
                 type="text">
-            </form>
 
           </td>
-          <td>
+          <td [formGroup]="airlineCalcFormGroup">
             <!-- [(ngModel)]="airlineCalculations.fare"> -->
-            <form [formGroup]="amountForm.get('airlineCalculations')">
                 <input
                   [ngClass]="{'error': checkIfErrorExist('airlineCalculations', 'fare')}"
                   class="form-control"
@@ -74,7 +71,6 @@
                   [maxLength]="11"
                   formControlName="fare"
                   type="text">
-              </form>
           </td>
           <td>
             <!-- [value]="totalCalculations.fare"> -->
@@ -85,9 +81,8 @@
           <th class="title" l10nTranslate>ADM_ACM.AMOUNT.tfc
             <img src="assets/images/utils/ico_tooltip.svg"/>
           </th>
-          <td>
+          <td [formGroup]="agentCalcFormGroup">
             <!-- [(ngModel)]="agentCalculations.tax"> -->
-            <form [formGroup]="amountForm.get('agentCalculations')">
               <input
                 [ngClass]="{'error': checkIfErrorExist('agentCalculations', 'tax')}"
                 class="form-control"
@@ -96,11 +91,9 @@
                 [maxLength]="11"
                 formControlName="tax"
                 type="text">
-            </form>
           </td>
-          <td>
+          <td [formGroup]="airlineCalcFormGroup">
             <!-- [(ngModel)]="airlineCalculations.tax"> -->
-            <form [formGroup]="amountForm.get('airlineCalculations')">
               <input
                 [ngClass]="{'error': checkIfErrorExist('airlineCalculations', 'tax')}"
                 class="form-control"
@@ -109,7 +102,6 @@
                 [maxLength]="11"
                 formControlName="tax"
                 type="text">
-            </form>
           </td>
           <td>
             <!-- [value]="totalCalculations.tax"> -->
@@ -118,9 +110,8 @@
         </tr>
         <tr>
           <th class="title" l10nTranslate>ADM_ACM.AMOUNT.comission</th>
-          <td>
+          <td [formGroup]="agentCalcFormGroup">
             <!-- [(ngModel)]="agentCalculations.commission"> -->
-            <form [formGroup]="amountForm.get('agentCalculations')">
               <input
                 [ngClass]="{'error': checkIfErrorExist('agentCalculations', 'commission')}"
                 class="form-control"
@@ -129,11 +120,9 @@
                 [maxLength]="11"
                 formControlName="commission"
                 type="text">
-            </form>
           </td>
-          <td>
+          <td [formGroup]="airlineCalcFormGroup">
             <!-- [(ngModel)]="airlineCalculations.commission"> -->
-            <form [formGroup]="amountForm.get('airlineCalculations')">
               <input
                 [ngClass]="{'error': checkIfErrorExist('airlineCalculations', 'commission')}"
                 class="form-control"
@@ -142,7 +131,6 @@
                 [maxLength]="11"
                 formControlName="commission"
                 type="text">
-            </form>
           </td>
           <td>
             <!-- [value]="totalCalculations.commission"> -->
@@ -151,9 +139,8 @@
         </tr>
         <tr *ngIf="showSpam">
           <th class="title" l10nTranslate>ADM_ACM.AMOUNT.spam</th>
-          <td>
+          <td [formGroup]="agentCalcFormGroup">
             <!-- [(ngModel)]="agentCalculations.spam"> -->
-            <form [formGroup]="amountForm.get('agentCalculations')">
               <input
                 [ngClass]="{'error': checkIfErrorExist('agentCalculations', 'spam')}"
                 class="form-control"
@@ -162,11 +149,9 @@
                 [maxLength]="11"
                 formControlName="spam"
                 type="text">
-            </form>
           </td>
-          <td>
+          <td [formGroup]="airlineCalcFormGroup">
             <!-- [(ngModel)]="airlineCalculations.spam"> -->
-            <form [formGroup]="amountForm.get('airlineCalculations')">
               <input
                 [ngClass]="{'error': checkIfErrorExist('airlineCalculations', 'spam')}"
                 class="form-control"
@@ -175,7 +160,6 @@
                 [maxLength]="11"
                 formControlName="spam"
                 type="text">
-            </form>
           </td>
           <td>
             <!-- [value]="totalCalculations.spam"> -->
@@ -184,9 +168,8 @@
         </tr>
         <tr *ngIf="true"> <!-- show TOCA -->
           <th class="title" l10nTranslate>ADM_ACM.AMOUNT.toca</th>
-          <td>
+          <td [formGroup]="agentCalcFormGroup">
             <!-- [(ngModel)]="agentCalculations.taxOnCommission"> -->
-            <form [formGroup]="amountForm.get('agentCalculations')">
               <input
                 [ngClass]="{'error': checkIfErrorExist('agentCalculations', 'taxOnCommission')}"
                 class="form-control"
@@ -195,11 +178,9 @@
                 [maxLength]="11"
                 formControlName="taxOnCommission"
                 type="text">
-            </form>
           </td>
-          <td>
+          <td [formGroup]="airlineCalcFormGroup">
             <!-- [(ngModel)]="airlineCalculations.taxOnCommission"> -->
-            <form [formGroup]="amountForm.get('airlineCalculations')">
               <input
                 [ngClass]="{'error': checkIfErrorExist('airlineCalculations', 'taxOnCommission')}"
                 class="form-control"
@@ -208,7 +189,6 @@
                 [maxLength]="11"
                 formControlName="taxOnCommission"
                 type="text">
-            </form>
           </td>
           <td>
             <!-- [value]="totalCalculations.taxOnCommission"> -->

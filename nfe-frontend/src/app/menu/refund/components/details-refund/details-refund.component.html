@@ -10,7 +10,7 @@
           [domesticLabel]="'REFUNDS.DETAILS.domestic'"
           [internacionalLabel]="'REFUNDS.DETAILS.internacional'"
           [freeStat]="refundConfiguration.freeStat"
-          [defaultStat]="refundConfiguration.defaultStat"
+          [defaultStat]="refundConfiguration.defaultStat == 'DOM' ? 'D' : 'I'"
           [formGroupParent]="detailsRefundFormModel.detailsRefundGroup"
           [formControlParentName]="'statisticalCode'">
         </bspl-stat>
@@ -42,12 +42,22 @@
         </div>
         <div class="col-3"></div>
         <div class="form-group  col-5">
-          <label l10nTranslate>REFUNDS.DETAILS.detailed_reasons</label>
-            <bspl-field-error
-            *ngIf="(this.detailsRefundFormModel.issueReason.touched || this.detailsRefundFormModel.issueReason.dirty) && this.detailsRefundFormModel.issueReason.errors"
-            [errors]="this.detailsRefundFormModel.issueReason.errors">
-          </bspl-field-error>
-          <textarea id="detailed_reasons" rows="4" class="form-control" formControlName="issueReason"></textarea>
+          <div class="row">
+            <label class="col-5 pr-0 text-nowrap" l10nTranslate>REFUNDS.DETAILS.detailed_reasons</label>
+            <div class="col pl-0 mb-1">
+                <bspl-field-error
+                *ngIf="(this.detailsRefundFormModel.issueReason.touched || this.detailsRefundFormModel.issueReason.dirty) && this.detailsRefundFormModel.issueReason.errors"
+                [errors]="this.detailsRefundFormModel.issueReason.errors">
+              </bspl-field-error>
+            </div>
+          </div>
+
+          <textarea [ngClass]="{'border-red': (this.detailsRefundFormModel.issueReason.touched || this.detailsRefundFormModel.issueReason.dirty) && this.detailsRefundFormModel.issueReason.errors}" id="detailed_reasons" rows="4" class="form-control" formControlName="issueReason"></textarea>
+
+
+
+
+
         </div>
       </div>
     </div>
@@ -190,10 +200,18 @@
           <input class=" form-group form-control-plaintext ico-trash-container" readonly="" type="text" (click)="detailsRefundFormModel.removeCNJ(i);onRemoveAllCuponsFrom(cnj);">
         </div>
 
-        <!-- BUTTON PLUS -->
-        <div class="form-group col-1 col-xl-1" *ngIf="showHideMaxCNJ(i)">
+       <!-- BUTTON PLUS -->
+         <!-- <div class="form-group col-1 col-xl-1" *ngIf="showHideMaxCNJ(i)">
           <i class="fa fa-plus-circle centered btn-plus" (click)="detailsRefundFormModel.addCNJ()"></i>
-        </div>
+        </div> -->
+
+
+        <div class="form-group col-2 pr-1 pl-4 pr-4" *ngIf="showHideMaxCNJ(i)">
+            <label>&nbsp;</label>
+            <button class="form-control btn btn-primary btn-blue" l10nTranslate (click)="detailsRefundFormModel.addCNJ()">
+              <i class="fa fa-plus-circle"></i> REFUNDS.DETAILS.buttonPlus
+            </button>
+          </div>
 
       </div>
 

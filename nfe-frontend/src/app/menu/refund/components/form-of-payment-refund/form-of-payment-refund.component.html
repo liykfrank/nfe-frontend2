@@ -95,7 +95,7 @@
 
         <div class="form-group col">
           <div class="form-row">
-            <div class="col" formGroupName="selectAmount">
+            <div class="col" [formGroup]="this.selectAmount">
                 <div class="form-row">
 
                   <div class="form-group col-5">
@@ -108,7 +108,7 @@
                           [type]="'decimal'"
                          [decimalsNumber]="getNumDecimals()"
                           [label]="'REFUNDS.FORM_OF_PAYMENT.amount'"
-                          [formGroupParent]="this.formOfPaymentRefundFormModel.selectAmount"
+                          [formGroupParent]="this.selectAmount"
                           [formControlParentName]="'amount'">
                         </bspl-input-form-control>
                       </div>
@@ -121,18 +121,30 @@
                           [typingPattern]="'^[a-zA-Z]*$'"
                           [inputMaxTextLength]="'2'"
                           [label]="'REFUNDS.FORM_OF_PAYMENT.type'"
-                          [formGroupParent]="this.formOfPaymentRefundFormModel.selectAmount"
+                          [formGroupParent]="this.selectAmount"
                           [formControlParentName]="'vendorCode'">
                         </bspl-input-form-control>
                       </div>
 
-                      <div *ngIf="isFopTypeSelectedCaMscaOrVoid()" class="col-1">
+                      <div *ngIf="isFopTypeSelectedCaMscaOrVoid()" class="col">
                         <div class="form-row">
-                          <div class="form-group col-1">
+                          <div class="form-group col">
                               <label>&nbsp;</label>
-                            <div *ngIf="validFopSelected  && formOfPaymentRefundFormModel.type.value!=''" class="form-group col-1 col-xl-1 pl-0" (click)="onClickPlusIcon()">
+
+                              <div class="form-group pr-1" *ngIf="validFopSelected  && formOfPaymentRefundFormModel.type.value!=''">
+                                  
+                                  <button class="form-control btn btn-primary btn-blue" l10nTranslate (click)="onClickPlusIcon()">
+                                    <i class="fa fa-plus-circle"></i> REFUNDS.FORM_OF_PAYMENT.buttonPlus
+                                  </button>
+                                </div>
+
+<!--                             <div *ngIf="validFopSelected  && formOfPaymentRefundFormModel.type.value!=''" class="form-group col-1 col-xl-1 pl-0" (click)="onClickPlusIcon()">
                                 <i class="fa fa-plus-circle centered btn-plus"></i>
-                            </div>
+                            </div> -->
+
+
+
+
                             <div *ngIf="isFopTypeSelectedCaMscaOrVoid() && validFopSelected===false" class="tooltip-container">
                                 <bspl-field-error [errors]="{customError: {message : 'FORM_CONTROL_VALIDATORS.maxFop'}}"></bspl-field-error>
                             </div>
@@ -151,18 +163,26 @@
                       [typingPattern]="'^[0-9]*$'"
                       [inputMaxTextLength]="'19'"
                       [label]="'REFUNDS.FORM_OF_PAYMENT.creditCardNumber'"
-                      [formGroupParent]="this.formOfPaymentRefundFormModel.selectAmount"
+                      [formGroupParent]="this.selectAmount"
                       [formControlParentName]="'number'">
                     </bspl-input-form-control>
                   </div>
 
-                  <div *ngIf="!isFopTypeSelectedCaMscaOrVoid()" class="col-1">
+                  <div *ngIf="!isFopTypeSelectedCaMscaOrVoid()" class="col">
                     <div class="form-row">
-                      <div class="form-group col-1">
+                      <div class="form-group col">
                           <label>&nbsp;</label>
-                        <div *ngIf="validFopSelected  && formOfPaymentRefundFormModel.type.value!=''"  class="form-group col-1 col-xl-1 pl-0" (click)="onClickPlusIcon()">
+
+                          <div class="form-group pr-1 mr-2 ml-2" *ngIf="validFopSelected  && formOfPaymentRefundFormModel.type.value!=''">
+                                  
+                              <button class="form-control btn btn-primary btn-blue" l10nTranslate (click)="onClickPlusIcon()">
+                                <i class="fa fa-plus-circle"></i> REFUNDS.FORM_OF_PAYMENT.buttonPlus
+                              </button>
+                            </div>
+
+<!--                         <div *ngIf="validFopSelected  && formOfPaymentRefundFormModel.type.value!=''"  class="form-group col-1 col-xl-1 pl-0" (click)="onClickPlusIcon()">
                             <i class="fa fa-plus-circle centered btn-plus"></i>
-                          </div>
+                          </div> -->
                           <div *ngIf="!isFopTypeSelectedCaMscaOrVoid() && validFopSelected===false" class="tooltip-container">
                               <bspl-field-error [errors]="{customError: {message : 'FORM_CONTROL_VALIDATORS.maxFop'}}"></bspl-field-error>
                           </div>
@@ -211,7 +231,7 @@
       </div>
 
       <div class="form-row">
-        
+
         <div class="col-4">
           <div class="form-row">
             <div class="form-group col-5">

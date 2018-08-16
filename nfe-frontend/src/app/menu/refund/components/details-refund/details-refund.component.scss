@@ -1,6 +1,8 @@
 @import '/../../../../../theme/general.scss';
 
-
+.border-red {
+    border-color: red !important;
+  }
 #details-refund{
 
     label{
@@ -24,6 +26,14 @@
           border-color: red !important;
         }
       }
+
+      .btn-blue{
+        background-color: #1989CF !important;
+
+        i{
+            font-size:14px;
+        }
+    }
       
 
 }

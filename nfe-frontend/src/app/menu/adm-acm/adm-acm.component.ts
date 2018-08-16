@@ -19,6 +19,7 @@ import { Country } from './models/country.model';
 import { AcdmsService } from './services/acdms.service';
 import { AcdmConfigurationService } from './services/adm-acm-configuration.service';
 import { CountryService } from './services/country.service';
+import { AlertModel } from '../../core/models/alert.model';
 
 @Component({
   selector: 'bspl-adm-acm',
@@ -91,7 +92,10 @@ export class AdmAcmComponent implements OnInit {
     this.showPopUp = event;
   }
 
-  onRemoveTicket(value) {}
+  onRemoveTicket(value) {
+    (this.detailsFormGroup.get('relatedTicketDocuments') as FormArray).removeAt(value);
+    this.ticketDocuments = this.detailsFormGroup.get('relatedTicketDocuments').value;
+  }
 
   onReturnFormBasicInfo(event) {
     this.basicInfoFormGroup = event;
@@ -157,7 +161,6 @@ export class AdmAcmComponent implements OnInit {
     }
 
     if (this.amountFormGroup.get('amountPaidByCustomer').value <= 0) {
-      console.log('me voy por aquí 2');
       this._alertService.setAlertTranslate(
         'ADM_ACM.AMOUNT.title',
         'ADM_ACM.AMOUNT.total_error',
@@ -167,7 +170,6 @@ export class AdmAcmComponent implements OnInit {
     }
 
     if (!this._checkTaxes()) {
-      console.log('me voy por aquí 3');
       this._alertService.setAlertTranslate(
         'ADM_ACM.AMOUNT.title',
         'ADM_ACM.AMOUNT.tax_error',
@@ -177,16 +179,8 @@ export class AdmAcmComponent implements OnInit {
     }
 
     const acdm = this._createModel();
-    console.log(acdm);
-    this._acdmsService.postAcdm(acdm).subscribe(
-      data => {
-        console.log('todo ha ido chachi');
-      },
-      err => {
-        console.log('err');
-        console.log(err);
-      }
-    );
+
+    this._postAcdm(acdm);
   }
 
   @HostListener('window:scroll', [])
@@ -391,7 +385,7 @@ export class AdmAcmComponent implements OnInit {
 
     const aux = this.amountFormGroup
       .get('taxMiscellaneousFees')
-      .value.find(x => x.type != '');
+      .value.filter(x => x.type != '');
     acdm.taxMiscellaneousFees = aux ? aux : [];
     acdm.amountPaidByCustomer = this.amountFormGroup.get(
       'amountPaidByCustomer'
@@ -421,5 +415,55 @@ export class AdmAcmComponent implements OnInit {
     ret.taxOnCommission = ret.taxOnCommission ? ret.taxOnCommission : 0;
 
     return ret;
+  }
+
+  private _postAcdm(acdm: Acdm) {
+    this._acdmsService.postAcdm(acdm).subscribe(
+      data => {
+        this._alertService.setAlertTranslate(this.isAdm ? 'ADM_ACM.ADMTitle' : 'ADM_ACM.ACMTitle', 'REFUNDS.OK');
+
+        this.id_acdm_model = data.id;
+        this.screen = ScreenType.DETAIL;
+      },
+      err => {
+        const list = err.error.validationErrors;
+
+        if (list && list.length == 1 && list[0].fieldName == 'regularized') {
+          const subscription = this._alertService
+          .getAccept()
+          .subscribe(accept => {
+            if (accept) {
+              acdm.regularized = true;
+              this._postAcdm(acdm);
+            }
+
+            subscription.unsubscribe();
+          });
+
+          this._alertService.setAlertTranslate(
+            'ADM_ACM.' + (this.isAdm ? 'ADMTitle' : 'ACMTitle'),
+            'ADM_ACM.regularized',
+            AlertType.CONFIRM
+          );
+        } else if (list) {
+          const forms = [this.basicInfoFormGroup, this.amountFormGroup, this.detailsFormGroup];
+
+          const errors = this._utils.setBackErrorsOnForms(
+            forms.filter(x => x != null),
+            err.error.validationErrors
+          );
+
+          console.log(errors);
+
+          let msg = this._translationService.translate('error');
+          for (const aux of errors) {
+            msg += '\n' + aux.message;
+          }
+
+          const alert = new AlertModel(this._translationService.translate('error'), msg, AlertType.ERROR);
+          this._alertService.setAlert(alert);
+        }
+      }
+    );
   }
 }

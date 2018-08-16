@@ -29,6 +29,7 @@ export class DecimalsFormatterDirective implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.decimals) {
+      this.value_aux = this._control.control.value;
       this.onBlur(null);
     }
   }

@@ -22,6 +22,7 @@ export class FormOfPaymentRefundComponent extends ReactiveFormHandler
 
   refundConfiguration: RefundConfiguration;
   formOfPaymentRefundFormModel: FormOfPaymentRefundFormModel = new FormOfPaymentRefundFormModel();
+  selectAmount = this.formOfPaymentRefundFormModel.selectAmount;
   type = EnvironmentType.REFUND_INDIRECT;
   validFopSelected = true;
 
@@ -121,10 +122,11 @@ export class FormOfPaymentRefundComponent extends ReactiveFormHandler
   }
 
   addFopAmount(): boolean {
+
     const formOfPaymentTypeValue: string = this.formOfPaymentRefundFormModel
       .type.value;
-    const formOfPaymentTypeText: string = this.fopType.nativeElement
-      .selectedOptions[0].textContent;
+    // const formOfPaymentTypeText: string = this.fopType.nativeElement
+    //   .selectedOptions[0].textContent;
     const amount: string = this.formOfPaymentRefundFormModel.selectAmount.get(
       'amount'
     ).value;
@@ -135,7 +137,7 @@ export class FormOfPaymentRefundComponent extends ReactiveFormHandler
       'number'
     ).value;
 
-    if (this.fopAmountAdditionIsPossible(formOfPaymentTypeText)) {
+    if (this.fopAmountAdditionIsPossible(formOfPaymentTypeValue)) {
       // msca and cash
       if (
         this.isFopTypeValueMscaOrCash(formOfPaymentTypeValue) ||
@@ -143,14 +145,20 @@ export class FormOfPaymentRefundComponent extends ReactiveFormHandler
       ) {
         this.formOfPaymentRefundFormModel.addCashAmount(
           amount,
-          formOfPaymentTypeText
+          formOfPaymentTypeValue
         );
 
         // credic card, mscc, easy pay
       } else if (formOfPaymentTypeValue != '') {
+        if (this.formOfPaymentRefundFormModel.selectAmount.get('vendorCode').invalid ||
+          this.formOfPaymentRefundFormModel.selectAmount.get('number').invalid) {
+          this.formOfPaymentRefundFormModel.selectAmount.get('vendorCode').markAsDirty();
+          this.formOfPaymentRefundFormModel.selectAmount.get('number').markAsDirty();
+         return false;
+       }
         this.formOfPaymentRefundFormModel.addCreditOrEPAmount(
           amount,
-          formOfPaymentTypeText,
+          formOfPaymentTypeValue,
           vendorCode,
           number
         );

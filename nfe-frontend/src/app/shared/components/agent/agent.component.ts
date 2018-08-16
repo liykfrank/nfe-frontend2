@@ -17,16 +17,43 @@ export class AgentComponent extends ReactiveFormHandler implements OnInit, OnCha
 
   @Input() role;
   @Input() agentCode: string;
-  @Input() agentVatNumberEnabled: boolean;
-  @Input() companyRegistrationNumberEnabled: boolean;
+
+  private _agentVatNumberEnabled = true;
+  @Input()
+  set agentVatNumberEnabled(val: boolean) {
+    this._agentVatNumberEnabled = val;
+    if (val) {
+      this.agentFormModelGroup.get('agentVatNumber').enable({emitEvent: false});
+    } else {
+      this.agentFormModelGroup.get('agentVatNumber').disable({emitEvent: false});
+    }
+  }
+  get agentVatNumberEnabled(): boolean {
+    return this._agentVatNumberEnabled;
+  }
+
+  private _companyRegistrationNumberEnabled = true;
+  @Input()
+  set companyRegistrationNumberEnabled(val: boolean) {
+    this._companyRegistrationNumberEnabled = val;
+    if (val) {
+      this.agentFormModelGroup.get('agentRegistrationNumber').enable({emitEvent: false});
+    } else {
+      this.agentFormModelGroup.get('agentRegistrationNumber').disable({emitEvent: false});
+    }
+  }
+  get companyRegistrationNumberEnabled(): boolean {
+    return this._companyRegistrationNumberEnabled;
+  }
+
   private _disabledContact: boolean;
   @Input()
   set disabledContact(val: boolean) {
     this._disabledContact = val;
     if (val) {
-      this.agentFormModelGroup.get('agentContact').enable();
+      this.agentFormModelGroup.get('agentContact').enable({emitEvent: false});
     } else {
-      this.agentFormModelGroup.get('agentContact').disable();
+      this.agentFormModelGroup.get('agentContact').disable({emitEvent: false});
     }
   }
   get disabledContact(): boolean {
@@ -40,9 +67,9 @@ export class AgentComponent extends ReactiveFormHandler implements OnInit, OnCha
   set showContact(val: boolean) {
     this._showContact = val;
     if (val) {
-      this.agentFormModelGroup.get('agentContact').enable();
+      this.agentFormModelGroup.get('agentContact').enable({emitEvent: false});
     } else {
-      this.agentFormModelGroup.get('agentContact').disable();
+      this.agentFormModelGroup.get('agentContact').disable({emitEvent: false});
     }
   }
   get showContact(): boolean {

@@ -40,7 +40,10 @@ export class AmountRefundComponent extends ReactiveFormHandler implements OnInit
 
     this._currencyService.getCurrencyState().subscribe(currency => {
       this._currencyState = currency;
+      this.amountRefundFormModel.decimals = this._currencyState.numDecimals;
     });
+
+    this.subscribe(this.amountRefundFormModel.amountRefundGroup);
   }
 
 
@@ -61,8 +64,5 @@ export class AmountRefundComponent extends ReactiveFormHandler implements OnInit
     }
   }
 
-  addTaxes() {
-    this.amountRefundFormModel.addTaxes(Number(this.getNumDecimals()));
-  }
 
 }
