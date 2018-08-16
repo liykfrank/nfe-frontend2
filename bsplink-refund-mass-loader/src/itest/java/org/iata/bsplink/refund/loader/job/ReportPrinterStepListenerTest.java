@@ -24,13 +24,16 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.boot.test.rule.OutputCapture;
+import org.springframework.test.context.junit4.SpringRunner;
 
+@RunWith(SpringRunner.class)
 public class ReportPrinterStepListenerTest {
 
     private static final String ANY_REFUND_FILE_NAME = "ALe9EARS_20170410_0744_016";
@@ -48,7 +51,7 @@ public class ReportPrinterStepListenerTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Rule
-    public OutputCapture capture;
+    public OutputCapture capture = new OutputCapture();
 
     private ProcessReportPrinter printer;
     private ReportPrinterStepListener listener;

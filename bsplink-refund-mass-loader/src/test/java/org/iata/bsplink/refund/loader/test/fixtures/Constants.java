@@ -8,7 +8,7 @@ public class Constants {
     public static final String AGENT_CODE = "00000011";
     public static final String TRANSACTION_NUMBER_1 = "000001";
     public static final String TRANSACTION_NUMBER_2 = "000002";
-    public static final String TICKET_DOCUMENT_NUMBER_1 = "0000000000001";
+    public static final String TICKET_DOCUMENT_NUMBER_1 = AIRLINE_CODE + "0000000001";
 
     private static final String BASE_WRONG_TEST_FILE = "wrong/XXe9EARS_20180101_0011_001";
 

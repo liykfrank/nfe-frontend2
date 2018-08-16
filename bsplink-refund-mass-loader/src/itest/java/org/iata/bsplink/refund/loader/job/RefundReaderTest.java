@@ -19,6 +19,7 @@ import org.iata.bsplink.refund.loader.model.record.RecordIt01;
 import org.iata.bsplink.refund.loader.model.record.RecordIt0z;
 import org.iata.bsplink.refund.loader.model.record.RecordRawLine;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,8 @@ import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.boot.test.rule.OutputCapture;
+import org.springframework.test.context.junit4.rules.SpringClassRule;
+import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RefundReaderTest {
@@ -37,8 +40,14 @@ public class RefundReaderTest {
     @Mock
     private ItemReader<Record> delegate;
 
+    @ClassRule
+    public static final SpringClassRule springClassRule = new SpringClassRule();
+
     @Rule
-    public OutputCapture capture;
+    public final SpringMethodRule springMethodRule = new SpringMethodRule();
+
+    @Rule
+    public OutputCapture capture = new OutputCapture();
 
     private RefundDocument refund;
     private RefundReader reader;
@@ -46,8 +55,6 @@ public class RefundReaderTest {
 
     @Before
     public void setUp() {
-
-        capture = new OutputCapture();
 
         reader = new RefundReader(delegate);
 

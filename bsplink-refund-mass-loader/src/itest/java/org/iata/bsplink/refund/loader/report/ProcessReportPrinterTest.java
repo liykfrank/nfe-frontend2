@@ -16,15 +16,18 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.boot.test.rule.OutputCapture;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.junit4.SpringRunner;
 
+@RunWith(SpringRunner.class)
 public class ProcessReportPrinterTest {
 
     @Rule
-    public OutputCapture capture;
+    public OutputCapture capture = new OutputCapture();
 
     private static String reportFileName;
 
@@ -45,8 +48,6 @@ public class ProcessReportPrinterTest {
 
         printer = new ProcessReportPrinter(mapper);
         errors = new ArrayList<>();
-
-        capture = new OutputCapture();
 
         deleteQuietly(new File(reportFileName));
     }
@@ -117,7 +118,7 @@ public class ProcessReportPrinterTest {
         capture.expect(containsString("ERROR"));
         capture.expect(containsString("Refund loader errors: 2"));
         capture.expect(containsString("message=The record element is mandatory"));
-        capture.expect(containsString("message=message=Non-numeric characters in numeric fields"));
+        capture.expect(containsString("message=Non-numeric characters in numeric fields"));
     }
 
     @Test

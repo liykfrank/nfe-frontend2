@@ -82,6 +82,8 @@ public class RefundWriter extends RefundLoaderErrorsAware implements ItemWriter<
 
     private Optional<Refund> findRefund(Refund refundFromFile) {
 
+        log.info(getLogMessageForRefund("searching refund", refundFromFile));
+
         ResponseEntity<Refund> response = client.findRefund(
                 refundFromFile.getIsoCountryCode(),
                 refundFromFile.getAirlineCode(),
@@ -89,12 +91,22 @@ public class RefundWriter extends RefundLoaderErrorsAware implements ItemWriter<
 
         if (HttpStatus.NOT_FOUND.equals(response.getStatusCode())) {
 
+            log.info(getLogMessageForRefund("refund does not exist", refundFromFile));
+
             return Optional.empty();
         }
 
         throwExceptionIfResponseIsNotSuccessful(response);
 
         return Optional.ofNullable(response.getBody());
+    }
+
+    private String getLogMessageForRefund(String message, Refund refund) {
+
+        return String.format(
+                message + ": isoCountryCode=%s, airlineCode=%s, ticketDocumentNumber=%s",
+                refund.getIsoCountryCode(), refund.getAirlineCode(),
+                refund.getTicketDocumentNumber());
     }
 
     private void addRefundError(Refund refund, String fieldName, String message) {
@@ -114,6 +126,8 @@ public class RefundWriter extends RefundLoaderErrorsAware implements ItemWriter<
     private void update(Refund refundFromFile, Refund refundToUpdate) throws IOException {
 
         RefundStatus newStatus = refundFromFile.getStatus();
+
+        log.info("writing refund: " + refundFromFile);
 
         if (RefundStatus.AUTHORIZED.equals(newStatus)) {
 

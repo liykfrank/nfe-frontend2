@@ -46,6 +46,7 @@ import org.iata.bsplink.refund.loader.response.ValidationError;
 import org.iata.bsplink.refund.loader.response.ValidationErrorResponse;
 import org.iata.bsplink.refund.loader.restclient.RefundClient;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -59,8 +60,8 @@ import org.springframework.batch.item.ExecutionContext;
 import org.springframework.boot.test.rule.OutputCapture;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-
+import org.springframework.test.context.junit4.rules.SpringClassRule;
+import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 @RunWith(JUnitParamsRunner.class)
 public class RefundWriterTest {
@@ -69,8 +70,14 @@ public class RefundWriterTest {
     private static final String ANY_ERROR_FIELD_NAME = "anyField";
     private static final String ANY_ERROR_MESSAGE = "any error message";
 
+    @ClassRule
+    public static final SpringClassRule springClassRule = new SpringClassRule();
+
     @Rule
-    public OutputCapture capture;
+    public final SpringMethodRule springMethodRule = new SpringMethodRule();
+
+    @Rule
+    public OutputCapture capture = new OutputCapture();
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -84,7 +91,6 @@ public class RefundWriterTest {
     @Before
     public void setUp() {
 
-        capture = new OutputCapture();
         client = mock(RefundClient.class);
         executionContext = new ExecutionContext();
 
@@ -299,6 +305,18 @@ public class RefundWriterTest {
     }
 
     @Test
+    public void testLogsWhenSearchsRefund() throws Exception {
+
+        writer.write(Arrays.asList(refundFromFile));
+
+        String message = String.format("searching refund: "
+                + "isoCountryCode=%s, airlineCode=%s, ticketDocumentNumber=%s", ISO_COUNTRY_CODE,
+                AIRLINE_CODE, TICKET_DOCUMENT_NUMBER_1);
+
+        capture.expect(containsString(message));
+    }
+
+    @Test
     public void testLogsRefundDoesNotExistError() throws Exception {
 
         configureFindRefundToRespondWithStatus(HttpStatus.NOT_FOUND);
@@ -306,9 +324,12 @@ public class RefundWriterTest {
         writer.write(Arrays.asList(refundFromFile));
 
         capture.expect(containsString("ERROR"));
-        capture.expect(containsString("Refund does not exist"));
 
-        assertRefundLog();
+        String message = String.format("refund does not exist: "
+                + "isoCountryCode=%s, airlineCode=%s, ticketDocumentNumber=%s", ISO_COUNTRY_CODE,
+                AIRLINE_CODE, TICKET_DOCUMENT_NUMBER_1);
+
+        capture.expect(containsString(message));
     }
 
     @Test
