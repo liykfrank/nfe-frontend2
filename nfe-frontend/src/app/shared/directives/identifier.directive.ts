@@ -13,8 +13,6 @@ export class IdentifierDirective implements OnInit, OnDestroy {
     private _renderer: Renderer2,
     private _el: ElementRef
   ) {
-    console.log('on Identifier');
-    console.log(this.base);
 
     this.changes = new MutationObserver(() => this.findOnTree());
 

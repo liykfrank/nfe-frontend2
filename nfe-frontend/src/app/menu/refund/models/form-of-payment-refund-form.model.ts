@@ -19,9 +19,9 @@ export class FormOfPaymentRefundFormModel extends ReactiveFormHandlerModel {
   }
 
   createFormControls() {
-    this.type = new FormControl('', [Validators.required]);
+    this.type = new FormControl('', []);
     this.amount = new FormControl('');
-    this.creditEPSubTotal = new FormControl({value: 0, disabled: true}, [Validators.required]);
+    this.creditEPSubTotal = new FormControl({value: 0, disabled: true}, []);
     this.totalAmount = new FormControl({value: 0, disabled: true}, [Validators.required]);
     this.tourCode = new FormControl('', []);
     this.customerFileReference = new FormControl('');
@@ -31,9 +31,9 @@ export class FormOfPaymentRefundFormModel extends ReactiveFormHandlerModel {
   createFormGroups() {
     this.formOfPaymentAmounts = new FormArray([]);
     this.selectAmount = new FormGroup({
-      amount: new FormControl('', []),
-      number: new FormControl('', []),
-      vendorCode: new FormControl('', [])
+      amount: new FormControl(0),
+      number: new FormControl('', [Validators.required]),
+      vendorCode: new FormControl('', [Validators.required])
     });
   }
 
@@ -41,7 +41,6 @@ export class FormOfPaymentRefundFormModel extends ReactiveFormHandlerModel {
     this.formOfPaymentRefundGroup = new FormGroup({
       formOfPaymentAmounts: this.formOfPaymentAmounts,
       type: this.type,
-      selectAmount: this.selectAmount,
       creditEPSubTotal: this.creditEPSubTotal,
       totalAmount: this.totalAmount,
       tourCode: this.tourCode,

@@ -42,7 +42,7 @@ export class AcdmBasicInfoFormModel extends ReactiveFormHandlerModel {
         code: new FormControl('', [Validators.required]),
         decimals: new FormControl('', [Validators.required]),
       }),
-      taxOnCommissionType: new FormControl('', [Validators.required]),
+      taxOnCommissionType: new FormControl(''),
       statisticalCode: new FormControl('', [Validators.required, Validators.pattern('[DI][A-Z]{2}$')]),
 
       netReporting: new FormControl(false)

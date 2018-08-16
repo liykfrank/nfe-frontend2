@@ -17,7 +17,7 @@ export class DocumentsComponent {
   }
 
   deleteElem(index: number) {
-    this.removeTicket.emit(this.documents.splice(index, 1));
+    this.removeTicket.emit(index);
   }
 
   onClickTicket(ticket: TicketDocument) {

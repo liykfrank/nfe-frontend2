@@ -24,11 +24,11 @@ export class AcdmAmountForm extends ReactiveFormHandlerModel {
 
   private _inputAmount(): FormGroup {
     return new FormGroup({
-      commission: new FormControl(0),
-      fare: new FormControl(0),
-      spam: new FormControl(0),
-      tax: new FormControl(0),
-      taxOnCommission: new FormControl(0)
+      commission: new FormControl({value: 0}),
+      fare: new FormControl({value: 0}),
+      spam: new FormControl({value: 0}),
+      tax: new FormControl({value: 0}),
+      taxOnCommission: new FormControl({value: 0})
     });
   }
 

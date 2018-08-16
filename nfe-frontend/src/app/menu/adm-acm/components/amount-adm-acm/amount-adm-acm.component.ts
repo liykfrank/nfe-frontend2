@@ -19,6 +19,10 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
   implements OnInit {
   private acdmAmountModel = new AcdmAmountForm();
   amountForm: FormGroup = this.acdmAmountModel._amountModelGroup;
+
+  agentCalcFormGroup: FormGroup = (this.amountForm.get('agentCalculations') as FormGroup);
+  airlineCalcFormGroup: FormGroup = (this.amountForm.get('airlineCalculations') as FormGroup);
+
   configuration: AdmAcmConfiguration;
 
   @Input()
@@ -287,8 +291,6 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
           value == 'MF'
         ) {
           aux.get('type').setErrors(this._setCustomError('NOT_VALID'));
-        } else {
-          aux.get('type').updateValueAndValidity();
         }
       } else {
         aux.get('type').setErrors(this._setCustomError('NOT_EMPTY'));
@@ -296,7 +298,7 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
       }
     }
 
-    return false;
+    return ret;
   }
 
   private _setCustomError(msg: string) {

@@ -1,3 +1,4 @@
+import { GLOBALS } from './../../../shared/constants/globals';
 import { OnDestroy } from '@angular/core';
 import { FormArray, FormControl, Validators, FormGroup } from '@angular/forms';
 import { ReactiveFormHandlerModel } from '../../../shared/base/reactive-form-handler-model';
@@ -34,7 +35,7 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
   radioCommission: FormControl;
   radioCpAndMfCommission: FormControl;
 
-  private decimals = 0;
+  public decimals = 0;
 
 
   private suscrNetRemit;
@@ -57,32 +58,33 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
   }
 
   getValueForTotalGrossFareRefunded() {
-    return this.grossFare.value - this.lessGrossFareUsed.value;
+    return (this.grossFare.value - this.lessGrossFareUsed.value).toFixed(this.decimals);
   }
 
   createFormControls(): void {
-    this.partialRefund = new FormControl('', [Validators.required]);
-    this.netRemit = new FormControl('0', [Validators.required]);
-    this.grossFare = new FormControl({ value: '0', disabled: this.partialRefund.value }, []);
-    this.lessGrossFareUsed = new FormControl({ value: '0', disabled: this.partialRefund.value }, []);
-    this.totalGrossFareRefunded = new FormControl({ value: '0', disabled: true }, []);
-    this.totalTaxes = new FormControl({ value: '0', disabled: true }, []);
-    this.radioCommission = new FormControl('', []);
-    this.radioCpAndMfCommission = new FormControl('', []);
+    this.partialRefund = new FormControl(false);
+    this.netRemit = new FormControl(false);
+    this.grossFare = new FormControl({ value: '0', disabled: this.partialRefund.value });
+    this.lessGrossFareUsed = new FormControl({ value: '0', disabled: this.partialRefund.value });
+    this.totalGrossFareRefunded = new FormControl({ value: '0', disabled: true });
+    this.totalTaxes = new FormControl({ value: '0', disabled: true });
+    this.radioCommission = new FormControl('');
+    this.radioCpAndMfCommission = new FormControl('');
     // TODO Total gros fare refunded?
-    this.commissionAmount = new FormControl({ value: '0', disabled: false }, []);
-    this.commissionRate = new FormControl({ value: '', disabled: true }, []);
-    this.dicountAmount = new FormControl({ value: '0', disabled: this.netRemit.value }, []);
-    this.cancellationPenalty = new FormControl('0', []);
-    this.taxOnCancellationPenalty = new FormControl('', []);
-    this.miscellaneousFee = new FormControl('', []);
-    this.taxOnMiscellaneousFee = new FormControl('', []);
-    this.commissionOnCpAndMfAmount = new FormControl({ value: '', disabled: false }, []);
-    this.commissionOnCpAndMfRate = new FormControl({ value: '', disabled: true }, []);
-    this.tax = new FormControl('', []);
-    this.refundToPassenger = new FormControl({value: '0', disabled: true}, []);
-    this.amountType = new FormControl('', []);
-    this.amountTax = new FormControl('0', []);
+    this.commissionAmount = new FormControl({ value: '0', disabled: false }); /*?:99 | */
+    this.commissionRate = new FormControl({ value: '', disabled: true }, [Validators.pattern(GLOBALS.PATTERNS.PERCENT_MAX_99_99)]);
+
+    this.dicountAmount = new FormControl({ value: '0', disabled: true });
+    this.cancellationPenalty = new FormControl('0');
+    this.taxOnCancellationPenalty = new FormControl('');
+    this.miscellaneousFee = new FormControl('');
+    this.taxOnMiscellaneousFee = new FormControl('');
+    this.commissionOnCpAndMfAmount = new FormControl({ value: '', disabled: false });
+    this.commissionOnCpAndMfRate = new FormControl({ value: '', disabled: true }, [Validators.pattern(GLOBALS.PATTERNS.PERCENT_MAX_99_99)]);
+    this.tax = new FormControl('');
+    this.refundToPassenger = new FormControl(0);
+    this.amountType = new FormControl('');
+    this.amountTax = new FormControl('0');
   }
 
   createFormGroups(): void {
@@ -118,18 +120,30 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
       netRemit: this.netRemit,
       amounts: this.amounts
     });
+    this.amountType.setValue('', {emitEvent: true});
   }
 
-  addTaxes(decimals: number) {
-    this.decimals = decimals;
+  setValueAmounts() {
+    return (0).toFixed(this.decimals);
+  }
 
-    this.taxMiscellaneousFees.push(this.newTaxes(this.amountType.value, this.amountTax.value));
+  addTaxes() {
 
-    setTimeout(() => {
-      this.amountType.reset();
-      this.amountTax.reset();
-    }, 0);
-    this.updateTotalTaxes();
+
+    if (this.amountType.value != '') {
+
+      this.taxMiscellaneousFees.push(this.newTaxes(this.amountType.value, this.amountTax.value));
+
+      setTimeout(() => {
+
+        this.amountType.setValue('');
+        this.amountTax.setValue(this.setValueAmounts());
+      }, 0);
+      this.updateTotalTaxes();
+    } else {
+      this.amountType.setErrors({ 'required': true });
+      this.amountType.markAsTouched();
+    }
   }
 
   updateTotalTaxes() {
@@ -137,7 +151,7 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
     for (const tax of this.taxMiscellaneousFees.controls) {
       total = total + Number(tax.value.amount);
     }
-    this.totalTaxes.setValue(total.toFixed(this.decimals), {emitEvent: true});
+    this.totalTaxes.setValue(total.toFixed(this.decimals), { emitEvent: true });
   }
 
   updateRefundToPassenger() {
@@ -145,22 +159,22 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
 
     if (this.partialRefund.value == 'true') {
       result = this.getNumber(this.grossFare.value)
-       + this.getNumber(this.totalTaxes.value)
+        + this.getNumber(this.totalTaxes.value)
         - this.getNumber(this.cancellationPenalty.value)
-         - this.getNumber(this.taxOnCancellationPenalty.value)
-          - this.getNumber(this.miscellaneousFee.value)
-           - this.getNumber(this.taxOnMiscellaneousFee.value);
+        - this.getNumber(this.taxOnCancellationPenalty.value)
+        - this.getNumber(this.miscellaneousFee.value)
+        - this.getNumber(this.taxOnMiscellaneousFee.value);
 
     } else {
 
       result = this.getNumber(this.totalGrossFareRefunded.value)
-       + this.getNumber(this.totalTaxes.value)
+        + this.getNumber(this.totalTaxes.value)
         - this.getNumber(this.cancellationPenalty.value)
-         - this.getNumber(this.taxOnCancellationPenalty.value)
-          - this.getNumber(this.miscellaneousFee.value)
-           - this.getNumber(this.taxOnMiscellaneousFee.value);
+        - this.getNumber(this.taxOnCancellationPenalty.value)
+        - this.getNumber(this.miscellaneousFee.value)
+        - this.getNumber(this.taxOnMiscellaneousFee.value);
     }
-    this.refundToPassenger.setValue(result, {emitEvent: false});
+    this.refundToPassenger.setValue(result.toFixed(this.decimals), { emitEvent: false });
   }
 
   getNumber(value) {
@@ -169,8 +183,8 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
 
   newTaxes(type, amount): FormGroup {
     return new FormGroup({
-      type: new FormControl(type, []),
-      amount: new FormControl(amount, [])
+      type: new FormControl(type),
+      amount: new FormControl(amount)
     });
   }
 
@@ -189,36 +203,38 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
     this.suscrPartialRefund = this.partialRefund.valueChanges.subscribe(() => {
       if (this.amountRefundGroup.get('partialRefund').value) {
         this.lessGrossFareUsed.enable();
-        this.totalGrossFareRefunded.setValue(this.getValueForTotalGrossFareRefunded(), {emitEvent: true});
+        this.totalGrossFareRefunded.setValue(this.getValueForTotalGrossFareRefunded(), { emitEvent: true });
       } else {
         this.lessGrossFareUsed.disable();
-        this.lessGrossFareUsed.reset();
+        this.lessGrossFareUsed.setValue(this.setValueAmounts());
       }
     });
 
     this.suscrGrossFare = this.grossFare.valueChanges.subscribe(() => {
-      this.totalGrossFareRefunded.setValue(this.getValueForTotalGrossFareRefunded(), {emitEvent: true});
+      this.totalGrossFareRefunded.setValue(this.getValueForTotalGrossFareRefunded(), { emitEvent: true });
       this.updateRefundToPassenger();
     });
 
     this.suscriptionFormGeneral = this.lessGrossFareUsed.valueChanges.subscribe(() => {
-      this.totalGrossFareRefunded.setValue(this.getValueForTotalGrossFareRefunded(), {emitEvent: true});
+      this.totalGrossFareRefunded.setValue(this.getValueForTotalGrossFareRefunded(), { emitEvent: true });
       this.updateRefundToPassenger();
     });
 
     this.suscrRadio = this.radioCommission.valueChanges.subscribe(() => {
       if (this.radioCommission.value == 'true') {
         setTimeout(() => {
-          this.commissionRate.reset();
+          this.commissionRate.setValue(this.setValueAmounts());
         }, 0);
         this.commissionRate.disable();
+        this.commissionRate.reset();
         this.commissionAmount.enable();
       } else {
         setTimeout(() => {
-          this.commissionAmount.reset();
+          this.commissionAmount.setValue(this.setValueAmounts());
         }, 0);
         this.commissionAmount.disable();
         this.commissionRate.enable();
+        this.commissionRate.setValue('0');
       }
 
     });
@@ -227,26 +243,29 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
 
       if (this.radioCpAndMfCommission.value == 'true') {
         setTimeout(() => {
-          this.commissionOnCpAndMfRate.reset();
+          this.commissionOnCpAndMfRate.setValue(this.setValueAmounts());
         }, 0);
         this.commissionOnCpAndMfRate.disable();
+        this.commissionOnCpAndMfRate.reset();
         this.commissionOnCpAndMfAmount.enable();
       } else {
         setTimeout(() => {
-          this.commissionOnCpAndMfAmount.reset();
+          this.commissionOnCpAndMfAmount.setValue(this.setValueAmounts());
         }, 0);
         this.commissionOnCpAndMfAmount.disable();
         this.commissionOnCpAndMfRate.enable();
+        this.commissionOnCpAndMfRate.setValue('0');
       }
 
     });
 
     this.suscrNetRemit = this.netRemit.valueChanges.subscribe(() => {
+
       if (this.netRemit.value) {
         this.dicountAmount.enable();
       } else {
         this.dicountAmount.disable();
-        this.dicountAmount.reset();
+        this.dicountAmount.setValue(this.setValueAmounts());
       }
     });
 
