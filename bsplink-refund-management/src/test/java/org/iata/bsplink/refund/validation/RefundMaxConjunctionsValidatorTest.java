@@ -88,7 +88,7 @@ public class RefundMaxConjunctionsValidatorTest {
         assertTrue(errors.hasErrors());
 
         String expectedMessage =
-                String.format("number of conjunctions must be less or equal that %d: %d found",
+                String.format("number of conjunctions must be less or equal than %d: %d found",
                         MAX_CONJUNCTIONS, totalConjunctions);
 
         assertEquals(expectedMessage, errors.getGlobalError().getDefaultMessage());
