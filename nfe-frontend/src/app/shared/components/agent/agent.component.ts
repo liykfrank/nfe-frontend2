@@ -132,7 +132,7 @@ export class AgentComponent extends ReactiveFormHandler
       this.agentFormModelGroup
         .get('agentControlDigit')
         .valueChanges.subscribe((agentCode: string) => {
-          this.agentFormModelGroup.get('agentCode').valid
+          this.agentFormModelGroup.get('agentControlDigit').valid
             ? this._validateAgent()
             : this._clean();
         })
@@ -213,8 +213,8 @@ export class AgentComponent extends ReactiveFormHandler
     if (
       agentCode &&
       agentControlDigit &&
-      agentCode.length > 0 &&
-      agentControlDigit.length > 0
+      agentCode.length == 7 &&
+      agentControlDigit.length == 1
     ) {
       return (
         this.agentFormModelGroup.get('agentCode').value +

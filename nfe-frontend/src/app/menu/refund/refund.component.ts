@@ -239,13 +239,10 @@ export class RefundComponent extends AbstractComponent implements OnInit{
   }
 
   private _getAmount() {
-    const currency = this.basicInfoRefundFormModel
-      ? this.basicInfoRefundFormModel.get('currency')
-      : null;
     let retCurrency = '-';
 
-    if (currency) {
-      retCurrency = currency.get('code').value;
+    if (this.currency) {
+      retCurrency = this.currency.get('name').value;
     }
 
     const total = this.formOfPaymentRefundFormModel
@@ -253,10 +250,10 @@ export class RefundComponent extends AbstractComponent implements OnInit{
       : null;
     let retTotal = '-';
 
-    if (total && currency) {
+    if (total && this.currency) {
       retTotal = new DecimalsFormatterPipe().transform(
         total.value,
-        currency.get('decimals').value
+        this.currency.get('numDecimals').value
       );
     }
 
