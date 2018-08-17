@@ -95,11 +95,11 @@
   "ADM_ACM": {
     "ADMTitle": "ADM Issue",
     "ACMTitle": "ACM Issue",
-    "OK": "Created correctly",
+    "OK": "ADM/ACM number: ",
     "error": "Can not create ADM/ACM ",
-    "regularized": "This ADM/ACM is regularized. Check as regularized?",
+    "regularized": "This transaction has both positive and negative amounts in the differences, therefore, only the total net difference will be reported to the DPC and will be included in the net billing.",
     "RESUME": {
-      "status": "Stastus",
+      "status": "Status",
       "bsp": "BSP",
       "agent_code": "Agent Code",
       "for": " for",
@@ -145,6 +145,10 @@
       },
       "BSP": {
         "label": "BSP"
+      },
+      "COUNTRY": {
+        "title": "WARNING",
+        "text": "This action will reset your data. Continue?"
       }
     },
     "AMOUNT": {
@@ -166,7 +170,6 @@
       "toca": "TOCA",
       "tax_error": "There are error in tax table",
       "total_error": "Total is wrong"
-
     },
     "DETAILS": {
       "title": "Details",
@@ -211,7 +214,10 @@
   "REFUNDS": {
     "error": "Can not create refund",
     "error_min_fop": "At least there must be a selected form of payment",
-    "OK": "Refund created",
+    "totalAmount_refundToPassenger": "Totals on Form of payment and Amount must be equal and greater than 0",
+    "OK": "Refund number: ",
+    "REFUNDTITLE": "REFUNDS",
+    "title": "Refund issued",
     "RESUME": {
       "status": "Status",
       "bsp": "BSP",
@@ -240,7 +246,7 @@
       "original_issue_details": "Original Issue Details",
       "issuing_agent": "Issuing Agent",
       "place_city_code": "Place (city code)",
-      "buttonPlus": "Cnj"
+      "buttonPlus": "CNJ"
     },
     "FORM_OF_PAYMENT": {
       "title": "Form of Payment",
@@ -392,5 +398,21 @@
   "STATUS": {
     "NEW": "NEW",
     "DETAIL": "DETAIL"
-  }
+  },
+
+
+  "dashboard": "DASHBOARD",
+  "adm": "ADM ISSUE",
+  "acm": "ACM ISSUE",
+  "refunds": "REFUND ISSUE",
+  "query-files": "QUERY FILES",
+  "query-files-read-only": "QUERY FILES",
+  "upload-files": "UPLOAD FILES",
+  "create-account": "CREATE SFTP ACCOUNT",
+  "ticketing": "TICKETING",
+  "general-info": "GENERAL INFO",
+  "self-service": "SELF SERVICE",
+  "monitor": "MONITOR"
+
+
 }

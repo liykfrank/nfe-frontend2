@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { ReactiveFormHandler } from '../../../../shared/base/reactive-form-handler';
 import { EnvironmentType } from '../../../../shared/enums/environment-type.enum';
@@ -14,7 +14,7 @@ import { FormControl } from '@angular/forms';
   templateUrl: './details-refund.component.html',
   styleUrls: ['./details-refund.component.scss']
 })
-export class DetailsRefundComponent extends ReactiveFormHandler {
+export class DetailsRefundComponent extends ReactiveFormHandler implements OnInit {
 
   public refundConfiguration: RefundConfiguration;
   public user: User;
@@ -30,7 +30,31 @@ export class DetailsRefundComponent extends ReactiveFormHandler {
     this._refundConfigurationService.getConfiguration().subscribe(config => this.refundConfiguration = config);
     this._userService.getUser().subscribe(data => this.user = data);
     this._refundConfigurationService.getCountCuponsState().subscribe(count => this.countCuponsSelected = count );
+  }
 
+  ngOnInit(): void {
+    this.subscriptions.push(
+      this.detailsRefundFormModel.conjunctions.valueChanges.subscribe(data => {
+        let i = 0;
+        for (const aux of data) {
+          let txt = aux.relatedTicketDocumentNumber;
+          if (txt && txt.length < 10) {
+            txt = '0'.repeat(10 - txt.length) + txt;
+            this.detailsRefundFormModel.conjunctions.get(i.toString()).get('relatedTicketDocumentNumber').setValue(txt, {emitEvent: false});
+          }
+          i++;
+        }
+      })
+    );
+
+    this.subscriptions.push(
+      this.detailsRefundFormModel.detailsRefundGroup.get('relatedDocument').get('relatedTicketDocumentNumber').valueChanges.subscribe(data => {
+        if (data && data.length < 10) {
+          let txt = '0'.repeat(10 - data.length) + data;
+          this.detailsRefundFormModel.detailsRefundGroup.get('relatedDocument').get('relatedTicketDocumentNumber').setValue(txt, {emitEvent: false});
+        }
+      })
+    );
   }
 
   showHideMaxCNJ(pos: number): boolean {

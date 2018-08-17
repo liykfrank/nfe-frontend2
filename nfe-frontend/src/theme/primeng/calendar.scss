@@ -20,18 +20,13 @@
   }
   
   .ui-calendar-button {
-    width: auto;
+    // width: auto;
     border-radius: 0 4px 4px 0;
     background-color: #FFFFFF !important;
     border: 1px solid #ced4da !important;
     color: #BDC3C9 !important;
     border-left: 0px !important;
   }
-  
-  // .ui-calendar-button:hover {
-  //   background-color: #FFFFFF !important;
-  //   border-color: #BDC3C9 !important;
-  // }
 }
 
 .custom.ui-datepicker {
@@ -81,16 +76,6 @@
         border-radius: 20px;
         padding: 10px !important; 
       }
-
-      // &:not(.ui-state-disabled) {
-      //   a:hover {
-         
-      //   }
-      // }
-      
-      // a.ui-state-highlight {
-
-      // }
 
       a.ui-state-active {
         background-color: #1989CF !important;

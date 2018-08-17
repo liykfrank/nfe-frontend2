@@ -20,14 +20,13 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
   commissionAmount: FormControl;
   commissionRate: FormControl;
   dicountAmount: FormControl;
-  totalTaxes: FormControl;
+  tax: FormControl;
   cancellationPenalty: FormControl;
   taxOnCancellationPenalty: FormControl;
   miscellaneousFee: FormControl;
   taxOnMiscellaneousFee: FormControl;
   commissionOnCpAndMfAmount: FormControl;
   commissionOnCpAndMfRate: FormControl;
-  tax: FormControl;
   refundToPassenger: FormControl;
   amountType: FormControl;
   amountTax: FormControl;
@@ -67,7 +66,7 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
     this.grossFare = new FormControl({ value: '0', disabled: this.partialRefund.value });
     this.lessGrossFareUsed = new FormControl({ value: '0', disabled: this.partialRefund.value });
     this.totalGrossFareRefunded = new FormControl({ value: '0', disabled: true });
-    this.totalTaxes = new FormControl({ value: '0', disabled: true });
+    this.tax = new FormControl(0);
     this.radioCommission = new FormControl('');
     this.radioCpAndMfCommission = new FormControl('');
     // TODO Total gros fare refunded?
@@ -81,7 +80,6 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
     this.taxOnMiscellaneousFee = new FormControl('');
     this.commissionOnCpAndMfAmount = new FormControl({ value: '', disabled: false });
     this.commissionOnCpAndMfRate = new FormControl({ value: '', disabled: true }, [Validators.pattern(GLOBALS.PATTERNS.PERCENT_MAX_99_99)]);
-    this.tax = new FormControl('');
     this.refundToPassenger = new FormControl(0);
     this.amountType = new FormControl('');
     this.amountTax = new FormControl('0');
@@ -96,7 +94,7 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
       totalGrossFareRefunded: this.totalGrossFareRefunded,
       commissionAmount: this.commissionAmount,
       commissionRate: this.commissionRate,
-      totalTaxes: this.totalTaxes,
+      tax: this.tax,
       amountType: this.amountType,
       amountTax: this.amountTax,
       radioCommission: this.radioCommission,
@@ -108,7 +106,6 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
       taxOnMiscellaneousFee: this.taxOnMiscellaneousFee,
       commissionOnCpAndMfAmount: this.commissionOnCpAndMfAmount,
       commissionOnCpAndMfRate: this.commissionOnCpAndMfRate,
-      tax: this.tax,
       refundToPassenger: this.refundToPassenger,
       taxMiscellaneousFees: this.taxMiscellaneousFees,
     });
@@ -139,19 +136,19 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
         this.amountType.setValue('');
         this.amountTax.setValue(this.setValueAmounts());
       }, 0);
-      this.updateTotalTaxes();
+      this.updatetax();
     } else {
       this.amountType.setErrors({ 'required': true });
       this.amountType.markAsTouched();
     }
   }
 
-  updateTotalTaxes() {
+  updatetax() {
     let total = 0;
     for (const tax of this.taxMiscellaneousFees.controls) {
       total = total + Number(tax.value.amount);
     }
-    this.totalTaxes.setValue(total.toFixed(this.decimals), { emitEvent: true });
+    this.tax.setValue(total.toFixed(this.decimals), { emitEvent: true });
   }
 
   updateRefundToPassenger() {
@@ -159,7 +156,7 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
 
     if (this.partialRefund.value == 'true') {
       result = this.getNumber(this.grossFare.value)
-        + this.getNumber(this.totalTaxes.value)
+        + this.getNumber(this.tax.value)
         - this.getNumber(this.cancellationPenalty.value)
         - this.getNumber(this.taxOnCancellationPenalty.value)
         - this.getNumber(this.miscellaneousFee.value)
@@ -168,7 +165,7 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
     } else {
 
       result = this.getNumber(this.totalGrossFareRefunded.value)
-        + this.getNumber(this.totalTaxes.value)
+        + this.getNumber(this.tax.value)
         - this.getNumber(this.cancellationPenalty.value)
         - this.getNumber(this.taxOnCancellationPenalty.value)
         - this.getNumber(this.miscellaneousFee.value)
@@ -190,7 +187,7 @@ export class AmountRefundFormModel extends ReactiveFormHandlerModel implements O
 
   removeTaxes(position) {
     this.taxMiscellaneousFees.removeAt(position);
-    this.updateTotalTaxes();
+    this.updatetax();
   }
 
   getTaxMiscellaneousFees(position = null) {

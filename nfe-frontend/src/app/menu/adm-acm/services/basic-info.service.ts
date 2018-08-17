@@ -11,6 +11,7 @@ export class BasicInfoService {
   private $currency = new BehaviorSubject<CurrencyPost>(new CurrencyPost());
   private $showSpam = new BehaviorSubject<boolean>(false);
   private $concernsIndicator = new BehaviorSubject<string>('I');
+  private $toca = new BehaviorSubject<string>('');
 
   public getSubType(): Observable<string> {
     return this.$subType.asObservable();
@@ -42,5 +43,13 @@ export class BasicInfoService {
 
   public setConcernsIndicator(str: string): void {
     this.$concernsIndicator.next(str);
+  }
+
+  public getToca(): Observable<string> {
+    return this.$toca.asObservable();
+  }
+
+  public setToca(str: string): void {
+    this.$toca.next(str);
   }
 }

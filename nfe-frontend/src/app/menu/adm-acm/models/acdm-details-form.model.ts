@@ -15,11 +15,11 @@ export class AcdmDetailsForm extends ReactiveFormHandlerModel {
 
   createForm() {
     this.acdmDetailsFormGroup = new FormGroup({
-      dateOfIssueRelatedDocument: new FormControl(null, [Validators.required]), // ISO Format 2018-06-13T11:20:01.736Z;
-      passenger: new FormControl('', [Validators.required]),
+      dateOfIssueRelatedDocument: new FormControl(null), // ISO Format 2018-06-13T11:20:01.736Z;
+      passenger: new FormControl(''),
       relatedTicketDocuments: new FormArray([]),
-      reasonForMemoIssuanceCode: new FormControl('', [Validators.required]),
-      reasonForMemo: new FormControl('', [Validators.required]),
+      reasonForMemoIssuanceCode: new FormControl(''),
+      reasonForMemo: new FormControl(''),
       ticketDocumentNumberToAdd: new FormControl('')
     });
   }
