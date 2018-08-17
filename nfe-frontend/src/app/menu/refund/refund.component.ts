@@ -20,6 +20,7 @@ import { DecimalsFormatterPipe } from '../../shared/pipes/decimals-formatter.pip
 import { AlertsService } from '../../core/services/alerts.service';
 import { AlertType } from '../../core/enums/alert-type.enum';
 import { RefundAmount } from './models/api/refund-amount.model';
+import { RefundFormOfPaymentAmounts } from './models/api/refund-form-of-payment-amounts';
 
 @Component({
   selector: 'bspl-refund',
@@ -71,9 +72,9 @@ export class RefundComponent extends AbstractComponent implements OnInit{
     this.subscriptions.push(
       this.basicInfoRefundFormModel.valueChanges.subscribe(data => {
 
-        // (this.elementsResumeBar[1] as any).value = this._getBSP();
-        // (this.elementsResumeBar[2] as any).value = this._getAirlineCode();
-        // (this.elementsResumeBar[3] as any).value = this._getAgentCode();
+        (this.elementsResumeBar[1] as any).value = this._getBSP();
+        (this.elementsResumeBar[2] as any).value = this._getAirlineCode();
+        (this.elementsResumeBar[3] as any).value = this._getAgentCode();
       })
     );
 
@@ -87,7 +88,7 @@ export class RefundComponent extends AbstractComponent implements OnInit{
   onReturnFormOfPayment(formOfPaymentRefundFormModel: FormGroup) {
     this.formOfPaymentRefundFormModel = formOfPaymentRefundFormModel;
 
-    // (this.elementsResumeBar[6] as any).value = this._getAmount();
+    (this.elementsResumeBar[6] as any).value = this._getAmount();
   }
 
   onReturnAmount(amountRefundFormModel: FormGroup) {
@@ -279,7 +280,15 @@ export class RefundComponent extends AbstractComponent implements OnInit{
     if (refund) {
       this._refundIndirectService.post(refund).subscribe(
         data => {
-          this._alertService.setAlertTranslate('REFUNDS.title', 'REFUNDS.OK');
+
+          const txt = '0'.repeat(10 - data.id.toString().length) + data.id.toString();
+          const alert =
+            new AlertModel(
+              this._translationService.translate('REFUNDS.title'),
+              this._translationService.translate('REFUNDS.OK') + ' ' + txt,
+              AlertType.INFO);
+
+          this._alertService.setAlert(alert);
           this.id_refund_model = data.id;
           this.screen = ScreenType.DETAIL;
         },
@@ -300,12 +309,15 @@ export class RefundComponent extends AbstractComponent implements OnInit{
 
             console.log(errors);
 
-            let msg = this._translationService.translate('error');
+            let msg = '';
             for (const aux of errors) {
               msg += '\n' + aux.message;
             }
 
-            const alert = new AlertModel(this._translationService.translate('error'), msg, AlertType.ERROR)
+            const alert = new AlertModel(
+              this._translationService.translate('error'),
+              msg == '' ? this._translationService.translate('REFUNDS.error') : msg,
+              AlertType.ERROR)
             this._alertService.setAlert(alert);
           }
         }
@@ -354,16 +366,22 @@ export class RefundComponent extends AbstractComponent implements OnInit{
     refund.relatedDocument = this.detailsRefundFormModel.get(
       'relatedDocument'
     ).value;
-    refund.conjunctions = this.detailsRefundFormModel.get('conjunctions').value;
+    refund.conjunctions = this.detailsRefundFormModel.get('conjunctions').value.
+                            filter(x => x.relatedTicketDocumentNumber && x.relatedTicketDocumentNumber.length == 10);
     refund.exchange = this.detailsRefundFormModel.get('exchange').value;
-    refund.originalIssue = this.detailsRefundFormModel.get(
-      'originalIssue'
-    ).value;
+
+    if (refund.exchange) {
+      refund.originalIssue = this.detailsRefundFormModel.get(
+        'originalIssue'
+      ).value;
+    } else {
+      refund.originalIssue = null;
+    }
 
     // FORM OF PAYMENT
-    refund.formOfPaymentAmounts = this.formOfPaymentRefundFormModel.get(
+    refund.formOfPaymentAmounts = this._fopFormat(this.formOfPaymentRefundFormModel.get(
       'formOfPaymentAmounts'
-    ).value;
+    ).value);
     refund.tourCode = this.formOfPaymentRefundFormModel.get('tourCode').value;
     refund.currency.code = this.currency.name;
     refund.currency.decimals = this.currency.numDecimals;
@@ -378,7 +396,7 @@ export class RefundComponent extends AbstractComponent implements OnInit{
     refund.partialRefund = this.amountRefundFormModel.get('partialRefund').value;
     refund.netReporting = this.amountRefundFormModel.get('netRemit').value;
     refund.amounts = this._refundAmount(this.amountRefundFormModel.get('amounts').value);
-    const taxArr = this.amountRefundFormModel.get('taxMiscellaneousFees');
+    const taxArr = this.amountRefundFormModel.get('amounts').get('taxMiscellaneousFees');
     refund.taxMiscellaneousFees = taxArr ? taxArr.value : [];
 
     return refund;
@@ -400,5 +418,13 @@ export class RefundComponent extends AbstractComponent implements OnInit{
     val.taxOnMiscellaneousFee = val.taxOnMiscellaneousFee ? val.taxOnMiscellaneousFee : 0;
 
     return val;
+  }
+
+  private _fopFormat(fopList: RefundFormOfPaymentAmounts[]) {
+    for (const aux of fopList) {
+      aux.amount = aux.amount && (aux as any).amount != '' ? aux.amount : 0;
+    }
+
+    return fopList;
   }
 }

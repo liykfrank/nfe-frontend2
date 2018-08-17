@@ -31,6 +31,7 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
   subType: string;
   currency: CurrencyPost;
   showSpam: boolean;
+  showToca: boolean;
   concernsIndicator: string;
 
   totalInputAmount: InputAmountServer = new InputAmountServer();
@@ -74,8 +75,8 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
         .get('airlineCalculations')
         .valueChanges.subscribe(value => {
           this._setOnModel('agentCalculations', this.agentInputAmount);
-        this._setOnModel('airlineCalculations', this.airlineInputAmount);
-        this._setTotals();
+          this._setOnModel('airlineCalculations', this.airlineInputAmount);
+          this._setTotals();
         })
     );
 
@@ -90,6 +91,9 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
     this.subscriptions.push(
       this._basicInfoService.getShowSpam().subscribe(showSpam => {
         this.showSpam = showSpam;
+
+        this.amountForm.get('agentCalculations').get('spam').setValue(0);
+        this.amountForm.get('airlineCalculations').get('spam').setValue(0);
       })
     );
 
@@ -117,6 +121,19 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
         .valueChanges.subscribe(value => {
           this._validTaxes();
         })
+    );
+
+    this.subscriptions.push(
+      this._basicInfoService.getToca().subscribe(data => {
+        if (data.length > 0) {
+          this.showToca = true;
+        } else {
+          this.showToca = false;
+
+          this.amountForm.get('agentCalculations').get('taxOnCommission').setValue(0);
+          this.amountForm.get('airlineCalculations').get('taxOnCommission').setValue(0);
+        }
+      })
     );
   }
 
@@ -180,7 +197,10 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
   }
 
   clean() {
-    this.amountForm.get('taxMiscellaneousFees').reset();
+    while ((this.amountForm.get('taxMiscellaneousFees') as FormArray).length > 0) {
+      (this.amountForm.get('taxMiscellaneousFees') as FormArray).removeAt(0);
+    }
+
     this.acdmAmountModel.addTax();
   }
 
@@ -192,9 +212,9 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
 
     this._calculateTotalOnInput();
 
-    this.totalAgent = this._calculateTotal(this.agentInputAmount);
+    this.totalAgent =   this._calculateTotal(this.agentInputAmount);
     this.totalAirline = this._calculateTotal(this.airlineInputAmount);
-    this.total = this._calculateTotal(this.totalInputAmount);
+    this.total =        this._calculateTotal(this.totalInputAmount);
 
     this.amountForm.get('amountPaidByCustomer').setValue(this.total);
   }

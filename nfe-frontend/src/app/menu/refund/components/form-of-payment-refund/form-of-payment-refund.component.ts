@@ -60,7 +60,11 @@ export class FormOfPaymentRefundComponent extends ReactiveFormHandler
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.subscriptions.push(
+      this.formOfPaymentRefundFormModel.formOfPaymentAmounts.valueChanges.subscribe(() => this.updateTotals())
+    );
+  }
 
   getNumDecimals() {
     if (this._currencyState) {

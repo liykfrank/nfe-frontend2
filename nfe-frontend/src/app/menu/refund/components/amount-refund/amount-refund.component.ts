@@ -44,6 +44,10 @@ export class AmountRefundComponent extends ReactiveFormHandler implements OnInit
     });
 
     this.subscribe(this.amountRefundFormModel.amountRefundGroup);
+
+    this.subscriptions.push(
+      this.amountRefundFormModel.taxMiscellaneousFees.valueChanges.subscribe(() => this.amountRefundFormModel.updatetax())
+    );
   }
 
 

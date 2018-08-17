@@ -8,7 +8,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 export class ResumeBarComponent implements OnInit {
 
-  @Input() elementsResumeBar: Object[];
+  @Input() elementsResumeBar: any[];
   @Output() returnSave: EventEmitter<null> = new EventEmitter();
   @Output() returnIssue: EventEmitter<null> = new EventEmitter();
 

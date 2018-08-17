@@ -3,7 +3,11 @@ import { FormGroup } from '@angular/forms';
 import { EnvironmentType } from '../../enums/environment-type.enum';
 import { ReactiveFormHandler } from './../../base/reactive-form-handler';
 import { Currency } from './models/currency.model';
+
+
 import { CurrencyService } from './services/currency.service';
+import { AlertsService } from '../../../core/services/alerts.service';
+import { AlertType } from '../../../core/enums/alert-type.enum';
 
 @Component({
   selector: 'bspl-currency',
@@ -19,7 +23,7 @@ export class CurrencyComponent implements OnInit, OnChanges {
   currencyList: Currency[] = [];
   currencySelected: Currency;
 
-  constructor(private _currencyService: CurrencyService) {
+  constructor(private _currencyService: CurrencyService, private _alertsService: AlertsService) {
   }
 
   ngOnInit() {
@@ -41,11 +45,21 @@ export class CurrencyComponent implements OnInit, OnChanges {
       this._currencyService.getWithISO(this.type, iso).subscribe(data => {
 
         this.currencyList = data[0].currencies.filter(
-          x => new Date(x.expirationDate).getTime() >= new Date().getTime());
+          x => new Date(x.expirationDate).getTime() >= new Date().getTime()
+        );
 
-        const currencyFound = this.currencyList.find( currency => currency.name === currencyDefault);
-        this.currencySelected = currencyFound ? currencyFound : data[0].currencies[0];
-        this._currencyService.setCurrencyState(this.currencySelected);
+        if (this.currencyList.length == 0) {
+          this._alertsService.setAlertTranslate(
+            'error',
+            'CURRENCY.error',
+            AlertType.ERROR
+          );
+          this._currencyService.setCurrencyState(new Currency());
+        } else {
+          const currencyFound = this.currencyList.find( currency => currency.name === currencyDefault);
+          this.currencySelected = currencyFound ? currencyFound : this.currencyList[0];
+          this._currencyService.setCurrencyState(this.currencySelected);
+        }
       });
 
   }

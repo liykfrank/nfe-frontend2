@@ -166,7 +166,7 @@
             <input class="form-control" disabled="true" [value]="totalInputAmount.spam | abs | decimalsFormatter:currency.decimals">
           </td>
         </tr>
-        <tr *ngIf="true"> <!-- show TOCA -->
+        <tr *ngIf="showToca"> <!-- show TOCA -->
           <th class="title" l10nTranslate>ADM_ACM.AMOUNT.toca</th>
           <td [formGroup]="agentCalcFormGroup">
             <!-- [(ngModel)]="agentCalculations.taxOnCommission"> -->
@@ -192,7 +192,7 @@
           </td>
           <td>
             <!-- [value]="totalCalculations.taxOnCommission"> -->
-            <input class="form-control" disabled="true" [value]="totalInputAmount.taxOnCommission  | abs | decimalsFormatter:currency.decimals">
+            <input class="form-control" disabled="true" [value]="totalInputAmount.taxOnCommission | abs | decimalsFormatter:currency.decimals">
           </td>
         </tr>
       </tbody>
@@ -264,7 +264,7 @@
             <td>
               <!-- [value]="item.dif"> -->
               <div class="input-group">
-                <input class="form-control" disabled="true" [value]="getTaxValue(i) | abs">
+                <input class="form-control" disabled="true" [value]="getTaxValue(i) | abs | decimalsFormatter:currency.decimals">
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary button-bin-float-right ml-1" (click)="removeTax(i)">
                     <i class="fa fa-trash-o fa-lg"></i>

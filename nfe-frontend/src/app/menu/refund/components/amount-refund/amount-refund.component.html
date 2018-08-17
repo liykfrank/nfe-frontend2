@@ -123,11 +123,8 @@
         <div class="col-12 mb-2">
           <div class="row">
             <div class="form-group col-3 pr-1">
-
-              <bspl-input-form-control l10nTranslate [formGroupParent]="amountRefundFormModel.amounts" [formControlParentName]="'totalTaxes'"
-                [wrapText]="true" [type]="'decimal'" [decimalsNumber]="getNumDecimals()" [label]="'REFUNDS.AMOUNT.total_taxes'">
-              </bspl-input-form-control>
-
+              <label class="text-nowrap" l10nTranslate>REFUNDS.AMOUNT.total_taxes</label>
+              <input class="form-control" disabled="true" [value]="this.amountRefundFormModel.amounts.get('tax').value | decimalsFormatter:getNumDecimals()">
             </div>
           </div>
         </div>
@@ -296,12 +293,12 @@
         <!-- REFUND TO PASSENGER -->
         <div class="col-6 mb-2">
           <div class="row">
-            <div class="form-group col-3 pr-1">
+            <div class="form-group col-6 pr-1">
               <!-- <bspl-input-form-control l10nTranslate [type]="'decimal'" [decimalsNumber]="getNumDecimals()" [formGroupParent]="amountRefundFormModel.amounts" [formControlParentName]="'refundToPassenger'"
                 [wrapText]="true" [label]="'REFUNDS.AMOUNT.refund_to_passenger'">
               </bspl-input-form-control> -->
-              <label l10nTranslate>REFUNDS.AMOUNT.refund_to_passenger</label>
-              <input disabled="true" [value]="this.amountRefundFormModel.amounts.get('refundToPassenger') | decimalsFormatter:getNumDecimals()">
+              <label class="text-nowrap" l10nTranslate>REFUNDS.AMOUNT.refund_to_passenger</label>
+              <input class="form-control" disabled="true" [value]="this.amountRefundFormModel.amounts.get('refundToPassenger').value | decimalsFormatter:getNumDecimals()">
             </div>
 
 

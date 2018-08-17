@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, OnChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { ReactiveFormHandler } from '../../base/reactive-form-handler';
@@ -11,21 +19,28 @@ import { AgentService } from './services/agent.service';
   templateUrl: './agent.component.html',
   styleUrls: ['./agent.component.scss']
 })
-export class AgentComponent extends ReactiveFormHandler implements OnInit, OnChanges {
+export class AgentComponent extends ReactiveFormHandler
+  implements OnInit, OnChanges {
+  @Input()
+  agentFormModelGroup: FormGroup;
 
-  @Input() agentFormModelGroup: FormGroup;
-
-  @Input() role;
-  @Input() agentCode: string;
+  @Input()
+  role;
+  @Input()
+  agentCode: string;
 
   private _agentVatNumberEnabled = true;
   @Input()
   set agentVatNumberEnabled(val: boolean) {
     this._agentVatNumberEnabled = val;
     if (val) {
-      this.agentFormModelGroup.get('agentVatNumber').enable({emitEvent: false});
+      this.agentFormModelGroup
+        .get('agentVatNumber')
+        .enable({ emitEvent: false });
     } else {
-      this.agentFormModelGroup.get('agentVatNumber').disable({emitEvent: false});
+      this.agentFormModelGroup
+        .get('agentVatNumber')
+        .disable({ emitEvent: false });
     }
   }
   get agentVatNumberEnabled(): boolean {
@@ -37,9 +52,13 @@ export class AgentComponent extends ReactiveFormHandler implements OnInit, OnCha
   set companyRegistrationNumberEnabled(val: boolean) {
     this._companyRegistrationNumberEnabled = val;
     if (val) {
-      this.agentFormModelGroup.get('agentRegistrationNumber').enable({emitEvent: false});
+      this.agentFormModelGroup
+        .get('agentRegistrationNumber')
+        .enable({ emitEvent: false });
     } else {
-      this.agentFormModelGroup.get('agentRegistrationNumber').disable({emitEvent: false});
+      this.agentFormModelGroup
+        .get('agentRegistrationNumber')
+        .disable({ emitEvent: false });
     }
   }
   get companyRegistrationNumberEnabled(): boolean {
@@ -51,34 +70,43 @@ export class AgentComponent extends ReactiveFormHandler implements OnInit, OnCha
   set disabledContact(val: boolean) {
     this._disabledContact = val;
     if (val) {
-      this.agentFormModelGroup.get('agentContact').enable({emitEvent: false});
+      this.agentFormModelGroup.get('agentContact').enable({ emitEvent: false });
     } else {
-      this.agentFormModelGroup.get('agentContact').disable({emitEvent: false});
+      this.agentFormModelGroup
+        .get('agentContact')
+        .disable({ emitEvent: false });
     }
   }
   get disabledContact(): boolean {
     return this._disabledContact;
   }
 
-  @Input() showAgentName: boolean;
+  @Input()
+  showAgentName: boolean;
 
   private _showContact: boolean = true;
   @Input()
   set showContact(val: boolean) {
     this._showContact = val;
     if (val) {
-      this.agentFormModelGroup.get('agentContact').enable({emitEvent: false});
+      this.agentFormModelGroup.get('agentContact').enable({ emitEvent: false });
     } else {
-      this.agentFormModelGroup.get('agentContact').disable({emitEvent: false});
+      this.agentFormModelGroup
+        .get('agentContact')
+        .disable({ emitEvent: false });
     }
   }
   get showContact(): boolean {
     return this._showContact;
   }
-  @Input() showMoreDetails = true;
-  @Output() clickMoreDetails: EventEmitter<any> = new EventEmitter();
-  @Output() changeAgent: EventEmitter<Agent> = new EventEmitter();
-  @Output() changeAgentFormModel: EventEmitter<AgentFormModel> = new EventEmitter();
+  @Input()
+  showMoreDetails = true;
+  @Output()
+  clickMoreDetails: EventEmitter<any> = new EventEmitter();
+  @Output()
+  changeAgent: EventEmitter<Agent> = new EventEmitter();
+  @Output()
+  changeAgentFormModel: EventEmitter<AgentFormModel> = new EventEmitter();
   disabledMoreDetails = true;
   agent: Agent = new Agent();
 
@@ -90,15 +118,35 @@ export class AgentComponent extends ReactiveFormHandler implements OnInit, OnCha
 
   ngOnInit() {
     this.subscribe(this.agentFormModelGroup);
-    this.subscriptions.push(this.agentFormModelGroup.get('agentCode').valueChanges.subscribe((agentCode: string) => {
-      this.agentFormModelGroup.get('agentCode').valid ?  this._validateAgent() : this._clean();
-     }));
+    this.subscriptions.push(
+      this.agentFormModelGroup
+        .get('agentCode')
+        .valueChanges.subscribe((agentCode: string) => {
+          this.agentFormModelGroup.get('agentCode').valid
+            ? this._validateAgent()
+            : this._clean();
+        })
+    );
+
+    this.subscriptions.push(
+      this.agentFormModelGroup
+        .get('agentControlDigit')
+        .valueChanges.subscribe((agentCode: string) => {
+          this.agentFormModelGroup.get('agentCode').valid
+            ? this._validateAgent()
+            : this._clean();
+        })
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.agentCode != '' && changes.agentCode) {
-      this.agentFormModelGroup.get('agentCode').setValue(this.agentCode.substring(0, 7));
-      this.agentFormModelGroup.get('agentControlDigit').setValue(this.agentCode.substring(7, 8));
+      this.agentFormModelGroup
+        .get('agentCode')
+        .setValue(this.agentCode.substring(0, 7));
+      this.agentFormModelGroup
+        .get('agentControlDigit')
+        .setValue(this.agentCode.substring(7, 8));
       this._validateAgent();
     }
   }
@@ -118,22 +166,29 @@ export class AgentComponent extends ReactiveFormHandler implements OnInit, OnCha
   }
 
   private _validateAgent() {
-    this._agentService.validateAgent(true, this.getIataCode())
-    .subscribe((agent) => {
+    const iataCode = this.getIataCode();
 
-        this.changeAgent.emit(agent);
-        this.agent = agent;
+    if (iataCode != null) {
+      this._agentService.validateAgent(true, iataCode).subscribe(
+        agent => {
+          this.changeAgent.emit(agent);
+          this.agent = agent;
 
-        if (this.agentVatNumberEnabled) {
-          this.agentFormModelGroup.get('agentVatNumber').setValue(agent.vatNumber);
+          if (this.agentVatNumberEnabled) {
+            this.agentFormModelGroup
+              .get('agentVatNumber')
+              .setValue(agent.vatNumber);
+          }
+
+          this.agentCode = agent.iataCode;
+          this.disabledMoreDetails = false;
+        },
+        error => {
+          this._clean();
+          this._setErros();
         }
-
-        this.agentCode = agent.iataCode;
-        this.disabledMoreDetails = false;
-      }, error => {
-        this._clean();
-        this._setErros();
-      });
+      );
+    }
   }
 
   private _clean() {
@@ -149,11 +204,24 @@ export class AgentComponent extends ReactiveFormHandler implements OnInit, OnCha
         message: 'FORM_CONTROL_VALIDATORS.agent'
       }
     });
-
   }
 
- private getIataCode(): string {
-    return this.agentFormModelGroup.get('agentCode').value + this.agentFormModelGroup.get('agentControlDigit').value;
+  private getIataCode(): string {
+    const agentCode = this.agentFormModelGroup.get('agentCode').value;
+    const agentControlDigit = this.agentFormModelGroup.get('agentControlDigit')
+      .value;
+    if (
+      agentCode &&
+      agentControlDigit &&
+      agentCode.length > 0 &&
+      agentControlDigit.length > 0
+    ) {
+      return (
+        this.agentFormModelGroup.get('agentCode').value +
+        this.agentFormModelGroup.get('agentControlDigit').value
+      );
+    } else {
+      return null;
+    }
   }
-
 }

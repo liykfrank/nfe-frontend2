@@ -10,8 +10,6 @@
         <a class="nav-link dropdown-toggle" id="adm-acm-dropdowm" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ADM/ACM</a>
 
         <div class="dropdown-menu" aria-labelledby="adm-acm-dropdowm">
-
-          <a class="dropdown-item">Query Files</a>
           <a class="dropdown-item" [routerLink]="routes.ADM_ISSUE.URL" l10nTranslate>ADM_ACM.ADMTitle</a>
           <a class="dropdown-item" [routerLink]="routes.ACM_ISSUE.URL" l10nTranslate>ADM_ACM.ACMTitle</a>
 
@@ -22,7 +20,7 @@
       <!-- REFUNDS -->
       <li class="nav-item">
 
-        <a class="nav-link" [routerLink]="routes.REFUNDS.URL">REFUNDS</a>
+        <a class="nav-link" [routerLink]="routes.REFUNDS.URL" l10nTranslate>REFUNDS.REFUNDTITLE</a>
 
       </li>
 

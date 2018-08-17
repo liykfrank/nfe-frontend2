@@ -78,6 +78,7 @@
 <p-dialog
     styleClass="info-card"
     [(visible)]="display"
+    [resizable]="false"
     [modal]="true"
     [responsive]="true"
     [width]="430"
@@ -88,25 +89,25 @@
   </p-header>
   <div>
     <table>
-        <tbody>
-          <tr>
-            <th l10nTranslate>AIRLINE.POPUP.address</th>
-            <td>{{airline.address1}}</td>
-          </tr>
-          <tr>
-            <th l10nTranslate>AIRLINE.POPUP.postcode</th>
-            <td>{{airline.postalCode}}</td>
-          </tr>
-          <tr>
-            <th l10nTranslate>AIRLINE.POPUP.city</th>
-            <td>{{airline.city}}</td>
-          </tr>
-          <tr>
-            <th l10nTranslate>AIRLINE.POPUP.country</th>
-            <td>{{airline.country}}</td>
-          </tr>
-        </tbody>
-      </table>
+      <tbody>
+        <tr>
+          <th l10nTranslate>AIRLINE.POPUP.address</th>
+          <td>{{airline.address1}}</td>
+        </tr>
+        <tr>
+          <th l10nTranslate>AIRLINE.POPUP.postcode</th>
+          <td>{{airline.postalCode}}</td>
+        </tr>
+        <tr>
+          <th l10nTranslate>AIRLINE.POPUP.city</th>
+          <td>{{airline.city}}</td>
+        </tr>
+        <tr>
+          <th l10nTranslate>AIRLINE.POPUP.country</th>
+          <td>{{airline.country}}</td>
+        </tr>
+      </tbody>
+    </table>
 
     <div class="pull-right">
       <button (click)="onClose()" l10nTranslate class="btn btn-s btn-primary">

@@ -20,6 +20,7 @@ import { AcdmsService } from './services/acdms.service';
 import { AcdmConfigurationService } from './services/adm-acm-configuration.service';
 import { CountryService } from './services/country.service';
 import { AlertModel } from '../../core/models/alert.model';
+import { TaxAmountServer } from './models/tax-amount-server';
 
 @Component({
   selector: 'bspl-adm-acm',
@@ -100,16 +101,16 @@ export class AdmAcmComponent implements OnInit {
   onReturnFormBasicInfo(event) {
     this.basicInfoFormGroup = event;
 
-    // (this.elementsResumeBar[1] as any).value = this._getBSP();
-    // (this.elementsResumeBar[2] as any).value = this._getAgentCode();
-    // (this.elementsResumeBar[3] as any).title = this._getSubtype();
-    // (this.elementsResumeBar[3] as any).value = this._getType();
+    (this.elementsResumeBar[1] as any).value = this._getBSP();
+    (this.elementsResumeBar[2] as any).value = this._getAgentCode();
+    (this.elementsResumeBar[3] as any).title = this._getSubtype();
+    (this.elementsResumeBar[3] as any).value = this._getType();
   }
 
   onReturnFormAmount(event) {
     this.amountFormGroup = event;
 
-    // (this.elementsResumeBar[5] as any).value = this._getAmount();
+    (this.elementsResumeBar[5] as any).value = this._getAmount();
   }
 
   onReturnFormDetails(event) {
@@ -153,6 +154,11 @@ export class AdmAcmComponent implements OnInit {
         'ADM_ACM.error',
         AlertType.ERROR
       );
+
+      if (arrTaxes.length == 0) {
+        arrTaxes.push(new AcdmAmountForm()._taxFormModelGroup());
+      }
+
       return;
     }
 
@@ -199,7 +205,7 @@ export class AdmAcmComponent implements OnInit {
         title: 'ADM_ACM.RESUME.issue_date',
         value: new DatePipe('en').transform(new Date(), 'dd/MM/yyyy')
       },
-      { title: 'ADM_ACM.RESUME.amount', value: this._getAmount() }
+      { title: 'ADM_ACM.RESUME.amount', value: '-' }
     ]);
   }
 
@@ -288,12 +294,12 @@ export class AdmAcmComponent implements OnInit {
 
   private _getAmount() {
     const currency = this.basicInfoFormGroup
-      ? this.basicInfoFormGroup.get('currency')
+      ? this.basicInfoFormGroup.get('currency').value
       : null;
     let retCurrency = '-';
 
     if (currency) {
-      retCurrency = currency.get('code').value;
+      retCurrency = currency.code;
     }
 
     const total = this.amountFormGroup
@@ -304,11 +310,11 @@ export class AdmAcmComponent implements OnInit {
     if (total && currency) {
       retTotal = new DecimalsFormatterPipe().transform(
         total.value,
-        currency.get('decimals').value
+        currency.decimals
       );
     }
 
-    return retTotal + ' ' + retCurrency;
+    return retTotal + ' ' + (retCurrency && retCurrency.length > 0 ? retCurrency : '-');
   }
 
   private _initializePills() {
@@ -386,15 +392,17 @@ export class AdmAcmComponent implements OnInit {
     const aux = this.amountFormGroup
       .get('taxMiscellaneousFees')
       .value.filter(x => x.type != '');
-    acdm.taxMiscellaneousFees = aux ? aux : [];
+
+    acdm.taxMiscellaneousFees = aux ? this._filterTaxes(aux) : [];
     acdm.amountPaidByCustomer = this.amountFormGroup.get(
       'amountPaidByCustomer'
     ).value;
 
     // Details
-    acdm.dateOfIssueRelatedDocument = this.detailsFormGroup.get(
+    const date = this.detailsFormGroup.get(
       'dateOfIssueRelatedDocument'
     ).value;
+    acdm.dateOfIssueRelatedDocument = date ? new Date(date).toISOString() : null;
     acdm.passenger = this.detailsFormGroup.get('passenger').value;
     acdm.relatedTicketDocuments = this.detailsFormGroup.get(
       'relatedTicketDocuments'
@@ -417,10 +425,26 @@ export class AdmAcmComponent implements OnInit {
     return ret;
   }
 
+  private _filterTaxes(ret: TaxAmountServer[]) {
+    for (const aux of ret) {
+      aux.agentAmount = (aux as any).agentAmount != '' ? aux.agentAmount : 0;
+      aux.airlineAmount = (aux as any).airlineAmount != '' ? aux.airlineAmount : 0;
+    }
+
+    return ret;
+  }
+
   private _postAcdm(acdm: Acdm) {
     this._acdmsService.postAcdm(acdm).subscribe(
       data => {
-        this._alertService.setAlertTranslate(this.isAdm ? 'ADM_ACM.ADMTitle' : 'ADM_ACM.ACMTitle', 'REFUNDS.OK');
+        const txt = '0'.repeat(10 - data.id.toString().length) + data.id.toString();
+        const alert =
+          new AlertModel(
+            this._translationService.translate(this.isAdm ? 'ADM_ACM.ADMTitle' : 'ADM_ACM.ACMTitle'),
+            this._translationService.translate('ADM_ACM.OK') + ' ' + txt,
+            AlertType.INFO);
+
+        this._alertService.setAlert(alert);
 
         this.id_acdm_model = data.id;
         this.screen = ScreenType.DETAIL;
