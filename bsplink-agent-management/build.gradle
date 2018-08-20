@@ -47,7 +47,6 @@ dependencies {
 	compile('commons-io:commons-io:2.4')
 	compile('commons-lang:commons-lang:2.6')
 	compile('org.iata.bsplink:bsplink-commons-rest:0.0.3')
-	compile('org.iata.bsplink:bsplink-commons-security:0.0.1-20180820.124043-3')
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.keycloak:keycloak-spring-boot-starter:4.2.1.Final')
 	runtime('com.h2database:h2')
