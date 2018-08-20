@@ -14,15 +14,18 @@ import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.iata.bsplink.user.model.entity.BsplinkOption;
 import org.iata.bsplink.user.model.entity.BsplinkTemplate;
 import org.iata.bsplink.user.model.entity.UserType;
 import org.iata.bsplink.user.model.view.BsplinkOptionTemplateView;
 import org.iata.bsplink.user.service.BsplinkOptionService;
 import org.iata.bsplink.user.service.BsplinkTemplateService;
+import org.iata.bsplink.user.validation.BsplinkTemplateOptionUserTypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +48,9 @@ public class BsplinkTemplateController {
     @Autowired
     private BsplinkOptionService optionService;
 
+    @Autowired
+    private BsplinkTemplateOptionUserTypeValidator  optionUserTypeValidator;
+
     /**
      *  Returns the template for the ID.
      */
@@ -58,6 +64,7 @@ public class BsplinkTemplateController {
             @NotBlank @PathVariable("id") Optional<BsplinkTemplate> template) {
 
         if (!template.isPresent()) {
+
             return ResponseEntity.notFound().build();
         }
 
@@ -140,11 +147,20 @@ public class BsplinkTemplateController {
     @PostMapping
     @JsonView(BsplinkOptionTemplateView.class)
     public ResponseEntity<BsplinkTemplate> createTemplate(
-            @NotBlank @RequestBody(required = true) @Valid BsplinkTemplate template) {
+            @NotBlank @RequestBody(required = true) @Valid BsplinkTemplate template,
+            Errors errors) {
+
+        optionUserTypeValidator.validate(template, errors);
+
+        if (errors.hasErrors()) {
+
+            throw new ApplicationValidationException(errors);
+        }
 
         Optional<BsplinkTemplate> templateOpt = templateService.findById(template.getId());
 
         if (templateOpt.isPresent()) {
+
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
@@ -166,13 +182,17 @@ public class BsplinkTemplateController {
     @JsonView(BsplinkOptionTemplateView.class)
     public ResponseEntity<BsplinkTemplate> updateTemplate(
             @PathVariable("id") Optional<BsplinkTemplate> templateToUpdate,
-            @NotBlank @RequestBody(required = true) @Valid BsplinkTemplate template) {
+            @NotBlank @RequestBody(required = true) @Valid BsplinkTemplate template,
+            Errors errors) {
 
         if (!templateToUpdate.isPresent()) {
+
             return ResponseEntity.notFound().build();
         }
 
         template.setId(templateToUpdate.get().getId());
+
+        optionUserTypeValidator.validate(template, errors);
 
         return ResponseEntity.status(HttpStatus.OK).body(templateService.save(template));
     }
@@ -191,6 +211,7 @@ public class BsplinkTemplateController {
             @NotBlank @PathVariable("id") Optional<BsplinkTemplate> template) {
 
         if (!template.isPresent()) {
+
             return ResponseEntity.notFound().build();
         }
 
@@ -211,6 +232,7 @@ public class BsplinkTemplateController {
             @NotBlank @PathVariable("id") Optional<BsplinkTemplate> template) {
 
         if (!template.isPresent()) {
+
             return ResponseEntity.notFound().build();
         }
 
@@ -250,19 +272,31 @@ public class BsplinkTemplateController {
     @JsonView(BsplinkOptionTemplateView.class)
     public ResponseEntity<BsplinkOption> addOption(
             @NotBlank @PathVariable("id") Optional<BsplinkTemplate> template,
-            @NotBlank @RequestBody(required = true) BsplinkOption optionRequest) {
+            @NotBlank @RequestBody(required = true) @Valid BsplinkOption optionRequest,
+            Errors errors) {
 
         if (!template.isPresent()) {
+
             return ResponseEntity.notFound().build();
         }
 
         Optional<BsplinkOption> option = optionService.findById(optionRequest.getId());
+
         if (!option.isPresent()) {
+
             return ResponseEntity.notFound().build();
         }
 
         if (template.get().getOptions().contains(option.get())) {
+
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        optionUserTypeValidator.validate(template.get(), option.get(), errors);
+
+        if (errors.hasErrors()) {
+
+            throw new ApplicationValidationException(errors);
         }
 
         template.get().getOptions().add(option.get());
@@ -288,14 +322,17 @@ public class BsplinkTemplateController {
             @NotBlank @PathVariable("optionId") Optional<BsplinkOption> option) {
 
         if (!template.isPresent()) {
+
             return ResponseEntity.notFound().build();
         }
 
         if (!option.isPresent()) {
+
             return ResponseEntity.notFound().build();
         }
 
         if (!template.get().getOptions().contains(option.get())) {
+
             return ResponseEntity.notFound().build();
         }
 
@@ -340,17 +377,21 @@ public class BsplinkTemplateController {
             @NotBlank @PathVariable("optionId") Optional<BsplinkOption> option) {
 
         if (!template.isPresent()) {
+
             return ResponseEntity.notFound().build();
         }
 
         if (!option.isPresent()) {
+
             return ResponseEntity.notFound().build();
         }
 
         if (template.get().getOptions().remove(option.get())) {
+
             templateService.save(template.get());
             return ResponseEntity.status(HttpStatus.OK).build();
         } else {
+
             return ResponseEntity.notFound().build();
         }
     }
@@ -368,6 +409,7 @@ public class BsplinkTemplateController {
             @NotBlank @PathVariable("id") Optional<BsplinkTemplate> template) {
 
         if (!template.isPresent()) {
+
             return ResponseEntity.notFound().build();
         }
 
@@ -390,16 +432,26 @@ public class BsplinkTemplateController {
     @JsonView(BsplinkOptionTemplateView.class)
     public ResponseEntity<@NotBlank UserType> addUserType(
             @NotBlank @PathVariable("id") Optional<BsplinkTemplate> templateOpt,
-            @NotBlank @RequestBody(required = true) UserType userType) {
+            @NotBlank @RequestBody(required = true) @Valid UserType userType,
+            Errors errors) {
 
         if (!templateOpt.isPresent()) {
+
             return ResponseEntity.notFound().build();
         }
 
         BsplinkTemplate template = templateOpt.get();
 
         if (template.getUserTypes().contains(userType)) {
+
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        optionUserTypeValidator.validate(template, userType, errors);
+
+        if (errors.hasErrors()) {
+
+            throw new ApplicationValidationException(errors);
         }
 
         template.getUserTypes().add(userType);
@@ -425,13 +477,16 @@ public class BsplinkTemplateController {
             @NotBlank @PathVariable("userType") UserType userType) {
 
         if (!template.isPresent()) {
+
             return ResponseEntity.notFound().build();
         }
 
         if (template.get().getUserTypes().remove(userType)) {
+
             templateService.save(template.get());
             return ResponseEntity.status(HttpStatus.OK).build();
         } else {
+
             return ResponseEntity.notFound().build();
         }
     }
