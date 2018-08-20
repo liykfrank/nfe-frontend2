@@ -1,0 +1,53 @@
+plugins {
+
+    id "io.franzbecker.gradle-lombok" version "1.14"
+    id "org.sonarqube" version "2.6"
+
+    // org.springframework.boot disabled in order to use Spring Boot’s dependency management
+    // in isolation.
+    // See https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/#managing-dependencies-using-in-isolation
+    id 'org.springframework.boot' version '2.0.1.RELEASE' apply false
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+dependencyManagement {
+    imports {
+        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+group = 'org.iata.bsplink'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+	mavenLocal()
+	maven {
+    	url project.hasProperty('nexusPublicRepositoryUrl') ? nexusPublicRepositoryUrl : 'http://nexusinterno.nfedev.accelya.com/repository/maven-public'
+	}
+}
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.security:spring-security-core')
+    compile('org.springframework.boot:spring-boot-starter-security')
+	compile('org.keycloak:keycloak-spring-boot-starter:4.2.1.Final')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('pl.pragmatists:JUnitParams:1.1.1')
+}
+
+apply plugin: 'checkstyle'
+
+checkstyle {
+    toolVersion = '8.0'
+}
+
+apply from: 'gradle/scripts/itest.gradle'
+apply from: 'gradle/scripts/jacoco.gradle'
+apply from: 'gradle/scripts/sonarqube.gradle'
+apply from: 'gradle/scripts/publish.gradle'

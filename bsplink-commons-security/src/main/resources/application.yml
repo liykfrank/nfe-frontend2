@@ -1,0 +1,6 @@
+keycloak:
+  auth-server-url: http://host/auth
+  realm: 
+  public-client: true
+  resource: 
+  principal-attribute: 
