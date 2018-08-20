@@ -3,6 +3,10 @@ package org.iata.bsplink.user.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +49,8 @@ public class BsplinkTemplateController {
      *  Returns the template for the ID.
      */
     @GetMapping(path = "/{id}")
+    @ApiOperation(value = "Get a BSPlink Template")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "The template")})
     @ApiImplicitParam(name = "id", value = "The name of the BSPlink Template", required = true,
         type = "string")
     @JsonView(BsplinkOptionTemplateView.class)
@@ -62,9 +68,15 @@ public class BsplinkTemplateController {
     /**
      *  Returns the template for the ID.
      */
+    @ApiOperation(value = "Get a BSPlink Template with options in complete view.")
+    @ApiResponses(value = {@ApiResponse(code = 200,
+            message = "The template with the options."
+                + " For each option the option's user types are included.")})
     @GetMapping(path = "/{id}", params = "fullView")
-    @ApiImplicitParam(name = "id", value = "The name of the BSPlink Template", required = true,
-        type = "string")
+    @ApiImplicitParams(
+            {@ApiImplicitParam(name = "id", value = "The name of the BSPlink Template",
+                required = true, type = "string"),
+            @ApiImplicitParam(name = "fullView", required = true, paramType = "query")})
     public ResponseEntity<BsplinkTemplate> getTemplateFull(
             @NotBlank @PathVariable("id") Optional<BsplinkTemplate> template) {
 
@@ -74,6 +86,11 @@ public class BsplinkTemplateController {
     /**
      *  Returns the templates for the indicated user type.
      */
+    @ApiOperation(value = "Get BSPlink Template by User Type.")
+    @ApiResponses(value = {@ApiResponse(code = 200,
+            message = "The templates for the indicated user type.")})
+    @ApiImplicitParam(name = "userType", value = "The User Type to filter for", required = true,
+            type = "string", paramType = "query")
     @GetMapping(params = "userType")
     public ResponseEntity<List<BsplinkTemplate>> getTemplatesByUserType(
             @NotBlank @RequestParam(required = true) UserType userType) {
@@ -87,6 +104,9 @@ public class BsplinkTemplateController {
     /**
      *  Returns all templates.
      */
+    @ApiOperation(value = "Get all BSPlink Templates.")
+    @ApiResponses(value = {@ApiResponse(code = 200,
+            message = "All templates.")})
     @JsonView(BsplinkOptionTemplateView.class)
     @GetMapping
     public ResponseEntity<List<BsplinkTemplate>> getTemplates() {
@@ -100,6 +120,10 @@ public class BsplinkTemplateController {
     /**
      *  Returns all templates.
      */
+    @ApiOperation(value = "Get all BSPlink Templates with options in complete view.")
+    @ApiResponses(value = {@ApiResponse(code = 200,
+            message = "All templates. For each option the option's user types are included.")})
+    @ApiImplicitParam(name = "fullView", required = true, paramType = "query")
     @GetMapping(params = "fullView")
     public ResponseEntity<List<BsplinkTemplate>> getTemplatesFull() {
 
@@ -109,6 +133,10 @@ public class BsplinkTemplateController {
     /**
      * Creates a new template.
      */
+    @ApiOperation(value = "Create a new BSPlink Template.")
+    @ApiImplicitParam(value = "The template to create.",
+        paramType = "body", required = true, dataType = "BsplinkTemplate")
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "The created template.")})
     @PostMapping
     @JsonView(BsplinkOptionTemplateView.class)
     public ResponseEntity<BsplinkTemplate> createTemplate(
@@ -127,6 +155,13 @@ public class BsplinkTemplateController {
     /**
      * Updates the template.
      **/
+    @ApiOperation(value = "Update a BSPlink Template.")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "The template to update.",
+                paramType = "body", required = true, dataType = "BsplinkTemplate"),
+            @ApiImplicitParam(name = "id", value = "The name of the template.",
+                required = true)})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "The updated template.")})
     @PutMapping(path = "/{id}")
     @JsonView(BsplinkOptionTemplateView.class)
     public ResponseEntity<BsplinkTemplate> updateTemplate(
@@ -146,6 +181,10 @@ public class BsplinkTemplateController {
     /**
      * Deletes the template.
      */
+    @ApiOperation(value = "Delete a BSPlink Template.")
+    @ApiImplicitParam(name = "id", value = "The template to delete.", required = true,
+            dataType = "string")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "")})
     @DeleteMapping(path = "/{id}")
     @JsonView(BsplinkOptionTemplateView.class)
     public ResponseEntity<BsplinkTemplate> deleteTemplate(
@@ -163,6 +202,9 @@ public class BsplinkTemplateController {
     /**
      * Get options from a template.
      */
+    @ApiOperation(value = "Get all options from a BSPlink Template.")
+    @ApiImplicitParam(name = "id", value = "The template", required = true, dataType = "string")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "The options of the template")})
     @GetMapping(path = "/{id}/options")
     @JsonView(BsplinkOptionTemplateView.class)
     public ResponseEntity<List<BsplinkOption>> getOptions(
@@ -179,6 +221,14 @@ public class BsplinkTemplateController {
     /**
      * Get options from a template.
      */
+    @ApiOperation(value = "Get all options from a BSPlink Template with options in complete view.")
+
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "The options of the template."
+            + " For each option the option's user types are included.")})
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "fullView", required = true, paramType = "query"),
+        @ApiImplicitParam(name = "id", value = "The template", required = true,
+            dataType = "string")})
     @GetMapping(path = "/{id}/options", params = "fullView")
     public ResponseEntity<List<BsplinkOption>> getOptionsFull(
             @NotBlank @PathVariable("id") Optional<BsplinkTemplate> template) {
@@ -189,6 +239,13 @@ public class BsplinkTemplateController {
     /**
      * Add an option to a template.
      */
+    @ApiOperation(value = "Add an option to a BSPlink Template.")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "id", value = "The template", required = true,
+                dataType = "string"),
+        @ApiImplicitParam(name = "BsplinkOption", value = "The option to add.", required = true,
+            dataType = "BsplinkOption", paramType = "body")})
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "The added option of the template")})
     @PostMapping(path = "/{id}/options")
     @JsonView(BsplinkOptionTemplateView.class)
     public ResponseEntity<BsplinkOption> addOption(
@@ -217,6 +274,13 @@ public class BsplinkTemplateController {
     /**
      * Get option from a template.
      */
+    @ApiOperation(value = "Get an option from a BSPlink Template.")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "id", value = "The template", required = true,
+                dataType = "string"),
+        @ApiImplicitParam(name = "optionId", value = "The option from the template.",
+                required = true, dataType = "string")})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "The option")})
     @GetMapping(path = "/{id}/options/{optionId}")
     @JsonView(BsplinkOptionTemplateView.class)
     public ResponseEntity<BsplinkOption> getOption(
@@ -242,6 +306,14 @@ public class BsplinkTemplateController {
     /**
      * Get option from a template.
      */
+    @ApiOperation(value = "Get an option from a BSPlink Template.")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "id", value = "The template", required = true,
+                dataType = "string"),
+        @ApiImplicitParam(name = "optionId", value = "The option from the template.",
+                required = true, dataType = "string"),
+        @ApiImplicitParam(name = "fullView", required = true, paramType = "query")})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "The option")})
     @GetMapping(path = "/{id}/options/{optionId}", params = "fullView")
     public ResponseEntity<BsplinkOption> getOptionFull(
             @NotBlank @PathVariable("id") Optional<BsplinkTemplate> template,
@@ -254,6 +326,13 @@ public class BsplinkTemplateController {
     /**
      * Remove an option from a template.
      */
+    @ApiOperation(value = "Remove an option from a BSPlink Template.")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "id", value = "The template", required = true,
+                dataType = "string"),
+        @ApiImplicitParam(name = "optionId", value = "The option from the template.",
+                required = true, dataType = "string")})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "")})
     @DeleteMapping(path = "/{id}/options/{optionId}")
     @JsonView(BsplinkOptionTemplateView.class)
     public ResponseEntity<BsplinkTemplate> removeOption(
@@ -280,6 +359,9 @@ public class BsplinkTemplateController {
     /**
      * Get all User Types from a template.
      */
+    @ApiOperation(value = "Get the user types from a BSPlink Template.")
+    @ApiImplicitParam(name = "id", value = "The template", required = true, dataType = "string")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "The user types from the template")})
     @GetMapping(path = "/{id}/userTypes")
     @JsonView(BsplinkOptionTemplateView.class)
     public ResponseEntity<List<UserType>> getUserTypes(
@@ -296,6 +378,14 @@ public class BsplinkTemplateController {
     /**
      * Add a User Type to a template.
      */
+    @ApiOperation(value = "Add a user types to a BSPlink Template.")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "id", value = "The template", required = true,
+                dataType = "string"),
+        @ApiImplicitParam(name = "UserType", value = "The User Type", required = true,
+            dataType = "string", paramType = "body")})
+    @ApiResponses(value = {@ApiResponse(code = 201,
+            message = "The user type added to the template")})
     @PostMapping(path = "/{id}/userTypes")
     @JsonView(BsplinkOptionTemplateView.class)
     public ResponseEntity<@NotBlank UserType> addUserType(
@@ -321,6 +411,13 @@ public class BsplinkTemplateController {
     /**
      * Remove a User Type from a template.
      */
+    @ApiOperation(value = "Remove a user type from a BSPlink Template.")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "id", value = "The template", required = true,
+                dataType = "string"),
+        @ApiImplicitParam(name = "id", value = "The template", required = true,
+                dataType = "string")})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "")})
     @DeleteMapping(path = "/{id}/userTypes/{userType}")
     @JsonView(BsplinkOptionTemplateView.class)
     public ResponseEntity<BsplinkTemplate> removeUserType(

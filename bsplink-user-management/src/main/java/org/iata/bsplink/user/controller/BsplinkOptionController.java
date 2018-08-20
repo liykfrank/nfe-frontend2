@@ -56,6 +56,11 @@ public class BsplinkOptionController {
     /**
      *  Returns the options for the indicated user type.
      */
+    @ApiOperation(value = "Get BSPlink Option by User Type")
+    @ApiResponses(value = {@ApiResponse(code = 200,
+        message = "The options for the indicated user type.")})
+    @ApiImplicitParam(name = "userType", value = "The User Type to filter for", required = true,
+        type = "string", paramType = "query")
     @JsonView(BsplinkOptionTemplateView.class)
     @GetMapping(params = "userType")
     public ResponseEntity<List<BsplinkOption>> getOptionsByUserType(
@@ -69,6 +74,8 @@ public class BsplinkOptionController {
     /**
      *  Returns all options.
      */
+    @ApiOperation(value = "Get all BSPlink Options")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "The option")})
     @GetMapping
     public ResponseEntity<List<BsplinkOption>> getOptions() {
 

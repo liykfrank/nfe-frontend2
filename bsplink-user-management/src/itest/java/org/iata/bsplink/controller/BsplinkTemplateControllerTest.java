@@ -195,7 +195,7 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
 
     @Test
-    public void testRemoveTemplate() throws Exception {
+    public void testDeleteTemplate() throws Exception {
 
         String id = templates.get(0).getId();
 
@@ -334,7 +334,7 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
 
     @Test
-    public void testRemoveTemplateNotFound() throws Exception {
+    public void testDeleteTemplateNotFound() throws Exception {
 
         mockMvc.perform(
                 delete(BASE_URI + "/TEMPLATE_NOT_FOUND").contentType(MediaType.APPLICATION_JSON))
