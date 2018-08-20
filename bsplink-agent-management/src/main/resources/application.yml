@@ -9,10 +9,11 @@ spring:
         default_schema: agentmanagement
   flyway:
     schemas: agentmanagement
-
+    
+    
 keycloak:
-  auth-server-url: 
-  realm: 
+  auth-server-url: http://keycloak-dev.nfedev.accelya.com/auth
+  realm: NFE
   public-client: true
-  resource: 
-  principal-attribute: 
+  resource: bsplink-agent-management
+  principal-attribute: preferred_username         
