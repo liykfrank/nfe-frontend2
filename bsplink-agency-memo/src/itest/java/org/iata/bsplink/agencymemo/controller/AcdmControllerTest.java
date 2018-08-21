@@ -53,6 +53,8 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = {"app.host.local.protocol=local", "app.host.sftp.protocol=sftp"})
@@ -89,6 +91,9 @@ public class AcdmControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
+    @Autowired
+    protected WebApplicationContext webAppContext;
+
     private List<Acdm> acdms;
 
     private Acdm acdm;
@@ -98,6 +103,7 @@ public class AcdmControllerTest {
 
     @Before
     public void setUp() throws Exception {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
         acdmRepository.deleteAll();
         acdms = getAcdms();
 
@@ -250,9 +256,10 @@ public class AcdmControllerTest {
         acdm.setRegularized(null);
 
         String json = mapper.writeValueAsString(acdm);
-        String responseBody = mockMvc.perform(post(BASE_URI + "?fileName=file.txt").content(json)
-                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(post(BASE_URI + "?fileName=file.txt").content(json)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
         Acdm retrievedAcdm = readAcdmFromJson(responseBody);
         assertNotNull(retrievedAcdm.getRegularized());
         assertFalse(retrievedAcdm.getRegularized());
@@ -266,12 +273,12 @@ public class AcdmControllerTest {
         acdm.setRegularized(null);
 
         String json = mapper.writeValueAsString(acdm);
-        mockMvc.perform(post(BASE_URI).content(json)
-                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+        mockMvc.perform(post(BASE_URI).content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", equalTo("Validation error")))
                 .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("regularized")))
                 .andExpect(jsonPath("$.validationErrors[0].message",
-                equalTo(ValidationMessages.NON_NULL_MESSAGE)));
+                        equalTo(ValidationMessages.NON_NULL_MESSAGE)));
     }
 
 
@@ -506,10 +513,9 @@ public class AcdmControllerTest {
     @Test
     public void testWhenCreatesAcdmReturnsTicketDocumentNumber() throws Exception {
 
-        String responseBody = mockMvc.perform(post(BASE_URI).content(acdmJson)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(post(BASE_URI).content(acdmJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
 
         Acdm responseAcdm = readAcdmFromJson(responseBody);
 
