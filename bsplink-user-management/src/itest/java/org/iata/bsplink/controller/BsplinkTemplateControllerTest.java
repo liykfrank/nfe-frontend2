@@ -39,6 +39,8 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -60,12 +62,17 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
     @Autowired
     private ObjectMapper mapper;
 
+    @Autowired
+    protected WebApplicationContext webAppContext;
+
     private List<BsplinkTemplate> templates;
     private List<BsplinkOption> options;
 
 
     @Before
     public void setUp() {
+
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
 
         repository.deleteAll();
 
@@ -109,13 +116,11 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
     @Test
     public void testGetTemplates() throws Exception {
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc.perform(get(BASE_URI).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
-        List<BsplinkTemplate> templatesRead = mapper.readValue(responseBody,
-                new TypeReference<List<BsplinkTemplate>>() {});
+        List<BsplinkTemplate> templatesRead =
+                mapper.readValue(responseBody, new TypeReference<List<BsplinkTemplate>>() {});
 
         assertThat(templatesRead, equalTo(templates));
     }
@@ -126,13 +131,12 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         String json = mapper.writeValueAsString(repository.findAll());
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "?fullView").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody =
+                mockMvc.perform(get(BASE_URI + "?fullView").contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
-        List<BsplinkTemplate> templatesRead = mapper.readValue(responseBody,
-                new TypeReference<List<BsplinkTemplate>>() {});
+        List<BsplinkTemplate> templatesRead =
+                mapper.readValue(responseBody, new TypeReference<List<BsplinkTemplate>>() {});
 
         assertThat(templatesRead, equalTo(templates));
         assertThat(responseBody, equalTo(json));
@@ -142,17 +146,17 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
     @Test
     public void testGetTemplatesByUserType() throws Exception {
 
-        List<BsplinkTemplate> templatesAirline = templates.stream()
-                .filter(t -> t.getUserTypes().contains(UserType.AIRLINE))
-                .collect(Collectors.toList());
+        List<BsplinkTemplate> templatesAirline =
+                templates.stream().filter(t -> t.getUserTypes().contains(UserType.AIRLINE))
+                        .collect(Collectors.toList());
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "?userType=AIRLINE").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(
+                        get(BASE_URI + "?userType=AIRLINE").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
-        List<BsplinkTemplate> templatesRead = mapper.readValue(responseBody,
-                new TypeReference<List<BsplinkTemplate>>() {});
+        List<BsplinkTemplate> templatesRead =
+                mapper.readValue(responseBody, new TypeReference<List<BsplinkTemplate>>() {});
 
         assertThat(templatesRead, equalTo(templatesAirline));
     }
@@ -163,10 +167,10 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         BsplinkTemplate template = templates.get(0);
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "/" + template.getId()).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(get(BASE_URI + "/" + template.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         BsplinkTemplate templateRead = mapper.readValue(responseBody, BsplinkTemplate.class);
 
@@ -181,11 +185,10 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         String json = mapper.writeValueAsString(template);
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "/" + template.getId() + "?fullView")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(get(BASE_URI + "/" + template.getId() + "?fullView")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         BsplinkTemplate templateRead = mapper.readValue(responseBody, BsplinkTemplate.class);
 
@@ -199,8 +202,7 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         String id = templates.get(0).getId();
 
-        mockMvc.perform(
-                delete(BASE_URI + "/" + id).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete(BASE_URI + "/" + id).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         assertFalse(repository.findById(id).isPresent());
@@ -220,7 +222,7 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
         String json = mapper.writeValueAsString(template);
 
         mockMvc.perform(post(BASE_URI).content(json).contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated());
+                .andExpect(status().isCreated());
 
         Optional<BsplinkTemplate> templateCreated = repository.findById(template.getId());
         assertTrue(templateCreated.isPresent());
@@ -238,7 +240,7 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
         String json = mapper.writeValueAsString(template);
 
         mockMvc.perform(post(BASE_URI).content(json).contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isConflict());
+                .andExpect(status().isConflict());
     }
 
 
@@ -281,10 +283,8 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         String json = mapper.writeValueAsString(option);
 
-        mockMvc.perform(
-                post(BASE_URI + "/" + template.getId() + "/options/").content(json)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+        mockMvc.perform(post(BASE_URI + "/" + template.getId() + "/options/").content(json)
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
 
         Optional<BsplinkTemplate> templateUpdated = repository.findById(template.getId());
         assertTrue(templateUpdated.isPresent());
@@ -312,10 +312,8 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
         template.setOptions(Arrays.asList(optionX, optionY));
         repository.save(template);
 
-        mockMvc.perform(
-                delete(BASE_URI + "/" + template.getId() + "/options/" + optionX.getId())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        mockMvc.perform(delete(BASE_URI + "/" + template.getId() + "/options/" + optionX.getId())
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
         Optional<BsplinkTemplate> templateUpdated = repository.findById(template.getId());
         assertTrue(templateUpdated.isPresent());
@@ -351,10 +349,8 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         String json = mapper.writeValueAsString(template);
 
-        mockMvc.perform(
-                put(BASE_URI + "/" + template.getId()).content(json)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(put(BASE_URI + "/" + template.getId()).content(json)
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
 
@@ -368,10 +364,8 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         String json = mapper.writeValueAsString(option);
 
-        mockMvc.perform(
-                post(BASE_URI + "/TEMPLATE_NOT_FOUND/options").content(json)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(post(BASE_URI + "/TEMPLATE_NOT_FOUND/options").content(json)
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
 
@@ -384,10 +378,8 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         String json = mapper.writeValueAsString(option);
 
-        mockMvc.perform(
-                post(BASE_URI + "/" + templates.get(0).getId() + "/options").content(json)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(post(BASE_URI + "/" + templates.get(0).getId() + "/options").content(json)
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
 
@@ -407,20 +399,16 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         String json = mapper.writeValueAsString(option);
 
-        mockMvc.perform(
-                post(BASE_URI + "/" + template.getId() + "/options").content(json)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isConflict());
+        mockMvc.perform(post(BASE_URI + "/" + template.getId() + "/options").content(json)
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isConflict());
     }
 
 
     @Test
     public void testRemoveOptionTemplateNotFound() throws Exception {
 
-        mockMvc.perform(
-                delete(BASE_URI + "/TEMPLATE_NOT_FOUND/options/OPT1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(delete(BASE_URI + "/TEMPLATE_NOT_FOUND/options/OPT1")
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
 
@@ -429,7 +417,7 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         mockMvc.perform(
                 delete(BASE_URI + "/" + templates.get(0).getId() + "/options/OPTION_NOT_FOUND")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
@@ -444,7 +432,7 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         mockMvc.perform(
                 delete(BASE_URI + "/" + templates.get(0).getId() + "/options/" + option.getId())
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
@@ -452,10 +440,8 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
     @Test
     public void testGetOptionsTemplateNotFound() throws Exception {
 
-        mockMvc.perform(
-                get(BASE_URI + "/TEMPLATE_NOT_FOUND/options")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get(BASE_URI + "/TEMPLATE_NOT_FOUND/options")
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
 
@@ -479,14 +465,13 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
         template.setOptions(Arrays.asList(optionA, optionB));
         repository.save(template);
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "/" + template.getId() + "/options?fullView")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(get(BASE_URI + "/" + template.getId() + "/options?fullView")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
-        List<BsplinkOption> optionsRead = mapper.readValue(responseBody,
-                new TypeReference<List<BsplinkOption>>() {});
+        List<BsplinkOption> optionsRead =
+                mapper.readValue(responseBody, new TypeReference<List<BsplinkOption>>() {});
 
         assertThat(optionsRead, equalTo(template.getOptions()));
     }
@@ -500,11 +485,10 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
         template.getOptions().add(option);
         repository.save(template);
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "/" + template.getId() + "/options/" + option.getId())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(get(BASE_URI + "/" + template.getId() + "/options/" + option.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         BsplinkOption optionRead = mapper.readValue(responseBody, BsplinkOption.class);
 
@@ -515,30 +499,25 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
     @Test
     public void testGetOptionTemplateNotFound() throws Exception {
 
-        mockMvc.perform(
-                get(BASE_URI + "/TEMPLATE_NOT_FOUND/options/" + options.get(0).getId())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get(BASE_URI + "/TEMPLATE_NOT_FOUND/options/" + options.get(0).getId())
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
 
     @Test
     public void testGetOptionNotFound() throws Exception {
 
-        mockMvc.perform(
-                get(BASE_URI + "/" + templates.get(0).getId() + "/options/OPTION_NOT_FOUND")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get(BASE_URI + "/" + templates.get(0).getId() + "/options/OPTION_NOT_FOUND")
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
 
     @Test
     public void testGetOptionNotFoundInTemplate() throws Exception {
 
-        mockMvc.perform(
-                get(BASE_URI + "/" + templates.get(0).getId()
-                        + "/options/" + options.get(0).getId())
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(
+                BASE_URI + "/" + templates.get(0).getId() + "/options/" + options.get(0).getId())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
@@ -553,11 +532,10 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         String json = mapper.writeValueAsString(option);
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "/" + template.getId() + "/options/" + option.getId() + "?fullView")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(get(BASE_URI + "/" + template.getId() + "/options/" + option.getId()
+                        + "?fullView").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         BsplinkOption optionRead = mapper.readValue(responseBody, BsplinkOption.class);
 
@@ -573,10 +551,8 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         String json = mapper.writeValueAsString(userType);
 
-        mockMvc.perform(
-                post(BASE_URI + "/TEMPLATE_NOT_FOUND/userTypes").content(json)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(post(BASE_URI + "/TEMPLATE_NOT_FOUND/userTypes").content(json)
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
 
@@ -590,10 +566,8 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         String json = mapper.writeValueAsString(UserType.BSP);
 
-        mockMvc.perform(
-                post(BASE_URI + "/" + template.getId() + "/userTypes").content(json)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+        mockMvc.perform(post(BASE_URI + "/" + template.getId() + "/userTypes").content(json)
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
 
         Optional<BsplinkTemplate> templateUpdated = repository.findById(template.getId());
         assertTrue(templateUpdated.isPresent());
@@ -614,10 +588,8 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         String json = mapper.writeValueAsString(userType);
 
-        mockMvc.perform(
-                post(BASE_URI + "/" + template.getId() + "/userTypes").content(json)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isConflict());
+        mockMvc.perform(post(BASE_URI + "/" + template.getId() + "/userTypes").content(json)
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isConflict());
     }
 
 
@@ -628,10 +600,8 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
         template.setUserTypes(Arrays.asList(UserType.BSP, UserType.GDS, UserType.IATA));
         repository.save(template);
 
-        mockMvc.perform(
-                delete(BASE_URI + "/" + template.getId() + "/userTypes/" + UserType.GDS)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        mockMvc.perform(delete(BASE_URI + "/" + template.getId() + "/userTypes/" + UserType.GDS)
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
         Optional<BsplinkTemplate> templateUpdated = repository.findById(template.getId());
 
@@ -644,10 +614,8 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
     @Test
     public void testRemoveUserTypeTemplateNotFound() throws Exception {
 
-        mockMvc.perform(
-                delete(BASE_URI + "/TEMPLATE_NOT_FOUND/userTypes/DPC")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(delete(BASE_URI + "/TEMPLATE_NOT_FOUND/userTypes/DPC")
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
 
@@ -656,20 +624,16 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
         UserType userType = UserType.IATA;
 
-        mockMvc.perform(
-                delete(BASE_URI + "/" + templates.get(0).getId() + "/userTypes/" + userType)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(delete(BASE_URI + "/" + templates.get(0).getId() + "/userTypes/" + userType)
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
 
     @Test
     public void testGetUserTypesTemplateNotFound() throws Exception {
 
-        mockMvc.perform(
-                get(BASE_URI + "/TEMPLATE_NOT_FOUND/userTypes")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get(BASE_URI + "/TEMPLATE_NOT_FOUND/userTypes")
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
 
@@ -681,14 +645,13 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
         template.setUserTypes(Arrays.asList(UserType.DPC, UserType.BSP));
         repository.save(template);
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "/" + template.getId() + "/userTypes")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(get(BASE_URI + "/" + template.getId() + "/userTypes")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
-        List<UserType> userTypesRead = mapper.readValue(responseBody,
-                new TypeReference<List<UserType>>() {});
+        List<UserType> userTypesRead =
+                mapper.readValue(responseBody, new TypeReference<List<UserType>>() {});
 
         assertThat(userTypesRead, equalTo(template.getUserTypes()));
     }

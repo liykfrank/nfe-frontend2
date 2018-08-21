@@ -29,6 +29,8 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -49,8 +51,13 @@ public class BsplinkOptionControllerTest extends BaseUserTest {
 
     private List<BsplinkOption> options;
 
+    @Autowired
+    protected WebApplicationContext webAppContext;
+
     @Before
     public void setUp() {
+
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
 
         repository.deleteAll();
 
@@ -76,13 +83,11 @@ public class BsplinkOptionControllerTest extends BaseUserTest {
     @Test
     public void testGetOptions() throws Exception {
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc.perform(get(BASE_URI).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
-        List<BsplinkOption> optionsRead = mapper.readValue(responseBody,
-                new TypeReference<List<BsplinkOption>>() {});
+        List<BsplinkOption> optionsRead =
+                mapper.readValue(responseBody, new TypeReference<List<BsplinkOption>>() {});
 
         assertThat(optionsRead, equalTo(options));
     }
@@ -93,16 +98,14 @@ public class BsplinkOptionControllerTest extends BaseUserTest {
 
         List<BsplinkOption> options = repository.findByUserTypes(UserType.AGENT);
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "?userType=AGENT").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(get(BASE_URI + "?userType=AGENT").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
-        List<BsplinkOption> optionsRead = mapper.readValue(responseBody,
-                new TypeReference<List<BsplinkOption>>() {});
+        List<BsplinkOption> optionsRead =
+                mapper.readValue(responseBody, new TypeReference<List<BsplinkOption>>() {});
 
-        assertThat(
-                optionsRead.stream().map(BsplinkOption::getId).collect(Collectors.toList()),
+        assertThat(optionsRead.stream().map(BsplinkOption::getId).collect(Collectors.toList()),
                 equalTo(options.stream().map(BsplinkOption::getId).collect(Collectors.toList())));
     }
 
@@ -112,10 +115,10 @@ public class BsplinkOptionControllerTest extends BaseUserTest {
 
         BsplinkOption option = options.get(0);
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "/" + option.getId()).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(get(BASE_URI + "/" + option.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         BsplinkOption optionRead = mapper.readValue(responseBody, BsplinkOption.class);
 
@@ -126,8 +129,7 @@ public class BsplinkOptionControllerTest extends BaseUserTest {
     @Test
     public void testGetOptionNotFound() throws Exception {
 
-        mockMvc.perform(
-                get(BASE_URI + "/OPTION_NOT_FOUND").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(BASE_URI + "/OPTION_NOT_FOUND").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 }
