@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
 @RequestMapping("/v1/configurations")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*")
 public class ConfigController {
 
     @Autowired
@@ -37,12 +37,9 @@ public class ConfigController {
      * Configurations for ACDMs.
      */
     @ApiOperation(value = "Configuration for ADM or ACM")
-    @ApiResponses(
-            value = {@ApiResponse(code = 200,
-            message = "Config")})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Config")})
     @GetMapping("/{isoc}")
-    public ResponseEntity<Config> getConfig(
-            @PathVariable("isoc") String isoc) {
+    public ResponseEntity<Config> getConfig(@PathVariable("isoc") String isoc) {
         return ResponseEntity.status(HttpStatus.OK).body(configService.find(isoc));
     }
 
@@ -60,11 +57,7 @@ public class ConfigController {
     @PostMapping()
     @ApiImplicitParams({@ApiImplicitParam(name = "body", value = "The Configuration to save.",
             paramType = "body", required = true, dataType = "Config")})
-    public ResponseEntity<Config> save(
-            @Valid
-            @RequestBody
-            Config config,
-            Errors errors) {
+    public ResponseEntity<Config> save(@Valid @RequestBody Config config, Errors errors) {
         if (errors.hasErrors()) {
             throw new ApplicationValidationException(errors);
         }
