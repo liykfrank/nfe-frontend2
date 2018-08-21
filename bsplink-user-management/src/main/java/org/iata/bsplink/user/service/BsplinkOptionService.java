@@ -28,4 +28,9 @@ public class BsplinkOptionService {
     public List<BsplinkOption> findByUserType(UserType userType) {
         return repository.findByUserTypes(userType);
     }
+
+    public List<BsplinkOption> findByUserTypes(List<UserType> userTypes) {
+        return repository.findOptionsForUserTypes(userTypes,
+                userTypes.stream().distinct().count());
+    }
 }

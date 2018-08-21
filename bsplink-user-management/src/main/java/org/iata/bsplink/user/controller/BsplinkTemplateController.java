@@ -90,21 +90,46 @@ public class BsplinkTemplateController {
         return getTemplate(template);
     }
 
-    /**
-     *  Returns the templates for the indicated user type.
-     */
-    @ApiOperation(value = "Get BSPlink Template by User Type.")
-    @ApiResponses(value = {@ApiResponse(code = 200,
-            message = "The templates for the indicated user type.")})
-    @ApiImplicitParam(name = "userType", value = "The User Type to filter for", required = true,
-            type = "string", paramType = "query")
-    @GetMapping(params = "userType")
-    public ResponseEntity<List<BsplinkTemplate>> getTemplatesByUserType(
-            @NotBlank @RequestParam(required = true) UserType userType) {
 
-        List<BsplinkTemplate> templates = templateService.findByUserType(userType);
+    /**
+     *  Returns the options for the indicated user type.
+     */
+    @ApiOperation(value = "Get BSPlink Templates by User Types")
+    @ApiResponses(value = {@ApiResponse(code = 200,
+        message = "The templates which all the indicated user types have in common.")})
+    @ApiImplicitParam(name = "userType", value = "The User Types to filter for."
+            + " User Types separated by comma or use userType paramater repeatedly"
+            + " separated by ampersand.",
+            required = true, type = "array", paramType = "query")
+    @JsonView(BsplinkOptionTemplateView.class)
+    @GetMapping(params = "userType")
+    public ResponseEntity<List<BsplinkTemplate>> getTemplatesByUserTypes(
+            @NotBlank @RequestParam(required = true) List<UserType> userType) {
+
+        List<BsplinkTemplate> templates = templateService.findByUserTypes(userType);
 
         return ResponseEntity.status(HttpStatus.OK).body(templates);
+    }
+
+
+    /**
+     *  Returns the options for the indicated user type.
+     */
+    @ApiOperation(value = "Get BSPlink Templates by User Types in complete view")
+    @ApiResponses(value = {@ApiResponse(code = 200,
+        message = "The templates which all the indicated user types have in common."
+                + " For each option the option's user types are included.")})
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "userType", value = "The User Types to filter for."
+                + " User Types separated by comma or use userType paramater repeatedly"
+                + " separated by ampersand.",
+                required = true, type = "array", paramType = "query"),
+        @ApiImplicitParam(name = "fullView", required = true, paramType = "query")})
+    @GetMapping(params = {"userType", "fullView"})
+    public ResponseEntity<List<BsplinkTemplate>> getTemplatesByUserTypesFull(
+            @NotBlank @RequestParam(required = true) List<UserType> userType) {
+
+        return getTemplatesByUserTypes(userType);
     }
 
 

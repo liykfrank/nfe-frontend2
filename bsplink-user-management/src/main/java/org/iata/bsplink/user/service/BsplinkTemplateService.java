@@ -40,4 +40,9 @@ public class BsplinkTemplateService {
     public List<BsplinkTemplate> findByUserType(@NotBlank UserType userType) {
         return repository.findByUserTypes(userType);
     }
+
+    public List<BsplinkTemplate> findByUserTypes(List<UserType> userTypes) {
+        return repository.findTemplatesForUserTypes(userTypes,
+                userTypes.stream().distinct().count());
+    }
 }
