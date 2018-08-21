@@ -1,0 +1,52 @@
+###
+#   Server Settings
+###
+server:
+  port: 8080
+
+###
+#   Application Settings
+###
+spring:
+  application:
+    name: bsplink-base-microservice 
+       
+  ###
+  #   Database Settings
+  ###
+  datasource:
+    url: jdbc:h2:mem:testdb
+    platform: h2
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true      
+        
+  ###
+  #   H2 Settings
+  ###
+  h2:
+    console:
+      enabled: true
+  
+  ###
+  #  Flyway Settings
+  ###
+  flyway:
+    enabled: true
+
+###
+#   Logging Settings
+###
+logging:
+  file: ${spring.application.name}.log
+  path: /tmp
+  
