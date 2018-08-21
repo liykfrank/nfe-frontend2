@@ -32,6 +32,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -55,8 +57,12 @@ public class TaxOnCommissionTypeControllerTest {
     @Autowired
     private TaxOnCommissionTypeRepository taxOnCommissionTypeRepository;
 
+    @Autowired
+    protected WebApplicationContext webAppContext;
+
     @Before
     public void setUp() throws Exception {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
         taxOnCommissionTypeRepository.deleteAll();
         taxOnCommissionTypes = getTaxOnCommissionTypes();
         taxOnCommissionType = taxOnCommissionTypes.get(0);
@@ -67,8 +73,7 @@ public class TaxOnCommissionTypeControllerTest {
     public void testSave() throws Exception {
 
         mockMvc.perform(post(BASE_URI).content(taxOnCommissionTypeJson)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
 
         List<TaxOnCommissionType> taxOnCommissionTypes = taxOnCommissionTypeRepository.findAll();
 
@@ -79,11 +84,10 @@ public class TaxOnCommissionTypeControllerTest {
     @Test
     public void testReturnsSavedTaxOnCommissionType() throws Exception {
 
-        String responseBody = mockMvc.perform(post(BASE_URI)
-                .content(taxOnCommissionTypeJson)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn().getRequest().getContentAsString();
+        String responseBody = mockMvc
+                .perform(post(BASE_URI).content(taxOnCommissionTypeJson)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isCreated()).andReturn().getRequest().getContentAsString();
 
         assertThat(readTaxOnCommissionTypeFromJson(responseBody), equalTo(taxOnCommissionType));
     }
@@ -101,8 +105,7 @@ public class TaxOnCommissionTypeControllerTest {
         String taxOnCommissionTypeJson = mapper.writeValueAsString(taxOnCommissionType);
 
         mockMvc.perform(post(BASE_URI).content(taxOnCommissionTypeJson)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", equalTo("Validation error")));
     }
 
@@ -114,8 +117,7 @@ public class TaxOnCommissionTypeControllerTest {
         String taxOnCommissionTypeJson = mapper.writeValueAsString(taxOnCommissionType);
 
         mockMvc.perform(post(BASE_URI).content(taxOnCommissionTypeJson)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", equalTo("Validation error")))
                 .andExpect(jsonPath("$.validationErrors[0].fieldName", containsString("ode")))
                 .andExpect(jsonPath("$.validationErrors[0].message",
@@ -133,10 +135,9 @@ public class TaxOnCommissionTypeControllerTest {
                 .filter(t -> t.getPk().getIsoCountryCode().equals(isoc))
                 .collect(Collectors.toList());
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "/" + isoc).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody =
+                mockMvc.perform(get(BASE_URI + "/" + isoc).contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         List<TaxOnCommissionType> actual =
                 mapper.readValue(responseBody, new TypeReference<List<TaxOnCommissionType>>() {});
@@ -158,8 +159,7 @@ public class TaxOnCommissionTypeControllerTest {
         TaxOnCommissionTypePk pk = taxOnCommissionTypeToDelete.getPk();
 
         mockMvc.perform(delete(BASE_URI + "/" + pk.getIsoCountryCode() + "/" + pk.getCode())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
         assertFalse(taxOnCommissionTypeRepository.findById(pk).isPresent());
     }
@@ -169,12 +169,10 @@ public class TaxOnCommissionTypeControllerTest {
         TaxOnCommissionType taxOnCommissionTypeToDelete = createTaxOnCommissionTypes().get(0);
         TaxOnCommissionTypePk pk = taxOnCommissionTypeToDelete.getPk();
 
-        String responseBody = mockMvc.perform(
-                delete(BASE_URI + "/" + pk.getIsoCountryCode() + "/" + pk.getCode())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse()
-                .getContentAsString();
+        String responseBody = mockMvc
+                .perform(delete(BASE_URI + "/" + pk.getIsoCountryCode() + "/" + pk.getCode())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         assertThat(readTaxOnCommissionTypeFromJson(responseBody),
                 equalTo(taxOnCommissionTypeToDelete));

@@ -29,6 +29,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -51,9 +53,12 @@ public class ConfigControllerTest {
     @Autowired
     private ConfigRepository configRepository;
 
+    @Autowired
+    protected WebApplicationContext webAppContext;
+
     @Before
     public void setUp() throws Exception {
-
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
         configs = getConfigs();
         config = configs.get(0);
         configJson = mapper.writeValueAsString(config);
@@ -62,8 +67,7 @@ public class ConfigControllerTest {
     @Test
     public void testSave() throws Exception {
 
-        mockMvc.perform(
-                post(BASE_URI).content(configJson).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post(BASE_URI).content(configJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
         List<Config> configs = configRepository.findAll();
@@ -75,10 +79,10 @@ public class ConfigControllerTest {
     @Test
     public void testReturnsSavedConfig() throws Exception {
 
-        String responseBody = mockMvc.perform(
-                post(BASE_URI).content(configJson).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn().getRequest().getContentAsString();
+        String responseBody = mockMvc
+                .perform(post(BASE_URI).content(configJson)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isCreated()).andReturn().getRequest().getContentAsString();
 
         assertThat(readConfigFromJson(responseBody), equalTo(config));
     }
@@ -93,10 +97,8 @@ public class ConfigControllerTest {
 
         createConfigs();
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc.perform(get(BASE_URI).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         List<Config> actual = mapper.readValue(responseBody, new TypeReference<List<Config>>() {});
 
@@ -117,11 +119,10 @@ public class ConfigControllerTest {
 
         Config config = createConfigs().get(0);
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "/" + config.getIsoCountryCode())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(get(BASE_URI + "/" + config.getIsoCountryCode())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         Config actual = mapper.readValue(responseBody, Config.class);
 
@@ -135,11 +136,10 @@ public class ConfigControllerTest {
 
         assertFalse(configRepository.findById(config.getIsoCountryCode()).isPresent());
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "/" + config.getIsoCountryCode())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(get(BASE_URI + "/" + config.getIsoCountryCode())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         Config actual = mapper.readValue(responseBody, Config.class);
 
@@ -154,10 +154,9 @@ public class ConfigControllerTest {
         List<String> isocs =
                 configs.stream().map(Config::getIsoCountryCode).collect(Collectors.toList());
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "/isocs").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody =
+                mockMvc.perform(get(BASE_URI + "/isocs").contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         List<String> actual = mapper.readValue(responseBody, new TypeReference<List<String>>() {});
 
@@ -171,8 +170,7 @@ public class ConfigControllerTest {
 
         String configJson = mapper.writeValueAsString(config);
 
-        mockMvc.perform(
-                post(BASE_URI).content(configJson).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post(BASE_URI).content(configJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", equalTo("Validation error")));
     }

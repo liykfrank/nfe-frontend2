@@ -13,6 +13,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.iata.bsplink.agencymemo.fake.Country;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -35,9 +38,18 @@ public class CountryControllerTest {
 
     @Autowired
     private ObjectMapper mapper;
+    
+    @Autowired
+    protected WebApplicationContext webAppContext;
+    
+    @Before
+    public void setUp() throws Exception {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
+    }
 
     @Test
     public void testGetCountries() throws Exception {
+
         List<Country> countries = Country.findAllCountries();
 
         String body = mockMvc.perform(get(BASE_URI).contentType(MediaType.APPLICATION_JSON))

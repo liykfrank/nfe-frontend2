@@ -26,6 +26,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -46,8 +48,12 @@ public class AgentControllerTest {
     @MockBean
     private AgentService agentService;
 
+    @Autowired
+    protected WebApplicationContext webAppContext;
+
     @Before
     public void setUp() throws Exception {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
         agent = getAgents().get(0);
         agents = getAgents();
         ResponseEntity<Agent> respAgent = ResponseEntity.status(HttpStatus.OK).body(agent);
@@ -56,17 +62,16 @@ public class AgentControllerTest {
         ResponseEntity<Agent> notFound = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         when(agentService.findAgentResponse("00000011")).thenReturn(notFound);
 
-        ResponseEntity<List<Agent>>  respAgents = ResponseEntity.status(HttpStatus.OK).body(agents);
+        ResponseEntity<List<Agent>> respAgents = ResponseEntity.status(HttpStatus.OK).body(agents);
         when(agentService.findAllAgentResponse()).thenReturn(respAgents);
     }
 
     @Test
     public void testGetAgent() throws Exception {
-        String responseBody = mockMvc.perform(
-            get(BASE_URI + "/" + agent.getIataCode())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(get(BASE_URI + "/" + agent.getIataCode())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         Agent actual = mapper.readValue(responseBody, Agent.class);
 
@@ -80,11 +85,8 @@ public class AgentControllerTest {
 
     @Test
     public void testGetAgents() throws Exception {
-        String responseBody = mockMvc.perform(
-            get(BASE_URI)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc.perform(get(BASE_URI).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         List<Agent> actual = mapper.readValue(responseBody, new TypeReference<List<Agent>>() {});
 
