@@ -89,8 +89,8 @@ public class BsplinkTemplateOptionUserTypeValidator {
     private boolean isValidOptionForTemplate(BsplinkOption option,
             BsplinkTemplate template) {
 
-        if (template.getUserTypes() == null || option == null || option.getUserTypes() == null
-                || option.getUserTypes().isEmpty()) {
+        if (template.getUserTypes() == null || template.getUserTypes().isEmpty() || option == null
+                || option.getUserTypes() == null || option.getUserTypes().isEmpty()) {
 
             return false;
         }
