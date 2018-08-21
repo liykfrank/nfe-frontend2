@@ -39,8 +39,8 @@ app:
       protocol: 
       
 keycloak:
-  auth-server-url: 
-  realm: 
+  auth-server-url: http://keycloak-dev.nfedev.accelya.com/auth
+  realm: NFE
   public-client: true
-  resource: 
-  principal-attribute: 
+  resource: bsplink-agency-memo
+  principal-attribute: preferred_username  
