@@ -10,7 +10,7 @@ pipeline {
             steps {
 		    	checkout poll: false, scm: [
 					$class: 'GitSCM',
-					branches: [[name: "*/UAT" ]],
+					branches: [[name: "*/IATA-QA" ]],
 					doGenerateSubmoduleConfigurations: false,
 						extensions: [],
 						submoduleCfg: [],
