@@ -111,6 +111,25 @@ public class BsplinkOptionControllerTest extends BaseUserTest {
 
 
     @Test
+    public void testGetOptionsByUserTypeFullView() throws Exception {
+        List<BsplinkOption> options = repository.findByUserTypes(UserType.AGENT);
+
+        String json = mapper.writeValueAsString(options);
+
+        String responseBody =
+                mockMvc.perform(get(BASE_URI + "?userType=AGENT&fullView")
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        List<BsplinkOption> optionsRead =
+                mapper.readValue(responseBody, new TypeReference<List<BsplinkOption>>() {});
+
+        assertThat(optionsRead, equalTo(options));
+        assertThat(responseBody, equalTo(json));
+    }
+
+
+    @Test
     public void testGetOption() throws Exception {
 
         BsplinkOption option = options.get(0);
