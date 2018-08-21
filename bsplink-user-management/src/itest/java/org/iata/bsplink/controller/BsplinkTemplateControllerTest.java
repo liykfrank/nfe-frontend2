@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -28,6 +29,7 @@ import org.iata.bsplink.user.model.entity.BsplinkTemplate;
 import org.iata.bsplink.user.model.entity.UserType;
 import org.iata.bsplink.user.model.repository.BsplinkOptionRepository;
 import org.iata.bsplink.user.model.repository.BsplinkTemplateRepository;
+import org.iata.bsplink.user.validation.BsplinkTemplateOptionUserTypeValidator;
 import org.iata.bsplink.utils.BaseUserTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -163,6 +165,29 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
 
 
     @Test
+    public void testGetTemplatesByUserTypeFull() throws Exception {
+
+        List<BsplinkTemplate> templatesAirline =
+                templates.stream().filter(t -> t.getUserTypes().contains(UserType.AIRLINE))
+                        .collect(Collectors.toList());
+
+        String json = mapper.writeValueAsString(templatesAirline);
+
+        String responseBody = mockMvc
+                .perform(
+                        get(BASE_URI + "?userType=AIRLINE&fullView")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        List<BsplinkTemplate> templatesRead =
+                mapper.readValue(responseBody, new TypeReference<List<BsplinkTemplate>>() {});
+
+        assertThat(templatesRead, equalTo(templatesAirline));
+        assertThat(responseBody, equalTo(json));
+    }
+
+
+    @Test
     public void testGetTemplate() throws Exception {
 
         BsplinkTemplate template = templates.get(0);
@@ -227,6 +252,33 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
         Optional<BsplinkTemplate> templateCreated = repository.findById(template.getId());
         assertTrue(templateCreated.isPresent());
         assertEquals(template, templateCreated.get());
+    }
+
+
+    @Test
+    public void testCreateTemplateWithInvalidOption() throws Exception {
+        BsplinkOption option = new BsplinkOption();
+        option.setId("OPTION_AGENT");
+        option.setUserTypes(Arrays.asList(UserType.AGENT));
+        optionRepository.save(option);
+
+        List<BsplinkOption> options = optionRepository.findByUserTypes(UserType.AIRLINE);
+
+        BsplinkTemplate template = new BsplinkTemplate();
+        template.setId("NewTemplate");
+        template.setUserTypes(Arrays.asList(UserType.AIRLINE));
+        template.setOptions(options);
+        template.getOptions().add(option);
+
+        String json = mapper.writeValueAsString(template);
+
+        mockMvc.perform(post(BASE_URI).content(json).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.validationErrors[0].fieldName",
+                    equalTo("options[" + (template.getOptions().size() - 1) + "]")))
+            .andExpect(jsonPath("$.validationErrors[0].message",
+                    equalTo(BsplinkTemplateOptionUserTypeValidator
+                        .INVALID_OPTION_FOR_USER_TYPE_MSG)));
     }
 
 
@@ -592,6 +644,50 @@ public class BsplinkTemplateControllerTest extends BaseUserTest {
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isConflict());
     }
 
+
+    @Test
+    public void testAddInvalidUserType() throws Exception {
+        BsplinkOption option = new BsplinkOption();
+        option.setId("OPTION_AGENT");
+        option.setUserTypes(Arrays.asList(UserType.AGENT));
+        optionRepository.save(option);
+
+        BsplinkTemplate template = new BsplinkTemplate();
+        template.setId("TemplateX");
+        template.setUserTypes(Arrays.asList(UserType.GDS));
+        template.getOptions().add(option);
+        repository.save(template);
+
+        String json = mapper.writeValueAsString(UserType.BSP);
+
+        mockMvc.perform(post(BASE_URI + "/" + template.getId() + "/userTypes").content(json)
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.validationErrors[0].message",
+                        equalTo(BsplinkTemplateOptionUserTypeValidator.INVALID_USER_TYPE_MSG)));
+    }
+
+
+    @Test
+    public void testAddInvalidOption() throws Exception {
+        BsplinkOption option = new BsplinkOption();
+        option.setId("OPTION_AGENT");
+        option.setUserTypes(Arrays.asList(UserType.AGENT));
+        optionRepository.save(option);
+
+        BsplinkTemplate template = new BsplinkTemplate();
+        template.setId("TemplateX");
+        template.setUserTypes(Arrays.asList(UserType.GDS));
+        repository.save(template);
+
+        String json = mapper.writeValueAsString(option);
+
+        mockMvc.perform(post(BASE_URI + "/" + template.getId() + "/options").content(json)
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("userTypes")))
+                .andExpect(jsonPath("$.validationErrors[0].message",
+                        equalTo(BsplinkTemplateOptionUserTypeValidator
+                                .INVALID_OPTION_FOR_USER_TYPE_MSG)));
+    }
 
     @Test
     public void testRemoveUserType() throws Exception {
