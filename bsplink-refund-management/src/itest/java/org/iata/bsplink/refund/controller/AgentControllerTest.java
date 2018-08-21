@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.iata.bsplink.refund.dto.Agent;
 import org.iata.bsplink.refund.service.AgentService;
 import org.junit.Before;
@@ -23,6 +22,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -42,9 +43,13 @@ public class AgentControllerTest {
 
     @MockBean
     private AgentService agentService;
+    
+    @Autowired
+    private WebApplicationContext webAppContext;
 
     @Before
     public void setUp() throws Exception {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
         agent = getAgents().get(0);
         ResponseEntity<Agent> respAgent = ResponseEntity.status(HttpStatus.OK).body(agent);
         when(agentService.findAgentResponse(agent.getIataCode())).thenReturn(respAgent);

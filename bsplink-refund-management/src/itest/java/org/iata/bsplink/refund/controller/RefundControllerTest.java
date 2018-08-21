@@ -81,7 +81,9 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Errors;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = {"app.host.local.protocol=local", "app.host.sftp.protocol=sftp"})
@@ -148,6 +150,8 @@ public class RefundControllerTest {
     @SpyBean
     private MassloadValidator massloadValidator;
 
+    @Autowired
+    private WebApplicationContext webAppContext;
 
     private Refund refund;
 
@@ -155,6 +159,7 @@ public class RefundControllerTest {
 
     @Before
     public void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
         refund = getRefunds().get(0);
         massloadFileName =
                 refund.getIsoCountryCode() + "e9EARS_20001224_" + refund.getAirlineCode() + "9_123";
@@ -781,24 +786,19 @@ public class RefundControllerTest {
                 .content(mapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", equalTo("Validation error")))
-                .andExpect(jsonPath("$.validationErrors[0].fieldName",
-                        equalTo(fieldName)))
+                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo(fieldName)))
                 .andExpect(jsonPath("$.validationErrors[0].message",
                         equalTo(RefundStatusValidator.AIRLINE_CODE_REQUIRED)))
-                .andExpect(jsonPath("$.validationErrors[1].fieldName",
-                        equalTo(fieldName)))
+                .andExpect(jsonPath("$.validationErrors[1].fieldName", equalTo(fieldName)))
                 .andExpect(jsonPath("$.validationErrors[1].message",
                         equalTo(RefundStatusValidator.PASSENGER_REQUIRED)))
-                .andExpect(jsonPath("$.validationErrors[2].fieldName",
-                        equalTo(fieldName)))
+                .andExpect(jsonPath("$.validationErrors[2].fieldName", equalTo(fieldName)))
                 .andExpect(jsonPath("$.validationErrors[2].message",
                         equalTo(RefundStatusValidator.AIRLINE_CODE_RELATED_DOCUMENT_REQUIRED)))
-                .andExpect(jsonPath("$.validationErrors[3].fieldName",
-                        equalTo(fieldName)))
+                .andExpect(jsonPath("$.validationErrors[3].fieldName", equalTo(fieldName)))
                 .andExpect(jsonPath("$.validationErrors[3].message",
                         equalTo(RefundStatusValidator.REASON_REQUIRED)))
-                .andExpect(jsonPath("$.validationErrors[4].fieldName",
-                        equalTo(fieldName)))
+                .andExpect(jsonPath("$.validationErrors[4].fieldName", equalTo(fieldName)))
                 .andExpect(jsonPath("$.validationErrors[4].message",
                         equalTo(RefundStatusValidator.DATE_OF_ISSUE_RELATED_DOCUMENT_REQUIRED)));
 
@@ -815,8 +815,7 @@ public class RefundControllerTest {
                 .content(mapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", equalTo("Validation error")))
-                .andExpect(jsonPath("$.validationErrors[0].fieldName",
-                        equalTo("status")))
+                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("status")))
                 .andExpect(jsonPath("$.validationErrors[0].message",
                         equalTo(RefundStatusValidator.TOTAL_AMOUNT_GREATRER_ZERO)));
 
@@ -992,8 +991,7 @@ public class RefundControllerTest {
         refund.setAirlineCode("123");
         Refund refundWithId = refundRepository.save(refund);
         Refund refundCopied = saveAndCopyRefund();
-        mockMvc.perform(put(BASE_URI + "/" + refundWithId.getId()
-                + "?fileName=" + massloadFileName)
+        mockMvc.perform(put(BASE_URI + "/" + refundWithId.getId() + "?fileName=" + massloadFileName)
                 .content(mapper.writeValueAsString(refundCopied))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", equalTo("Validation error")))
@@ -1067,9 +1065,11 @@ public class RefundControllerTest {
     public void testChangeRefundStatusViaMassloadFileName() throws Exception {
         refundRepository.save(refund);
         RefundStatusRequest request = getRefundStatusRequest();
-        mockMvc.perform(post(BASE_URI + "/" + refund.getId() + "/status?fileName="
-                + massloadFileName).content(mapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        mockMvc.perform(
+                post(BASE_URI + "/" + refund.getId() + "/status?fileName=" + massloadFileName)
+                        .content(mapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
         assertThat(refund.getStatus(), equalTo(request.getStatus()));
         assertTrue(refundHistoryService.findByRefundId(refund.getId()).stream()
@@ -1079,8 +1079,8 @@ public class RefundControllerTest {
     @Test
     public void testChangeRefundStatusViaMassloadFileNameNotFound() throws Exception {
         RefundStatusRequest request = getRefundStatusRequest();
-        mockMvc.perform(post(BASE_URI + "/777888/status?fileName="
-                + massloadFileName).content(mapper.writeValueAsString(request))
+        mockMvc.perform(post(BASE_URI + "/777888/status?fileName=" + massloadFileName)
+                .content(mapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
@@ -1090,9 +1090,11 @@ public class RefundControllerTest {
         refund.setStatus(RefundStatus.DRAFT);
         refundRepository.save(refund);
         RefundStatusRequest request = getRefundStatusRequest();
-        mockMvc.perform(post(BASE_URI + "/" + refund.getId() + "/status?fileName="
-                + massloadFileName).content(mapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+        mockMvc.perform(
+                post(BASE_URI + "/" + refund.getId() + "/status?fileName=" + massloadFileName)
+                        .content(mapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
 
@@ -1101,9 +1103,11 @@ public class RefundControllerTest {
         refund.setAirlineCode("123");
         refundRepository.save(refund);
         RefundStatusRequest request = getRefundStatusRequest();
-        mockMvc.perform(post(BASE_URI + "/" + refund.getId() + "/status?fileName="
-                + massloadFileName).content(mapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+        mockMvc.perform(
+                post(BASE_URI + "/" + refund.getId() + "/status?fileName=" + massloadFileName)
+                        .content(mapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
         assertThat(refund.getStatus(), not(equalTo(request.getStatus())));
     }
 
@@ -1151,10 +1155,10 @@ public class RefundControllerTest {
 
         refundRepository.deleteAll();
 
-        String responseBody = mockMvc.perform(post(BASE_URI).content(getRefundJson())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(post(BASE_URI).content(getRefundJson())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
 
         Refund retrievedRefund = mapper.readValue(responseBody, Refund.class);
 

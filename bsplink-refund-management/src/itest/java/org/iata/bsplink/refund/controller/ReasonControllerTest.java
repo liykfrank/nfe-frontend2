@@ -33,6 +33,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -59,9 +61,12 @@ public class ReasonControllerTest {
     @Autowired
     private EntityManager entityManager;
 
+    @Autowired
+    private WebApplicationContext webAppContext;
+
     @Before
     public void setUp() throws Exception {
-
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
         reasons = getReasons();
         reason = reasons.get(0);
         reasonJson = mapper.writeValueAsString(reason);
@@ -70,8 +75,7 @@ public class ReasonControllerTest {
     @Test
     public void testCreatesReason() throws Exception {
 
-        mockMvc.perform(
-                post(BASE_URI).content(reasonJson).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post(BASE_URI).content(reasonJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
         List<Reason> reasons = reasonRepository.findAll();
@@ -83,10 +87,10 @@ public class ReasonControllerTest {
     @Test
     public void testReturnsCreatedReason() throws Exception {
 
-        String responseBody = mockMvc.perform(
-                post(BASE_URI).content(reasonJson).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn().getRequest().getContentAsString();
+        String responseBody = mockMvc
+                .perform(post(BASE_URI).content(reasonJson)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isCreated()).andReturn().getRequest().getContentAsString();
 
         assertThat(readReasonFromJson(responseBody), equalTo(reason));
     }
@@ -103,8 +107,7 @@ public class ReasonControllerTest {
 
         String reasonJson = mapper.writeValueAsString(reason);
 
-        mockMvc.perform(
-                post(BASE_URI).content(reasonJson).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post(BASE_URI).content(reasonJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", equalTo("Validation error")));
     }
@@ -114,10 +117,8 @@ public class ReasonControllerTest {
 
         createReasons();
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc.perform(get(BASE_URI).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         List<Reason> actual = mapper.readValue(responseBody, new TypeReference<List<Reason>>() {});
 
@@ -131,16 +132,15 @@ public class ReasonControllerTest {
 
         String isoc = reasons.get(0).getIsoCountryCode();
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "?isoCountryCode=" + isoc).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(get(BASE_URI + "?isoCountryCode=" + isoc)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         List<Reason> actual = mapper.readValue(responseBody, new TypeReference<List<Reason>>() {});
 
         List<Reason> filteredReasons = reasons.stream()
-                .filter(r -> isoc.equals(r.getIsoCountryCode()))
-                .collect(Collectors.toList());
+                .filter(r -> isoc.equals(r.getIsoCountryCode())).collect(Collectors.toList());
         assertThat(actual, equalTo(filteredReasons));
     }
 
@@ -152,11 +152,10 @@ public class ReasonControllerTest {
         String isoc = reasons.get(0).getIsoCountryCode();
         ReasonType type = reasons.get(0).getType();
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "?isoCountryCode=" + isoc + "&refundType=" + type)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(get(BASE_URI + "?isoCountryCode=" + isoc + "&refundType=" + type)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         List<Reason> actual = mapper.readValue(responseBody, new TypeReference<List<Reason>>() {});
 
@@ -181,8 +180,7 @@ public class ReasonControllerTest {
         Reason reasonToDelete = createReasons().get(0);
         Long reasonId = reasonToDelete.getId();
 
-        mockMvc.perform(
-                delete(BASE_URI + "/" + reasonId).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete(BASE_URI + "/" + reasonId).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         assertThat(reasonRepository.findById(reasonId).isPresent(), is(false));
@@ -194,10 +192,9 @@ public class ReasonControllerTest {
         Reason reasonToDelete = createReasons().get(0);
         Long reasonId = reasonToDelete.getId();
 
-        String responseBody = mockMvc.perform(
-                delete(BASE_URI + "/" + reasonId).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(delete(BASE_URI + "/" + reasonId).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         assertThat(readReasonFromJson(responseBody), equalTo(reasonToDelete));
     }
@@ -218,11 +215,8 @@ public class ReasonControllerTest {
 
         String reasonToUpdateJson = mapper.writeValueAsString(reasonToUpdate);
 
-        mockMvc.perform(
-                put(BASE_URI + "/" + reasonToUpdate.getId())
-                .content(reasonToUpdateJson)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        mockMvc.perform(put(BASE_URI + "/" + reasonToUpdate.getId()).content(reasonToUpdateJson)
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
         Reason actual = reasonRepository.findById(reasonToUpdate.getId()).get();
 
@@ -232,8 +226,7 @@ public class ReasonControllerTest {
     @Test
     public void testReturnsNotFoundWhenTryingToUpdateNonExistentReason() throws Exception {
 
-        mockMvc.perform(
-                put(NON_EXISTENT_REASON_URI).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put(NON_EXISTENT_REASON_URI).contentType(MediaType.APPLICATION_JSON)
                 .content(reasonJson)).andExpect(status().isNotFound());
     }
 
@@ -247,12 +240,10 @@ public class ReasonControllerTest {
 
         String reasonToUpdateJson = mapper.writeValueAsString(reasonToUpdate);
 
-        String responseBody = mockMvc.perform(
-                put(BASE_URI + "/" + reasonToUpdate.getId())
-                .content(reasonToUpdateJson)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(put(BASE_URI + "/" + reasonToUpdate.getId()).content(reasonToUpdateJson)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         assertThat(readReasonFromJson(responseBody), equalTo(reasonToUpdate));
     }
@@ -262,10 +253,10 @@ public class ReasonControllerTest {
 
         Reason reason = createReasons().get(0);
 
-        String responseBody = mockMvc.perform(
-                get(BASE_URI + "/" + reason.getId()).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String responseBody = mockMvc
+                .perform(get(BASE_URI + "/" + reason.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
 
         Reason actual = mapper.readValue(responseBody, Reason.class);
 

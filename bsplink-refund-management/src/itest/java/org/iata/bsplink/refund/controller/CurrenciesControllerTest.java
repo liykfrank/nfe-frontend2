@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -20,14 +23,21 @@ public class CurrenciesControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private WebApplicationContext webAppContext;
+
+    @Before
+    public void setUp() throws Exception {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
+    }
+
     @Test
     public void testGetCurrencies() throws Exception {
         String json = "[{\"isoc\":\"AA\",\"currencies\":[{\"name\":\"ABC\",\"numDecimals\":2,"
                 + "\"expirationDate\":\"2058-12-24\"},{\"name\":\"DEF\",\"numDecimals\":3,"
                 + "\"expirationDate\":\"2058-12-25\"},{\"name\":\"GHI\",\"numDecimals\":0,"
                 + "\"expirationDate\":\"2058-12-25\"}]}]";
-        mockMvc.perform(get("/v1/currencies/AA"))
-                .andExpect(status().isOk())
+        mockMvc.perform(get("/v1/currencies/AA")).andExpect(status().isOk())
                 .andExpect(content().json(json));
     }
 
