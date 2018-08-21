@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
 @RequestMapping("/v1/tctps")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*")
 public class TaxOnCommissionTypeController {
 
     @Autowired
@@ -40,15 +40,12 @@ public class TaxOnCommissionTypeController {
      * Tax On Commission Types.
      */
     @ApiOperation(value = "Tax On Commission Types")
-    @ApiResponses(
-            value = {@ApiResponse(code = 200,
-            message = "Array of Tax On Commission Types")})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Array of Tax On Commission Types")})
     @GetMapping("/{isoc}")
-    public ResponseEntity<List<TaxOnCommissionType>> getTctps(
-            @PathVariable("isoc") String isoc) {
+    public ResponseEntity<List<TaxOnCommissionType>> getTctps(@PathVariable("isoc") String isoc) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(
-                taxOnCommissionTypeService.findByIsoCountryCode(isoc));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(taxOnCommissionTypeService.findByIsoCountryCode(isoc));
     }
 
     /**
@@ -56,15 +53,11 @@ public class TaxOnCommissionTypeController {
      */
     @ApiOperation(value = "Save a Tax On Commission Type")
     @PostMapping()
-    @ApiImplicitParams(
-            {@ApiImplicitParam(name = "body",
-                value = "The Tax On Commission Type to save.",
-            paramType = "body", required = true, dataType = "TaxOnCommissionType")})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "body", value = "The Tax On Commission Type to save.",
+                    paramType = "body", required = true, dataType = "TaxOnCommissionType")})
     public ResponseEntity<TaxOnCommissionType> save(
-            @Valid
-            @RequestBody
-            TaxOnCommissionType taxOnCommissionType,
-            Errors errors) {
+            @Valid @RequestBody TaxOnCommissionType taxOnCommissionType, Errors errors) {
         if (errors.hasErrors()) {
             throw new ApplicationValidationException(errors);
         }
@@ -77,16 +70,15 @@ public class TaxOnCommissionTypeController {
      */
     @ApiOperation(value = "Deletes an Tax On Commission Type")
     @DeleteMapping("/{isoc}/{code}")
-    public ResponseEntity<TaxOnCommissionType> delete(
-            @PathVariable("isoc") String isoc,
+    public ResponseEntity<TaxOnCommissionType> delete(@PathVariable("isoc") String isoc,
             @PathVariable("code") String code) {
 
         TaxOnCommissionTypePk pk = new TaxOnCommissionTypePk();
         pk.setIsoCountryCode(isoc);
         pk.setCode(code);
 
-        Optional<TaxOnCommissionType> optionalTaxOnCommissionType
-            = taxOnCommissionTypeService.find(pk);
+        Optional<TaxOnCommissionType> optionalTaxOnCommissionType =
+                taxOnCommissionTypeService.find(pk);
 
         if (!optionalTaxOnCommissionType.isPresent()) {
             return ResponseEntity.notFound().build();

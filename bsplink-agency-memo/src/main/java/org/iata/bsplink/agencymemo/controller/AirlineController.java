@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
 @RequestMapping("/v1/airlines")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*")
 public class AirlineController {
 
     @Autowired
@@ -26,12 +26,9 @@ public class AirlineController {
      * Get basic Agent Data.
      */
     @ApiOperation(value = "Get basic Airline Data")
-    @ApiResponses(
-            value = {@ApiResponse(code = 200,
-            message = "Airline Data")})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Airline Data")})
     @GetMapping("/{isoCountryCode}/{airlineCode}")
-    public ResponseEntity<Airline> getAirline(
-            @PathVariable("isoCountryCode") String isoCountryCode,
+    public ResponseEntity<Airline> getAirline(@PathVariable("isoCountryCode") String isoCountryCode,
             @PathVariable("airlineCode") String airlineCode) {
 
         return airlineService.findAirlineResponse(isoCountryCode, airlineCode);
