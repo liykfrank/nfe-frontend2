@@ -14,10 +14,6 @@ spring:
   ###
   #   Database Settings
   ###
-  datasource:
-    url: jdbc:postgresql://10.5.0.217:5432/nfedatadev1
-    username:
-    password:
   jpa:
     generate-ddl: false
     hibernate:
@@ -61,6 +57,5 @@ logging:
 keycloak:
   auth-server-url: http://keycloak-dev.nfedev.accelya.com/auth
   realm: NFE
-  public-client: true
   resource: bsplink-user-management
-  principal-attribute: preferred_username  
+  bearer-only: true
