@@ -47,6 +47,5 @@ app:
 keycloak:
   auth-server-url: 
   realm: 
-  public-client: true
   resource: 
-  principal-attribute: 
+  bearer-only: true
