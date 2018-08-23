@@ -3,9 +3,7 @@ package org.iata.bsplink.agencymemo.controller;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
 import java.util.List;
-
 import org.iata.bsplink.agencymemo.dto.Agent;
 import org.iata.bsplink.agencymemo.service.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
