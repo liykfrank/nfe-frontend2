@@ -1,5 +1,6 @@
 package org.iata.bsplink.agencymemo.configuration;
 
+import feign.RequestInterceptor;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.KeycloakSecurityComponents;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
@@ -23,6 +24,17 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 @ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
 public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
+
+    /**
+     * Intercepts calls made through feign client to propagate the JWT token.
+     * 
+     * @return RequestInterceptor
+     */
+    @Bean
+    public RequestInterceptor securityFeignRequestInterceptor() {
+        return new SecurityFeignRequestInterceptor();
+    }
+
     /**
      * Registers the KeycloakAuthenticationProvider with the authentication manager.
      */
