@@ -83,5 +83,5 @@ keycloak:
   realm: NFE
   public-client: true
   resource: bsplink-refund-management
-  principal-attribute: preferred_username
+  bearer-only: true
   
