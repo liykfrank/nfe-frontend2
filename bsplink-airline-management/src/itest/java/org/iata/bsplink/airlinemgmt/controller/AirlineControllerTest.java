@@ -32,6 +32,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -53,13 +55,16 @@ public class AirlineControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
+    @Autowired
+    private WebApplicationContext webAppContext;
+
     private List<Airline> airlines;
     private String airlinesJson;
     private AirlinePk airline1Pk;
 
     @Before
     public void setUp() throws Exception {
-
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
         airlines = getAirlinesFixture();
         airlinesJson = mapper.writeValueAsString(airlines);
         airline1Pk = airlines.get(0).getAirlinePk();
@@ -145,8 +150,7 @@ public class AirlineControllerTest {
 
         createAirlines();
 
-        String responseBody = mockMvc.perform(get(AIRLINE_1_URI))
-                .andExpect(status().isOk())
+        String responseBody = mockMvc.perform(get(AIRLINE_1_URI)).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
         Airline airline = airlineRepository.findById(airline1Pk).get();
@@ -166,8 +170,7 @@ public class AirlineControllerTest {
 
         createAirlines();
 
-        String responseBody = mockMvc.perform(delete(AIRLINE_1_URI))
-                .andExpect(status().isOk())
+        String responseBody = mockMvc.perform(delete(AIRLINE_1_URI)).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
         Optional<Airline> optionalAirline = airlineRepository.findById(airline1Pk);
@@ -189,12 +192,11 @@ public class AirlineControllerTest {
 
         createAirlines();
 
-        mockMvc.perform(get(AIRLINE_1_URI))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.airlineCode").exists())
-            .andExpect(jsonPath("$.isoCountryCode").exists())
-            .andExpect(jsonPath("$.address1").exists())
-            .andExpect(jsonPath("$.firstName").exists())
-            .andExpect(jsonPath("$.taxNumber").exists());
+        mockMvc.perform(get(AIRLINE_1_URI)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.airlineCode").exists())
+                .andExpect(jsonPath("$.isoCountryCode").exists())
+                .andExpect(jsonPath("$.address1").exists())
+                .andExpect(jsonPath("$.firstName").exists())
+                .andExpect(jsonPath("$.taxNumber").exists());
     }
 }
