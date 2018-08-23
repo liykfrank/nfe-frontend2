@@ -32,4 +32,4 @@ keycloak:
   realm: NFE
   public-client: true
   resource: bsplink-agent-management
-  principal-attribute: preferred_username     
+  bearer-only: true

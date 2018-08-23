@@ -33,6 +33,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -53,11 +55,15 @@ public class AgentControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
+    @Autowired
+    protected WebApplicationContext webAppContext;
+
     private List<Agent> agents;
     private String agentsJson;
 
     @Before
     public void setUp() throws Exception {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
         agentRepository.deleteAll();
         agents = getAgentsFixture();
         agentsJson = mapper.writeValueAsString(agents);
@@ -78,11 +84,8 @@ public class AgentControllerTest {
 
     private Agent findAgent(String iataCode, List<Agent> list) {
 
-        return list.stream()
-                .filter(value -> value != null)
-                .filter(value -> iataCode.equals(value.getIataCode()))
-                .findFirst()
-                .get();
+        return list.stream().filter(value -> value != null)
+                .filter(value -> iataCode.equals(value.getIataCode())).findFirst().get();
     }
 
     @Test
@@ -115,8 +118,7 @@ public class AgentControllerTest {
     @Test
     public void testGetAgent() throws Exception {
         createAgents();
-        String responseBody = mockMvc.perform(get(IATA_CODE_1_URI))
-                .andExpect(status().isOk())
+        String responseBody = mockMvc.perform(get(IATA_CODE_1_URI)).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         Agent agent = agentRepository.findById(IATA_CODE_1).get();
         Agent retrievedAgent = mapper.readValue(responseBody, Agent.class);
@@ -164,8 +166,7 @@ public class AgentControllerTest {
 
         createAgents();
 
-        String responseBody = mockMvc.perform(delete(IATA_CODE_1_URI))
-                .andExpect(status().isOk())
+        String responseBody = mockMvc.perform(delete(IATA_CODE_1_URI)).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
         Optional<Agent> optionalAgent = agentRepository.findById(IATA_CODE_1);
