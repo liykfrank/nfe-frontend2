@@ -116,7 +116,7 @@ pipeline {
                         docker.image('atsistemas/openshift-cli:1.2').withRun('-v $WORKSPACE/build/libs:$WORKSPACE') { c ->
                             sh "oc login https://$clusterOpenShiftDev -u $USERNAME -p $PASSWORD --insecure-skip-tls-verify=true"
                             sh "oc project nfedesarrollo"
-                            sh "oc start-build bsplink-user-management --from-dir=$WORKSPACE/build/libs --follow"
+                            sh "oc start-build bsplink-agent-management --from-dir=$WORKSPACE/build/libs --follow"
                         }
                       }   
                         

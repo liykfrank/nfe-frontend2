@@ -5,15 +5,14 @@ feign:
   airlines:
     url: http://localhost:8083/v1/airlines
 
-keycloak:
-  auth-server-url: 
-  realm: 
-  public-client: true
-  resource: 
-  principal-attribute: 
-
 spring:
   jpa:
     properties:
       hibernate:
         default_schema: bsplink_user
+        
+keycloak:
+  auth-server-url: http://keycloak-dev.nfedev.accelya.com/auth
+  realm: NFE
+  resource: bsplink-user-management
+  bearer-only: true
