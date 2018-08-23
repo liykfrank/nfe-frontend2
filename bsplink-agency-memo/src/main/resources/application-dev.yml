@@ -30,7 +30,7 @@ app:
     sftp:      
       name: 10.5.0.40
       username: jobsch
-      password: 
+      password:
       port: 22
       protocol: sftp
     local:
@@ -45,5 +45,4 @@ keycloak:
   realm: NFE
   public-client: true
   resource: bsplink-agency-memo
-  principal-attribute: preferred_username  
-      
+  bearer-only: true       
