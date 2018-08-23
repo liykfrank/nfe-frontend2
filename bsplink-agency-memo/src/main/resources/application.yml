@@ -43,4 +43,4 @@ keycloak:
   realm: NFE
   public-client: true
   resource: bsplink-agency-memo
-  principal-attribute: preferred_username  
+  bearer-only: true  
