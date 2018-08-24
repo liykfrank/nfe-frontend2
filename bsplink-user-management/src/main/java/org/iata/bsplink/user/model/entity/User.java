@@ -58,6 +58,9 @@ public class User implements Serializable {
 
     @Size(max = 49, message = INCORRECT_SIZE + "max 49")
     private String name;
+    
+    @Size(max = 100, message = INCORRECT_SIZE + "max 100")
+    private String lastName;
 
     @Size(max = 15, message = INCORRECT_SIZE + "max 15")
     private String telephone;
