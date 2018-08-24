@@ -53,6 +53,7 @@ dependencies {
 	compile('org.iata.bsplink:bsplink-commons-rest:0.0.4-SNAPSHOT')
 	compile('org.flywaydb:flyway-core:5.0.7')
 	compile('org.springframework.cloud:spring-cloud-starter-openfeign:2.0.0.RELEASE')
+	compile('org.keycloak:keycloak-authz-client:2.0.0.Final')	
 	runtime('com.h2database:h2')
 	runtime('org.postgresql:postgresql')
 	testCompile('org.springframework.boot:spring-boot-starter-test')

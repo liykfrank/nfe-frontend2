@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -47,6 +48,11 @@ public class User implements Serializable {
     @NotNull(message = NON_NULL_MESSAGE)
     @Size(max = 255, message = INCORRECT_SIZE + "max 255")
     private String username;
+    
+    @Email
+    @NotNull(message = NON_NULL_MESSAGE)
+    @Size(max = 200, message = INCORRECT_SIZE + "max 200")
+    private String email;
 
     @CreatedDate
     @Column(name = "register_date")

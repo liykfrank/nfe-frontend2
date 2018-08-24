@@ -5,6 +5,7 @@
 	"userCode": "123",
 	"name": "Test",
 	"telephone": "654987321987897987",
+	"email": "test@email.com",
 	"address": {
 		"description": "Description",
 		"locality": "Locality",

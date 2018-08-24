@@ -24,6 +24,7 @@ public class UserUtils {
         oldUser.setName(newUser.getName());
         oldUser.setTelephone(newUser.getTelephone());
         oldUser.setOrganization(newUser.getOrganization());
+        oldUser.setLastName(newUser.getLastName());
         oldUser.setTemplates(newUser.getTemplates());
 
         Address address = newUser.getAddress();

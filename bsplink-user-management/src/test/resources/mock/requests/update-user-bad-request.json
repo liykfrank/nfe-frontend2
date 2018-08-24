@@ -4,6 +4,7 @@
 	"userType": "AIRLINE",
 	"userCode": "123",
 	"name": "Test",
+	"email": "test@email.com",
 	"telephone": "6549873215465465465",
 	"address": {
 		"description": "Description",
