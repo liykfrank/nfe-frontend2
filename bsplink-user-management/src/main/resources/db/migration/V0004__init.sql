@@ -1,7 +1,7 @@
 
 
 alter table bsplink_user.user
-       add column lastName varchar(100) DEFAULT NULL;
+       add column last_name varchar(100) DEFAULT NULL;
 
  
  DROP TABLE IF EXISTS bsplink_user.user_templates CASCADE;

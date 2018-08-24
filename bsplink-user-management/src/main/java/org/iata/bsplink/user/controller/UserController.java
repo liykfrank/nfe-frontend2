@@ -21,6 +21,7 @@ import org.iata.bsplink.user.service.UserService;
 import org.iata.bsplink.user.validation.AgentValidator;
 import org.iata.bsplink.user.validation.AirlineValidator;
 import org.iata.bsplink.user.validation.UserBasicValidator;
+import org.iata.bsplink.user.validation.UserTemplateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,11 +56,14 @@ public class UserController {
     private AirlineValidator airlineValidator;
 
     @Autowired
+    private UserTemplateValidator userTemplateValidator;
+
+    @Autowired
     private UserBasicValidator userBasicValidator;
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
-        Stream.of(agentValidator, airlineValidator)
+        Stream.of(agentValidator, airlineValidator, userTemplateValidator)
                 .forEach(validator -> Optional.ofNullable(binder.getTarget())
                         .filter(o -> validator.supports(o.getClass()))
                         .ifPresent(o -> binder.addValidators(validator)));
