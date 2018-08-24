@@ -1,5 +1,5 @@
 package org.iata.bsplink.user.model.view;
 
-public interface BsplinkOptionTemplateView {
+public interface UserTemplateView {
 
 }

@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.iata.bsplink.user.Application;

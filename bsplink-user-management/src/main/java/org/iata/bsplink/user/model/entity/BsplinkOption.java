@@ -2,6 +2,7 @@ package org.iata.bsplink.user.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,9 @@ import org.iata.bsplink.user.model.view.BsplinkOptionTemplateView;
 
 @Data
 @Entity
-public class BsplinkOption {
+public class BsplinkOption  implements Serializable {
+
+    private static final long serialVersionUID = 2515486701058152262L;
 
     @Id
     @NotNull

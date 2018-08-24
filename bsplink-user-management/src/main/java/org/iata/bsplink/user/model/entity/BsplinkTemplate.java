@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.ApiModelProperty;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,16 +27,19 @@ import javax.validation.constraints.Size;
 import lombok.Data;
 
 import org.iata.bsplink.user.model.view.BsplinkOptionTemplateView;
+import org.iata.bsplink.user.model.view.UserTemplateView;
 
 @Data
 @Entity
-public class BsplinkTemplate {
+public class BsplinkTemplate implements Serializable {
+
+    private static final long serialVersionUID = 8534620206035476169L;
 
     @ApiModelProperty(value = "Bsplink Template Name", required = true)
     @Id
-    @Size
+    @Size(max = 32)
     @Column(length = 32)
-    @JsonView(BsplinkOptionTemplateView.class)
+    @JsonView({ BsplinkOptionTemplateView.class, UserTemplateView.class })
     private String id;
 
     @ApiModelProperty(value = "List of Bsplink Options", required = true)
