@@ -128,7 +128,7 @@ public class RefundFileValidator {
             return false;
         }
 
-        if (expectedLinesCount != actualLinesCount) {
+        if (!actualLinesCount.equals(expectedLinesCount)) {
 
             addToErrors(actualLinesCount, IT0Z, "reportRecordCounter", INCORRECT_NUMBER_OF_RECORDS);
 

@@ -5,6 +5,8 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_EMPTY_FILE;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_NO_FILE_TRAILER_RECORD;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_NO_HEADER_RECORD;
+import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_WITHOUT_EOL;
+import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_WITH_MORE_THAN_127_RECORDS;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_WRONG_RECORD_COUNTER;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_WRONG_RECORD_COUNT_FORMAT;
 import static org.iata.bsplink.refund.loader.test.fixtures.FixtureLoader.getFileFixture;
@@ -51,6 +53,33 @@ public class RefundFileValidatorTest {
         executeValidationOnFile(FILE_WRONG_RECORD_COUNTER);
 
         assertError(expectedError);
+    }
+
+    /**
+     * Bug NFEIATA-286 Error when e9 file has more than 99 records.
+     *
+     * <p>
+     * There was an error in the comparison because was used the "==" operator instead of the
+     * equals() method so with less than 127 records the comparison was correct but with more
+     * records it failed.
+     * </p>
+     */
+    @Test
+    public void testValidatesRecordCounterWhenThereAreMoreThan127Records() {
+
+        executeValidationOnFile(FILE_WITH_MORE_THAN_127_RECORDS);
+
+        assertThat("The validation should have no errors: " + refundLoaderErrors.toString(),
+                refundLoaderErrors, hasSize(0));
+    }
+
+    @Test
+    public void testValidatesRecordCounterWhenFileDoesnHaveEndOfLine() {
+
+        executeValidationOnFile(FILE_WITHOUT_EOL);
+
+        assertThat("The validation should have no errors: " + refundLoaderErrors.toString(),
+                refundLoaderErrors, hasSize(0));
     }
 
     private void executeValidationOnFile(String fileName) {

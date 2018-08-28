@@ -24,6 +24,10 @@ public class Constants {
             BASE_WRONG_TEST_FILE + "_NO_HEADER_RECORD";
     public static final String FILE_INVALID_TRANSACTIONS =
             "wrong/FRe9EARS_20150602_0302_INVALID";
+    public static final String FILE_WITH_MORE_THAN_127_RECORDS =
+            "AAe9EARS_20080225_2015_005_MORE_THAN_127_RECORDS";
+    public static final String FILE_WITHOUT_EOL =
+            "ALe9EARS_20170410_0744_016_NOEOL";
 
     private Constants() {
         // empty
