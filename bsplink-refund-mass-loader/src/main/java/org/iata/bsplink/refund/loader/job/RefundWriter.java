@@ -103,9 +103,8 @@ public class RefundWriter extends RefundLoaderErrorsAware implements ItemWriter<
 
     private String getLogMessageForRefund(String message, Refund refund) {
 
-        return String.format(
-                message + ": isoCountryCode=%s, airlineCode=%s, ticketDocumentNumber=%s",
-                refund.getIsoCountryCode(), refund.getAirlineCode(),
+        return String.format("%s: isoCountryCode=%s, airlineCode=%s, ticketDocumentNumber=%s",
+                message, refund.getIsoCountryCode(), refund.getAirlineCode(),
                 refund.getTicketDocumentNumber());
     }
 
