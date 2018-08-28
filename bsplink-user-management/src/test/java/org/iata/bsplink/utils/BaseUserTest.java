@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.iata.bsplink.user.model.entity.Address;
 import org.iata.bsplink.user.model.entity.User;
+import org.iata.bsplink.user.model.entity.UserStatus;
 import org.iata.bsplink.user.model.entity.UserType;
 
 public abstract class BaseUserTest {
@@ -16,14 +17,12 @@ public abstract class BaseUserTest {
 
     protected static final String USER_ID = "b348f80e-59sa-4a2f-9ci4-879805d92920";
 
-    protected User user;
+    protected User userPending;
+    protected User userCreated;
 
-    /**
-     * Creates the user for the tests.
-     */
-    protected void createUser() {
+    private User getBaseUser() {
 
-        user = new User();
+        User user = new User();
         user.setId(USER_ID);
         user.setUsername("bsplink.test");
         user.setName("Test");
@@ -40,6 +39,28 @@ public abstract class BaseUserTest {
         address.setCountry("Country");
 
         user.setAddress(address);
+
+        return user;
+    }
+
+
+    /**
+     * Creates the user for the tests.
+     */
+    protected void createPendingUser() {
+
+        userPending = getBaseUser();
+        userPending.setStatus(UserStatus.PENDING);
+    }
+
+    /**
+     * Creates the user for the tests.
+     */
+    protected void createCreatedUser() {
+
+        userCreated = getBaseUser();
+        userCreated.setStatus(UserStatus.CREATED);
+
     }
 
     /**

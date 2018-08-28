@@ -41,17 +41,17 @@ public class User implements Serializable {
     private static final long serialVersionUID = -4263626642022961775L;
 
     @Id
-    @NotNull(message = NON_NULL_MESSAGE)
-    @Size(max = 36, message = INCORRECT_SIZE + "max 36")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String id;
 
+    @Email
     @NotNull(message = NON_NULL_MESSAGE)
     @Size(max = 255, message = INCORRECT_SIZE + "max 255")
     private String username;
-    
+
     @Email
     @NotNull(message = NON_NULL_MESSAGE)
-    @Size(max = 200, message = INCORRECT_SIZE + "max 200")
+    @Size(max = 255, message = INCORRECT_SIZE + "max 255")
     private String email;
 
     @CreatedDate
@@ -73,7 +73,8 @@ public class User implements Serializable {
 
     @Size(max = 49, message = INCORRECT_SIZE + "max 49")
     private String name;
-    
+
+    @Column(name = "last_name")
     @Size(max = 100, message = INCORRECT_SIZE + "max 100")
     private String lastName;
 
@@ -93,8 +94,10 @@ public class User implements Serializable {
     @JoinColumn(name = "address_id")
     private Address address;
 
-
     @Valid
     @OneToMany(cascade = CascadeType.ALL)
     private List<UserTemplate> templates;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private UserStatus status;
 }

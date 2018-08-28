@@ -1,11 +1,8 @@
 package org.iata.bsplink.user.utils;
 
-import lombok.extern.apachecommons.CommonsLog;
-
 import org.iata.bsplink.user.model.entity.Address;
 import org.iata.bsplink.user.model.entity.User;
 
-@CommonsLog
 public class UserUtils {
 
     private UserUtils() {}
@@ -19,19 +16,17 @@ public class UserUtils {
      */
     public static User mapUserToUpdate(User oldUser, User newUser) {
 
+        oldUser.setEmail(newUser.getEmail());
         oldUser.setExpiryDate(newUser.getExpiryDate());
+        oldUser.setUserType(newUser.getUserType());
         oldUser.setUserCode(newUser.getUserCode());
         oldUser.setName(newUser.getName());
+        oldUser.setLastName(newUser.getLastName());
         oldUser.setTelephone(newUser.getTelephone());
         oldUser.setOrganization(newUser.getOrganization());
-        oldUser.setLastName(newUser.getLastName());
-        oldUser.setTemplates(newUser.getTemplates());
-
         Address address = newUser.getAddress();
         address.setId(oldUser.getAddress() != null ? oldUser.getAddress().getId() : null);
         oldUser.setAddress(address);
-
-        log.debug("built user to update: " + oldUser);
 
         return oldUser;
     }

@@ -20,8 +20,8 @@ import org.iata.bsplink.user.model.view.UserTemplateView;
 import org.iata.bsplink.user.service.UserService;
 import org.iata.bsplink.user.validation.AgentValidator;
 import org.iata.bsplink.user.validation.AirlineValidator;
-import org.iata.bsplink.user.validation.UserBasicValidator;
 import org.iata.bsplink.user.validation.UserTemplateValidator;
+import org.iata.bsplink.user.validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -59,7 +59,7 @@ public class UserController {
     private UserTemplateValidator userTemplateValidator;
 
     @Autowired
-    private UserBasicValidator userBasicValidator;
+    private UserValidator userValidator;
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -68,6 +68,8 @@ public class UserController {
                         .filter(o -> validator.supports(o.getClass()))
                         .ifPresent(o -> binder.addValidators(validator)));
     }
+
+
 
     /**
      * Exposes a REST endpoint that returns the user matching the provided id.
@@ -112,7 +114,7 @@ public class UserController {
 
         log.info("received request for creating user: " + request);
 
-        userBasicValidator.validate(request, errors);
+        userValidator.validateCreate(request, errors);
 
         if (errors.hasErrors()) {
             throw new ApplicationValidationException(errors);
@@ -141,7 +143,7 @@ public class UserController {
 
         log.info("received request for updating user with id: " + userId);
 
-        userBasicValidator.validate(request, errors);
+        userValidator.validateUpdate(request, errors);
 
         if (errors.hasErrors()) {
             throw new ApplicationValidationException(errors);

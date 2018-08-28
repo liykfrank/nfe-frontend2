@@ -59,3 +59,9 @@ keycloak:
   realm: NFE
   resource: bsplink-user-management
   bearer-only: true
+  
+keycloak-admin:
+  master-realm:
+  admin-username:
+  admin-pass:
+  admin-client-id:

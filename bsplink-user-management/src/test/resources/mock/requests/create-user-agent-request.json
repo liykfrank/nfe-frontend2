@@ -1,11 +1,11 @@
 {
 	"id": "b348f80e-59sa-4a2f-9ci4-879805d92920",
-	"username": "bsplink.test",
+	"username": "bsplink.test@test.com",
 	"userType": "AGENT",
 	"userCode": "78200102",
 	"name": "Test",
 	"telephone": "654987321",
-	"email": "test@email.com",
+	"email": "bsplink.test@test.com",
 	"address": {
 		"description": "Description",
 		"locality": "Locality",

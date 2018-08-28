@@ -1,10 +1,8 @@
-# Externalized configuration
 feign:
   agents:
     url: http://localhost:8082/v1/agents
   airlines:
     url: http://localhost:8083/v1/airlines
-
 spring:
   jpa:
     properties:
@@ -16,3 +14,9 @@ keycloak:
   realm: NFE
   resource: bsplink-user-management
   bearer-only: true
+  
+keycloak-admin:
+  master-realm:
+  admin-username:
+  admin-pass:
+  admin-client-id:

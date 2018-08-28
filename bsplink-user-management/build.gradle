@@ -53,7 +53,10 @@ dependencies {
 	compile('org.iata.bsplink:bsplink-commons-rest:0.0.4-SNAPSHOT')
 	compile('org.flywaydb:flyway-core:5.0.7')
 	compile('org.springframework.cloud:spring-cloud-starter-openfeign:2.0.0.RELEASE')
-	compile('org.keycloak:keycloak-authz-client:2.0.0.Final')	
+	compile group: 'org.keycloak', name: 'keycloak-admin-client', version: '3.3.0.CR2'
+    compile group: 'org.jboss.resteasy', name: 'resteasy-jaxrs', version: '3.1.4.Final'
+    compile group: 'org.jboss.resteasy', name: 'resteasy-client', version: '3.1.4.Final'
+    compile group: 'org.jboss.resteasy', name: 'resteasy-jackson2-provider', version: '3.1.4.Final'
 	runtime('com.h2database:h2')
 	runtime('org.postgresql:postgresql')
 	testCompile('org.springframework.boot:spring-boot-starter-test')

@@ -6,12 +6,19 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Optional;
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.iata.bsplink.user.model.entity.User;
 import org.iata.bsplink.user.model.repository.UserRepository;
+import org.iata.bsplink.user.service.KeycloakService;
 import org.iata.bsplink.user.service.UserServiceImpl;
 import org.iata.bsplink.utils.BaseUserTest;
 import org.junit.Before;
@@ -19,6 +26,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.Errors;
@@ -32,6 +40,9 @@ public class UserServiceImplTest extends BaseUserTest {
     private UserRepository userRepository;
 
     @MockBean
+    private KeycloakService keycloakService;
+
+    @MockBean
     private Errors errors;
 
     @Rule
@@ -39,9 +50,12 @@ public class UserServiceImplTest extends BaseUserTest {
 
     @Before
     public void init() {
-        this.userService = new UserServiceImpl(userRepository);
-        user = new User();
-        createUser();
+        this.userService = new UserServiceImpl(userRepository, keycloakService);
+        userPending = new User();
+        userCreated = new User();
+        createPendingUser();
+        createCreatedUser();
+
     }
 
     /**
@@ -50,11 +64,11 @@ public class UserServiceImplTest extends BaseUserTest {
     @Test
     public void testGetUser() {
 
-        doReturn(Optional.of(user)).when(userRepository).findById(USER_ID);
+        doReturn(Optional.of(userPending)).when(userRepository).findById(USER_ID);
 
-        user = userService.getUser(USER_ID).get();
+        userPending = userService.getUser(USER_ID).get();
 
-        commonResponseAssertions(user);
+        commonResponseAssertions(userPending);
 
         verify(userRepository, times(1)).findById(USER_ID);
     }
@@ -70,47 +84,44 @@ public class UserServiceImplTest extends BaseUserTest {
     }
 
     /**
-     * Create user test.
+     * Creates user.
+     * 
+     * @throws URISyntaxException when no URL provided.
      */
     @Test
-    public void testCreateUser() {
+    public void testCreateUser() throws URISyntaxException {
 
-        doReturn(user).when(userRepository).save(any(User.class));
+        doReturn(Optional.of(userPending)).when(userRepository)
+                .findByUsername(userPending.getUsername());
 
-        user = userService.createUser(user, null);
+        when(userRepository.save(any(User.class))).thenReturn(userPending);
+        when(keycloakService.findUser(userPending)).thenReturn(getUserRepresentation());
 
-        commonResponseAssertions(user);
+        ResponseBuilder responseBuilder = Response.created(new URI("mock-url"));
+        when(keycloakService.createUser(userPending)).thenReturn(responseBuilder.build());
 
-        verify(userRepository, times(1)).save(any(User.class));
+        userPending = userService.createUser(userPending, errors);
+
+        verify(userRepository, times(2)).save(any(User.class));
     }
 
 
     /**
      * Create user already exists.
-     */
-    @Test
-    public void testCreateUserAlreadyExistsWithId() {
-
-        expectedException.expect(ApplicationValidationException.class);
-
-        doReturn(Optional.of(user)).when(userRepository).findById(USER_ID);
-
-        user = userService.createUser(user, errors);
-
-        verify(userRepository, times(1)).save(any(User.class));
-    }
-
-    /**
-     * Create user already exists.
+     * 
+     * @throws URISyntaxException URISyntaxException when no URL provided.
      */
     @Test
     public void testCreateUserAlreadyExistsWithUsername() {
 
         expectedException.expect(ApplicationValidationException.class);
 
-        doReturn(Optional.of(user)).when(userRepository).findByUsername(user.getUsername());
+        doReturn(Optional.of(userCreated)).when(userRepository)
+                .findByUsername(userCreated.getUsername());
 
-        user = userService.createUser(user, errors);
+        when(keycloakService.findUser(userCreated)).thenReturn(getUserRepresentation());
+
+        userCreated = userService.createUser(userCreated, errors);
 
         verify(userRepository, times(1)).save(any(User.class));
     }
@@ -121,12 +132,12 @@ public class UserServiceImplTest extends BaseUserTest {
     @Test
     public void testUpdateUser() {
 
-        doReturn(Optional.of(user)).when(userRepository).findById(USER_ID);
-        doReturn(user).when(userRepository).save(any(User.class));
+        doReturn(Optional.of(userPending)).when(userRepository).findById(USER_ID);
+        doReturn(userPending).when(userRepository).save(any(User.class));
 
-        user = userService.updateUser(user, user);
+        userPending = userService.updateUser(userPending, userPending);
 
-        commonResponseAssertions(user);
+        commonResponseAssertions(userPending);
 
         verify(userRepository, times(1)).save(any(User.class));
     }
@@ -137,12 +148,12 @@ public class UserServiceImplTest extends BaseUserTest {
     @Test
     public void testDeleteUser() {
 
-        doReturn(Optional.of(user)).when(userRepository).findById(USER_ID);
-        doNothing().when(userRepository).delete(user);
+        doReturn(Optional.of(userPending)).when(userRepository).findById(USER_ID);
+        doNothing().when(userRepository).delete(userPending);
 
-        userService.deleteUser(user);
+        userService.deleteUser(userPending);
 
-        verify(userRepository, times(1)).delete(user);
+        verify(userRepository, times(1)).delete(userPending);
     }
 
     /**
@@ -153,7 +164,13 @@ public class UserServiceImplTest extends BaseUserTest {
 
         doReturn(Optional.empty()).when(userRepository).findById(USER_ID);
 
-        userService.deleteUser(user);
+        userService.deleteUser(userPending);
+    }
+
+    private UserRepresentation getUserRepresentation() {
+        UserRepresentation userRepresentation = new UserRepresentation();
+        userRepresentation.setId("1d26b494-64e1-41d7-8144-cd8f0b634d07");
+        return userRepresentation;
     }
 
 }

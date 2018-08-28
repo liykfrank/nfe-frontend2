@@ -30,7 +30,7 @@ CREATE TABLE bsplink_user.user(
 	telephone varchar(15) DEFAULT NULL,
 	organization varchar(30) DEFAULT NULL,
   	last_modified_date timestamp DEFAULT NULL,
-  	address_id bigint DEFAULT NULL,  	
+  	address_id bigint DEFAULT NULL,
 	PRIMARY KEY (id)
 );
 

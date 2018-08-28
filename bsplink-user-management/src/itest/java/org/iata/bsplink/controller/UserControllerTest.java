@@ -27,6 +27,7 @@ import org.iata.bsplink.user.pojo.Agent;
 import org.iata.bsplink.user.pojo.Airline;
 import org.iata.bsplink.user.service.AgentService;
 import org.iata.bsplink.user.service.AirlineService;
+import org.iata.bsplink.user.service.KeycloakService;
 import org.iata.bsplink.user.service.UserService;
 import org.iata.bsplink.utils.BaseUserTest;
 import org.iata.bsplink.utils.TestUtils;
@@ -66,6 +67,9 @@ public class UserControllerTest extends BaseUserTest {
 
     @Autowired
     protected WebApplicationContext webAppContext;
+    
+    @MockBean
+    private KeycloakService keycloakService;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -83,8 +87,8 @@ public class UserControllerTest extends BaseUserTest {
 
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
 
-        user = new User();
-        createUser();
+        userPending = new User();
+        createPendingUser();
 
         MAPPER.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
@@ -95,12 +99,12 @@ public class UserControllerTest extends BaseUserTest {
     @Test
     public void getUserTest() throws Exception {
 
-        Optional<User> optional = Optional.of(user);
+        Optional<User> optional = Optional.of(userPending);
 
         when(userService.getUser(USER_ID)).thenReturn(optional);
 
         mockMvc.perform(get(GET_USER_URL, USER_ID)).andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(content().json(MAPPER.writer().writeValueAsString(user)))
+                .andExpect(content().json(MAPPER.writer().writeValueAsString(userPending)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
@@ -114,20 +118,39 @@ public class UserControllerTest extends BaseUserTest {
     @Test
     public void createUserTest() throws Exception {
 
-        doReturn(user).when(userService).createUser(any(), any());
+        doReturn(userPending).when(userService).createUser(any(), any());
 
         String userRequestString = TestUtils.getJson("/mock/requests/create-user-request.json");
 
         mockMvc.perform(post(CREATE_USER_URL).contentType(MediaType.APPLICATION_JSON)
                 .content(userRequestString)).andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(content().json(MAPPER.writer().writeValueAsString(user)))
+                .andExpect(content().json(MAPPER.writer().writeValueAsString(userPending)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+    }
+
+
+    @Test
+    public void createUserUsernameBadRequestTest() throws Exception {
+
+        doReturn(userPending).when(userService).createUser(any(), any());
+
+        String userRequestString = TestUtils.getJson("/mock/requests/create-user-request.json");
+
+        User userToSave = MAPPER.readValue(userRequestString, User.class);
+        userToSave.setUsername("not-well-formed-user");
+
+        mockMvc.perform(post(CREATE_USER_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(MAPPER.writeValueAsString(userToSave)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("username")))
+                .andExpect(jsonPath("$.validationErrors[0].message",
+                        equalTo("must be a well-formed email address")));
     }
 
     @Test
     public void createUserUserCodeBadRequestTest() throws Exception {
 
-        doReturn(user).when(userService).createUser(any(), any());
+        doReturn(userPending).when(userService).createUser(any(), any());
 
         String userRequestString = TestUtils.getJson("/mock/requests/create-user-request.json");
 
@@ -142,7 +165,7 @@ public class UserControllerTest extends BaseUserTest {
     @Test
     public void createThirdPartyUserTestBadRequest() throws Exception {
 
-        doReturn(user).when(userService).createUser(any(), any());
+        doReturn(userPending).when(userService).createUser(any(), any());
 
         String userRequestString = TestUtils.getJson("/mock/requests/create-user-request.json");
 
@@ -161,7 +184,7 @@ public class UserControllerTest extends BaseUserTest {
     @Test
     public void createAgentUserTestBadRequest() throws Exception {
 
-        doReturn(user).when(userService).createUser(any(), any());
+        doReturn(userPending).when(userService).createUser(any(), any());
 
         String userRequestString = TestUtils.getJson("/mock/requests/create-user-request.json");
 
@@ -179,7 +202,7 @@ public class UserControllerTest extends BaseUserTest {
     @Test
     public void createDpcUserTestBadRequest() throws Exception {
 
-        doReturn(user).when(userService).createUser(any(), any());
+        doReturn(userPending).when(userService).createUser(any(), any());
 
         String userRequestString = TestUtils.getJson("/mock/requests/create-user-request.json");
 
@@ -208,7 +231,7 @@ public class UserControllerTest extends BaseUserTest {
     @Test
     public void createUserAgentTest() throws Exception {
 
-        doReturn(user).when(userService).createUser(any(), any());
+        doReturn(userPending).when(userService).createUser(any(), any());
 
         String userRequestString =
                 TestUtils.getJson("/mock/requests/create-user-agent-request.json");
@@ -220,9 +243,9 @@ public class UserControllerTest extends BaseUserTest {
     @Test
     public void updateUserTest() throws Exception {
 
-        doReturn(user).when(userService).updateUser(any(), any());
+        doReturn(userPending).when(userService).updateUser(any(), any());
 
-        Optional<User> optional = Optional.of(user);
+        Optional<User> optional = Optional.of(userPending);
 
         when(userService.getUser(USER_ID)).thenReturn(optional);
 
@@ -230,16 +253,16 @@ public class UserControllerTest extends BaseUserTest {
 
         mockMvc.perform(put(UPDATE_USER_URL, USER_ID).contentType(MediaType.APPLICATION_JSON)
                 .content(userRequestString)).andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(content().json(MAPPER.writer().writeValueAsString(user)))
+                .andExpect(content().json(MAPPER.writer().writeValueAsString(userPending)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
     @Test
     public void updateUserBadRequestTest() throws Exception {
 
-        doReturn(user).when(userService).updateUser(any(), any());
+        doReturn(userPending).when(userService).updateUser(any(), any());
 
-        Optional<User> optional = Optional.of(user);
+        Optional<User> optional = Optional.of(userPending);
 
         when(userService.getUser(USER_ID)).thenReturn(optional);
 
@@ -262,11 +285,11 @@ public class UserControllerTest extends BaseUserTest {
     @Test
     public void deleteUserTest() throws Exception {
 
-        Optional<User> optional = Optional.of(user);
+        Optional<User> optional = Optional.of(userPending);
 
         when(userService.getUser(USER_ID)).thenReturn(optional);
 
-        doNothing().when(userService).deleteUser(user);
+        doNothing().when(userService).deleteUser(userPending);
 
         mockMvc.perform(delete(DELETE_USER_URL, USER_ID))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -275,7 +298,7 @@ public class UserControllerTest extends BaseUserTest {
     @Test
     public void deleteUserTestNotFound() throws Exception {
 
-        doNothing().when(userService).deleteUser(user);
+        doNothing().when(userService).deleteUser(userPending);
 
         mockMvc.perform(delete(DELETE_USER_URL, USER_ID))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
