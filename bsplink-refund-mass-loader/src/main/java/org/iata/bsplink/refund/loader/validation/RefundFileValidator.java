@@ -25,6 +25,8 @@ import org.springframework.stereotype.Component;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RefundFileValidator {
 
+    private static final int RECORD_LINE_LENGTH = 255;
+
     private static final String FILE_EMPTY = "The file is empty";
     private static final String IT01_EXPECTED_IN_LINE1 =
             "The IT01 Record is expected to be reported in first line.";
@@ -34,6 +36,9 @@ public class RefundFileValidator {
             "The report record counter doesn't have a valid format.";
     private static final String INCORRECT_NUMBER_OF_RECORDS =
             "Incorrect number of records reported in Report Record Counter field.";
+
+    private static final String LESS_RECORD_LENGTH = "The record has less than 255 characters.";
+    private static final String MORE_RECORD_LENGTH = "The record has more than 255 characters.";
 
     private List<RefundLoaderError> refundLoaderErrors;
 
@@ -59,6 +64,8 @@ public class RefundFileValidator {
 
                 optionalLastReadLine = Optional.ofNullable(currentLine);
                 actualLinesCount++;
+
+                validateRecordLength(currentLine, actualLinesCount);
 
                 if (actualLinesCount == 1 && ! validateHeaderRecord(currentLine)) {
                     return;
@@ -88,6 +95,18 @@ public class RefundFileValidator {
         addToErrors(null, null, null, FILE_EMPTY);
 
         return false;
+    }
+
+    private void validateRecordLength(String line, int lineNumber) {
+
+        if (line.length() < RECORD_LINE_LENGTH) {
+
+            addToErrors(lineNumber, null, null, LESS_RECORD_LENGTH);
+
+        } else if (line.length() > RECORD_LINE_LENGTH) {
+
+            addToErrors(lineNumber, null, null, MORE_RECORD_LENGTH);
+        }
     }
 
     private boolean validateHeaderRecord(String line) {

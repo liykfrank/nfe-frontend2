@@ -28,6 +28,8 @@ public class Constants {
             "AAe9EARS_20080225_2015_005_MORE_THAN_127_RECORDS";
     public static final String FILE_WITHOUT_EOL =
             "ALe9EARS_20170410_0744_016_NOEOL";
+    public static final String FILE_WITH_WRONG_LENGTH =
+            BASE_WRONG_TEST_FILE + "_INVALID_LENGTH";
 
     private Constants() {
         // empty

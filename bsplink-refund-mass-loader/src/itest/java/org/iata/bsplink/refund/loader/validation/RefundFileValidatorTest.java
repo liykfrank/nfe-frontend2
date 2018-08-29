@@ -1,5 +1,6 @@
 package org.iata.bsplink.refund.loader.validation;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_EMPTY_FILE;
@@ -7,6 +8,7 @@ import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_NO_FIL
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_NO_HEADER_RECORD;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_WITHOUT_EOL;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_WITH_MORE_THAN_127_RECORDS;
+import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_WITH_WRONG_LENGTH;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_WRONG_RECORD_COUNTER;
 import static org.iata.bsplink.refund.loader.test.fixtures.Constants.FILE_WRONG_RECORD_COUNT_FORMAT;
 import static org.iata.bsplink.refund.loader.test.fixtures.FixtureLoader.getFileFixture;
@@ -33,6 +35,8 @@ public class RefundFileValidatorTest {
             "The report record counter doesn't have a valid format.";
     private static final String INCORRECT_NUMBER_OF_RECORDS =
             "Incorrect number of records reported in Report Record Counter field.";
+    private static final String LESS_RECORD_LENGTH = "The record has less than 255 characters.";
+    private static final String MORE_RECORD_LENGTH = "The record has more than 255 characters.";
 
     private RefundFileValidator validator;
     private List<RefundLoaderError> refundLoaderErrors;
@@ -100,6 +104,15 @@ public class RefundFileValidatorTest {
         assertThat(refundLoaderErrors.get(0), samePropertyValuesAs(expected));
     }
 
+    private void assertError(int errorNumber, int lineNumber, String message) {
+
+        RefundLoaderError error = refundLoaderErrors.get(errorNumber);
+
+        assertThat(error.getLineNumber(), equalTo(lineNumber));
+        assertThat(error.getMessage(), equalTo(message));
+        assertThat(error.getValidationPhase(), equalTo(ValidationPhase.FILE));
+    }
+
     @Test
     public void testValidationSucceedWhenFileIsCorrect() {
 
@@ -147,7 +160,6 @@ public class RefundFileValidatorTest {
         assertError(it01Error(IT01_EXPECTED_IN_LINE1));
     }
 
-
     private RefundLoaderError it01Error(String message) {
 
         RefundLoaderError it01Error = new RefundLoaderError();
@@ -173,4 +185,18 @@ public class RefundFileValidatorTest {
 
         return it0zError;
     }
+
+    @Test
+    public void testValidatesRecordLength() {
+
+        executeValidationOnFile(FILE_WITH_WRONG_LENGTH);
+
+        assertThat(refundLoaderErrors, hasSize(4));
+
+        assertError(0, 1, LESS_RECORD_LENGTH);
+        assertError(1, 3, LESS_RECORD_LENGTH);
+        assertError(2, 6, MORE_RECORD_LENGTH);
+        assertError(3, 8, LESS_RECORD_LENGTH);
+    }
+
 }
