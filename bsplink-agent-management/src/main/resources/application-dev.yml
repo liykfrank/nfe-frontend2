@@ -14,12 +14,6 @@ spring:
   h2:
     console:
       enabled: true
-      
-  datasource:
-    url: jdbc:postgresql://10.5.0.217:5432/nfedatadev1
-    username: nferootdb
-    password: bdtoorefn_2018.
-    
 
 logging:
   level:
