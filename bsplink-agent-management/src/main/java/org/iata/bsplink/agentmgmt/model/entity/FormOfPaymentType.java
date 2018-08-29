@@ -11,5 +11,11 @@ public enum FormOfPaymentType {
     CA,
 
     @ApiModelProperty(value = "Easy Pay")
-    EP
+    EP,
+
+    @ApiModelProperty(value = "Miscellaneous Credit")
+    MSCC,
+
+    @ApiModelProperty(value = "Miscellaneous Cash")
+    MSCA;
 }
