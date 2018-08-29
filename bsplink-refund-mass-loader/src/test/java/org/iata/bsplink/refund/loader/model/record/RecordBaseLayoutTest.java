@@ -7,8 +7,6 @@ import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.batch.item.file.transform.Range;
@@ -77,12 +75,16 @@ public class RecordBaseLayoutTest {
         }
 
         @Override
-        protected void setFieldsLayouts(List<FieldLayout> fieldsLayouts) {
+        public RecordIdentifier getRecordIdentifier() {
 
-            fieldsLayouts.add(new FieldLayout(
-                    "fileType", 10, "FTYP", FieldType.AN, 37, 1));
-            fieldsLayouts.add(new FieldLayout(
-                    "fileTypeSequenceNumber", 11, "FTSN", FieldType.AN, 38, 2));
+            return RecordIdentifier.IT01;
+        }
+
+        @Override
+        protected void setFieldsLayouts() {
+
+            addFieldLayout("fileType", 10, "FTYP", FieldType.AN, 37, 1);
+            addFieldLayout("fileTypeSequenceNumber", 11, "FTSN", FieldType.AN, 38, 2);
         }
 
     }

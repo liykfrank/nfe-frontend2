@@ -5,21 +5,16 @@ import static org.iata.bsplink.refund.loader.test.fixtures.Constants.TRANSACTION
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
 import org.iata.bsplink.refund.loader.error.ValidationPhase;
-import org.iata.bsplink.refund.loader.model.record.FieldLayout;
 import org.iata.bsplink.refund.loader.model.record.Record;
 import org.iata.bsplink.refund.loader.model.record.RecordIdentifier;
 import org.iata.bsplink.refund.loader.model.record.RecordIt01;
 import org.iata.bsplink.refund.loader.model.record.RecordIt02;
-import org.iata.bsplink.refund.loader.model.record.RecordIt02Layout;
 import org.iata.bsplink.refund.loader.model.record.RecordIt03;
 import org.iata.bsplink.refund.loader.model.record.RecordIt05;
-import org.iata.bsplink.refund.loader.model.record.RecordIt05Layout;
 import org.iata.bsplink.refund.loader.model.record.RecordIt08;
 import org.iata.bsplink.refund.loader.model.record.RecordIt0h;
 import org.iata.bsplink.refund.loader.model.record.RecordIt0y;
@@ -138,29 +133,13 @@ public class RefundDocumentFixtures {
 
         RefundLoaderError error2 = new RefundLoaderError();
 
-        error2.setField("currency");
+        error2.setField("currency.code");
         error2.setLineNumber(null);
         error2.setMessage("The currency was not found.");
         error2.setTransactionNumber("000008");
         error2.setValidationPhase(ValidationPhase.UPDATE);
 
         return Arrays.asList(error1, error2);
-    }
-
-    /**
-     * Returns a map of field names and theirs layouts.
-     */
-    public static Map<String, FieldLayout> getFieldNameToFieldLayoutMap() {
-
-        RecordIt02Layout recordIt02Layout = new RecordIt02Layout();
-        RecordIt05Layout recordIt05Layout = new RecordIt05Layout();
-
-        Map<String, FieldLayout> fieldLayouts = new HashMap<>();
-
-        fieldLayouts.put("agentCode", recordIt02Layout.getFieldLayout("agentNumericCode"));
-        fieldLayouts.put("currency", recordIt05Layout.getFieldLayout("currencyType"));
-
-        return fieldLayouts;
     }
 
 }

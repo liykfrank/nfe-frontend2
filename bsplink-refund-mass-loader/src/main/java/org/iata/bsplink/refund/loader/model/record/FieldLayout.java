@@ -19,6 +19,8 @@ import org.springframework.batch.item.file.transform.Range;
 public class FieldLayout {
 
     @NonNull
+    private RecordIdentifier recordIdentifier;
+    @NonNull
     private String field;
     @NonNull
     private Integer elementNumber;

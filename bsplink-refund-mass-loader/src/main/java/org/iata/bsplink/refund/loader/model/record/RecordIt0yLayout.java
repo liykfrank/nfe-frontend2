@@ -1,7 +1,5 @@
 package org.iata.bsplink.refund.loader.model.record;
 
-import java.util.List;
-
 public class RecordIt0yLayout extends RecordBaseLayout {
 
     private static final String PATTERN = "Y*";
@@ -12,9 +10,15 @@ public class RecordIt0yLayout extends RecordBaseLayout {
     }
 
     @Override
-    protected void setFieldsLayouts(List<FieldLayout> fieldsLayouts) {
+    public RecordIdentifier getRecordIdentifier() {
 
-        fieldsLayouts.add(new FieldLayout("transactionNumber", 10, "TRNN", FieldType.N, 2, 6));
+        return RecordIdentifier.IT0Y;
+    }
+
+    @Override
+    protected void setFieldsLayouts() {
+
+        addFieldLayout("transactionNumber", 10, "TRNN", FieldType.N, 2, 6);
     }
 
 }

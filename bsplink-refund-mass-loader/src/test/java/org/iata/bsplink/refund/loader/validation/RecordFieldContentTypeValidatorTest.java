@@ -30,6 +30,7 @@ import org.iata.bsplink.refund.loader.model.record.RecordIt0h;
 import org.iata.bsplink.refund.loader.model.record.RecordIt0y;
 import org.iata.bsplink.refund.loader.model.record.RecordIt0z;
 import org.iata.bsplink.refund.loader.model.record.RecordLayout;
+import org.iata.bsplink.refund.loader.model.record.RecordLayouts;
 import org.iata.bsplink.refund.loader.model.record.TransactionRecord;
 import org.junit.Before;
 import org.junit.Test;
@@ -129,7 +130,7 @@ public class RecordFieldContentTypeValidatorTest {
 
         for (Class<Record> recordType : recordTypes) {
 
-            RecordLayout layout = recordType.newInstance().getRecordIdentifier().getLayout();
+            RecordLayout layout = RecordLayouts.get(recordType.newInstance().getRecordIdentifier());
 
             for (String fieldName : layout.getFieldsNames()) {
 

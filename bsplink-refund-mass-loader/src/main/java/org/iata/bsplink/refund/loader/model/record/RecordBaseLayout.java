@@ -17,14 +17,19 @@ public abstract class RecordBaseLayout implements RecordLayout {
     protected RecordBaseLayout(String recordPattern) {
 
         this.recordPattern = recordPattern;
-        setFieldsLayouts(fieldsLayout);
+        setFieldsLayouts();
         setLayoutsByField(fieldsLayout);
     }
 
     /**
      * Adds the fields layout of the record.
+     *
+     * <p>
+     * The layouts should be added doing successive calls to the method
+     * RecordBaseLayout.addFieldLayout().
+     * </p>
      */
-    protected abstract void setFieldsLayouts(List<FieldLayout> fieldsLayout);
+    protected abstract void setFieldsLayouts();
 
     private void setLayoutsByField(List<FieldLayout> fieldsLayout) {
 
@@ -73,6 +78,13 @@ public abstract class RecordBaseLayout implements RecordLayout {
             .map(FieldLayout::getRange)
             .collect(Collectors.toList())
             .toArray(new Range[] {});
+    }
+
+    protected final void addFieldLayout(String fieldName, Integer elementNumber,
+            String abbreviation, FieldType fieldType, Integer startPosition, Integer lentgth) {
+
+        fieldsLayout.add(new FieldLayout(getRecordIdentifier(), fieldName, elementNumber,
+                abbreviation, fieldType, startPosition, lentgth));
     }
 
 }

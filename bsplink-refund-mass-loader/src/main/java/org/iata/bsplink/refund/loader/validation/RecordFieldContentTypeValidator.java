@@ -13,6 +13,7 @@ import org.iata.bsplink.refund.loader.model.record.FieldLayout;
 import org.iata.bsplink.refund.loader.model.record.FieldType;
 import org.iata.bsplink.refund.loader.model.record.Record;
 import org.iata.bsplink.refund.loader.model.record.RecordLayout;
+import org.iata.bsplink.refund.loader.model.record.RecordLayouts;
 import org.iata.bsplink.refund.loader.model.record.TransactionRecord;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -46,7 +47,7 @@ public class RecordFieldContentTypeValidator {
 
     private void validate(Record record) {
 
-        RecordLayout recordLayout = record.getRecordIdentifier().getLayout();
+        RecordLayout recordLayout = RecordLayouts.get(record.getRecordIdentifier());
 
         for (String fieldName : recordLayout.getFieldsNames()) {
 

@@ -1,7 +1,5 @@
 package org.iata.bsplink.refund.loader.model.record;
 
-import java.util.List;
-
 public class RecordIt0zLayout extends RecordBaseLayout {
 
     private static final String PATTERN = "Z*";
@@ -12,9 +10,15 @@ public class RecordIt0zLayout extends RecordBaseLayout {
     }
 
     @Override
-    protected void setFieldsLayouts(List<FieldLayout> fieldsLayouts) {
+    public RecordIdentifier getRecordIdentifier() {
 
-        fieldsLayouts.add(new FieldLayout("reportRecordCounter", 10, "RRDC", FieldType.N, 2, 11));
+        return RecordIdentifier.IT0Z;
+    }
+
+    @Override
+    protected void setFieldsLayouts() {
+
+        addFieldLayout("reportRecordCounter", 10, "RRDC", FieldType.N, 2, 11);
     }
 
 }

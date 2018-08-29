@@ -10,8 +10,8 @@ public class FieldLayoutTest {
     @Test
     public void testGetRanges() {
 
-        FieldLayout fieldLayout =
-                new FieldLayout("handbookRevisionNumber", 4, "REVN", FieldType.N, 12, 3);
+        FieldLayout fieldLayout = new FieldLayout(RecordIdentifier.IT01, "handbookRevisionNumber",
+                4, "REVN", FieldType.N, 12, 3);
 
         assertThat(fieldLayout.getRange().getMin(), equalTo(12));
         assertThat(fieldLayout.getRange().getMax(), equalTo(14));

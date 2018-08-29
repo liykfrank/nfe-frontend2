@@ -8,7 +8,6 @@ import static org.springframework.batch.test.AssertFile.assertFileEquals;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
@@ -43,8 +42,7 @@ public class ProcessReportPrinterTest {
     @Before
     public void setUp() {
 
-        RefundLoaderErrorToFieldLayoutMapper mapper =
-                new RefundLoaderErrorToFieldLayoutMapper(new HashMap<>());
+        RefundLoaderErrorToFieldLayoutMapper mapper = new RefundLoaderErrorToFieldLayoutMapper();
 
         printer = new ProcessReportPrinter(mapper);
         errors = new ArrayList<>();

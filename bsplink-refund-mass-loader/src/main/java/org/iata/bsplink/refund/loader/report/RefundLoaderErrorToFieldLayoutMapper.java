@@ -1,11 +1,12 @@
 package org.iata.bsplink.refund.loader.report;
 
 import java.util.List;
-import java.util.Map;
 
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
+import org.iata.bsplink.refund.loader.model.ValidationErrorFieldLayouts;
 import org.iata.bsplink.refund.loader.model.record.FieldLayout;
 import org.iata.bsplink.refund.loader.model.record.RecordIdentifier;
+import org.iata.bsplink.refund.loader.model.record.RecordLayouts;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,17 +14,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class RefundLoaderErrorToFieldLayoutMapper {
-
-    private Map<String, FieldLayout> fieldNameToFieldLayoutMap;
-
-    /**
-     * Creates the mapper.
-     */
-    public RefundLoaderErrorToFieldLayoutMapper(
-            Map<String, FieldLayout> fieldNameToFieldLayoutMap) {
-
-        this.fieldNameToFieldLayoutMap = fieldNameToFieldLayoutMap;
-    }
 
     /**
      * Adds the field layouts to the errors list.
@@ -36,11 +26,14 @@ public class RefundLoaderErrorToFieldLayoutMapper {
 
             if (recordIdentifier != null) {
 
-                x.setFieldLayout(recordIdentifier.getLayout().getFieldLayout(x.getField()));
+                x.setFieldLayout(RecordLayouts.get(recordIdentifier).getFieldLayout(x.getField()));
 
-            } else if (fieldNameToFieldLayoutMap.containsKey(x.getField())) {
+            } else if (ValidationErrorFieldLayouts.exists(x.getField())) {
 
-                x.setFieldLayout(fieldNameToFieldLayoutMap.get(x.getField()));
+                FieldLayout fieldLayout = ValidationErrorFieldLayouts.get(x.getField());
+
+                x.setFieldLayout(fieldLayout);
+                x.setRecordIdentifier(fieldLayout.getRecordIdentifier());
             }
 
         });

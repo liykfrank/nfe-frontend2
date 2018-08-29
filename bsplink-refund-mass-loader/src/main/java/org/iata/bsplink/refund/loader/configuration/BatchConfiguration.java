@@ -15,6 +15,7 @@ import org.iata.bsplink.refund.loader.model.RefundDocument;
 import org.iata.bsplink.refund.loader.model.record.Record;
 import org.iata.bsplink.refund.loader.model.record.RecordIdentifier;
 import org.iata.bsplink.refund.loader.model.record.RecordLayout;
+import org.iata.bsplink.refund.loader.model.record.RecordLayouts;
 import org.iata.bsplink.refund.loader.validation.RefundLoaderParametersValidator;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -139,15 +140,15 @@ public class BatchConfiguration {
     @Bean
     public LineMapper<Record> lineMapper(Map<String, FieldSetMapper<Record>> fieldSetMappers) {
 
-        RecordLayout recordIt01Layout = RecordIdentifier.IT01.getLayout();
-        RecordLayout recordIt02Layout = RecordIdentifier.IT02.getLayout();
-        RecordLayout recordIt03Layout = RecordIdentifier.IT03.getLayout();
-        RecordLayout recordIt05Layout = RecordIdentifier.IT05.getLayout();
-        RecordLayout recordIt08Layout = RecordIdentifier.IT08.getLayout();
-        RecordLayout recordIt0yLayout = RecordIdentifier.IT0Y.getLayout();
-        RecordLayout recordIt0hLayout = RecordIdentifier.IT0H.getLayout();
-        RecordLayout recordIt0zLayout = RecordIdentifier.IT0Z.getLayout();
-        RecordLayout recordRawLineLayout = RecordIdentifier.UNKNOWN.getLayout();
+        RecordLayout recordIt01Layout = RecordLayouts.get(RecordIdentifier.IT01);
+        RecordLayout recordIt02Layout = RecordLayouts.get(RecordIdentifier.IT02);
+        RecordLayout recordIt03Layout = RecordLayouts.get(RecordIdentifier.IT03);
+        RecordLayout recordIt05Layout = RecordLayouts.get(RecordIdentifier.IT05);
+        RecordLayout recordIt08Layout = RecordLayouts.get(RecordIdentifier.IT08);
+        RecordLayout recordIt0yLayout = RecordLayouts.get(RecordIdentifier.IT0Y);
+        RecordLayout recordIt0hLayout = RecordLayouts.get(RecordIdentifier.IT0H);
+        RecordLayout recordIt0zLayout = RecordLayouts.get(RecordIdentifier.IT0Z);
+        RecordLayout recordRawLineLayout = RecordLayouts.get(RecordIdentifier.UNKNOWN);
 
         Map<String, LineTokenizer> tokenizers = new HashMap<>();
 

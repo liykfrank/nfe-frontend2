@@ -16,4 +16,6 @@ public interface RecordLayout {
 
     Range[] getFieldsRanges();
 
+    RecordIdentifier getRecordIdentifier();
+
 }
