@@ -27,10 +27,11 @@ sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
+    mavenLocal()
+   	maven { url "https://repo.spring.io/milestone" }   
 	maven {
-        url nexusPublicRepositoryUrl
-    }
-    maven { url "https://repo.spring.io/milestone" }   
+    	url project.hasProperty('nexusPublicRepositoryUrl') ? nexusPublicRepositoryUrl : 'http://nexusinterno.nfedev.accelya.com/repository/maven-public'
+	}
 }
 
 checkstyle {
