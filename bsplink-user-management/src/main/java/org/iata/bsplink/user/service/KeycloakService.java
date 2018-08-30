@@ -3,6 +3,8 @@ package org.iata.bsplink.user.service;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
+
+import lombok.Data;
 import lombok.extern.apachecommons.CommonsLog;
 
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
@@ -16,29 +18,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 
+@Data
 @Service
 @CommonsLog
 public class KeycloakService {
 
-    @Value("${keycloak-admin.master-realm}")
-    private String masterRealm;
-
-    @Value("${keycloak-admin.admin-username}")
-    private String adminUsername;
-
-    @Value("${keycloak-admin.admin-pass}")
-    private String adminPass;
-
-    @Value("${keycloak-admin.admin-client-id}")
-    private String adminClientId;
-
-    @Value("${keycloak.auth-server-url}")
-    private String authServerUrl;
-
     @Value("${keycloak.realm}")
     private String realm;
-    
-    private static final String USER_NOT_FOUND_IN_KEYCLOAK = "User not found";
+
+    private Keycloak keycloak;
+
+    public KeycloakService(Keycloak keycloak) {
+        this.keycloak = keycloak;
+    }
 
     /**
      * Finds user by username or email.
@@ -59,7 +51,7 @@ public class KeycloakService {
             return listUserKeycloackByUsername.get(0);
         }
 
-        log.info(USER_NOT_FOUND_IN_KEYCLOAK);
+        log.info("User not found in keycloak");
 
         return null;
     }
@@ -75,23 +67,24 @@ public class KeycloakService {
         log.info("Updating user in keycloak: " + user);
 
         UsersResource usersResource = getKeycloak().realm(realm).users();
-        UserRepresentation userToUpdate = usersResource.search(user.getUsername()).get(0);
+        List<UserRepresentation> listUsers = usersResource.search(user.getUsername());
 
-        if (userToUpdate != null) {
+        if (!listUsers.isEmpty()) {
 
+            UserRepresentation userToUpdate = new UserRepresentation();
             userToUpdate.setFirstName(user.getName());
-            userToUpdate.setLastName(userToUpdate.getLastName());
+            userToUpdate.setLastName(user.getLastName());
 
             usersResource.get(user.getId()).update(userToUpdate);
 
             log.info("User updated");
-            
+
             return findUser(user);
 
         } else {
-            
-            log.info(USER_NOT_FOUND_IN_KEYCLOAK);
-            
+
+            log.info("User not found");
+
             errors.rejectValue("username", "", ValidationMessages.USER_NOT_FOUND);
             throw new ApplicationValidationException(errors);
         }
@@ -120,11 +113,11 @@ public class KeycloakService {
             userRepresentation.setEnabled(true);
         }
 
-        Response reponse = getKeycloak().realm(realm).users().create(userRepresentation);
+        Response response = getKeycloak().realm(realm).users().create(userRepresentation);
 
         log.info("User created in keycloak");
 
-        return reponse;
+        return response;
     }
 
     /**
@@ -134,9 +127,9 @@ public class KeycloakService {
      * @param status true or false
      * @return boolean
      */
-    public UserRepresentation changeUserStatus(String username, boolean status) {
+    public UserRepresentation changeUserStatus(String username, boolean status, Errors errors) {
 
-        log.info("Updating user statu in keycloak with username: " + username);
+        log.info("Updating user status in keycloak with username: " + username);
 
         UsersResource usersResource = getKeycloak().realm(realm).users();
         List<UserRepresentation> listUserKeycloack = usersResource.search(username);
@@ -152,8 +145,9 @@ public class KeycloakService {
             return usersResource.search(username).get(0);
 
         } else {
-            log.info("User status cannot be updated");
-            return null;
+            log.info("User not found in keycloak");
+            errors.rejectValue("username", "", ValidationMessages.USER_NOT_FOUND);
+            throw new ApplicationValidationException(errors);
         }
     }
 
@@ -174,11 +168,4 @@ public class KeycloakService {
 
         return reponse;
     }
-
-
-    private Keycloak getKeycloak() {
-        return Keycloak.getInstance(authServerUrl, masterRealm, adminUsername, adminPass,
-                adminClientId);
-    }
-
 }

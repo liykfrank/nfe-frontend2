@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
         if (newUser != null) {
 
-            keycloakService.changeUserStatus(user.getUsername(), true);
+            keycloakService.changeUserStatus(user.getUsername(), true, errors);
             newUser.setStatus(UserStatus.CREATED);
             userRepository.save(newUser);
 
@@ -87,13 +87,14 @@ public class UserServiceImpl implements UserService {
      * Updates user.
      */
     @Override
-    public User updateUser(User userToUpdate, User newUser) {
+    public User updateUser(User userToUpdate, User newUser, Errors errors) {
 
         log.info("Updating resource with id: " + userToUpdate);
 
         userToUpdate = UserUtils.mapUserToUpdate(userToUpdate, newUser);
         userToUpdate.setLastModifiedDate(LocalDateTime.now());
         User userUpdated = userRepository.save(userToUpdate);
+        keycloakService.updateUser(userUpdated, errors);
 
         log.info("User updated");
 

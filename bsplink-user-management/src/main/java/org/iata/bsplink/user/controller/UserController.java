@@ -155,7 +155,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-        User response = userService.updateUser(user.get(), request);
+        User response = userService.updateUser(user.get(), request, errors);
 
         log.info("responding with response: " + response);
 

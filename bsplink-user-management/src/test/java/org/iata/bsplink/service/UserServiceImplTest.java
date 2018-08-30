@@ -135,7 +135,7 @@ public class UserServiceImplTest extends BaseUserTest {
         doReturn(Optional.of(userPending)).when(userRepository).findById(USER_ID);
         doReturn(userPending).when(userRepository).save(any(User.class));
 
-        userPending = userService.updateUser(userPending, userPending);
+        userPending = userService.updateUser(userPending, userPending, errors);
 
         commonResponseAssertions(userPending);
 

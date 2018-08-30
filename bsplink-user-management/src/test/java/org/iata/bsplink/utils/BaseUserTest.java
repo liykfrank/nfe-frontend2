@@ -7,6 +7,7 @@ import org.iata.bsplink.user.model.entity.Address;
 import org.iata.bsplink.user.model.entity.User;
 import org.iata.bsplink.user.model.entity.UserStatus;
 import org.iata.bsplink.user.model.entity.UserType;
+import org.keycloak.representations.idm.UserRepresentation;
 
 public abstract class BaseUserTest {
 
@@ -16,6 +17,7 @@ public abstract class BaseUserTest {
     protected static final String DELETE_USER_URL = "/v1/users/{id}";
 
     protected static final String USER_ID = "b348f80e-59sa-4a2f-9ci4-879805d92920";
+    protected static final String REALM = "realm";
 
     protected User userPending;
     protected User userCreated;
@@ -72,6 +74,17 @@ public abstract class BaseUserTest {
 
         assertNotNull(user);
         assertEquals(USER_ID, user.getId());
+    }
+
+    /**
+     * Common keycloak response assertions.
+     * 
+     * @param keycloakUser UserRepresentation
+     */
+    public void commonResponseAssertions(UserRepresentation keycloakUser) {
+        assertNotNull(keycloakUser);
+        assertEquals(userPending.getUsername(), keycloakUser.getUsername());
+        assertEquals(userPending.getId(), keycloakUser.getId());
     }
 
 }

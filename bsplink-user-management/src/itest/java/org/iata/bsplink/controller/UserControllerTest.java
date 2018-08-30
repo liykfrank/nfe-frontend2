@@ -34,6 +34,7 @@ import org.iata.bsplink.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -67,7 +68,7 @@ public class UserControllerTest extends BaseUserTest {
 
     @Autowired
     protected WebApplicationContext webAppContext;
-    
+
     @MockBean
     private KeycloakService keycloakService;
 
@@ -89,6 +90,8 @@ public class UserControllerTest extends BaseUserTest {
 
         userPending = new User();
         createPendingUser();
+        userCreated = new User();
+        createCreatedUser();
 
         MAPPER.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
@@ -126,6 +129,25 @@ public class UserControllerTest extends BaseUserTest {
                 .content(userRequestString)).andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(content().json(MAPPER.writer().writeValueAsString(userPending)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+    }
+
+
+    @Test
+    public void createUserTestUserAlreadyExists() throws Exception {
+
+        doReturn(userPending).when(userService).createUser(any(), any());
+        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(userCreated));
+
+        when(keycloakService.findUser(any(User.class))).thenReturn(new UserRepresentation());
+
+        String userRequestString = TestUtils.getJson("/mock/requests/create-user-request.json");
+
+        mockMvc.perform(post(CREATE_USER_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(userRequestString))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("username")))
+                .andExpect(
+                        jsonPath("$.validationErrors[0].message", equalTo("User already exists.")));
     }
 
 
@@ -243,7 +265,7 @@ public class UserControllerTest extends BaseUserTest {
     @Test
     public void updateUserTest() throws Exception {
 
-        doReturn(userPending).when(userService).updateUser(any(), any());
+        doReturn(userPending).when(userService).updateUser(any(), any(), any());
 
         Optional<User> optional = Optional.of(userPending);
 
@@ -260,7 +282,7 @@ public class UserControllerTest extends BaseUserTest {
     @Test
     public void updateUserBadRequestTest() throws Exception {
 
-        doReturn(userPending).when(userService).updateUser(any(), any());
+        doReturn(userPending).when(userService).updateUser(any(), any(), any());
 
         Optional<User> optional = Optional.of(userPending);
 

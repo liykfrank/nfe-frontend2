@@ -11,7 +11,7 @@ public interface UserService {
 
     User createUser(User user, Errors errors);
 
-    User updateUser(User userId, User newUser);
+    User updateUser(User userId, User newUser, Errors errors);
 
     void deleteUser(User user);
 
