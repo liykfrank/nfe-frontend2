@@ -1,23 +1,13 @@
-import { EventEmitter, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Input } from '@angular/core';
+
 import { AbstractComponent } from './abstract-component';
+import { ReactiveFormHandlerModel } from './reactive-form-handler-model';
 
-export class ReactiveFormHandler extends AbstractComponent {
+export class ReactiveFormHandler<T extends ReactiveFormHandlerModel> extends AbstractComponent {
 
-  @Output() returnForm = new EventEmitter();
-  protected reactiveFormGroup: FormGroup;
+  @Input() model: T;
 
   constructor() {
     super();
   }
-
-  subscribe(reactiveFormGroup: FormGroup) {
-    this.reactiveFormGroup = reactiveFormGroup;
-    this.subscriptions.push(
-      this.reactiveFormGroup.valueChanges.subscribe(val => {
-        this.returnForm.emit(this.reactiveFormGroup);
-      })
-    );
-  }
-
 }

@@ -1,5 +1,5 @@
 
-<form [formGroup]="amountForm">
+<form [formGroup]="amountForm" appIdentifier [base]="isAdm ? 'ADM.AMOUNT' : 'ACM.AMOUNT'">
   <div class="resume-amount">
     <label>{{ subType }}</label>
     <label l10nTranslate *ngIf="isAdm" >ADM_ACM.AMOUNT.adm_amount</label>
@@ -12,9 +12,8 @@
 
     <div class="form-group col-4" *ngIf="isAdm">
       <bspl-input-form-control l10nTranslate
-        [formGroupParent]="this.amountForm.get('airlineCalculations')"
-        [formControlParentName]="'fare'"
-        [inputMaxTextLength]="'12'"
+        [groupForm]="this.amountForm.get('airlineCalculations')"
+        [controlName]="'fare'"
         [wrapText]="true"
         [type]="'decimal'"
         [decimalsNumber]="currency.decimals"
@@ -24,9 +23,8 @@
 
     <div class="form-group col-4" *ngIf="!isAdm">
         <bspl-input-form-control l10nTranslate
-          [formGroupParent]="this.amountForm.get('agentCalculations')"
-          [formControlParentName]="'fare'"
-          [inputMaxTextLength]="'12'"
+          [groupForm]="this.amountForm.get('agentCalculations')"
+          [controlName]="'fare'"
           [wrapText]="true"
           [type]="'decimal'"
           [decimalsNumber]="currency.decimals"
@@ -229,14 +227,12 @@
             <td>
               <!-- [(ngModel)]="item.name"> -->
               <div class="input-group-inline">
-                <input
+                <input bsplInputRegex
+                  [regexPattern]="PT_TAX"
                   [ngClass]="{'error': checkIfErrorOnTaxExist('taxMiscellaneousFees', i, 'type')}"
                   class="form-control"
                   formControlName="type"
                   type="text">
-                <!-- <div *ngIf="checkIfErrorOnTaxExist('taxMiscellaneousFees', i, 'type')" class="tooltip-container">
-                  <bspl-field-error [errors]="this.amountForm.controls['taxMiscellaneousFees']['controls'][i].get('type').errors"></bspl-field-error>
-                </div> -->
               </div>
             </td>
             <td>

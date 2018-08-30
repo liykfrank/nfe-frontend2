@@ -1,0 +1,29 @@
+<div class="form-group">
+    <label *ngIf="label != undefined" [ngClass]="{'text-nowrap': wrapText}" [innerHTML]="label"></label>
+    <div class="form-control header" (click)="toggleDrop()" [ngClass]="checkClassOpen()">
+        <span *ngIf="_optionSelected != undefined">
+            {{ _optionSelected[optionLabel] || _optionSelected }}
+        </span>
+        <span *ngIf="_optionSelected == undefined">
+            {{ placeholderSelect }}
+        </span>
+    </div>
+    <div class="options" [ngClass]="checkClassOpen()">
+        <div class="search-bar input-group" *ngIf="checkSearchBar()">
+            <input class="form-control" type="text" placeholder="{{placeholderSearchBar}}" (input)="simpleSearch()" [(ngModel)]="filter_value">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary btn-search">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        <p-scrollPanel [style]="{width: '100%', height: scroll_height}" styleClass="custom">
+            <div class="single-option" 
+                [ngClass]="checkClassSelected(opt)" 
+                *ngFor="let opt of options_filtered" 
+                (click)="selectOption(opt)">
+                {{ opt[optionLabel] || opt }}
+            </div>
+        </p-scrollPanel>
+    </div>
+</div>

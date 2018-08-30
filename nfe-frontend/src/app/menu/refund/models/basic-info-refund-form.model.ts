@@ -17,7 +17,7 @@ export class BasicInfoRefundFormModel extends ReactiveFormHandlerModel {
   public createFormControls() {}
 
   public createFormGroups() {
-    this.airline = new AirlineFormModel();
+    this.airline = new AirlineFormModel(false, false, false, true);
     this.agent = new AgentFormModel(true);
   }
 
@@ -27,5 +27,33 @@ export class BasicInfoRefundFormModel extends ReactiveFormHandlerModel {
       airline: this.airline.airlineFormModelGroup,
       isoCountryCode: new FormControl('', [Validators.required])
     });
+  }
+
+  changeAgent(disabledVAT: boolean, disabledReg: boolean) {
+    if (disabledVAT) {
+      this.agent.agentVatNumber.enable();
+    } else {
+      this.agent.agentVatNumber.disable();
+    }
+
+    if (disabledReg) {
+      this.agent.agentRegistrationNumber.enable();
+    } else {
+      this.agent.agentRegistrationNumber.disable();
+    }
+  }
+
+  changeAirline(disabledVAT: boolean, disabledReg: boolean) {
+    if (disabledVAT) {
+      this.airline.airlineVatNumber.enable();
+    } else {
+      this.airline.airlineVatNumber.disable();
+    }
+
+    if (disabledReg) {
+      this.airline.airlineRegistrationNumber.enable();
+    } else {
+      this.airline.airlineRegistrationNumber.disable();
+    }
   }
 }

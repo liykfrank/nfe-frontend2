@@ -1,3 +1,4 @@
+import { EnvironmentType } from './../../enums/environment-type.enum';
 import {
   Component,
   EventEmitter,
@@ -13,103 +14,34 @@ import { ReactiveFormHandler } from '../../base/reactive-form-handler';
 import { AgentFormModel } from './models/agent-form-model';
 import { Agent } from './models/agent.model';
 import { AgentService } from './services/agent.service';
+import { GLOBALS } from '../../constants/globals';
 
 @Component({
   selector: 'bspl-agent',
   templateUrl: './agent.component.html',
   styleUrls: ['./agent.component.scss']
 })
-export class AgentComponent extends ReactiveFormHandler
-  implements OnInit, OnChanges {
-  @Input()
+export class AgentComponent extends ReactiveFormHandler<AgentFormModel> implements OnInit, OnChanges {
   agentFormModelGroup: FormGroup;
 
-  @Input()
-  role;
-  @Input()
-  agentCode: string;
+  PT_NUMERIC = GLOBALS.HTML_PATTERN.NUMERIC;
+  PT_ALPHA = GLOBALS.HTML_PATTERN.ALPHANUMERIC_LOWERCASE;
 
-  private _agentVatNumberEnabled = true;
-  @Input()
-  set agentVatNumberEnabled(val: boolean) {
-    this._agentVatNumberEnabled = val;
-    if (val) {
-      this.agentFormModelGroup
-        .get('agentVatNumber')
-        .enable({ emitEvent: false });
-    } else {
-      this.agentFormModelGroup
-        .get('agentVatNumber')
-        .disable({ emitEvent: false });
-    }
-  }
-  get agentVatNumberEnabled(): boolean {
-    return this._agentVatNumberEnabled;
-  }
+  @Input() role;
+  @Input() agentCode: string;
 
-  private _companyRegistrationNumberEnabled = true;
-  @Input()
-  set companyRegistrationNumberEnabled(val: boolean) {
-    this._companyRegistrationNumberEnabled = val;
-    if (val) {
-      this.agentFormModelGroup
-        .get('agentRegistrationNumber')
-        .enable({ emitEvent: false });
-    } else {
-      this.agentFormModelGroup
-        .get('agentRegistrationNumber')
-        .disable({ emitEvent: false });
-    }
-  }
-  get companyRegistrationNumberEnabled(): boolean {
-    return this._companyRegistrationNumberEnabled;
-  }
+  @Input() agentVatNumberEnabled: boolean = true;
+  @Input() companyRegistrationNumberEnabled: boolean = true;
+  @Input() disabledContact: boolean = false;
+  @Input() showAgentName: boolean = false;
+  @Input() showContact: boolean = true;
+  @Input() showMoreDetails: boolean = true;
 
-  private _disabledContact: boolean;
-  @Input()
-  set disabledContact(val: boolean) {
-    this._disabledContact = val;
-    if (val) {
-      this.agentFormModelGroup.get('agentContact').enable({ emitEvent: false });
-    } else {
-      this.agentFormModelGroup
-        .get('agentContact')
-        .disable({ emitEvent: false });
-    }
-  }
-  get disabledContact(): boolean {
-    return this._disabledContact;
-  }
+  @Output() changeAgent: EventEmitter<Agent> = new EventEmitter();
+  @Output() changeAgentFormModel: EventEmitter<AgentFormModel> = new EventEmitter();
 
-  @Input()
-  showAgentName: boolean;
-
-  private _showContact: boolean = true;
-  @Input()
-  set showContact(val: boolean) {
-    this._showContact = val;
-    if (val) {
-      this.agentFormModelGroup.get('agentContact').enable({ emitEvent: false });
-    } else {
-      this.agentFormModelGroup
-        .get('agentContact')
-        .disable({ emitEvent: false });
-    }
-  }
-  get showContact(): boolean {
-    return this._showContact;
-  }
-  @Input()
-  showMoreDetails = true;
-  @Output()
-  clickMoreDetails: EventEmitter<any> = new EventEmitter();
-  @Output()
-  changeAgent: EventEmitter<Agent> = new EventEmitter();
-  @Output()
-  changeAgentFormModel: EventEmitter<AgentFormModel> = new EventEmitter();
   disabledMoreDetails = true;
   agent: Agent = new Agent();
-
   display = false;
 
   constructor(private _agentService: AgentService) {
@@ -117,22 +49,19 @@ export class AgentComponent extends ReactiveFormHandler
   }
 
   ngOnInit() {
-    this.subscribe(this.agentFormModelGroup);
+    this.agentFormModelGroup = this.model.agentFormModelGroup;
+
     this.subscriptions.push(
-      this.agentFormModelGroup
-        .get('agentCode')
-        .valueChanges.subscribe((agentCode: string) => {
-          this.agentFormModelGroup.get('agentCode').valid
+      this.model.agentCode.valueChanges.subscribe(() => {
+          this.model.agentCode.valid
             ? this._validateAgent()
             : this._clean();
         })
     );
 
     this.subscriptions.push(
-      this.agentFormModelGroup
-        .get('agentControlDigit')
-        .valueChanges.subscribe((agentCode: string) => {
-          this.agentFormModelGroup.get('agentControlDigit').valid
+      this.model.agentControlDigit.valueChanges.subscribe(() => {
+          this.model.agentControlDigit.valid
             ? this._validateAgent()
             : this._clean();
         })
@@ -141,27 +70,20 @@ export class AgentComponent extends ReactiveFormHandler
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.agentCode != '' && changes.agentCode) {
-      this.agentFormModelGroup
-        .get('agentCode')
+      this.model.agentCode
         .setValue(this.agentCode.substring(0, 7));
-      this.agentFormModelGroup
-        .get('agentControlDigit')
+      this.model.agentControlDigit
         .setValue(this.agentCode.substring(7, 8));
+
       this._validateAgent();
     }
   }
 
   onClickMoreDetails() {
-    this.clickMoreDetails.emit(true);
     this.display = true;
   }
 
-  onChangeContact(value) {
-    this.agentFormModelGroup.setControl('agentContact', value);
-  }
-
   onClose() {
-    this.clickMoreDetails.emit(false);
     this.display = false;
   }
 
@@ -169,13 +91,13 @@ export class AgentComponent extends ReactiveFormHandler
     const iataCode = this.getIataCode();
 
     if (iataCode != null) {
-      this._agentService.validateAgent(true, iataCode).subscribe(
+      this._agentService.validateAgent(EnvironmentType.REFUND_INDIRECT, iataCode).subscribe(
         agent => {
           this.changeAgent.emit(agent);
           this.agent = agent;
 
           if (this.agentVatNumberEnabled) {
-            this.agentFormModelGroup
+            this.model.agentFormModelGroup
               .get('agentVatNumber')
               .setValue(agent.vatNumber);
           }
@@ -197,6 +119,7 @@ export class AgentComponent extends ReactiveFormHandler
     this.disabledMoreDetails = true;
   }
 
+  // FIXME: fix name
   private _setErros() {
     this.agentFormModelGroup.get('agentCode').setErrors({
       customError: {
@@ -207,8 +130,8 @@ export class AgentComponent extends ReactiveFormHandler
   }
 
   private getIataCode(): string {
-    const agentCode = this.agentFormModelGroup.get('agentCode').value;
-    const agentControlDigit = this.agentFormModelGroup.get('agentControlDigit')
+    const agentCode = this.model.agentFormModelGroup.get('agentCode').value;
+    const agentControlDigit = this.model.agentFormModelGroup.get('agentControlDigit')
       .value;
     if (
       agentCode &&
@@ -217,8 +140,8 @@ export class AgentComponent extends ReactiveFormHandler
       agentControlDigit.length == 1
     ) {
       return (
-        this.agentFormModelGroup.get('agentCode').value +
-        this.agentFormModelGroup.get('agentControlDigit').value
+        this.model.agentFormModelGroup.get('agentCode').value +
+        this.model.agentFormModelGroup.get('agentControlDigit').value
       );
     } else {
       return null;

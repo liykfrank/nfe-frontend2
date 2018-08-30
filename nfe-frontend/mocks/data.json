@@ -7,6 +7,24 @@
     "isoc": "AA",
     "role": "AGENT"
   },
+  "agents": [
+    { 
+      "billingCity": "CITY_78200021",
+      "billingCountry": "COUNTRY_78200021",
+      "billingPostalCode": "PC_78200021",
+      "billingStreet": "STREET_78200021",
+      "defaultDate": null,
+      "formOfPayment": [
+        { "status": "Non-Active", "type": "CC" },
+        { "status": "Active", "type": "EP" }
+      ],
+      "iataCode": "78200021",
+      "isoCountryCode": "AA",
+      "name": "AGENT_78200021",
+      "vatNumber": "00000078200021"
+    }
+  ],
+
   "remfiles": {
     "content": [
       {
@@ -205,109 +223,92 @@
     "numberOfElements": 5,
     "first": true
   },
-  "agent":{
-  "billingCity": "City1",
-  "billingCountry": "Country1",
-  "billingPostalCode": "00000",
-  "billingStreet": "Street1",
-  "defaultDate": "01/01/2018",
-  "iataCode": "SS",
-  "isoCountryCode": "SS",
-  "name": "Agent",
-  "vatNumber": "ABC123"
-},
-"billingPeriod":{
-  "address1": "mi dirección 1",
-  "airlineCode": "ABC",
-  "city": "Ciudad1",
-  "country": "Pais1",
-  "globalName": "Name",
-  "isoCountryCode": "NA",
-  "postalCode": "12345",
-  "taxNumber": "taxNumber",
-  "toDate": "Date"
-},
-"adm-acm-configuration":
-{
-  "agentVatNumberEnabled": "false",
-  "airlineVatNumberEnabled": "false",
-  "companyRegistrationNumberEnabled": "false",
-  "cpPermittedForConcerningIssue": "false",
-  "cpPermittedForConcerningRefund": "false",
-  "defaultStat": "false",
-  "freeStat": "false",
-  "isoc": "",
-  "maxNumberOfRelatedDocuments": 3,
-  "mfPermittedForConcerningIssue": "false",
-  "mfPermittedForConcerningRefund": "false",
-  "nridAndSpamEnabled": "false",
-  "taxOnCommissionEnabled": "false",
-  "taxOnCommissionSign": -1
-},
-"refund-configuration":{},
-"countries": 
-  [
-  {"isoCountryCode":"AA","name":"Country AA"},
-  {"isoCountryCode":"BB","name":"Country BB"},
-  {"isoCountryCode":"CC","name":"Country CC"}
-],
-"curreny": [
-  {"isoc":"BB",
-  "currencies":
-    [
-      {"name":"ZZZ","numDecimals":0,"expirationDate":"2017-01-01"}
-    ]
-  }
-],
-"adm-acm-reasons":
-[
-  {
-    "detail": "Prueba1",
-    "id": 0,
-    "isoCountryCode": "AAA",
-    "title": "Prueba1 Tit"
+  "billingPeriod": {
+    "address1": "mi dirección 1",
+    "airlineCode": "ABC",
+    "city": "Ciudad1",
+    "country": "Pais1",
+    "globalName": "Name",
+    "isoCountryCode": "NA",
+    "postalCode": "12345",
+    "taxNumber": "taxNumber",
+    "toDate": "Date"
   },
-  {
-    "detail": "Prueba2",
-    "id": 1,
-    "isoCountryCode": "BBB",
-    "title": "Prueba2 Tit"
+  "adm-acm-configuration": {
+    "agentVatNumberEnabled": "false",
+    "airlineVatNumberEnabled": "false",
+    "companyRegistrationNumberEnabled": "false",
+    "cpPermittedForConcerningIssue": "false",
+    "cpPermittedForConcerningRefund": "false",
+    "defaultStat": "false",
+    "freeStat": "false",
+    "isoc": "",
+    "maxNumberOfRelatedDocuments": 3,
+    "mfPermittedForConcerningIssue": "false",
+    "mfPermittedForConcerningRefund": "false",
+    "nridAndSpamEnabled": "false",
+    "taxOnCommissionEnabled": "false",
+    "taxOnCommissionSign": -1
   },
-  {
-    "detail": "Prueba3",
-    "id": 2,
-    "isoCountryCode": "CCC",
-    "title": "Prueba3 Tit"
-  }
-],
-"refund-reasons":
-[
-  {
-    "detail": "Prueba1",
-    "id": 0,
-    "isoCountryCode": "AAA",
-    "title": "Prueba1 Tit"
-  },
-  {
-    "detail": "Prueba2",
-    "id": 1,
-    "isoCountryCode": "BBB",
-    "title": "Prueba2 Tit"
-  },
-  {
-    "detail": "Prueba3",
-    "id": 2,
-    "isoCountryCode": "CCC",
-    "title": "Prueba3 Tit"
-  }
-],
-"toca":[
-  {
-    "code": "AAA",
-    "description": "pppp",
-    "isoCountryCode": "AA"
-  }
-]
-
-
+  "refund-configuration": {},
+  "countries": [
+    { "isoCountryCode": "AA", "name": "Country AA" },
+    { "isoCountryCode": "BB", "name": "Country BB" },
+    { "isoCountryCode": "CC", "name": "Country CC" }
+  ],
+  "curreny": [
+    {
+      "isoc": "BB",
+      "currencies": [
+        { "name": "ZZZ", "numDecimals": 0, "expirationDate": "2017-01-01" }
+      ]
+    }
+  ],
+  "adm-acm-reasons": [
+    {
+      "detail": "Prueba1",
+      "id": 0,
+      "isoCountryCode": "AAA",
+      "title": "Prueba1 Tit"
+    },
+    {
+      "detail": "Prueba2",
+      "id": 1,
+      "isoCountryCode": "BBB",
+      "title": "Prueba2 Tit"
+    },
+    {
+      "detail": "Prueba3",
+      "id": 2,
+      "isoCountryCode": "CCC",
+      "title": "Prueba3 Tit"
+    }
+  ],
+  "refund-reasons": [
+    {
+      "detail": "Prueba1",
+      "id": 0,
+      "isoCountryCode": "AAA",
+      "title": "Prueba1 Tit"
+    },
+    {
+      "detail": "Prueba2",
+      "id": 1,
+      "isoCountryCode": "BBB",
+      "title": "Prueba2 Tit"
+    },
+    {
+      "detail": "Prueba3",
+      "id": 2,
+      "isoCountryCode": "CCC",
+      "title": "Prueba3 Tit"
+    }
+  ],
+  "toca": [
+    {
+      "code": "AAA",
+      "description": "pppp",
+      "isoCountryCode": "AA"
+    }
+  ]
 }

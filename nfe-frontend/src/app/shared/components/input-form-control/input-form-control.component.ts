@@ -9,7 +9,7 @@ import { FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./input-form-control.component.scss']
 })
 @Injectable()
-export class InputFormControlComponent extends ReactiveComponentBase implements OnInit {
+export class InputFormControlComponent extends ReactiveComponentBase {
 
   @Input('label') label;
   @Input('wrapText') wrapText: boolean;
@@ -19,19 +19,8 @@ export class InputFormControlComponent extends ReactiveComponentBase implements 
   @Input('inputMaxTextLength') inputMaxTextLength ? = 500;
   @Input('inputValue') inputValue?: string;
 
-  constructor(_translationService: TranslationService) {
-    super(_translationService);
+  constructor() {
+    super();
   }
-
-  ngOnInit() {
-    this.label = this.label = '' ? '&nbsp;' : this.label;
-    this.createForm();
-
-    if (this.inputValue) {
-      this.formControlParent.setValue(this.inputValue);
-    }
-  }
-
-
 
 }

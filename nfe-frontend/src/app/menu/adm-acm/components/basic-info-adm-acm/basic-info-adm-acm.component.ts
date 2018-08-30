@@ -1,10 +1,8 @@
 import {
   Component,
-  EventEmitter,
   Input,
   OnChanges,
   OnInit,
-  Output,
   SimpleChanges
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -18,10 +16,11 @@ import { EnvironmentType } from '../../../../shared/enums/environment-type.enum'
 import { KeyValue } from '../../../../shared/models/key.value.model';
 import { Country } from '../../models/country.model';
 import { TocaType } from '../../models/toca-type.model';
-import { AcdmConfigurationService } from '../../services/adm-acm-configuration.service';
+import { AcdmConfigurationService } from '../../services/acdm-configuration.service';
 import { BasicInfoService } from '../../services/basic-info.service';
 import { AlertsService } from './../../../../core/services/alerts.service';
 import { CurrencyService } from './../../../../shared/components/currency/services/currency.service';
+import { GLOBALS } from './../../../../shared/constants/globals';
 import { AcdmBasicInfoFormModel } from './../../models/acdm-basic-info-form.model';
 import { AdmAcmConfiguration } from './../../models/adm-acm-configuration.model';
 import { PeriodService } from './../../services/period.service';
@@ -32,11 +31,11 @@ import { TocaService } from './../../services/toca.service';
   templateUrl: './basic-info-adm-acm.component.html',
   styleUrls: ['./basic-info-adm-acm.component.scss']
 })
-export class BasicInfoAdmAcmComponent extends ReactiveFormHandler
+export class BasicInfoAdmAcmComponent
+  extends ReactiveFormHandler<AcdmBasicInfoFormModel>
   implements OnInit, OnChanges {
 
-  basicInfoFormModelGroup: FormGroup = new AcdmBasicInfoFormModel()
-    .basicInfoFormModelGroup;
+  basicInfoFormModelGroup: FormGroup;
 
   private listPeriods: number[] = [];
 
@@ -45,15 +44,12 @@ export class BasicInfoAdmAcmComponent extends ReactiveFormHandler
   @Input()
   countryList: Country[];
 
-  @Output()
-  clickMoreDetails: EventEmitter<any> = new EventEmitter();
-
   configuration: AdmAcmConfiguration;
 
   type = EnvironmentType.ACDM;
 
   typeList: string[] = [];
-  forList: string[] = ['I', 'R', 'X', 'E'];
+  forList: string[] = GLOBALS.ACDM.FOR;
   tocaList: TocaType[] = [];
   currencyList: Currency[] = [];
 
@@ -78,7 +74,11 @@ export class BasicInfoAdmAcmComponent extends ReactiveFormHandler
   ) {
     super();
 
-    this.subscribe(this.basicInfoFormModelGroup);
+    this.typeList = this.isAdm ? GLOBALS.ACDM.ADM : GLOBALS.ACDM.ACM;
+  }
+
+  ngOnInit() {
+    this.basicInfoFormModelGroup = this.model.basicInfoModelGroup;
 
     this.subscriptions.push(
       this._acdmConfigurationService.getConfiguration().subscribe(data => {
@@ -92,23 +92,6 @@ export class BasicInfoAdmAcmComponent extends ReactiveFormHandler
       })
     );
 
-    if (this.isAdm) {
-      this.typeList = ['ADMA', 'SPDR', 'ADMD'];
-    } else {
-      this.typeList = ['ACMA', 'SPCR', 'ACMD'];
-    }
-
-    this.basicInfoFormModelGroup
-      .get('transactionCode')
-      .setValue(this.typeList[0]);
-    this.basicInfoFormModelGroup
-      .get('concernsIndicator')
-      .setValue(this.forList[0]);
-
-    this.basicInfoFormModelGroup.get('id').disable();
-  }
-
-  ngOnInit() {
     this.subscriptions.push(
       this.basicInfoFormModelGroup
         .get('transactionCode')
@@ -149,9 +132,11 @@ export class BasicInfoAdmAcmComponent extends ReactiveFormHandler
     );
 
     this.subscriptions.push(
-      this.basicInfoFormModelGroup.get('taxOnCommissionType').valueChanges.subscribe(data => {
-        this._basicInfoService.setToca(data);
-      })
+      this.basicInfoFormModelGroup
+        .get('taxOnCommissionType')
+        .valueChanges.subscribe(data => {
+          this._basicInfoService.setToca(data);
+        })
     );
 
     // Create subscription on countries
@@ -188,10 +173,15 @@ export class BasicInfoAdmAcmComponent extends ReactiveFormHandler
           }
         })
     );
-  }
 
-  onClickMoreDetails(event) {
-    this.clickMoreDetails.emit(event);
+    this.basicInfoFormModelGroup
+      .get('transactionCode')
+      .setValue(this.typeList[0]);
+    this.basicInfoFormModelGroup
+      .get('concernsIndicator')
+      .setValue(this.forList[0]);
+
+    this.basicInfoFormModelGroup.get('id').disable();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

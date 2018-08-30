@@ -1,32 +1,31 @@
-import { UtilsService } from './../../../../shared/services/utils.service';
+import { AmountRefundFormModel } from './../../../refund/models/amount-refund-form.model';
 import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
+import { FormArray, FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { ReactiveFormHandler } from '../../../../shared/base/reactive-form-handler';
 import { CurrencyPost } from '../../../../shared/components/currency/models/currency-post.model';
 import { AdmAcmConfiguration } from '../../models/adm-acm-configuration.model';
 import { InputAmountServer } from '../../models/input-amount-server.model';
-import { AcdmConfigurationService } from '../../services/adm-acm-configuration.service';
+import { AcdmConfigurationService } from '../../services/acdm-configuration.service';
 import { BasicInfoService } from '../../services/basic-info.service';
 import { AcdmAmountForm } from './../../models/acdm-amount-form.model';
+import { GLOBALS } from '../../../../shared/constants/globals';
 
 @Component({
   selector: 'bspl-amount-adm-acm',
   templateUrl: './amount-adm-acm.component.html',
   styleUrls: ['./amount-adm-acm.component.scss']
 })
-export class AmountAdmAcmComponent extends ReactiveFormHandler
-  implements OnInit {
-  private acdmAmountModel = new AcdmAmountForm();
-  amountForm: FormGroup = this.acdmAmountModel._amountModelGroup;
+export class AmountAdmAcmComponent extends ReactiveFormHandler<AcdmAmountForm> implements OnInit {
 
-  agentCalcFormGroup: FormGroup = (this.amountForm.get('agentCalculations') as FormGroup);
-  airlineCalcFormGroup: FormGroup = (this.amountForm.get('airlineCalculations') as FormGroup);
+  @Input() isAdm: boolean;
+
+  amountForm: FormGroup;
+
+  agentCalcFormGroup: FormGroup;
+  airlineCalcFormGroup: FormGroup;
 
   configuration: AdmAcmConfiguration;
-
-  @Input()
-  isAdm: boolean;
 
   subType: string;
   currency: CurrencyPost;
@@ -39,17 +38,23 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
   totalAirline: number = 0;
   total: number = 0;
 
+  PT_TAX = GLOBALS.HTML_PATTERN.ALPHANUMERIC_UPPERCASE;
+
   private isSimpleView: boolean;
-  private taxOnCommissionSign: number; // sign on TOCA (1/-1)
   private agentInputAmount: InputAmountServer = new InputAmountServer();
   private airlineInputAmount: InputAmountServer = new InputAmountServer();
 
   constructor(
     private _acdmConfigurationService: AcdmConfigurationService,
-    private _basicInfoService: BasicInfoService,
-    private _utils: UtilsService
+    private _basicInfoService: BasicInfoService
   ) {
     super();
+  }
+
+  ngOnInit() {
+    this.amountForm = this.model.amountModelGroup;
+    this.agentCalcFormGroup = this.model.agentCalculations;
+    this.airlineCalcFormGroup = this.model.airlineCalculations;
 
     this.subscriptions.push(
       this._acdmConfigurationService.getConfiguration().subscribe(data => {
@@ -58,12 +63,8 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
       })
     );
 
-    this.subscribe(this.amountForm);
-  }
-
-  ngOnInit() {
     this.subscriptions.push(
-      this.amountForm.get('agentCalculations').valueChanges.subscribe(value => {
+      this.agentCalcFormGroup.valueChanges.subscribe(value => {
         this._setOnModel('agentCalculations', this.agentInputAmount);
         this._setOnModel('airlineCalculations', this.airlineInputAmount);
         this._setTotals();
@@ -71,9 +72,7 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
     );
 
     this.subscriptions.push(
-      this.amountForm
-        .get('airlineCalculations')
-        .valueChanges.subscribe(value => {
+      this.airlineCalcFormGroup.valueChanges.subscribe(value => {
           this._setOnModel('agentCalculations', this.agentInputAmount);
           this._setOnModel('airlineCalculations', this.airlineInputAmount);
           this._setTotals();
@@ -92,8 +91,12 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
       this._basicInfoService.getShowSpam().subscribe(showSpam => {
         this.showSpam = showSpam;
 
-        this.amountForm.get('agentCalculations').get('spam').setValue(0);
-        this.amountForm.get('airlineCalculations').get('spam').setValue(0);
+        this.agentCalcFormGroup
+          .get('spam')
+          .setValue(0);
+        this.airlineCalcFormGroup
+          .get('spam')
+          .setValue(0);
       })
     );
 
@@ -101,11 +104,11 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
       this._basicInfoService.getSubType().subscribe(subtype => {
         this.subType = subtype;
 
-        const list: string[] = ['SPDR', 'SPCR', 'ACMA', 'ADMA'];
+        const list: string[] = GLOBALS.ACDM.COMPLEX_TYPE;
         this.isSimpleView = list.indexOf(this.subType) >= 0;
 
-        this.amountForm.get('agentCalculations').reset();
-        this.amountForm.get('airlineCalculations').reset();
+        this.agentCalcFormGroup.reset();
+        this.airlineCalcFormGroup.reset();
       })
     );
 
@@ -116,11 +119,9 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
     );
 
     this.subscriptions.push(
-      (this.amountForm
-        .get('taxMiscellaneousFees') as FormArray)
-        .valueChanges.subscribe(value => {
-          this._validTaxes();
-        })
+      this.model.taxMiscellaneousFees.valueChanges.subscribe(value => {
+        this._validTaxes();
+      })
     );
 
     this.subscriptions.push(
@@ -130,8 +131,12 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
         } else {
           this.showToca = false;
 
-          this.amountForm.get('agentCalculations').get('taxOnCommission').setValue(0);
-          this.amountForm.get('airlineCalculations').get('taxOnCommission').setValue(0);
+          this.agentCalcFormGroup
+            .get('taxOnCommission')
+            .setValue(0);
+          this.airlineCalcFormGroup
+            .get('taxOnCommission')
+            .setValue(0);
         }
       })
     );
@@ -149,59 +154,55 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
   }
 
   checkIfErrorOnTaxExist(father: string, pos: number, key: string) {
-    const taxPos = this.amountForm.controls['taxMiscellaneousFees']['controls'][
-      pos
-    ];
+    const taxPos = this.model.taxMiscellaneousFees.controls[pos];
 
-    if ((taxPos.get(key).dirty || taxPos.get(key).touched) && taxPos.get(key).errors ) {
+    if (
+      (taxPos.get(key).dirty || taxPos.get(key).touched) &&
+      taxPos.get(key).errors
+    ) {
       return true;
     }
 
     return false;
   }
 
-  getFormArray(): FormArray {
-    return this.amountForm.controls['taxMiscellaneousFees']['controls'];
+  getFormArray() {
+    return this.model.taxMiscellaneousFees.controls;
   }
 
   getTaxValue(pos: number): number {
-    const agent = this.amountForm
-      .get('taxMiscellaneousFees')
-      .get(pos.toString())
-      .get('agentAmount').value;
-    const airline = this.amountForm
-      .get('taxMiscellaneousFees')
-      .get(pos.toString())
-      .get('airlineAmount').value;
+    const agent = this.model.taxMiscellaneousFees.controls[pos].get('agentAmount').value;
+    const airline = this.model.taxMiscellaneousFees.controls[pos].get('airlineAmount').value;
+
     const direction = this._checkSide();
 
     return direction * agent + -1 * direction * airline;
   }
 
   removeTax(pos: number) {
-    const arr = this.amountForm.controls['taxMiscellaneousFees'][
-      'controls'
-    ].length;
+    const arr = this.model.taxMiscellaneousFees.length;
 
     if (arr == 1) {
-      this.amountForm.get('taxMiscellaneousFees').reset();
+      this.model.taxMiscellaneousFees.reset();
     } else {
-      this.acdmAmountModel.remove(pos);
+      this.model.taxMiscellaneousFees.removeAt(pos);
     }
   }
 
   addTax() {
     if (this._validTaxes()) {
-      this.acdmAmountModel.addTax();
+      this.model.taxMiscellaneousFees.push(this.model._taxFormModelGroup());
     }
   }
 
   clean() {
-    while ((this.amountForm.get('taxMiscellaneousFees') as FormArray).length > 0) {
-      (this.amountForm.get('taxMiscellaneousFees') as FormArray).removeAt(0);
+    while (
+      this.model.taxMiscellaneousFees.length > 0
+    ) {
+      this.model.taxMiscellaneousFees.removeAt(0);
     }
 
-    this.acdmAmountModel.addTax();
+    this.model.taxMiscellaneousFees.push(this.model._taxFormModelGroup());
   }
 
   populate() {}
@@ -212,9 +213,9 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
 
     this._calculateTotalOnInput();
 
-    this.totalAgent =   this._calculateTotal(this.agentInputAmount);
+    this.totalAgent = this._calculateTotal(this.agentInputAmount);
     this.totalAirline = this._calculateTotal(this.airlineInputAmount);
-    this.total =        this._calculateTotal(this.totalInputAmount);
+    this.total = this._calculateTotal(this.totalInputAmount);
 
     this.amountForm.get('amountPaidByCustomer').setValue(this.total);
   }
@@ -266,48 +267,45 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
   private _checkSide() {
     let aux;
     switch (this.concernsIndicator) {
-      case 'I':
-      case 'X':
-      case 'E':
-        aux = this.isAdm ? -1 : 1;
-        break;
-      case 'R':
+      case GLOBALS.ACDM.FOR_REFUND:
         aux = this.isAdm ? 1 : -1;
         break;
+      default:
+        aux = this.isAdm ? -1 : 1;
+        break;
     }
+
     return aux;
   }
 
   private _validTaxes(): boolean {
     let ret = true;
 
-    for (const aux of this.amountForm.controls['taxMiscellaneousFees'][
-      'controls'
-    ]) {
+    for (const aux of this.model.taxMiscellaneousFees.controls) {
       const value = aux.get('type').value;
 
       if (aux.get('type').valid && value && value.length > 0) {
         if (
           !this.configuration.cpPermittedForConcerningIssue &&
-          this.concernsIndicator == 'I' &&
+          this.concernsIndicator == GLOBALS.ACDM.FOR_ISSUE &&
           value == 'CP'
         ) {
           aux.get('type').setErrors(this._setCustomError('NOT_VALID'));
         } else if (
           !this.configuration.cpPermittedForConcerningRefund &&
-          this.concernsIndicator == 'R' &&
+          this.concernsIndicator == GLOBALS.ACDM.FOR_REFUND &&
           value == 'CP'
         ) {
           aux.get('type').setErrors(this._setCustomError('NOT_VALID'));
         } else if (
           !this.configuration.mfPermittedForConcerningIssue &&
-          this.concernsIndicator == 'I' &&
+          this.concernsIndicator == GLOBALS.ACDM.FOR_ISSUE &&
           value == 'MF'
         ) {
           aux.get('type').setErrors(this._setCustomError('NOT_VALID'));
         } else if (
           !this.configuration.mfPermittedForConcerningIssue &&
-          this.concernsIndicator == 'R' &&
+          this.concernsIndicator == GLOBALS.ACDM.FOR_REFUND &&
           value == 'MF'
         ) {
           aux.get('type').setErrors(this._setCustomError('NOT_VALID'));
@@ -329,4 +327,5 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler
       }
     };
   }
+
 }

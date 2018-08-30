@@ -13,7 +13,6 @@ import { MessageService } from 'primeng/components/common/messageservice';
 import { GrowlModule } from 'primeng/growl';
 import { DialogModule } from 'primeng/dialog';
 import { HttpClientModule } from '@angular/common/http';
-import { TranslationModule } from 'angular-l10n';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({

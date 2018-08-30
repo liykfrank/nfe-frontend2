@@ -56,9 +56,9 @@ export abstract class HttpServiceAbstract<T, K>  {
 
   getUrl(pathVariables?: string[]) {
     let urlEnd: string = this.url;
-    if (environment.mock) {
-      return this.url;
-    }
+    // if (environment.mock) {
+    //   return this.url;
+    // }
     if (pathVariables) {
         pathVariables.forEach((pathv) => urlEnd += '/' + pathv);
     }

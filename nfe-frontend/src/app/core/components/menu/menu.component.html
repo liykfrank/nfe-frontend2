@@ -75,7 +75,7 @@
 
               <li>
 
-                <a class="dropdown-item" >Modify pass</a> <!-- TODO (click)="sftpModifyPass()" -->
+                <a class="dropdown-item" >Modify pass</a> <!-- TODO: (click)="sftpModifyPass()" -->
 
               </li>
 
@@ -113,11 +113,49 @@
 
         <a class="nav-link dropdown-toggle" id="admin-dropdowm" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ADMIN</a>
 
-        <div class="dropdown-menu" aria-labelledby="admin-dropdowm">
 
-          <a class="dropdown-item" [routerLink]="routes.MONITOR.URL">MONITOR</a>
 
-        </div>
+        <ul class="dropdown-menu">
+
+          <li>
+              <a class="dropdown-item" [routerLink]="routes.MONITOR.URL">MONITOR</a>
+          </li>
+
+          <li class="dropdown-submenu dropright multi-level">
+
+            <a class="dropdown-item dropdown-toggle" id="filesDropright" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">USERS</a>
+
+            <ul class="dropdown-menu " aria-labelledby="filesDropright">
+
+              <li>
+
+                <a class="dropdown-item" [routerLink]="routes.NEW_USER.URL">NEW user</a>
+
+              </li>
+
+              <li>
+
+                <a class="dropdown-item" [routerLink]="routes.NEW_SUB_USER.URL">NEW sub-user</a>
+
+              </li>
+
+              <li>
+
+                <a class="dropdown-item" [routerLink]="routes.MOD_USER.URL">MOD user</a>
+
+              </li>
+
+              <li>
+
+                <a class="dropdown-item" [routerLink]="routes.MOD_SUB_USER.URL">MOD sub-user</a>
+
+              </li>
+
+            </ul>
+
+          </li>
+
+        </ul>
 
       </li>
 

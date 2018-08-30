@@ -1,25 +1,22 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ContactComponent } from './contact.component';
 
-import { ContactRfComponent } from './contact-rf.component';
+describe('ContactComponent', () => {
+    let comp: ContactComponent;
+    let fixture: ComponentFixture<ContactComponent>;
 
-xdescribe('ContactRfComponent', () => {
-  let component: ContactRfComponent;
-  let fixture: ComponentFixture<ContactRfComponent>;
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            declarations: [ ContactComponent ],
+            schemas: [ NO_ERRORS_SCHEMA ]
+        });
+        fixture = TestBed.createComponent(ContactComponent);
+        comp = fixture.componentInstance;
+    });
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ContactRfComponent ]
-    })
-    .compileComponents();
-  }));
+    it('can load instance', () => {
+        expect(comp).toBeTruthy();
+    });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ContactRfComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
 });

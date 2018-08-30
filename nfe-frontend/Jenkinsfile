@@ -39,7 +39,7 @@ pipeline {
                 }
             }
         }
-/*
+
          stage('Test') {
             steps {
                 nodejs('nodejs') {
@@ -60,7 +60,7 @@ pipeline {
                     }
                 }
 	        }
-	  	}*/
+	  	}
 
         stage('Nexus') {
             steps {

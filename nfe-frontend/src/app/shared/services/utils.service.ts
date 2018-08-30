@@ -100,6 +100,7 @@ export class UtilsService {
           message: msg
         }
       });
+      formAux.markAsDirty();
     } else {
       ret = false;
     }

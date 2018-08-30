@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 
 import { AgentModule } from './components/agent/agent.module';
 import { AirlineModule } from './components/airline/airline.module';
+import { CustomDropdownsModule } from './components/custom-dropdowns/custom-dropdowns.module';
 import { CollapsableComponent } from './components/collapsable/collapsable.component';
 import { MultitabsModule } from './components/multitabs/multitabs.module';
 import { PillsCollapsableComponent } from './components/pills-collapsable/pills-collapsable.component';
@@ -17,10 +19,12 @@ import { CurrencyModule } from './components/currency/currency.module';
     SharedModule,
     MultitabsModule,
     CalendarModule,
+    ScrollPanelModule,
     AirlineModule,
     AgentModule,
     ReasonsModule,
-    CurrencyModule
+    CurrencyModule,
+    CustomDropdownsModule
   ],
   declarations: [
     PillsCollapsableComponent,
@@ -36,11 +40,13 @@ import { CurrencyModule } from './components/currency/currency.module';
     AirlineModule,
     AgentModule,
     CalendarModule,
+    ScrollPanelModule,
     SharedModule,
     MultitabsModule,
     StatComponent,
     ReasonsModule,
-    CurrencyModule
+    CurrencyModule,
+    CustomDropdownsModule
   ]
 })
 export class IssueSharedModule {}

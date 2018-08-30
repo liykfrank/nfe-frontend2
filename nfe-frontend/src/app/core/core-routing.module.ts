@@ -48,6 +48,10 @@ const routes: Routes = [
         path: ROUTES.MONITOR.PATH,
         loadChildren: '../menu/monitor/monitor.module#MonitorModule',
         data: { tab: ROUTES.MONITOR }
+      },
+      {
+        path: 'users',
+        loadChildren: '../menu/admin/components/user/user.module#UserModule'
       }
     ]
   }

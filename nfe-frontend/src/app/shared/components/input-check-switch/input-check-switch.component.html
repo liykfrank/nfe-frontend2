@@ -1,0 +1,25 @@
+<label class="text-nowrap" l10nTranslate *ngIf="label != undefined">{{label}}</label>
+
+<div *ngIf="isCheckBox;then check else switch"></div>
+
+<ng-template #check>
+  <div [formGroup]="groupForm">
+      <label class="custom-checkbox col-3 text-nowrap">
+          <input type="checkbox" [formControlName]="controlName">
+          <span class="checkmark"></span>
+          {{getLabelCheck()}}
+      </label>
+  </div>
+</ng-template>
+
+<ng-template #switch>
+    <div [formGroup]="groupForm">
+        <div class="onoffswitch mt-1">
+            <input type="checkbox" name="onoffswitch" [formControlName]="controlName" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+            <label class="onoffswitch-label" for="myonoffswitch">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+      </div>
+</ng-template>

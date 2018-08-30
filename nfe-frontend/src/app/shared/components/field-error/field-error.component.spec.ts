@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslationService } from 'angular-l10n';
 
 import { FieldErrorComponent } from './field-error.component';
 
@@ -7,10 +8,16 @@ describe('FieldErrorComponent', () => {
   let fixture: ComponentFixture<FieldErrorComponent>;
 
   beforeEach(async(() => {
+    const translationServiceStub = {
+      translate: () => ({})
+    };
+
     TestBed.configureTestingModule({
-      declarations: [ FieldErrorComponent ]
-    })
-    .compileComponents();
+      providers: [
+        { provide: TranslationService, useValue: translationServiceStub }
+      ],
+      declarations: [FieldErrorComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

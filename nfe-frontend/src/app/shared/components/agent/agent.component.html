@@ -1,4 +1,4 @@
-<form [formGroup]="agentFormModelGroup">
+<form [formGroup]="model.agentFormModelGroup">
   <div class="form-row">
 
     <div class="form-group col-3">
@@ -7,10 +7,10 @@
         [wrapText]="true"
         [label]="'AGENT.code'"
         [type]="'pattern'"
-        [typingPattern]="'[0-9]{7}$'"
+        [typingPattern]="PT_NUMERIC"
         [inputMaxTextLength]="'7'"
-        [formGroupParent]="agentFormModelGroup"
-        [formControlParentName]="'agentCode'">
+        [groupForm]="model.agentFormModelGroup"
+        [controlName]="'agentCode'">
       </bspl-input-form-control>
     </div>
 
@@ -19,10 +19,10 @@
         l10nTranslate
         [label]="'&nbsp;'"
         [type]="'pattern'"
-        [typingPattern]="'[0-9]{1}$'"
+        [typingPattern]="PT_NUMERIC"
         [inputMaxTextLength]="'1'"
-        [formGroupParent]="agentFormModelGroup"
-        [formControlParentName]="'agentControlDigit'">
+        [groupForm]="model.agentFormModelGroup"
+        [controlName]="'agentControlDigit'">
       </bspl-input-form-control>
     </div>
 
@@ -50,9 +50,9 @@
         [label]="'AGENT.agentVAT'"
         [inputMaxTextLength]="'15'"
         [type]="'regex'"
-        [typingPattern]="'^[0-9]*$'"
-        [formGroupParent]="agentFormModelGroup"
-        [formControlParentName]="'agentVatNumber'">
+        [typingPattern]="PT_NUMERIC"
+        [groupForm]="model.agentFormModelGroup"
+        [controlName]="'agentVatNumber'">
       </bspl-input-form-control>
     </div>
   </div>
@@ -65,18 +65,17 @@
         [label]="'AGENT.companyReg'"
         [inputMaxTextLength]="'20'"
         [type]="'regex'"
-        [typingPattern]="'^[a-zA-Z0-9]*$'"
-        [formGroupParent]="agentFormModelGroup"
-        [formControlParentName]="'agentRegistrationNumber'">
+        [typingPattern]="PT_ALPHA"
+        [groupForm]="model.agentFormModelGroup"
+        [controlName]="'agentRegistrationNumber'">
       </bspl-input-form-control>
     </div>
   </div>
 
   <bspl-contact
     *ngIf="showContact"
-    [contactFormModelGroup]="agentFormModelGroup.get('agentContact')"
-    [disabledComponent]="disabledContact"
-    (returnForm)="onChangeContact($event)">
+    [model]="model.agentContact"
+    [disabledComponent]="disabledContact">
   </bspl-contact>
 </form>
 

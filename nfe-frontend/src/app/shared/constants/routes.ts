@@ -1,3 +1,5 @@
+import { UserViews } from '../enums/users.enum';
+
 export const ROUTES = {
     DASHBOARD: { URL: '/dashboard', LABEL: 'dashboard', PATH: 'dashboard' },
     ADM_ISSUE: { URL: '/issue/adm', LABEL: 'adm', PATH: 'adm' },
@@ -11,4 +13,8 @@ export const ROUTES = {
     GENERAL_INFO: { URL: '/general-info', LABEL: 'general-info', PATH: 'general-info' },
     SELF_SERVICE: { URL: '/self-service', LABEL: 'self-service', PATH: 'self-service' },
     MONITOR: { URL: '/monitor', LABEL: 'monitor', PATH: 'monitor' },
+    NEW_USER: { URL: `/users/${UserViews.NEW_USER}`, LABEL: UserViews.NEW_USER, PATH: UserViews.NEW_USER },
+    NEW_SUB_USER: { URL: `/users/${UserViews.NEW_SUB_USER}`, LABEL: UserViews.NEW_SUB_USER, PATH: UserViews.NEW_SUB_USER },
+    MOD_USER: { URL: `/users/${UserViews.MOD_USER}`, LABEL: UserViews.MOD_USER, PATH: UserViews.MOD_USER },
+    MOD_SUB_USER: { URL: `/users/${UserViews.MOD_SUB_USER}`, LABEL: UserViews.MOD_SUB_USER, PATH: UserViews.MOD_SUB_USER },
 };

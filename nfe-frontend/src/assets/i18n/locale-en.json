@@ -308,6 +308,7 @@
     "email": "Contact Email"
   },
   "AIRLINE": {
+    "title": "Airline",
     "code": "Airline Code",
     "more": "More details",
     "name": "Airline name",
@@ -322,6 +323,7 @@
     }
   },
   "AGENT": {
+    "title": "Agent",
     "code": "Agent Code",
     "more": "More details",
     "name": "Agent name",
@@ -399,6 +401,42 @@
     "NEW": "NEW",
     "DETAIL": "DETAIL"
   },
+  "USERS": {
+    "choose": "Choose",
+    "type": "Type",
+    "id": "ID",
+    "userCode": "User Code",
+    "company": "Company",
+    "name": "Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "template": "Template",
+    "countryTerritory": "Country / Territory",
+    "address": "Address",
+    "city": "City",
+    "postalCode": "Postal Code",
+    "country": "Country",
+    "telephone": "Telephone",
+    "expiryDate": "Expiry Date",
+    "active": "Active",
+    "btnCreate": "Create",
+    "btnUpdate": "Update",
+    "types_of_users": {
+      "AGENT": "Agent",
+      "AIRLINE": "Airline",
+      "IATA": "IATA",
+      "DPC": "DPC",
+      "GDS": "GDS",
+      "THIRD_PARTY": "Third Party"
+    }
+  },
+
+  "CUSTOM-DROPDOWN": {
+    "options-selected": "Options selected",
+    "select-all": "Select all",
+    "apply": "APPLY",
+    "cancel": "CANCEL"
+  },
 
 
   "dashboard": "DASHBOARD",
@@ -412,7 +450,11 @@
   "ticketing": "TICKETING",
   "general-info": "GENERAL INFO",
   "self-service": "SELF SERVICE",
-  "monitor": "MONITOR"
+  "monitor": "MONITOR",
+  "new-user": "NEW USER",
+  "new-sub-user": "NEW SUB USER",
+  "mod-user": "MOD USER",
+  "mod-sub-user": "MOD SUB USER"
 
 
 }

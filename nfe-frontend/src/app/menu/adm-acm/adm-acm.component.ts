@@ -1,12 +1,13 @@
-import { InputAmountServer } from './models/input-amount-server.model';
 import { DatePipe } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
+import { FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslationService } from 'angular-l10n';
 
 import { environment } from '../../../environments/environment';
 import { AlertType } from '../../core/enums/alert-type.enum';
+import { AlertModel } from '../../core/models/alert.model';
+import { AbstractComponent } from '../../shared/base/abstract-component';
 import { ROUTES } from '../../shared/constants/routes';
 import { Pill } from '../../shared/models/pill.model';
 import { AlertsService } from './../../core/services/alerts.service';
@@ -14,13 +15,16 @@ import { ScreenType } from './../../shared/enums/screen-type.enum';
 import { DecimalsFormatterPipe } from './../../shared/pipes/decimals-formatter.pipe';
 import { UtilsService } from './../../shared/services/utils.service';
 import { AcdmAmountForm } from './models/acdm-amount-form.model';
+import { AcdmBasicInfoFormModel } from './models/acdm-basic-info-form.model';
+import { AcdmDetailsForm } from './models/acdm-details-form.model';
 import { Acdm } from './models/acdm.model';
 import { Country } from './models/country.model';
-import { AcdmsService } from './services/acdms.service';
-import { AcdmConfigurationService } from './services/adm-acm-configuration.service';
-import { CountryService } from './services/country.service';
-import { AlertModel } from '../../core/models/alert.model';
+import { InputAmountServer } from './models/input-amount-server.model';
 import { TaxAmountServer } from './models/tax-amount-server';
+import { AcdmConfigurationService } from './services/acdm-configuration.service';
+import { AcdmsService } from './services/acdms.service';
+import { CountryService } from './services/country.service';
+import { AgentFormModel } from '../../shared/components/agent/models/agent-form-model';
 
 @Component({
   selector: 'bspl-adm-acm',
@@ -28,7 +32,7 @@ import { TaxAmountServer } from './models/tax-amount-server';
   styleUrls: ['./adm-acm.component.scss'],
   providers: []
 })
-export class AdmAcmComponent implements OnInit {
+export class AdmAcmComponent extends AbstractComponent implements OnInit {
   url = environment.basePath + environment.api.adm_acm.acdm;
   screen = ScreenType.CREATE;
 
@@ -47,11 +51,9 @@ export class AdmAcmComponent implements OnInit {
   ticketDocuments = [];
 
   id_acdm_model: number;
-  basicInfoFormGroup: FormGroup;
-  amountFormGroup: FormGroup;
-  detailsFormGroup: FormGroup;
-
-  private showPopUp = false;
+  basicInfoFormModel: AcdmBasicInfoFormModel = new AcdmBasicInfoFormModel();
+  amountFormModel: AcdmAmountForm = new AcdmAmountForm();
+  detailsFormModel: AcdmDetailsForm = new AcdmDetailsForm();
 
   constructor(
     protected router: Router,
@@ -62,6 +64,8 @@ export class AdmAcmComponent implements OnInit {
     private _alertService: AlertsService,
     private _translationService: TranslationService
   ) {
+    super();
+
     this.isAdm = router.routerState.snapshot.url === ROUTES.ADM_ISSUE.URL;
     this.elementsResumeBar = this._initializeResumeBar();
     this.pills = this._initializePills();
@@ -71,14 +75,49 @@ export class AdmAcmComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.subscriptions.push(
+      this.acdmConfigurationService.getConfiguration().subscribe(data => {
+        this.basicInfoFormModel.changeAgent(data.agentVatNumberEnabled, data.companyRegistrationNumberEnabled);
+        this.basicInfoFormModel.changeAirline(data.airlineVatNumberEnabled, data.companyRegistrationNumberEnabled);
+      })
+    );
+    this.subscriptions.push(
+      this.basicInfoFormModel.basicInfoModelGroup.valueChanges.subscribe(() => {
+        (this.elementsResumeBar[1] as any).value = this._getBSP();
+        (this.elementsResumeBar[2] as any).value = this._getAgentCode();
+        (this.elementsResumeBar[3] as any).title = this._getSubtype();
+        (this.elementsResumeBar[3] as any).value = this._getType();
+      })
+    );
+
+    this.subscriptions.push(
+      this.amountFormModel.amountPaidByCustomer.valueChanges.subscribe(val => {
+        let show;
+
+        if (val > 0) {
+         show = this._getAmount();
+        } else {
+          show = '-';
+        }
+
+        (this.elementsResumeBar[5] as any).value = show;
+      })
+    );
+
+    this.subscriptions.push(
+      this.detailsFormModel.acdmDetailsFormGroup.valueChanges.subscribe(() => {
+        this.ticketDocuments = this.detailsFormModel.acdmDetailsFormGroup.get('relatedTicketDocuments').value;
+      })
+    );
+  }
 
   checkClassSticky() {
     return this.isSticky ? 'sticky' : '';
   }
 
   checkSticky() {
-    return this.isSticky && !this.showPopUp;
+    return this.isSticky;
   }
 
   onReturnRefreshPills(pills: Pill[]) {
@@ -89,64 +128,37 @@ export class AdmAcmComponent implements OnInit {
     this.pills[index].collapsable = $event;
   }
 
-  onClickMoreDetails(event) {
-    this.showPopUp = event;
-  }
-
   onRemoveTicket(value) {
-    (this.detailsFormGroup.get('relatedTicketDocuments') as FormArray).removeAt(value);
-    this.ticketDocuments = this.detailsFormGroup.get('relatedTicketDocuments').value;
-  }
-
-  onReturnFormBasicInfo(event) {
-    this.basicInfoFormGroup = event;
-
-    (this.elementsResumeBar[1] as any).value = this._getBSP();
-    (this.elementsResumeBar[2] as any).value = this._getAgentCode();
-    (this.elementsResumeBar[3] as any).title = this._getSubtype();
-    (this.elementsResumeBar[3] as any).value = this._getType();
-  }
-
-  onReturnFormAmount(event) {
-    this.amountFormGroup = event;
-
-    (this.elementsResumeBar[5] as any).value = this._getAmount();
-  }
-
-  onReturnFormDetails(event) {
-    this.detailsFormGroup = event;
-
-    this.ticketDocuments = event.get('relatedTicketDocuments').value;
+    (this.detailsFormModel.acdmDetailsFormGroup.get('relatedTicketDocuments') as FormArray).removeAt(value);
+    this.ticketDocuments = this.detailsFormModel.acdmDetailsFormGroup.get('relatedTicketDocuments').value;
   }
 
   onReturnSave() {}
 
   onReturnIssue() {
-    const arrTaxes = this.amountFormGroup.get(
-      'taxMiscellaneousFees'
-    ) as FormArray;
+    const arrTaxes = this.amountFormModel.taxMiscellaneousFees.controls;
     const count = arrTaxes.length;
     const val =
       count > 0
-        ? this.amountFormGroup
+        ? this.amountFormModel.amountModelGroup
             .get('taxMiscellaneousFees')
             .get((count - 1).toString())
             .get('type').value
         : null;
 
     if (!val || val.length == 0) {
-      arrTaxes.removeAt(count - 1);
+      this.amountFormModel.taxMiscellaneousFees.removeAt(count - 1);
     }
 
     if (
-      !this.basicInfoFormGroup.valid ||
-      !this.amountFormGroup.valid ||
-      !this.detailsFormGroup.valid
+      !this.basicInfoFormModel.basicInfoModelGroup.valid ||
+      !this.amountFormModel.amountModelGroup.valid ||
+      !this.detailsFormModel.acdmDetailsFormGroup.valid
     ) {
       const forms = [
-        this.basicInfoFormGroup,
-        this.amountFormGroup,
-        this.detailsFormGroup
+        this.basicInfoFormModel.basicInfoModelGroup,
+        this.amountFormModel.amountModelGroup,
+        this.detailsFormModel.acdmDetailsFormGroup
       ];
       this._utils.touchAllForms(forms);
       this._alertService.setAlertTranslate(
@@ -166,7 +178,7 @@ export class AdmAcmComponent implements OnInit {
       arrTaxes.push(new AcdmAmountForm()._taxFormModelGroup());
     }
 
-    if (this.amountFormGroup.get('amountPaidByCustomer').value <= 0) {
+    if (this.amountFormModel.amountModelGroup.get('amountPaidByCustomer').value <= 0) {
       this._alertService.setAlertTranslate(
         'ADM_ACM.AMOUNT.title',
         'ADM_ACM.AMOUNT.total_error',
@@ -224,8 +236,8 @@ export class AdmAcmComponent implements OnInit {
   }
 
   private _getBSP() {
-    const bsp = this.basicInfoFormGroup
-      ? this.basicInfoFormGroup.get('isoCountryCode')
+    const bsp = this.basicInfoFormModel.basicInfoModelGroup
+      ? this.basicInfoFormModel.basicInfoModelGroup.get('isoCountryCode')
       : null;
     let ret;
 
@@ -244,9 +256,9 @@ export class AdmAcmComponent implements OnInit {
   private _getAgentCode() {
     let ret;
 
-    if (this.basicInfoFormGroup && this.basicInfoFormGroup.get('agent')) {
-      const agent = this.basicInfoFormGroup.get('agent').get('agentCode').value;
-      const check = this.basicInfoFormGroup
+    if (this.basicInfoFormModel.basicInfoModelGroup && this.basicInfoFormModel.basicInfoModelGroup.get('agent')) {
+      const agent = this.basicInfoFormModel.basicInfoModelGroup.get('agent').get('agentCode').value;
+      const check = this.basicInfoFormModel.basicInfoModelGroup
         .get('agent')
         .get('agentControlDigit').value;
 
@@ -263,8 +275,8 @@ export class AdmAcmComponent implements OnInit {
   }
 
   private _getSubtype() {
-    const bsp = this.basicInfoFormGroup
-      ? this.basicInfoFormGroup.get('transactionCode')
+    const bsp = this.basicInfoFormModel.basicInfoModelGroup
+      ? this.basicInfoFormModel.basicInfoModelGroup.get('transactionCode')
       : null;
     let ret = 'ADM_ACM.RESUME.';
 
@@ -278,8 +290,8 @@ export class AdmAcmComponent implements OnInit {
   }
 
   private _getType() {
-    const bsp = this.basicInfoFormGroup
-      ? this.basicInfoFormGroup.get('concernsIndicator')
+    const bsp = this.basicInfoFormModel.basicInfoModelGroup
+      ? this.basicInfoFormModel.basicInfoModelGroup.get('concernsIndicator')
       : null;
     let ret = '-';
 
@@ -293,8 +305,8 @@ export class AdmAcmComponent implements OnInit {
   }
 
   private _getAmount() {
-    const currency = this.basicInfoFormGroup
-      ? this.basicInfoFormGroup.get('currency').value
+    const currency = this.basicInfoFormModel.basicInfoModelGroup
+      ? this.basicInfoFormModel.basicInfoModelGroup.get('currency').value
       : null;
     let retCurrency = '-';
 
@@ -302,16 +314,12 @@ export class AdmAcmComponent implements OnInit {
       retCurrency = currency.code;
     }
 
-    const total = this.amountFormGroup
-      ? this.amountFormGroup.get('amountPaidByCustomer')
-      : null;
+    const total = this.amountFormModel.amountPaidByCustomer.value;
     let retTotal = '-';
 
-    if (total && currency) {
-      retTotal = new DecimalsFormatterPipe().transform(
-        total.value,
-        currency.decimals
-      );
+    if (total >= 0 && currency.decimals >= 0) {
+      const pipe = new DecimalsFormatterPipe();
+      retTotal = pipe.transform(total, currency.decimals);
     }
 
     return retTotal + ' ' + (retCurrency && retCurrency.length > 0 ? retCurrency : '-');
@@ -329,17 +337,17 @@ export class AdmAcmComponent implements OnInit {
     let agent = 0,
       airline = 0;
 
-    for (const aux of this.amountFormGroup.get('taxMiscellaneousFees').value) {
+    for (const aux of this.amountFormModel.amountModelGroup.get('taxMiscellaneousFees').value) {
       if (aux && aux.type && aux.type.length > 0) {
         agent = agent + Number(aux.agentAmount);
         airline = airline + Number(aux.airlineAmount);
       }
     }
 
-    let num = this.amountFormGroup.get('agentCalculations').get('tax').value;
+    let num = this.amountFormModel.agentCalculations.get('tax').value;
     const agentAmountTax = num ? Number(num) : 0;
 
-    num = this.amountFormGroup.get('airlineCalculations').get('tax').value;
+    num = this.amountFormModel.airlineCalculations.get('tax').value;
     const airlineAmountTax = num ? Number(num) : 0;
 
     return agent == agentAmountTax && airline == airlineAmountTax;
@@ -349,68 +357,63 @@ export class AdmAcmComponent implements OnInit {
     const acdm = new Acdm();
 
     // Basic Info
-    acdm.isoCountryCode = this.basicInfoFormGroup.get('isoCountryCode').value;
-    acdm.billingPeriod = this.basicInfoFormGroup.get('billingPeriod').value;
+    acdm.isoCountryCode = this.basicInfoFormModel.basicInfoModelGroup.get('isoCountryCode').value;
+    acdm.billingPeriod = this.basicInfoFormModel.basicInfoModelGroup.get('billingPeriod').value;
 
-    const AGENT = this.basicInfoFormGroup.get('agent');
+    const AGENT = this.basicInfoFormModel.basicInfoModelGroup.get('agent');
     acdm.agentCode = AGENT.get('agentCode').value + AGENT.get('agentControlDigit').value;
     acdm.agentRegistrationNumber = AGENT.get('agentRegistrationNumber').value;
     acdm.agentVatNumber = AGENT.get('agentVatNumber').value;
 
-    acdm.transactionCode = this.basicInfoFormGroup.get('transactionCode').value;
-    acdm.airlineCode = this.basicInfoFormGroup
+    acdm.transactionCode = this.basicInfoFormModel.basicInfoModelGroup.get('transactionCode').value;
+    acdm.airlineCode = this.basicInfoFormModel.basicInfoModelGroup
       .get('airline')
       .get('airlineCode').value;
-    acdm.airlineRegistrationNumber = this.basicInfoFormGroup
+    acdm.airlineRegistrationNumber = this.basicInfoFormModel.basicInfoModelGroup
       .get('airline')
       .get('airlineRegistrationNumber').value;
-    acdm.airlineVatNumber = this.basicInfoFormGroup
+    acdm.airlineVatNumber = this.basicInfoFormModel.basicInfoModelGroup
       .get('airline')
       .get('airlineVatNumber').value;
-    acdm.airlineContact = this.basicInfoFormGroup
+    acdm.airlineContact = this.basicInfoFormModel.basicInfoModelGroup
       .get('airline')
       .get('airlineContact').value;
 
-    acdm.concernsIndicator = this.basicInfoFormGroup.get(
+    acdm.concernsIndicator = this.basicInfoFormModel.basicInfoModelGroup.get(
       'concernsIndicator'
     ).value;
-    acdm.taxOnCommissionType = this.basicInfoFormGroup.get(
+    acdm.taxOnCommissionType = this.basicInfoFormModel.basicInfoModelGroup.get(
       'taxOnCommissionType'
     ).value;
-    acdm.currency = this.basicInfoFormGroup.get('currency').value;
-    acdm.netReporting = this.basicInfoFormGroup.get('netReporting').value;
-    acdm.statisticalCode = this.basicInfoFormGroup.get('statisticalCode').value;
+    acdm.currency = this.basicInfoFormModel.basicInfoModelGroup.get('currency').value;
+    acdm.netReporting = this.basicInfoFormModel.basicInfoModelGroup.get('netReporting').value;
+    acdm.statisticalCode = this.basicInfoFormModel.basicInfoModelGroup.get('statisticalCode').value;
 
     // Amount
-    acdm.agentCalculations = this._checkAmountValues(this.amountFormGroup.get(
-      'agentCalculations'
-    ).value);
-    acdm.airlineCalculations = this._checkAmountValues(this.amountFormGroup.get(
-      'airlineCalculations'
-    ).value);
+    acdm.agentCalculations = this._checkAmountValues(this.amountFormModel.agentCalculations.value);
+    acdm.airlineCalculations = this._checkAmountValues(this.amountFormModel.airlineCalculations.value);
 
-    const aux = this.amountFormGroup
-      .get('taxMiscellaneousFees')
+    const aux = this.amountFormModel.taxMiscellaneousFees
       .value.filter(x => x.type != '');
 
     acdm.taxMiscellaneousFees = aux ? this._filterTaxes(aux) : [];
-    acdm.amountPaidByCustomer = this.amountFormGroup.get(
+    acdm.amountPaidByCustomer = this.amountFormModel.amountModelGroup.get(
       'amountPaidByCustomer'
     ).value;
 
     // Details
-    const date = this.detailsFormGroup.get(
+    const date = this.detailsFormModel.acdmDetailsFormGroup.get(
       'dateOfIssueRelatedDocument'
     ).value;
     acdm.dateOfIssueRelatedDocument = date ? new Date(date).toISOString() : null;
-    acdm.passenger = this.detailsFormGroup.get('passenger').value;
-    acdm.relatedTicketDocuments = this.detailsFormGroup.get(
+    acdm.passenger = this.detailsFormModel.acdmDetailsFormGroup.get('passenger').value;
+    acdm.relatedTicketDocuments = this.detailsFormModel.acdmDetailsFormGroup.get(
       'relatedTicketDocuments'
     ).value;
-    acdm.reasonForMemoIssuanceCode = this.detailsFormGroup.get(
+    acdm.reasonForMemoIssuanceCode = this.detailsFormModel.acdmDetailsFormGroup.get(
       'reasonForMemoIssuanceCode'
     ).value;
-    acdm.reasonForMemo = this.detailsFormGroup.get('reasonForMemo').value;
+    acdm.reasonForMemo = this.detailsFormModel.acdmDetailsFormGroup.get('reasonForMemo').value;
 
     return acdm;
   }
@@ -470,7 +473,7 @@ export class AdmAcmComponent implements OnInit {
             AlertType.CONFIRM
           );
         } else if (list) {
-          const forms = [this.basicInfoFormGroup, this.amountFormGroup, this.detailsFormGroup];
+          const forms = [this.basicInfoFormModel.basicInfoModelGroup, this.amountFormModel.amountModelGroup, this.detailsFormModel.acdmDetailsFormGroup];
 
           const errors = this._utils.setBackErrorsOnForms(
             forms.filter(x => x != null),

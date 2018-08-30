@@ -1,11 +1,10 @@
-<form [formGroup]="acdmDetailsForm">
+<form [formGroup]="acdmDetailsForm" appIdentifier [base]="'ACDM.details'">
   <div class="row">
     <div class="col-6">
 
       <div class="form-row">
         <div class="form-group col-6">
           <label class="text-nowrap" l10nTranslate>ADM_ACM.DETAILS.ticketIssueDate</label>
-          <!-- [(ngModel)]="relatedDocument"  -->
           <p-calendar styleClass="custom form-control"
             panelStyleClass="custom"
             readonlyInput="true"
@@ -23,8 +22,10 @@
         <bspl-input-form-control l10nTranslate
           [wrapText]="true"
           [label]="'ADM_ACM.DETAILS.passenger'"
-          [formGroupParent]="acdmDetailsForm"
-          [formControlParentName]="'passenger'">
+          [groupForm]="acdmDetailsForm"
+          [controlName]="'passenger'"
+          [type]="'regex'"
+          [typingPattern]="PT_PASSENGER">
         </bspl-input-form-control>
       </div>
 
@@ -34,10 +35,10 @@
             [wrapText]="true"
             [label]="'ADM_ACM.DETAILS.documents'"
             [type]="'regex'"
-            [typingPattern]="'^[0-9]*$'"
+            [typingPattern]="PT_NUMERIC"
             [inputMaxTextLength]="13"
-            [formGroupParent]="acdmDetailsForm"
-            [formControlParentName]="'ticketDocumentNumberToAdd'">
+            [groupForm]="model.extra"
+            [controlName]="'ticketDocumentNumberToAdd'">
           </bspl-input-form-control>
         </div>
 
@@ -55,6 +56,24 @@
         </div>
       </div>
 
+      <div formArrayName="relatedTicketDocuments">
+        <div class="row" *ngFor="let aux of model.relatedTicketDocuments.controls; let i=index" [formGroupName]="i">
+          <div class="offset-1 col-5">
+            <input
+              type="text"
+              readonly
+              class="form-control-plaintext"
+              [value]="aux.get('relatedTicketDocumentNumber').value">
+          </div>
+          <div class="col-1">
+            <button class="btn btn-outline-secondary button-bin-float-right ml-1" (click)="onCkickTrashIcon(i)">
+              <i class="fa fa-trash-o fa-lg"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
     <div class="col-6">
@@ -64,10 +83,10 @@
           [wrapText]="true"
           [label]="'ADM_ACM.DETAILS.reasonIssue'"
           [type]="'regex'"
-          [typingPattern]="'^[0-9A-Z]*$'"
+          [typingPattern]="PT_ALPHANUMERIC_UPPERCASE"
           [inputMaxTextLength]="5"
-          [formGroupParent]="acdmDetailsForm"
-          [formControlParentName]="'reasonForMemoIssuanceCode'">
+          [groupForm]="acdmDetailsForm"
+          [controlName]="'reasonForMemoIssuanceCode'">
         </bspl-input-form-control>
       </div>
 

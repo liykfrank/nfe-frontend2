@@ -1,153 +1,45 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MessageService } from 'primeng/components/common/messageservice';
-import { Observable } from 'rxjs';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs/observable/of';
 
-import { AlertsService } from '../../../../core/services/alerts.service';
-import { Reason } from '../../../../shared/models/reason.model';
-import { SharedModule } from '../../../../shared/shared.module';
-import { Configuration } from '../../models/configuration.model';
-import { AdmAcmService } from '../../services/adm-acm.service';
-import { DetailsService } from '../../services/details.service';
-import { DetailsComponent } from './details.component';
+import { EnvironmentType } from '../../../../shared/enums/environment-type.enum';
+import { AcdmDetailsForm } from '../../models/acdm-details-form.model';
+import { AdmAcmConfiguration } from '../../models/adm-acm-configuration.model';
+import { AcdmConfigurationService } from '../../services/acdm-configuration.service';
+import { DetailsAdmAcmComponent } from './details-adm-acm.component';
 
-xdescribe('DetailsComponent', () => {
-  let component: DetailsComponent;
-  let fixture: ComponentFixture<DetailsComponent>;
+describe('DetailsAdmAcmComponent', () => {
+  let comp: DetailsAdmAcmComponent;
+  let fixture: ComponentFixture<DetailsAdmAcmComponent>;
 
-  const conf = new Configuration();
-  conf.maxNumberOfRelatedDocuments = -1;
-
-  const _DetailsService = jasmine.createSpyObj<DetailsService>(
-    'DetailsService',
-    [
-      'getReasonsOnISO',
-      'getReasons',
-      'setDateOfIssueRelatedDocument',
-      'setPassenger',
-      'setReasonForMemoIssuanceCode',
-      'setReasonForMemo',
-      'setRelatedTicketDocuments'
-    ]
+  const acdmConfigurationServiceStub = jasmine.createSpyObj<
+    AcdmConfigurationService
+  >('AcdmConfigurationService', ['getConfiguration']);
+  acdmConfigurationServiceStub.getConfiguration.and.returnValue(
+    of(new AdmAcmConfiguration())
   );
-  const _AdmAcmService = jasmine.createSpyObj<AdmAcmService>('AdmAcmService', [
-    'getConfiguration'
-  ]);
-  const _AlertsService = jasmine.createSpyObj<AlertsService>('AlertsService', [
-    'setAlertTranslate'
-  ]);
-
-  _AdmAcmService.getConfiguration.and.returnValue(Observable.of(conf));
-
-  _DetailsService.getReasons.and.returnValue(Observable.of({}));
-  _DetailsService.getReasonsOnISO.and.returnValue(Observable.of([]));
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [SharedModule, BrowserAnimationsModule],
-      providers: [
-        { provide: AlertsService, useValue: _AlertsService },
-        { provide: DetailsService, useValue: _DetailsService },
-        { provide: AdmAcmService, useValue: _AdmAcmService },
-        MessageService
-      ],
-      declarations: [DetailsComponent]
-    }).compileComponents();
-  }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DetailsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    TestBed.configureTestingModule({
+      declarations: [DetailsAdmAcmComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+        {
+          provide: AcdmConfigurationService,
+          useValue: acdmConfigurationServiceStub
+        }
+      ]
+    });
+    fixture = TestBed.createComponent(DetailsAdmAcmComponent);
+    comp = fixture.componentInstance;
+    comp.model = new AcdmDetailsForm();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('can load instance', () => {
+    expect(comp).toBeTruthy();
   });
 
-  it('onRelatedDocumentChange', () => {
-    _DetailsService.setDateOfIssueRelatedDocument.calls.reset();
-    _DetailsService.setDateOfIssueRelatedDocument.and.returnValue(
-      Observable.of({})
-    );
-
-    component.relatedDocument = new Date('01/01/2018');
-    component.onRelatedDocumentChange();
-    expect(_DetailsService.setDateOfIssueRelatedDocument.calls.count()).toBe(
-      1,
-      'setDateOfIssueRelatedDocument.calls'
-    );
+  it('type defaults to: EnvironmentType.ACDM', () => {
+    expect(comp.type).toEqual(EnvironmentType.ACDM);
   });
-
-  it('onPasengerChange', () => {
-    _DetailsService.setPassenger.calls.reset();
-    _DetailsService.setPassenger.and.returnValue(Observable.of({}));
-
-    component.passenger = 'AAA';
-    component.onPasengerChange();
-    expect(_DetailsService.setPassenger.calls.count()).toBe(
-      1,
-      'setPassenger.calls'
-    );
-  });
-
-  it('onReasonForMemoIssuanceCodeChange', () => {
-    _DetailsService.setReasonForMemoIssuanceCode.calls.reset();
-    _DetailsService.setReasonForMemoIssuanceCode.and.returnValue(
-      Observable.of({})
-    );
-
-    component.reasonForMemoIssuanceCode = 'AAA';
-    component.onReasonForMemoIssuanceCodeChange();
-    expect(_DetailsService.setReasonForMemoIssuanceCode.calls.count()).toBe(
-      1,
-      'setReasonForMemoIssuanceCode.calls'
-    );
-  });
-
-  it('onReasonForMemoChange', () => {
-    _DetailsService.setReasonForMemo.calls.reset();
-    _DetailsService.setReasonForMemo.and.returnValue(Observable.of({}));
-
-    component.reasonForMemo = 'AAA';
-    component.onReasonForMemoChange();
-    expect(_DetailsService.setReasonForMemo.calls.count()).toBe(
-      1,
-      'setReasonForMemo.calls'
-    );
-  });
-
-  it('checkNumbers', () => {
-    component.documentNumber = '1a2A';
-    component.checkNumbers();
-    expect(component.documentNumber).toBe('12');
-  });
-
-  it('topTenSelect', () => {
-    _DetailsService.setReasonForMemo.calls.reset();
-    _DetailsService.setReasonForMemo.and.returnValue(Observable.of({}));
-
-    const reason = new Reason();
-    reason.detail = 'Prueba1';
-    reason.id = 0;
-    reason.isoCountryCode = 'AAA';
-    reason.title = 'Prueba1 Tit';
-    component.elemSelect = reason;
-    component.topTenSelect();
-    expect(_DetailsService.setReasonForMemo.calls.count()).toBe(
-      1,
-      'setReasonForMemo.calls'
-    );
-    expect(component.reasonForMemo == reason.detail).toBe(true);
-  });
-  /*
-  it('addDocument, add 1', () => {
-    _MultitabService.pushTicket.calls.reset();
-    _MultitabService.pushTicket.and.returnValue(Observable.of({}));
-
-    component.documentNumber = '1111111111111';
-    component.addDocument();
-    expect(_MultitabService.pushTicket.calls.count()).toBe(1, 'pushTicket.calls');
-  });
- */
 });

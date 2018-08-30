@@ -1,4 +1,4 @@
-<form [formGroup]="airlineFormModelGroup">
+<form [formGroup]="model.airlineFormModelGroup">
   <div class="form-row">
 
     <div class="form-group col-2 minWidth" >
@@ -9,8 +9,8 @@
         [inputMaxTextLength]="'3'"
         [type]="'regex'"
         [typingPattern]="'^[a-zA-Z0-9]*$'"
-        [formGroupParent]="airlineFormModelGroup"
-        [formControlParentName]="'airlineCode'">
+        [groupForm]="model.airlineFormModelGroup"
+        [controlName]="'airlineCode'">
       </bspl-input-form-control>
     </div>
 
@@ -45,8 +45,8 @@
         [type]="'regex'"
         [typingPattern]="'^[0-9]*$'"
         [inputMaxTextLength]="'15'"
-        [formGroupParent]="airlineFormModelGroup"
-        [formControlParentName]="'airlineVatNumber'">
+        [groupForm]="model.airlineFormModelGroup"
+        [controlName]="'airlineVatNumber'">
       </bspl-input-form-control>
     </div>
   </div>
@@ -60,15 +60,15 @@
         [type]="'regex'"
         [typingPattern]="'^[a-zA-Z0-9]*$'"
         [inputMaxTextLength]="'20'"
-        [formGroupParent]="airlineFormModelGroup"
-        [formControlParentName]="'airlineRegistrationNumber'">
+        [groupForm]="model.airlineFormModelGroup"
+        [controlName]="'airlineRegistrationNumber'">
       </bspl-input-form-control>
     </div>
   </div>
 
   <bspl-contact
     *ngIf="showContact"
-    [contactFormModelGroup]="airlineFormModelGroup.get('airlineContact')"
+    [model]="model.airlineContact"
     [disabledComponent]="disabledContact"
     (returnForm)="onChangeContact($event)">
   </bspl-contact>

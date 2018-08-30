@@ -8,7 +8,7 @@ import { AdmAcmComponent } from './adm-acm.component';
 import { AmountAdmAcmComponent } from './components/amount-adm-acm/amount-adm-acm.component';
 import { BasicInfoAdmAcmComponent } from './components/basic-info-adm-acm/basic-info-adm-acm.component';
 import { DetailsAdmAcmComponent } from './components/details-adm-acm/details-adm-acm.component';
-import { AcdmConfigurationService } from './services/adm-acm-configuration.service';
+import { AcdmConfigurationService } from './services/acdm-configuration.service';
 import { CountryService } from './services/country.service';
 import { PeriodService } from './services/period.service';
 import { TocaService } from './services/toca.service';

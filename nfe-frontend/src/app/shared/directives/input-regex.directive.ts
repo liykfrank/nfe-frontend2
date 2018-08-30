@@ -1,4 +1,6 @@
 import { Directive, HostListener, ElementRef, Input } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { GLOBALS } from '../constants/globals';
 
 @Directive({
   selector: '[bsplInputRegex]'
@@ -9,7 +11,7 @@ export class InputRegexDirective {
 
   @Input('regexPattern')
   regexPattern;
-  constructor(private elemntRef: ElementRef) {
+  constructor(private elemntRef: ElementRef, private _control: NgControl) {
     this.el = this.elemntRef.nativeElement;
   }
 
@@ -21,11 +23,21 @@ export class InputRegexDirective {
     }
 
     const regex = new RegExp(this.regexPattern);
-    const current: string = this.el.value;
-    const next: string = current.concat(event.key);
 
-    if (next && !String(next).match(regex)) {
+    if (!String(event.key).match(regex) && !String(event.key).toUpperCase().match(regex)) {
       event.preventDefault();
     }
+  }
+
+
+  @HostListener('keyup', ['$event'])
+  onKeyup(event: KeyboardEvent) {
+
+    if (this.regexPattern.indexOf('a-z') === -1) {
+      this.el.value = this.el.value.toUpperCase();
+      this._control.control.setValue(this.el.value, GLOBALS.REACTIVE_FORMS.EMIT_EVENT_FALSE);
+    }
+    event.preventDefault();
+
   }
 }

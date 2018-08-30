@@ -7,12 +7,12 @@ import { NgControl } from '@angular/forms';
 })
 export class DecimalsFormatterDirective implements OnInit, OnChanges {
 
+  @Input() maxLength: number = 11;
+  @Input() decimals: number = 0;
 
-  @Input('maxLength') maxLength: number = 11;
   private el: HTMLInputElement;
   private value_aux;
 
-  @Input() decimals: number = 0;
 
   constructor(
     private elemntRef: ElementRef,
@@ -30,7 +30,7 @@ export class DecimalsFormatterDirective implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.decimals) {
       this.value_aux = this._control.control.value;
-      this.onBlur(null);
+      this.onBlur(this._DecimalsFormatterPipe.transform(this.value_aux, this.decimals));
     }
   }
 
@@ -49,23 +49,18 @@ export class DecimalsFormatterDirective implements OnInit, OnChanges {
 
   @HostListener('blur', ['$event.target.value'])
   onBlur(value) {
-    const transformed = this._DecimalsFormatterPipe.transform(this.value_aux, this.decimals);
-    this._control.control.setValue(this._DecimalsFormatterPipe.parse(transformed, this.decimals));
-    setTimeout(() => this.el.value = transformed, 0);
-  }
+    const transformed = this._DecimalsFormatterPipe.transform(value, this.decimals);
+    this._control.control.setValue(Number(value));
 
-  @HostListener('keyup', ['$event.target.value'])
-  onKeyup(value) {
-    if (this.checkLength(this.el.value)) {
-      this.value_aux = this.el.value;
-    }
-    this.el.value = this.value_aux;
+    setTimeout(() => this.el.value = transformed, 0);
   }
 
   @HostListener('keydown', ['$event.key'])
   onKeydown(value) {
     if (this.checkKeys(value)) {
       return true;
+    } else if (!this.checkLength(this.el.value + value)) {
+      return false;
     }
 
     const reg = new RegExp('[0-9.]');
