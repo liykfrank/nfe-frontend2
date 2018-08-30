@@ -1,0 +1,47 @@
+<div class="form-group">
+    <label *ngIf="label != undefined" [ngClass]="{'text-nowrap': wrapText}" [innerHTML]="label"></label>
+    <div class="form-control header" (click)="toggleDrop()" [ngClass]="checkClassOpen()">
+        <span *ngIf="_optionSelected.length > 1">
+            {{ _optionSelected.length }} <span l10nTranslate>CUSTOM-DROPDOWN.options-selected</span>   
+        </span>
+        <span *ngIf="_optionSelected.length == 1">
+            {{ _optionSelected[0][optionLabel] }}
+        </span>
+        <span *ngIf="_optionSelected.length == 0">
+            {{ placeholderSelect }}
+        </span>
+    </div>
+    <div class="options" [ngClass]="checkClassOpen()">
+        <div class="search-bar input-group" *ngIf="checkSearchBar()">
+            <input class="form-control" type="text" placeholder="{{placeholderSearchBar}}" (input)="simpleSearch()" [(ngModel)]="filter_value">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary btn-search">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        <div class="select-all"
+            *ngIf="checkSelectAll()"
+            [ngClass]="checkClassAllSelected()" 
+            (click)="selectAll()" 
+            l10nTranslate>
+            <div class="pull-left checkbox-icon"
+                [ngClass]="checkClassAllSelected()"></div>
+            CUSTOM-DROPDOWN.select-all
+        </div>
+        <p-scrollPanel [style]="{width: '100%', height: scroll_height}" styleClass="custom">
+            <div class="single-option" 
+                [ngClass]="checkClassSelected(opt)" 
+                *ngFor="let opt of options_filtered" 
+                (click)="selectOption(opt)">
+                <div class="pull-left checkbox-icon"
+                     [ngClass]="checkClassSelected(opt)"></div>
+                {{ opt[optionLabel] }}
+            </div>
+        </p-scrollPanel>
+        <div *ngIf="checkButtonsBar()" class="buttons-bar">
+            <a class="btn float-right" (click)="clickApply()" l10nTranslate>CUSTOM-DROPDOWN.apply</a>
+            <a class="btn float-right" (click)="clickCancel()" l10nTranslate>CUSTOM-DROPDOWN.cancel</a>
+        </div>
+    </div>
+</div>

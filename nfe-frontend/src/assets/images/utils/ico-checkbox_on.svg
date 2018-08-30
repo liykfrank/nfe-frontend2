@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>Path_418</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="forms/checkbox/checked" transform="translate(0.000000, -1.000000)" fill-rule="nonzero">
+            <g id="checkbox_checked">
+                <g id="Group_33610" transform="translate(0.000000, 0.968000)" fill="#152C5A">
+                    <rect id="Background" x="0" y="0.032" width="16.039" height="16.039" rx="1.5"></rect>
+                </g>
+                <polygon id="Path_418" fill="#FFFFFF" points="13.045 6.687 11.81 5.375 7.29 9.895 4.957 7.562 3.645 8.875 7.29 12.447"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

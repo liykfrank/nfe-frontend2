@@ -31,14 +31,14 @@ describe('RefundConfigurationService', () => {
   }));
 
   it('getConfiguration', inject([RefundConfigurationService], (service: RefundConfigurationService) => {
-    expect(service.getConfigurationByISO).toBeTruthy();
+    expect(service.changeConfigurationByISO).toBeTruthy();
   }));
 
 
   it('getWithISO', inject([RefundConfigurationService], (service: RefundConfigurationService) => {
     HTTP.get.calls.reset();
     HTTP.get.and.returnValue(Observable.of(200));
-    service.getConfigurationByISO('ABC');
+    service.changeConfigurationByISO('ABC');
     expect(HTTP.get.calls.count()).toBe(1, 'expected only one call');
 
   }));

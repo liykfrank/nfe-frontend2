@@ -8,7 +8,8 @@ describe('DocumentsComponent', () => {
   let component: DocumentsComponent;
   let fixture: ComponentFixture<DocumentsComponent>;
 
-  const elem1 = new TicketDocument(), elem2 = new TicketDocument();
+  const elem1 = new TicketDocument(),
+    elem2 = new TicketDocument();
 
   elem1.relatedTicketDocumentNumber = '111';
   elem2.relatedTicketDocumentNumber = '222';
@@ -34,9 +35,11 @@ describe('DocumentsComponent', () => {
   });
 
   it('deleteElem', () => {
-    expect(component.documents.length).toBe(2);
+    let aux;
+    component.removeTicket.subscribe(data => (aux = data));
+
     component.deleteElem(1);
-    expect(component.documents.length).toBe(1);
+    expect(aux).toBe(1);
   });
 
   it('onClickTicket', () => {

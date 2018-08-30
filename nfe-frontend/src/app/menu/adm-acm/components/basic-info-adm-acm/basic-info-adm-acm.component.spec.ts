@@ -1,312 +1,157 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Observable } from 'rxjs/Observable';
+import { HttpClientModule } from '@angular/common/http';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslationService, TranslationModule } from 'angular-l10n';
+import { of } from 'rxjs/observable/of';
 
-import { AlertsService } from '../../../../core/services/alerts.service';
-import { Contact } from '../../../../shared/models/contact.model';
-import { AgentService } from '../../../../shared/services/resources/agent.service';
-import { SharedModule } from '../../../../shared/shared.module';
-import { Configuration } from '../../models/configuration.model';
-import { AdmAcmService } from '../../services/adm-acm.service';
+import { EnvironmentType } from '../../../../shared/enums/environment-type.enum';
+import { IssueSharedModule } from '../../../../shared/issue-shared.module';
+import { AcdmBasicInfoFormModel } from '../../models/acdm-basic-info-form.model';
+import { AdmAcmConfiguration } from '../../models/adm-acm-configuration.model';
+import { AcdmConfigurationService } from '../../services/acdm-configuration.service';
 import { BasicInfoService } from '../../services/basic-info.service';
-import { KeyValue } from './../../../../shared/models/key.value.model';
-import { CompanyService } from './../../../../shared/services/resources/company.service';
-import { BasicInfoComponent } from './basic-info.component';
+import { AlertsService } from './../../../../core/services/alerts.service';
+import { CurrencyService } from './../../../../shared/components/currency/services/currency.service';
+import { PeriodService } from './../../services/period.service';
+import { TocaService } from './../../services/toca.service';
+import { BasicInfoAdmAcmComponent } from './basic-info-adm-acm.component';
+import { l10nConfig } from '../../../../shared/base/conf/l10n.config';
 
-xdescribe('BasicInfoComponent', () => {
-  let component: BasicInfoComponent;
-  let fixture: ComponentFixture<BasicInfoComponent>;
+describe('BasicInfoAdmAcmComponent', () => {
+  let comp: BasicInfoAdmAcmComponent;
+  let fixture: ComponentFixture<BasicInfoAdmAcmComponent>;
 
-  const conf = new Configuration();
+  const acdmConfigurationServiceStub = jasmine.createSpyObj<
+    AcdmConfigurationService
+  >('AcdmConfigurationService', ['getConfiguration', 'getConfigurationByISO']);
+  acdmConfigurationServiceStub.getConfiguration.and.returnValue(
+    of(new AdmAcmConfiguration())
+  );
+  acdmConfigurationServiceStub.getConfigurationByISO.and.returnValue(of());
 
-  conf.agentVatNumberEnabled = false;
-  conf.airlineVatNumberEnabled = false;
-  conf.companyRegistrationNumberEnabled = false;
-  conf.cpPermittedForConcerningIssue = false;
-  conf.cpPermittedForConcerningRefund = false;
-  conf.defaultStat = '';
-  conf.freeStat = true;
-  conf.isoCountryCode = '';
-  conf.maxNumberOfRelatedDocuments = -1;
-  conf.mfPermittedForConcerningIssue = false;
-  conf.mfPermittedForConcerningRefund = false;
-  conf.nridAndSpamEnabled = false;
-  conf.taxOnCommissionEnabled = false;
-  conf.taxOnCommissionSign = -1;
-
-  const keyValues: KeyValue[] = [
-    {
-      code: 'test',
-      description: 'description test'
-    }
-  ];
-
-  const countries = [
-    { isoCountryCode: 'AA', name: 'Country AA' },
-    { isoCountryCode: 'BB', name: 'Country BB' },
-    { isoCountryCode: 'CC', name: 'Country CC' }
-  ];
-
-  const toca = [{ code: 'AAA', description: 'pppp', isoCountryCode: 'AA' }];
-  const currency = [
-    {
-      isoc: 'BB',
-      currencies: [
-        { name: 'ZZZ', numDecimals: 0, expirationDate: '2017-01-01' }
-      ]
-    }
-  ];
-  const periods = { isoc: 'AA', values: [2018071, 2018072] };
-
-  const _CompanyService = jasmine.createSpyObj<CompanyService>(
-    'CompanyService',
+  const basicInfoServiceStub = jasmine.createSpyObj<BasicInfoService>(
+    'BasicInfoService',
     [
-      'getAirlineCountryAirlineCode',
-      'getFromServerAirlineCountryAirlineCode',
-      'setBaseURL'
+      'setToca',
+      'setSubType',
+      'setShowSpam',
+      'setConcernsIndicator',
+      'setCurrency'
     ]
   );
-  _CompanyService.setBaseURL.and.returnValue(Observable.of({}));
+  basicInfoServiceStub.setToca.and.returnValue(of());
+  basicInfoServiceStub.setSubType.and.returnValue(of());
+  basicInfoServiceStub.setShowSpam.and.returnValue(of());
+  basicInfoServiceStub.setConcernsIndicator.and.returnValue(of());
+  basicInfoServiceStub.setCurrency.and.returnValue(of());
 
-  const _AgentService = jasmine.createSpyObj<AgentService>('AgentService', [
-    'getAgent',
-    'getAgentWithCode',
-    'setBaseURL'
-  ]);
-  _AgentService.setBaseURL.and.returnValue(Observable.of({}));
-
-  const _BISvc = jasmine.createSpyObj<BasicInfoService>('BasicInfoService', [
-    'setBasicInfo',
-    'getCountries',
-    'getTocaAndCurrencies',
-    'getToca',
-    'getCurrency',
-    'getPeriod',
-    'getValidBasicInfo',
-    'getSubTypeList',
-    'getSPDRCombo',
-    'getStatList',
-    'setBasicInfo'
-  ]);
-  const _AdmAcmService = jasmine.createSpyObj<AdmAcmService>('AdmAcmService', [
-    'getConfiguration',
-    'findCountryConfiguration',
-    'getErrors',
-    'setCurrency',
-    'setSubtype',
-    'setSpdr',
-    'setSpan'
-  ]);
-
-  const _AlertsService = jasmine.createSpyObj<AlertsService>('AlertsService', [
-    'setAlertTranslate'
-  ]);
-
-  _AdmAcmService.getConfiguration.and.returnValue(Observable.of(conf));
-  _AdmAcmService.findCountryConfiguration.and.returnValue(Observable.of(conf));
-  _AdmAcmService.getErrors.and.returnValue(Observable.of([]));
-  _AdmAcmService.setSubtype.and.callThrough();
-  _AdmAcmService.setSpdr.and.callThrough();
-
-  _BISvc.getCountries.and.returnValue(Observable.of(countries));
-  _BISvc.getTocaAndCurrencies.and.returnValue(Observable.of({}));
-  _BISvc.getToca.and.returnValue(Observable.of(toca));
-  _BISvc.getCurrency.and.returnValue(Observable.of(currency));
-  _BISvc.getPeriod.and.returnValue(Observable.of(periods));
-  _BISvc.getValidBasicInfo.and.returnValue(Observable.of(true));
-  _BISvc.setBasicInfo.and.returnValue(Observable.of({}));
-  _BISvc.getValidBasicInfo.and.returnValue(Observable.of({}));
-  _BISvc.getSubTypeList.and.returnValue([keyValues]);
-  _BISvc.getSPDRCombo.and.returnValue([keyValues]);
-  _BISvc.getStatList.and.returnValue([keyValues]);
-
-  _CompanyService.getAirlineCountryAirlineCode.and.returnValue(
-    Observable.of({
-      address1: 'mi dirección 1',
-      airlineCode: 'ABC',
-      city: 'Ciudad1',
-      country: 'Pais1',
-      globalName: 'Name',
-      isoCountryCode: 'NA',
-      postalCode: '12345',
-      taxNumber: 'taxNumber',
-      toDate: 'Date'
-    })
+  const alertsServiceStub = jasmine.createSpyObj<AlertsService>(
+    'AlertsService',
+    ['getAccept', 'setAlertTranslate']
   );
-  _CompanyService.getFromServerAirlineCountryAirlineCode.and.returnValue(
-    Observable.of({})
-  );
-  _AgentService.getAgent.and.returnValue(
-    Observable.of({
-      billingCity: 'City1',
-      billingCountry: 'Country1',
-      billingPostalCode: '00000',
-      billingStreet: 'Street1',
-      defaultDate: '01/01/2018',
-      iataCode: 'SS',
-      isoCountryCode: 'SS',
-      name: 'Agent',
-      vatNumber: 'ABC123'
-    })
-  );
-  _AgentService.getAgentWithCode.and.returnValue(Observable.of({}));
+  alertsServiceStub.getAccept.and.returnValue(of());
+  alertsServiceStub.setAlertTranslate.and.returnValue(of());
 
-  _AlertsService.setAlertTranslate.and.returnValue(Observable.of({}));
+  const currencyServiceStub = jasmine.createSpyObj<CurrencyService>(
+    'CurrencyService',
+    ['getCurrencyState']
+  );
+  currencyServiceStub.getCurrencyState.and.returnValue(of());
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [SharedModule, BrowserAnimationsModule],
-      declarations: [BasicInfoComponent],
-      providers: [
-        { provide: AlertsService, useValue: _AlertsService },
-        { provide: CompanyService, useValue: _CompanyService },
-        { provide: AgentService, useValue: _AgentService },
-        { provide: BasicInfoService, useValue: _BISvc },
-        { provide: AdmAcmService, useValue: _AdmAcmService }
-      ]
-    }).compileComponents();
-  }));
+  const periodServiceStub = jasmine.createSpyObj<PeriodService>(
+    'PeriodService',
+    ['getPeriodWithISO']
+  );
+  periodServiceStub.getPeriodWithISO.and.returnValue(of());
+
+  const tocaServiceStub = jasmine.createSpyObj<TocaService>('TocaService', [
+    'getTocaWithISO'
+  ]);
+  tocaServiceStub.getTocaWithISO.and.returnValue(of());
+
+  const translationServiceStub = jasmine.createSpyObj<TranslationService>(
+    'TranslationService',
+    ['translate']
+  );
+  translationServiceStub.translate.and.returnValue(of('TEXT'));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BasicInfoComponent);
-    component = fixture.componentInstance;
-    // component.isADM = true;
-    fixture.detectChanges();
+    TestBed.configureTestingModule({
+      imports: [
+        TranslationModule.forRoot(l10nConfig), IssueSharedModule, HttpClientModule
+      ],
+      declarations: [BasicInfoAdmAcmComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+        {
+          provide: AcdmConfigurationService,
+          useValue: acdmConfigurationServiceStub
+        },
+        { provide: BasicInfoService, useValue: basicInfoServiceStub },
+        { provide: AlertsService, useValue: alertsServiceStub },
+        { provide: CurrencyService, useValue: currencyServiceStub },
+        { provide: PeriodService, useValue: periodServiceStub },
+        { provide: TocaService, useValue: tocaServiceStub },
+        { provide: TranslationService, useValue: translationServiceStub }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(BasicInfoAdmAcmComponent);
+    comp = fixture.componentInstance;
+    comp.isAdm = true;
+    comp.model = new AcdmBasicInfoFormModel();
+    comp.countryList = [
+      { isoCountryCode: 'AA', name: 'Country AA' },
+      { isoCountryCode: 'BB', name: 'Country BB' },
+      { isoCountryCode: 'CC', name: 'Country CC' }
+    ];
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('can load instance', () => {
+    expect(comp).toBeTruthy();
   });
 
-  // it('setNetReporting', () => {
-  //   _BISvc.setBasicInfo.calls.reset();
-  //   _AdmAcmService.setSpan.calls.reset();
+  it('isAdm defaults to: true', () => {
+    expect(comp.isAdm).toEqual(true);
+  });
 
-  //   _BISvc.setBasicInfo.and.returnValue(Observable.of({}));
-  //   _AdmAcmService.setSpan.and.returnValue(Observable.of({}));
+  it('type defaults to: EnvironmentType.ACDM', () => {
+    expect(comp.type).toEqual(EnvironmentType.ACDM);
+  });
 
-  //   component.setNetReporting();
+  it('typeList defaults to: []', () => {
+    expect(comp.typeList.length).toBeGreaterThan(0);
+  });
 
-  //   expect(_AdmAcmService.setSpan.calls.count()).toBe(
-  //     1,
-  //     '_AdmAcmService.setSpan error'
-  //   );
-  //   expect(_BISvc.setBasicInfo.calls.count()).toBe(
-  //     1,
-  //     '_BISvc.setBasicInfo error'
-  //   );
-  // });
+  it('forList defaults to: [I, R, X, E]', () => {
+    expect(comp.forList).toEqual(['I', 'R', 'X', 'E']);
+  });
 
-  // it('onChangeAirlineCode', () => {
-  //   _CompanyService.getFromServerAirlineCountryAirlineCode.calls.reset();
-  //   _CompanyService.getFromServerAirlineCountryAirlineCode.and.returnValue(
-  //     Observable.of({})
-  //   );
-  //   component.basicInfo.isoCountryCode = 'AA';
-  //   component.onChangeAirlineCode('11111111');
-  //   expect(
-  //     _CompanyService.getFromServerAirlineCountryAirlineCode.calls.count()
-  //   ).toBe(1);
-  // });
+  it('tocaList defaults to: []', () => {
+    expect(comp.tocaList).toEqual([]);
+  });
 
-  // it('onChangeVatNumber', () => {
-  //   component.configuration.airlineVatNumberEnabled = true;
-  //   fixture.detectChanges();
+  it('currencyList defaults to: []', () => {
+    expect(comp.currencyList).toEqual([]);
+  });
 
-  //   _BISvc.setBasicInfo.calls.reset();
-  //   _BISvc.setBasicInfo.and.returnValue(Observable.of({}));
-  //   component.onChangeVatNumber('TEXT');
-  //   expect(component.basicInfo.airlineVatNumber).toBe('TEXT');
-  //   expect(_BISvc.setBasicInfo.calls.count()).toBe(
-  //     1,
-  //     '_BISvc.setBasicInfo error'
-  //   );
-  // });
+  it('periodNumber defaults to: []', () => {
+    expect(comp.periodNumber).toEqual([]);
+  });
 
-  // it('onChangeCompanyReg', () => {
-  //   component.configuration.companyRegistrationNumberEnabled = true;
-  //   fixture.detectChanges();
+  it('periodMonth defaults to: []', () => {
+    expect(comp.periodMonth).toEqual([]);
+  });
 
-  //   _BISvc.setBasicInfo.calls.reset();
-  //   _BISvc.setBasicInfo.and.returnValue(Observable.of({}));
-  //   component.onChangeCompanyReg('TEXT');
-  //   expect(component.basicInfo.airlineRegistrationNumber).toBe('TEXT');
-  //   expect(_BISvc.setBasicInfo.calls.count()).toBe(
-  //     1,
-  //     '_BISvc.setBasicInfo error'
-  //   );
-  // });
+  it('periodYear defaults to: []', () => {
+    expect(comp.periodYear).toEqual([]);
+  });
 
-  // it('onChangeContact', () => {
-  //   component.configuration.companyRegistrationNumberEnabled = true;
-  //   fixture.detectChanges();
-
-  //   const contact: Contact = new Contact();
-  //   contact.contactName = 'TEXT';
-  //   contact.email = 'TEXT';
-  //   contact.phoneFaxNumber = 'TEXT';
-
-  //   _BISvc.setBasicInfo.calls.reset();
-  //   _BISvc.setBasicInfo.and.returnValue(Observable.of({}));
-  //   component.onChangeContact(contact);
-  //   expect(component.basicInfo.airlineContact.contactName).toBe('TEXT');
-  //   expect(component.basicInfo.airlineContact.email).toBe('TEXT');
-  //   expect(component.basicInfo.airlineContact.phoneFaxNumber).toBe('TEXT');
-  //   expect(_BISvc.setBasicInfo.calls.count()).toBe(
-  //     1,
-  //     '_BISvc.setBasicInfo error'
-  //   );
-  // });
-
-  // it('airlineMoreDetails/closeAirline', () => {
-  //   component.airlineMoreDetails();
-  //   expect(component.displayAirline).toBe(true);
-  //   component.closeAirline();
-  //   expect(component.displayAirline).toBe(false);
-  // });
-
-  // it('onChangeAgentCode', () => {
-  //   _AgentService.getAgentWithCode.calls.reset();
-  //   _AgentService.getAgentWithCode.and.returnValue(Observable.of({}));
-  //   component.onChangeAgentCode('TEXT');
-  //   expect(_AgentService.getAgentWithCode.calls.count()).toBe(
-  //     1,
-  //     '_BISvc.setBasicInfo error'
-  //   );
-  // });
-
-  // it('onChangeAgentVatNumber', () => {
-  //   component.configuration.agentVatNumberEnabled = true;
-  //   fixture.detectChanges();
-
-  //   _BISvc.setBasicInfo.calls.reset();
-  //   _BISvc.setBasicInfo.and.returnValue(Observable.of({}));
-  //   component.onChangeAgentVatNumber('TEXT');
-  //   expect(component.basicInfo.agentVatNumber).toBe('TEXT');
-  //   expect(_BISvc.setBasicInfo.calls.count()).toBe(
-  //     1,
-  //     '_BISvc.setBasicInfo error'
-  //   );
-  // });
-
-  // it('onChangeAgentCompanyReg', () => {
-  //   component.configuration.companyRegistrationNumberEnabled = true;
-  //   fixture.detectChanges();
-
-  //   _BISvc.setBasicInfo.calls.reset();
-  //   _BISvc.setBasicInfo.and.returnValue(Observable.of({}));
-  //   component.onChangeAgentCompanyReg('TEXT');
-  //   expect(component.basicInfo.agentRegistrationNumber).toBe('TEXT');
-  //   expect(_BISvc.setBasicInfo.calls.count()).toBe(
-  //     1,
-  //     '_BISvc.setBasicInfo error'
-  //   );
-  // });
-
-  // it('agentMoreDetails/closeAgent', () => {
-  //   component.agentMoreDetails();
-  //   expect(component.displayAgent).toBe(true);
-  //   component.closeAgent();
-  //   expect(component.displayAgent).toBe(false);
-  // });
+  it('ngOnInit: makes expected calls', () => {
+    comp.ngOnInit();
+    expect(basicInfoServiceStub.setSubType).toHaveBeenCalled();
+    expect(basicInfoServiceStub.setConcernsIndicator).toHaveBeenCalled();
+    expect(basicInfoServiceStub.setToca).toHaveBeenCalled();
+    expect(currencyServiceStub.getCurrencyState).toHaveBeenCalled();
+  });
 });

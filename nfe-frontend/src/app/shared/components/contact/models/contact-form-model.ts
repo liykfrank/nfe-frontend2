@@ -1,6 +1,7 @@
 import { ReactiveFormHandlerModel } from '../../../base/reactive-form-handler-model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
+import { GLOBALS } from '../../../constants/globals';
 
 export class ContactFormModel extends ReactiveFormHandlerModel {
   contactFormModelGroup: FormGroup;
@@ -15,7 +16,7 @@ export class ContactFormModel extends ReactiveFormHandlerModel {
 
   createFormControls() {
     this.contactName = new FormControl({value: '', disabled: false}, [Validators.required]);
-    this.email = new FormControl('', [Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$'), Validators.required]);
+    this.email = new FormControl('', [Validators.pattern(GLOBALS.PATTERNS.EMAIL), Validators.required]);
     this.phoneFaxNumber = new FormControl({value: '', disabled: false}, [Validators.required]);
   }
 

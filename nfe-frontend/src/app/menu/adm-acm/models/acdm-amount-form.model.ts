@@ -1,26 +1,41 @@
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { ReactiveFormHandlerModel } from '../../../shared/base/reactive-form-handler-model';
+import { GLOBALS } from '../../../shared/constants/globals';
 
 export class AcdmAmountForm extends ReactiveFormHandlerModel {
-  _amountModelGroup: FormGroup;
+  amountModelGroup: FormGroup;
+  agentCalculations: FormGroup;
+  airlineCalculations: FormGroup;
+
+  taxMiscellaneousFees: FormArray;
+
+  amountPaidByCustomer: FormControl;
 
   constructor() {
     super();
   }
 
-  createFormControls() {}
-
-  createFormGroups() {
-    this._amountModelGroup = new FormGroup({
-      agentCalculations: this._inputAmount(),
-      airlineCalculations: this._inputAmount(),
-      taxMiscellaneousFees: new FormArray([this._taxFormModelGroup()]),
-      amountPaidByCustomer: new FormControl(0)
-    });
+  createFormControls() {
+    this.amountPaidByCustomer = new FormControl(0);
   }
 
-  createForm() {}
+  createFormGroups() {
+    this.agentCalculations = this._inputAmount();
+    this.airlineCalculations = this._inputAmount();
+
+    this.taxMiscellaneousFees = new FormArray([this._taxFormModelGroup()]);
+
+  }
+
+  createForm() {
+    this.amountModelGroup = new FormGroup({
+      agentCalculations: this.agentCalculations,
+      airlineCalculations: this.airlineCalculations,
+      taxMiscellaneousFees: this.taxMiscellaneousFees,
+      amountPaidByCustomer: this.amountPaidByCustomer
+    });
+  }
 
   private _inputAmount(): FormGroup {
     return new FormGroup({
@@ -34,21 +49,10 @@ export class AcdmAmountForm extends ReactiveFormHandlerModel {
 
   public _taxFormModelGroup(): FormGroup {
     return new FormGroup({
-      type: new FormControl('', [
-        Validators.pattern(
-          /^(([O][ABC][A-Z0-9./-]{0,6})|([A-Z0-9]{2})|([X][F](([A-Z]{3})([0-9]{1,3})?)?))$/
-        )
-      ]),
+      type: new FormControl('', [Validators.pattern(GLOBALS.PATTERNS.TAX)]),
       agentAmount: new FormControl(0),
       airlineAmount: new FormControl(0)
     });
   }
 
-  addTax() {
-    (this._amountModelGroup.get('taxMiscellaneousFees') as FormArray).push(this._taxFormModelGroup());
-  }
-
-  remove(pos: number) {
-    (this._amountModelGroup.get('taxMiscellaneousFees') as FormArray).removeAt(pos);
-  }
 }

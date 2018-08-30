@@ -5,18 +5,17 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start-mock": "ng serve --env=mock",
     "build": "ng build --env=dev",
     "build-dev": "ng build --env=dev",
     "build-qai": "ng build --env=qai",
     "build-uat": "ng build --env=uat",
-    "build-qaia": "ng build --env=qaia",
-    "test": "ts-node setkarma && ng test --env=mock-test --watch=false --cc",
+    "start-mock": "ng serve --env=mock",
+    "test": "ts-node setkarma && ng test --watch=false --cc",
+    "e2e": "ts-node setproct && ng e2e --env=mock",
+    "coverage": "ng test --watch=false --single-run --cc",
     "lint": "ng lint",
-    "e2e": "ts-node setproct && ng e2e --env=mock-proc",
     "json-server": "node json-server.js",
-    "coverage": "ng test --watch=false --env=mock --single-run --code-coverage",
-    "deploy": "concurrently --kill-others \"npm run json-server\" \"npm run start-mock\""
+    "mock": "concurrently --kill-others \"npm run json-server\" \"npm run start-mock\""
   },
   "dependencies": {
     "@angular/animations": "^5.2.0",

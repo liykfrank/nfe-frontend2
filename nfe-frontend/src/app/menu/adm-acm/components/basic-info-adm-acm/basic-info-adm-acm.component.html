@@ -1,6 +1,7 @@
-<form [formGroup]="basicInfoFormModelGroup">
+<form [formGroup]="basicInfoFormModelGroup" appIdentifier [base]="isAdm ? 'ADM.BASIC_INFO' : 'ACM.BASIC_INFO'">
   <div class="row">
     <div class="col-6">
+
       <div class="form-row">
         <div class="form-group col-6">
           <label l10nTranslate>ADM_ACM.BASIC_INFO.BSP.label</label>
@@ -40,10 +41,9 @@
       <bspl-agent
         [showMoreDetails]="'true'"
         [showContact]="false"
-        [agentFormModelGroup]="basicInfoFormModelGroup.get('agent')"
+        [model]="model.agent"
         [agentVatNumberEnabled]="configuration.agentVatNumberEnabled"
-        [companyRegistrationNumberEnabled]="configuration.companyRegistrationNumberEnabled"
-        (clickMoreDetails)="onClickMoreDetails($event)">
+        [companyRegistrationNumberEnabled]="configuration.companyRegistrationNumberEnabled">
       </bspl-agent>
 
     </div>
@@ -60,7 +60,6 @@
         </div>
       </div>
 
-
       <div class="form-row">
         <div class="form-group col-6">
           <label l10nTranslate>ADM_ACM.BASIC_INFO.number</label>
@@ -73,10 +72,9 @@
         [showMoreDetails]="true"
         [showContact]="true"
         [isoCountryCode]="configuration.isoCountryCode"
-        [airlineFormModelGroup]="basicInfoFormModelGroup.get('airline')"
+        [model]="model.airline"
         [airlineVatNumberEnabled]="configuration.airlineVatNumberEnabled"
-        [companyRegistrationNumberEnabled]="configuration.companyRegistrationNumberEnabled"
-        (clickMoreDetails)="onClickMoreDetails($event)">
+        [companyRegistrationNumberEnabled]="configuration.companyRegistrationNumberEnabled">
       </bspl-airline>
 
     </div>
@@ -112,19 +110,17 @@
           [internacionalLabel]="'ADM_ACM.BASIC_INFO.statCombo.internacional'"
           [freeStat]="configuration.freeStat"
           [defaultStat]="configuration.defaultStat"
-          [formGroupParent]="basicInfoFormModelGroup"
-          [formControlParentName]="'statisticalCode'">
+          [groupForm]="basicInfoFormModelGroup"
+          [controlName]="'statisticalCode'">
         </bspl-stat>
 
         <div class="form-group col-2" *ngIf="showNRID()">
-          <label l10nTranslate>ADM_ACM.BASIC_INFO.nr</label>
-          <div class="row no-gutters mt-2 pl-1">
-            <label class="custom-checkbox col-3">
-              <input type="checkbox" formControlName="netReporting">
-              <span class="checkmark"></span>
-            </label>
-          </div>
-          <bspl-field-error error=""></bspl-field-error>
+          <bspl-input-check-switch l10nTranslate
+            [groupForm]="model.basicInfoModelGroup"
+            [controlName]="'netReporting'"
+            [isCheckBox]="true"
+            [label]="'ADM_ACM.BASIC_INFO.nr'">
+          </bspl-input-check-switch>
         </div>
 
       </div>

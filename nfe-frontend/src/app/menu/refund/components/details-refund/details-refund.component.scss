@@ -21,7 +21,7 @@
 
     textarea {
         resize: none;
-      
+
         &.error {
           border-color: red !important;
         }
@@ -34,8 +34,16 @@
             font-size:14px;
         }
     }
-      
 
+
+}
+
+textarea {
+  resize: none;
+
+  &.error {
+    border-color: red !important;
+  }
 }
 
 

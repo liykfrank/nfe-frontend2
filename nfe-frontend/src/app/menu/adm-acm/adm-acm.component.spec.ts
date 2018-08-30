@@ -1,155 +1,111 @@
-import { CommonModule } from '@angular/common';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslationModule } from 'angular-l10n';
-import { MessageService } from 'primeng/components/common/messageservice';
-import { Observable } from 'rxjs/Observable';
-
-import { AlertsService } from '../../core/services/alerts.service';
-import { DocumentPopUpComponent } from '../../shared/components/multitabs/components/document-pop-up/document-pop-up.component';
-import { ResumeBarComponent } from '../../shared/components/resume-bar/resume-bar.component';
-import { AgentService } from '../../shared/services/resources/agent.service';
-import { CurrencyService } from '../../shared/services/resources/currency.service';
-import { ReasonService } from '../../shared/services/resources/reason.service';
-import { AdmAcmRoutingModule } from './adm-acm-routing.module';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { InputAmountServer } from './models/input-amount-server.model';
+import { Router } from '@angular/router';
+import { TranslationService } from 'angular-l10n';
+import { AlertsService } from './../../core/services/alerts.service';
+import { UtilsService } from './../../shared/services/utils.service';
+import { Acdm } from './models/acdm.model';
+import { AcdmsService } from './services/acdms.service';
+import { AcdmConfigurationService } from './services/acdm-configuration.service';
+import { CountryService } from './services/country.service';
 import { AdmAcmComponent } from './adm-acm.component';
-import { AmountComponent } from './components/amount/amount.component';
-import { BasicInfoComponent } from './components/basic-info/basic-info.component';
-import { DetailsComponent } from './components/details/details.component';
-import { AdmAcmService } from './services/adm-acm.service';
-import { AmountService } from './services/amount.service';
-import { BasicInfoService } from './services/basic-info.service';
-import { DetailsService } from './services/details.service';
-import { AcdmsService } from './services/resources/acdms.service';
-import { ConfigurationService } from './services/resources/configuration.service';
-import { CountryService } from './services/resources/country.service';
-import { PeriodService } from './services/resources/period.service';
-import { TocaService } from './services/resources/toca.service';
+import { ScreenType } from '../../shared/enums/screen-type.enum';
 
-xdescribe('AdmAcmComponent', () => {
-  let component: AdmAcmComponent;
-  let fixture: ComponentFixture<AdmAcmComponent>;
+describe('AdmAcmComponent', () => {
+    let comp: AdmAcmComponent;
+    let fixture: ComponentFixture<AdmAcmComponent>;
 
-  const _AdmAcmService = jasmine.createSpyObj<AdmAcmService>('AdmAcmService', [
-    'issueACDM',
-    'getConfiguration'
-  ]);
-  _AdmAcmService.getConfiguration.and.returnValue(Observable.of({}));
+    beforeEach(() => {
+        const inputAmountServerStub = {
+            commission: {},
+            fare: {},
+            spam: {},
+            tax: {},
+            taxOnCommission: {}
+        };
+        const routerStub = {
+            routerState: {
+                snapshot: {
+                    url: {}
+                }
+            }
+        };
+        const translationServiceStub = {
+            translate: () => ({})
+        };
+        const alertsServiceStub = {
+            setAlertTranslate: () => ({}),
+            setAlert: () => ({}),
+            getAccept: () => ({
+                subscribe: () => ({
+                    unsubscribe: () => ({})
+                })
+            })
+        };
+        const utilsServiceStub = {
+            touchAllForms: () => ({}),
+            setBackErrorsOnForms: () => ({})
+        };
+        const acdmStub = {
+            regularized: {}
+        };
+        const acdmsServiceStub = {
+            postAcdm: () => ({
+                subscribe: () => ({})
+            })
+        };
+        const acdmConfigurationServiceStub = {};
+        const countryServiceStub = {
+            get: () => ({
+                subscribe: () => ({})
+            })
+        };
+        TestBed.configureTestingModule({
+            declarations: [ AdmAcmComponent ],
+            schemas: [ NO_ERRORS_SCHEMA ],
+            providers: [
+                { provide: InputAmountServer, useValue: inputAmountServerStub },
+                { provide: Router, useValue: routerStub },
+                { provide: TranslationService, useValue: translationServiceStub },
+                { provide: AlertsService, useValue: alertsServiceStub },
+                { provide: UtilsService, useValue: utilsServiceStub },
+                { provide: Acdm, useValue: acdmStub },
+                { provide: AcdmsService, useValue: acdmsServiceStub },
+                { provide: AcdmConfigurationService, useValue: acdmConfigurationServiceStub },
+                { provide: CountryService, useValue: countryServiceStub }
+            ]
+        });
+        fixture = TestBed.createComponent(AdmAcmComponent);
+        comp = fixture.componentInstance;
+    });
 
-  const _BasicInfoService = jasmine.createSpyObj<BasicInfoService>(
-    'BasicInfoService',
-    ['getCountries', 'getBasicInfo']
-  );
-  const _AmountService = jasmine.createSpyObj<AmountService>('AmountService', [
-    'getValidTaxes'
-  ]);
+    it('can load instance', () => {
+        expect(comp).toBeTruthy();
+    });
 
-  const _DetailsService = jasmine.createSpyObj<DetailsService>(
-    'DetailsService',
-    ['getTicket', 'getReasonsOnISO', 'getReasons', 'setRelatedTicketDocuments']
-  );
-  _DetailsService.getReasonsOnISO.and.returnValue(Observable.of([]));
-  _DetailsService.getReasons.and.returnValue(Observable.of([]));
-  _DetailsService.setRelatedTicketDocuments.and.returnValue(Observable.of([]));
-  /*
-  const _MultitabService = jasmine.createSpyObj<MultitabService>('MultitabService',
-    [
-      'getShowThisTicket',
-      'getTickets',
-      'setUrl',
-      'getScreenType',
-      'setScreenType',
-      'setId',
-      'pushTicket',
-      'getFiles',
-      'setFiles'
-    ]);
-  _MultitabService.getShowThisTicket.and.returnValue(Observable.of({}));
-  _MultitabService.setScreenType.and.returnValue(Observable.of({}));
-  _MultitabService.getScreenType.and.returnValue(Observable.of(ScreenType.CREATE));
-  _MultitabService.getTickets.and.returnValue(Observable.of([]));
-  _MultitabService.getFiles.and.returnValue(Observable.of([]));
+    it('screen defaults to: ScreenType.CREATE', () => {
+        expect(comp.screen).toEqual(ScreenType.CREATE);
+    });
 
-  const _CommentsService = jasmine.createSpyObj<CommentsService>('CommentsService', ['getComments']);
-  _CommentsService.getComments.and.returnValue(Observable.of([]));
-*/
-  const _AcdmsService = jasmine.createSpyObj<AcdmsService>('AcdmsService', [
-    'get'
-  ]);
-  const _AgentService = jasmine.createSpyObj<AgentService>('AgentService', [
-    'get'
-  ]);
-  const _ConfigurationService = jasmine.createSpyObj<ConfigurationService>(
-    'ConfigurationService',
-    ['get']
-  );
-  const _CountryService = jasmine.createSpyObj<CountryService>(
-    'CountryService',
-    ['get']
-  );
-  const _CurrencyService = jasmine.createSpyObj<CurrencyService>(
-    'CurrencyService',
-    ['get']
-  );
-  const _PeriodService = jasmine.createSpyObj<PeriodService>('PeriodService', [
-    'get'
-  ]);
-  const _ReasonService = jasmine.createSpyObj<ReasonService>('ReasonService', [
-    'get'
-  ]);
-  const _TocaService = jasmine.createSpyObj<TocaService>('TocaService', [
-    'get'
-  ]);
+    it('id_acdm defaults to: acdm-master-container', () => {
+        expect(comp.id_acdm).toEqual('acdm-master-container');
+    });
 
-  const _AlertsService = jasmine.createSpyObj<AlertsService>('AlertsService', [
-    'setAlert',
-    'setAlertTranslate'
-  ]);
+    it('ticketDocuments defaults to: []', () => {
+        expect(comp.ticketDocuments).toEqual([]);
+    });
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        AdmAcmRoutingModule,
-        TranslationModule
-        /* BrowserAnimationsModule */
-      ],
-      providers: [
-        { provide: AdmAcmService, useValue: _AdmAcmService },
-        { provide: DetailsService, useValue: _DetailsService },
-        { provide: BasicInfoService, useValue: _BasicInfoService },
-        { provide: AmountService, useValue: _AmountService },
+    describe('onReturnIssue', () => {
+        it('makes expected calls', () => {
+            const alertsServiceStub: AlertsService = fixture.debugElement.injector.get(AlertsService);
+            const utilsServiceStub: UtilsService = fixture.debugElement.injector.get(UtilsService);
+            spyOn(alertsServiceStub, 'setAlertTranslate');
+            spyOn(utilsServiceStub, 'touchAllForms');
+            comp.onReturnIssue();
+            expect(alertsServiceStub.setAlertTranslate).toHaveBeenCalled();
+            expect(utilsServiceStub.touchAllForms).toHaveBeenCalled();
+        });
+    });
 
-        { provide: AcdmsService, useValue: _AcdmsService },
-        { provide: AgentService, useValue: _AgentService },
-        { provide: ConfigurationService, useValue: _ConfigurationService },
-        { provide: CountryService, useValue: _CountryService },
-        { provide: CurrencyService, useValue: _CurrencyService },
-        { provide: PeriodService, useValue: _PeriodService },
-        { provide: ReasonService, useValue: _ReasonService },
-        { provide: TocaService, useValue: _TocaService },
-
-        { provide: AlertsService, useValue: _AlertsService },
-        MessageService
-      ],
-      declarations: [
-        ResumeBarComponent,
-        BasicInfoComponent,
-        AmountComponent,
-        DetailsComponent,
-        DocumentPopUpComponent,
-        AdmAcmComponent
-      ]
-    }).compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(AdmAcmComponent);
-    component = fixture.componentInstance;
-    //component.isAdm = true;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
 });

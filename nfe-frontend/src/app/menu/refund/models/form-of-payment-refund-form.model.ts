@@ -1,8 +1,9 @@
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { ReactiveFormHandlerModel } from '../../../shared/base/reactive-form-handler-model';
+import { GLOBALS } from '../../../shared/constants/globals';
 
 export class FormOfPaymentRefundFormModel extends ReactiveFormHandlerModel {
-
   formOfPaymentRefundGroup: FormGroup;
   selectAmount: FormGroup;
   formOfPaymentAmounts: FormArray;
@@ -21,19 +22,21 @@ export class FormOfPaymentRefundFormModel extends ReactiveFormHandlerModel {
   createFormControls() {
     this.type = new FormControl('', []);
     this.amount = new FormControl('');
-    this.creditEPSubTotal = new FormControl({value: 0, disabled: true}, []);
-    this.totalAmount = new FormControl({value: 0, disabled: true}, [Validators.required]);
-    this.tourCode = new FormControl('', []);
+    this.creditEPSubTotal = new FormControl({ value: 0, disabled: true }, []);
+    this.totalAmount = new FormControl({ value: 0, disabled: true }, [
+      Validators.required
+    ]);
+    this.tourCode = new FormControl('', [Validators.pattern(GLOBALS.PATTERNS.TOUR_CODE)]);
     this.customerFileReference = new FormControl('');
-    this.settlementAuthorisationCode = new FormControl('', []);
+    this.settlementAuthorisationCode = new FormControl('', [Validators.pattern(GLOBALS.PATTERNS.ELECTRONIC_TICKET_AUTH)]);
   }
 
   createFormGroups() {
     this.formOfPaymentAmounts = new FormArray([]);
     this.selectAmount = new FormGroup({
       amount: new FormControl(0),
-      number: new FormControl('', [Validators.required]),
-      vendorCode: new FormControl('', [Validators.required])
+      number: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      vendorCode: new FormControl({ value: '', disabled: true }, [Validators.required])
     });
   }
 
@@ -45,42 +48,7 @@ export class FormOfPaymentRefundFormModel extends ReactiveFormHandlerModel {
       totalAmount: this.totalAmount,
       tourCode: this.tourCode,
       customerFileReference: this.customerFileReference,
-      settlementAuthorisationCode: this.settlementAuthorisationCode
+      settlementAuthorisationCode: this.settlementAuthorisationCode,
     });
   }
-
-  getFormOfPaymentAmount(position = null): FormArray {
-    return position == null ?
-    this.formOfPaymentRefundGroup.controls['formOfPaymentAmounts']['controls'] :
-    this.formOfPaymentRefundGroup.controls['formOfPaymentAmounts']['controls'][position];
-  }
-
-  getFormOfPaymentAmountControlsElem(position: number) {
-    return this.getFormOfPaymentAmount(position).controls;
-  }
-
-  addCreditOrEPAmount(amountValue: string, fopTypeText: string, vendorCode: string, number: number): void {
-    this.formOfPaymentAmounts.push(
-      new FormGroup({
-        type: new FormControl(fopTypeText, []),
-        amount: new FormControl(amountValue, [] ),
-        vendorCode: new FormControl(vendorCode, [Validators.required] ),
-        number: new FormControl(number, [Validators.required]),
-      })
-    );
-  }
-
-  addCashAmount(amountValue: string, fopTypeText: string): void {
-    this.formOfPaymentAmounts.push(
-      new FormGroup({
-        type: new FormControl(fopTypeText, []),
-        amount: new FormControl(amountValue, [])
-      })
-    );
-  }
-
-  deleteAmountFormArrayElem(i: number): void {
-    this.formOfPaymentAmounts.removeAt(i);
-  }
-
 }

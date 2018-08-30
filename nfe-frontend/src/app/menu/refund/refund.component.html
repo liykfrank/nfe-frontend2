@@ -32,9 +32,7 @@
             (showHide)="collapsablePill($event,0)"
             [open]="pills[0].collapsable">
               <bspl-basic-info-refund
-                [basicInfoRefundFormModel]="basicInfoRefundFormModel"
-                (clickMoreDetails)="onClickMoreDetails($event)">
-                <!-- (returnForm)="onReturnBasicInfo($event)" -->
+                [model]="basicInfoRefundFormModel">
               </bspl-basic-info-refund>
           </bspl-collapsable>
           <bspl-collapsable
@@ -43,7 +41,7 @@
             (showHide)="collapsablePill($event,1)"
             [open]="pills[1].collapsable">
               <bspl-details-refund
-                (returnForm)="onReturnDetails($event)">
+                [model]="detailsRefundFormModel">
               </bspl-details-refund>
           </bspl-collapsable>
           <bspl-collapsable
@@ -52,17 +50,17 @@
             (showHide)="collapsablePill($event,2)"
             [open]="pills[2].collapsable">
             <bspl-form-of-payment-refund
-             (returnForm)="onReturnFormOfPayment($event)">
+              [model]="formOfPaymentRefundFormModel">
             </bspl-form-of-payment-refund>
           </bspl-collapsable>
           <bspl-collapsable
-            [idCollapsable]="pills[3].id"
-            [title]="'REFUNDS.AMOUNT.title'"
-            (showHide)="collapsablePill($event,3)"
-            [open]="pills[3].collapsable">
-           <bspl-amount-refund
-            (returnForm)="onReturnAmount($event)">
-          </bspl-amount-refund>
+              [idCollapsable]="pills[3].id"
+              [title]="'REFUNDS.AMOUNT.title'"
+              (showHide)="collapsablePill($event,3)"
+              [open]="pills[3].collapsable">
+            <bspl-amount-refund
+              [model]="amountRefundFormModel">
+            </bspl-amount-refund>
           </bspl-collapsable>
         </div>
       </div>

@@ -9,9 +9,9 @@ import { ContactFormModel } from './models/contact-form-model';
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss']
 })
-export class ContactComponent extends ReactiveFormHandler implements OnInit {
+export class ContactComponent extends ReactiveFormHandler<ContactFormModel> implements OnInit {
 
-  @Input() contactFormModelGroup: FormGroup;
+  //@Input() contactFormModelGroup: FormGroup;
 
   private _disabledComponent = false;
 
@@ -20,9 +20,9 @@ export class ContactComponent extends ReactiveFormHandler implements OnInit {
     this._disabledComponent = bool;
 
     if (bool) {
-      this.contactFormModelGroup.disable();
+      this.model.contactFormModelGroup.disable();
     } else {
-      this.contactFormModelGroup.enable();
+      this.model.contactFormModelGroup.enable();
     }
   }
 
@@ -35,6 +35,6 @@ export class ContactComponent extends ReactiveFormHandler implements OnInit {
   }
 
   ngOnInit(): void {
-    this.subscribe(this.contactFormModelGroup);
+
   }
 }

@@ -5,7 +5,10 @@ import { AgentFormModel } from './../../../shared/components/agent/models/agent-
 import { AirlineFormModel } from './../../../shared/components/airline/models/airline-form.model';
 
 export class AcdmBasicInfoFormModel extends ReactiveFormHandlerModel {
-  private _basicInfoModelGroup: FormGroup;
+  basicInfoModelGroup: FormGroup;
+
+  agent: AgentFormModel;
+  airline: AirlineFormModel;
 
   constructor() {
     super();
@@ -14,29 +17,21 @@ export class AcdmBasicInfoFormModel extends ReactiveFormHandlerModel {
   createFormControls() {}
 
   createFormGroups() {
-    this._basicInfoModelGroup = this._newBasicInfoForm();
+    this.airline = new AirlineFormModel();
+    this.agent = new AgentFormModel(false, false, false, true);
   }
 
-  createForm() {}
-
-  get basicInfoFormModelGroup(): FormGroup {
-    if (!this._basicInfoModelGroup) {
-      this._basicInfoModelGroup = this._newBasicInfoForm();
-    }
-    return this._basicInfoModelGroup;
-  }
-
-  private _newBasicInfoForm() {
-    return new FormGroup({
+  createForm() {
+    this.basicInfoModelGroup = new FormGroup({
       id: new FormControl(''),
       ticketDocumentNumber: new FormControl(''),
       isoCountryCode: new FormControl('', [Validators.required]),
 
       billingPeriod: new FormControl('', [Validators.required]),
-      agent: new AgentFormModel().agentFormModelGroup,
+      agent: this.agent.agentFormModelGroup,
 
       transactionCode: new FormControl('', [Validators.required]),
-      airline: new AirlineFormModel().airlineFormModelGroup,
+      airline: this.airline.airlineFormModelGroup,
       concernsIndicator: new FormControl('', [Validators.required]),
       currency: new FormGroup({
         code: new FormControl('', [Validators.required]),
@@ -48,4 +43,37 @@ export class AcdmBasicInfoFormModel extends ReactiveFormHandlerModel {
       netReporting: new FormControl(false)
     });
   }
+
+  changeAgent(disabledVAT: boolean, disabledReg: boolean) {
+    this.agent.agentFormModelGroup.reset();
+
+    if (disabledVAT) {
+      this.agent.agentVatNumber.enable();
+    } else {
+      this.agent.agentVatNumber.disable();
+    }
+
+    if (disabledReg) {
+      this.agent.agentRegistrationNumber.enable();
+    } else {
+      this.agent.agentRegistrationNumber.disable();
+    }
+  }
+
+  changeAirline(disabledVAT: boolean, disabledReg: boolean) {
+    this.airline.airlineFormModelGroup.reset();
+
+    if (disabledVAT) {
+      this.airline.airlineVatNumber.enable();
+    } else {
+      this.airline.airlineVatNumber.disable();
+    }
+
+    if (disabledReg) {
+      this.airline.airlineRegistrationNumber.enable();
+    } else {
+      this.airline.airlineRegistrationNumber.disable();
+    }
+  }
+
 }

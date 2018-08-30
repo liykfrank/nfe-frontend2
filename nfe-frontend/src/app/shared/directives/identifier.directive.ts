@@ -1,9 +1,9 @@
-import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2, OnChanges, SimpleChanges } from '@angular/core';
 
 @Directive({
   selector: '[appIdentifier]'
 })
-export class IdentifierDirective implements OnInit, OnDestroy {
+export class IdentifierDirective implements OnInit, OnDestroy/* , OnChanges */ {
 
   private changes: MutationObserver;
 
@@ -35,6 +35,12 @@ export class IdentifierDirective implements OnInit, OnDestroy {
     this.findOnTree();
   }
 
+  /* ngOnChanges(changes: SimpleChanges): void {
+    if (changes._el) {
+      this.findOnTree();
+    }
+  } */
+
   ngOnDestroy(): void {
     this.changes.disconnect();
   }
@@ -42,7 +48,10 @@ export class IdentifierDirective implements OnInit, OnDestroy {
   private findOnTree(): void {
     // Set name on arrays
     this._el.nativeElement.querySelectorAll('div[formarrayname]').forEach(aux => {
+      const baseAux = this.base;
+      this.base = this.base + '.' + aux.getAttribute('formarrayname');
       this.setID(aux, true);
+      this.base = baseAux;
     });
 
     // Set name on the other elements
@@ -62,7 +71,7 @@ export class IdentifierDirective implements OnInit, OnDestroy {
 
     elems.querySelectorAll(type).forEach(elem => {
       const id = elem.getAttribute('id');
-      const formcontrolname = elem.getAttribute('formcontrolname');
+      const formcontrolname = elem.getAttribute('formcontrolname') ? elem.getAttribute('formcontrolname') : elem.getAttribute('ng-reflect-name');
 
       if (!id && formcontrolname) {
         const name = (this.base ? this.base + '.' : '') + formcontrolname + (isArray && isArray == true ? '.' + i.toString() : '');

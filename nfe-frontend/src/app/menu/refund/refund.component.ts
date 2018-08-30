@@ -1,34 +1,35 @@
+import { DatePipe } from '@angular/common';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { TranslationService } from 'angular-l10n';
+
+import { AlertType } from '../../core/enums/alert-type.enum';
+import { User } from '../../core/models/user.model';
+import { AlertsService } from '../../core/services/alerts.service';
+import { UserService } from '../../core/services/user.service';
+import { AbstractComponent } from '../../shared/base/abstract-component';
+import { ScreenType } from '../../shared/enums/screen-type.enum';
+import { Pill } from '../../shared/models/pill.model';
+import { DecimalsFormatterPipe } from '../../shared/pipes/decimals-formatter.pipe';
+import { UtilsService } from '../../shared/services/utils.service';
+import { environment } from './../../../environments/environment';
 import { AlertModel } from './../../core/models/alert.model';
 import { CurrencyService } from './../../shared/components/currency/services/currency.service';
-import { environment } from './../../../environments/environment';
-import { Component, HostListener, OnInit } from '@angular/core';
-import { FormGroup, AbstractControl, FormArray } from '@angular/forms';
-
-import { User } from '../../core/models/user.model';
-import { UserService } from '../../core/services/user.service';
-import { Pill } from '../../shared/models/pill.model';
-import { UtilsService } from '../../shared/services/utils.service';
-import { Refund } from './models/api/refund.model';
-import { BasicInfoRefundFormModel } from './models/basic-info-refund-form.model';
-import { RefundConfigurationService } from './services/refund-configuration.service';
-import { RefundIndirectService } from './services/refund-indirect.service';
-import { ScreenType } from '../../shared/enums/screen-type.enum';
-import { AbstractComponent } from '../../shared/base/abstract-component';
-import { TranslationService } from 'angular-l10n';
-import { DatePipe } from '@angular/common';
-import { DecimalsFormatterPipe } from '../../shared/pipes/decimals-formatter.pipe';
-import { AlertsService } from '../../core/services/alerts.service';
-import { AlertType } from '../../core/enums/alert-type.enum';
+import { AmountRefundFormModel } from './models/amount-refund-form.model';
 import { RefundAmount } from './models/api/refund-amount.model';
 import { RefundFormOfPaymentAmounts } from './models/api/refund-form-of-payment-amounts';
+import { Refund } from './models/api/refund.model';
+import { BasicInfoRefundFormModel } from './models/basic-info-refund-form.model';
+import { DetailsRefundFormModel } from './models/details-refund-form.model';
+import { FormOfPaymentRefundFormModel } from './models/form-of-payment-refund-form.model';
+import { RefundConfigurationService } from './services/refund-configuration.service';
+import { RefundIndirectService } from './services/refund-indirect.service';
 
 @Component({
   selector: 'bspl-refund',
   templateUrl: './refund.component.html',
   styleUrls: ['./refund.component.scss']
 })
-export class RefundComponent extends AbstractComponent implements OnInit{
-
+export class RefundComponent extends AbstractComponent implements OnInit {
   url = environment.basePath + environment.api.refund.refund_indirect;
   id_refund_model;
   screen = ScreenType.CREATE;
@@ -44,10 +45,10 @@ export class RefundComponent extends AbstractComponent implements OnInit{
 
   id_refund = 'refund-master-container';
 
-  basicInfoRefundFormModel: FormGroup = new BasicInfoRefundFormModel().basicInfoRefundGroup;
-  private detailsRefundFormModel: FormGroup;
-  private formOfPaymentRefundFormModel: FormGroup;
-  private amountRefundFormModel: FormGroup;
+  basicInfoRefundFormModel: BasicInfoRefundFormModel = new BasicInfoRefundFormModel();
+  detailsRefundFormModel: DetailsRefundFormModel = new DetailsRefundFormModel();
+  formOfPaymentRefundFormModel: FormOfPaymentRefundFormModel = new FormOfPaymentRefundFormModel();
+  amountRefundFormModel: AmountRefundFormModel = new AmountRefundFormModel();
 
   private showMoreDetails = false;
   private currency;
@@ -65,34 +66,60 @@ export class RefundComponent extends AbstractComponent implements OnInit{
     this.elementsResumeBar = this._initializeResumeBar();
     this.pills = this._initializePills();
     userService.getUser().subscribe(data => (this.user = data));
-    this.refundConfigurationService.changeConfigurationByISO(this.user.isoc);
   }
 
   ngOnInit(): void {
-    this.subscriptions.push(
-      this.basicInfoRefundFormModel.valueChanges.subscribe(data => {
+    this.refundConfigurationService.changeConfigurationByISO(this.user.isoc);
 
-        (this.elementsResumeBar[1] as any).value = this._getBSP();
-        (this.elementsResumeBar[2] as any).value = this._getAirlineCode();
-        (this.elementsResumeBar[3] as any).value = this._getAgentCode();
+    this.subscriptions.push(
+      this.refundConfigurationService.getConfiguration().subscribe(data => {
+        this.basicInfoRefundFormModel.changeAgent(
+          data.agentVatNumberEnabled,
+          data.companyRegistrationNumberEnabled
+        );
+        this.basicInfoRefundFormModel.changeAirline(
+          data.airlineVatNumberEnabled,
+          data.companyRegistrationNumberEnabled
+        );
       })
     );
 
-    this._currencyService.getCurrencyState().subscribe(data => this.currency = data);
-  }
+    this.subscriptions.push(
+      this.basicInfoRefundFormModel.basicInfoRefundGroup.valueChanges.subscribe(
+        data => {
+          (this.elementsResumeBar[1] as any).value = this._getBSP();
 
-  onReturnDetails(detailsRefundFormModel: FormGroup) {
-    this.detailsRefundFormModel = detailsRefundFormModel;
-  }
+          const agent = this.basicInfoRefundFormModel.agent;
+          if (
+            agent.agentCode.value.length == 7 &&
+            agent.agentControlDigit.value.length == 1
+          ) {
+            (this.elementsResumeBar[3] as any).value = this._getAgentCode();
+          } else {
+            (this.elementsResumeBar[3] as any).value = '-';
+          }
 
-  onReturnFormOfPayment(formOfPaymentRefundFormModel: FormGroup) {
-    this.formOfPaymentRefundFormModel = formOfPaymentRefundFormModel;
+          const airline = this.basicInfoRefundFormModel.airline;
+          if (airline.airlineCode.value.length == 3) {
+            (this.elementsResumeBar[2] as any).value = this._getAirlineCode();
+          } else {
+            (this.elementsResumeBar[2] as any).value = '-';
+          }
+        }
+      )
+    );
 
-    (this.elementsResumeBar[6] as any).value = this._getAmount();
-  }
+    this.subscriptions.push(
+      this.formOfPaymentRefundFormModel.totalAmount.valueChanges.subscribe(
+        () => {
+          (this.elementsResumeBar[6] as any).value = this._getAmount();
+        }
+      )
+    );
 
-  onReturnAmount(amountRefundFormModel: FormGroup) {
-    this.amountRefundFormModel = amountRefundFormModel;
+    this._currencyService
+      .getCurrencyState()
+      .subscribe(data => (this.currency = data));
   }
 
   onClickMoreDetails(event) {
@@ -106,28 +133,37 @@ export class RefundComponent extends AbstractComponent implements OnInit{
   }
 
   onReturnIssue() {
-    const testBasicInfo = this.basicInfoRefundFormModel ? this.basicInfoRefundFormModel.valid : true;
-    const testDetails = this.detailsRefundFormModel ? this.detailsRefundFormModel.valid : true;
-    const testFOP = this.formOfPaymentRefundFormModel ? this.formOfPaymentRefundFormModel.valid : true;
-    const testAmount = this.amountRefundFormModel ? this.amountRefundFormModel.valid : true;
+    const testBasicInfo = this.basicInfoRefundFormModel.basicInfoRefundGroup
+      .valid;
+    const testDetails = this.detailsRefundFormModel.detailsRefundGroup.valid;
+    const testFOP = this.formOfPaymentRefundFormModel.formOfPaymentRefundGroup
+      .valid;
+    const testAmount = this.amountRefundFormModel.amountRefundGroup.valid;
 
     if (!testBasicInfo || !testDetails || !testFOP || !testAmount) {
-
       const forms = [
-        this.basicInfoRefundFormModel,
-        this.detailsRefundFormModel,
-        this.formOfPaymentRefundFormModel,
-        this.amountRefundFormModel
-      ]
+        this.basicInfoRefundFormModel.basicInfoRefundGroup,
+        this.detailsRefundFormModel.detailsRefundGroup,
+        this.formOfPaymentRefundFormModel.formOfPaymentRefundGroup,
+        this.amountRefundFormModel.amountRefundGroup
+      ];
 
       this._utilsService.touchAllForms(forms.filter(x => x != null));
 
-      this._alertService.setAlertTranslate('error', 'REFUNDS.error', AlertType.ERROR);
+      this._alertService.setAlertTranslate(
+        'error',
+        'REFUNDS.error',
+        AlertType.ERROR
+      );
       return;
     }
 
-    if ((this.formOfPaymentRefundFormModel.get('formOfPaymentAmounts') as FormArray).length == 0) {
-      this._alertService.setAlertTranslate('error', 'REFUNDS.error_min_fop', AlertType.ERROR);
+    if (this.formOfPaymentRefundFormModel.formOfPaymentAmounts.length == 0) {
+      this._alertService.setAlertTranslate(
+        'error',
+        'REFUNDS.error_min_fop',
+        AlertType.ERROR
+      );
       return;
     }
 
@@ -165,8 +201,11 @@ export class RefundComponent extends AbstractComponent implements OnInit{
       { title: 'REFUNDS.RESUME.airline_code', value: this._getAirlineCode() },
       { title: 'REFUNDS.RESUME.agent_code', value: this._getAgentCode() },
       { title: 'REFUNDS.RESUME.refund_number', value: null },
-      { title: 'REFUNDS.RESUME.issue_date', value: new DatePipe('en').transform(new Date(), 'dd/MM/yyyy') },
-      { title: 'REFUNDS.RESUME.refund_passenger', value: '0,000,000.00 EUR' }
+      {
+        title: 'REFUNDS.RESUME.issue_date',
+        value: new DatePipe('en').transform(new Date(), 'dd/MM/yyyy')
+      },
+      { title: 'REFUNDS.RESUME.refund_passenger', value: '-' }
     ]);
   }
 
@@ -186,7 +225,7 @@ export class RefundComponent extends AbstractComponent implements OnInit{
 
   private _getBSP() {
     const bsp = this.basicInfoRefundFormModel
-      ? this.basicInfoRefundFormModel.get('isoCountryCode')
+      ? this.basicInfoRefundFormModel.basicInfoRefundGroup.get('isoCountryCode')
       : null;
     let ret;
 
@@ -202,14 +241,10 @@ export class RefundComponent extends AbstractComponent implements OnInit{
   private _getAirlineCode() {
     let ret;
 
-    if (this.basicInfoRefundFormModel && this.basicInfoRefundFormModel.get('airline')) {
-      const airline = this.basicInfoRefundFormModel.get('airline').get('airlineCode').value;
+    const airline = this.basicInfoRefundFormModel.airline.airlineCode.value;
 
-      if (airline && airline.length > 0) {
-        ret = airline;
-      } else {
-        ret = '-';
-      }
+    if (airline && airline.length > 0) {
+      ret = airline;
     } else {
       ret = '-';
     }
@@ -220,20 +255,10 @@ export class RefundComponent extends AbstractComponent implements OnInit{
   private _getAgentCode() {
     let ret;
 
-    if (this.basicInfoRefundFormModel && this.basicInfoRefundFormModel.get('agent')) {
-      const agent = this.basicInfoRefundFormModel.get('agent').get('agentCode').value;
-      const check = this.basicInfoRefundFormModel
-        .get('agent')
-        .get('agentControlDigit').value;
+    const agent = this.basicInfoRefundFormModel.agent.agentCode.value;
+    const check = this.basicInfoRefundFormModel.agent.agentControlDigit.value;
 
-      if (agent && agent.length > 0 && check && check.length > 0) {
-        ret = agent + check;
-      } else {
-        ret = '-';
-      }
-    } else {
-      ret = '-';
-    }
+    ret = agent + check;
 
     return ret;
   }
@@ -242,18 +267,18 @@ export class RefundComponent extends AbstractComponent implements OnInit{
     let retCurrency = '-';
 
     if (this.currency) {
-      retCurrency = this.currency.get('name').value;
+      retCurrency = this.currency.name;
     }
 
     const total = this.formOfPaymentRefundFormModel
-      ? this.formOfPaymentRefundFormModel.get('totalAmount')
+      ? this.formOfPaymentRefundFormModel.totalAmount
       : null;
     let retTotal = '-';
 
     if (total && this.currency) {
       retTotal = new DecimalsFormatterPipe().transform(
         total.value,
-        this.currency.get('numDecimals').value
+        this.currency.numDecimals
       );
     }
 
@@ -273,30 +298,28 @@ export class RefundComponent extends AbstractComponent implements OnInit{
   }
 
   private _postRefundIndirect(refund: Refund) {
-
     if (refund) {
       this._refundIndirectService.post(refund).subscribe(
         data => {
-
-          const txt = '0'.repeat(10 - data.id.toString().length) + data.id.toString();
-          const alert =
-            new AlertModel(
-              this._translationService.translate('REFUNDS.title'),
-              this._translationService.translate('REFUNDS.OK') + ' ' + txt,
-              AlertType.INFO);
+          const txt =
+            '0'.repeat(10 - data.id.toString().length) + data.id.toString();
+          const alert = new AlertModel(
+            this._translationService.translate('REFUNDS.title'),
+            this._translationService.translate('REFUNDS.OK') + ' ' + txt,
+            AlertType.INFO
+          );
 
           this._alertService.setAlert(alert);
           this.id_refund_model = data.id;
           this.screen = ScreenType.DETAIL;
         },
         err => {
-
           if (err.error.validationErrors) {
             const forms = [
-              this.basicInfoRefundFormModel,
-              this.detailsRefundFormModel,
-              this.formOfPaymentRefundFormModel,
-              this.amountRefundFormModel
+              this.basicInfoRefundFormModel.basicInfoRefundGroup,
+              this.detailsRefundFormModel.detailsRefundGroup,
+              this.formOfPaymentRefundFormModel.formOfPaymentRefundGroup,
+              this.amountRefundFormModel.amountRefundGroup
             ];
 
             const errors = this._utilsService.setBackErrorsOnForms(
@@ -313,8 +336,11 @@ export class RefundComponent extends AbstractComponent implements OnInit{
 
             const alert = new AlertModel(
               this._translationService.translate('error'),
-              msg == '' ? this._translationService.translate('REFUNDS.error') : msg,
-              AlertType.ERROR)
+              msg == ''
+                ? this._translationService.translate('REFUNDS.error')
+                : msg,
+              AlertType.ERROR
+            );
             this._alertService.setAlert(alert);
           }
         }
@@ -326,14 +352,14 @@ export class RefundComponent extends AbstractComponent implements OnInit{
     const refund = new Refund();
 
     // BASIC INFO
-    const agent = this.basicInfoRefundFormModel.get('agent');
+    const agent = this.basicInfoRefundFormModel.agent.agentFormModelGroup;
     refund.agentCode =
       agent.get('agentCode').value + agent.get('agentControlDigit').value;
     refund.agentContact = agent.get('agentContact').value;
     refund.agentRegistrationNumber = agent.get('agentRegistrationNumber').value;
     refund.agentVatNumber = agent.get('agentVatNumber').value;
 
-    const airline = this.basicInfoRefundFormModel.get('airline');
+    const airline = this.basicInfoRefundFormModel.airline.airlineFormModelGroup;
     refund.airlineCode = airline.get('airlineCode').value;
     refund.airlineContact = airline.get('airlineContact').value;
     refund.airlineRegistrationNumber = airline.get(
@@ -342,68 +368,67 @@ export class RefundComponent extends AbstractComponent implements OnInit{
     refund.airlineVatNumber = airline.get('airlineVatNumber').value;
 
     // EXTRAS
-    refund.isoCountryCode = this.basicInfoRefundFormModel.get(
+    refund.isoCountryCode = this.basicInfoRefundFormModel.basicInfoRefundGroup.get(
       'isoCountryCode'
     ).value;
     refund.dateOfIssue = new Date().toISOString();
 
     // DETAILS
-    refund.statisticalCode = this.detailsRefundFormModel.get(
-      'statisticalCode'
-    ).value;
-    refund.passenger = this.detailsRefundFormModel.get('passenger').value;
-    refund.issueReason = this.detailsRefundFormModel.get('issueReason').value;
-    refund.airlineCodeRelatedDocument = this.detailsRefundFormModel.get(
-      'airlineCodeRelatedDocument'
-    ).value;
-    refund.dateOfIssueRelatedDocument = this.detailsRefundFormModel.get(
-      'dateOfIssueRelatedDocument'
-    ).value;
-    refund.waiverCode = this.detailsRefundFormModel.get('waiverCode').value;
-    refund.relatedDocument = this.detailsRefundFormModel.get(
-      'relatedDocument'
-    ).value;
-    refund.conjunctions = this.detailsRefundFormModel.get('conjunctions').value.
-                            filter(x => x.relatedTicketDocumentNumber && x.relatedTicketDocumentNumber.length == 10);
-    refund.exchange = this.detailsRefundFormModel.get('exchange').value;
+    refund.statisticalCode = this.detailsRefundFormModel.statisticalCode.value;
+    refund.passenger = this.detailsRefundFormModel.passenger.value;
+    refund.issueReason = this.detailsRefundFormModel.issueReason.value;
+    refund.airlineCodeRelatedDocument = this.detailsRefundFormModel.airlineCodeRelatedDocument.value;
+    refund.dateOfIssueRelatedDocument = this.detailsRefundFormModel.dateOfIssueRelatedDocument.value;
+    refund.waiverCode = this.detailsRefundFormModel.waiverCode.value;
+    refund.relatedDocument = this.detailsRefundFormModel.relatedDocument.value;
+    refund.conjunctions = this.detailsRefundFormModel.conjunctions.value.filter(
+      x =>
+        x.relatedTicketDocumentNumber &&
+        x.relatedTicketDocumentNumber.length == 10
+    );
+    refund.exchange = this.detailsRefundFormModel.exchange.value;
 
     if (refund.exchange) {
-      refund.originalIssue = this.detailsRefundFormModel.get(
-        'originalIssue'
-      ).value;
+      refund.originalIssue = this.detailsRefundFormModel.originalIssue.value;
     } else {
       refund.originalIssue = null;
     }
 
     // FORM OF PAYMENT
-    refund.formOfPaymentAmounts = this._fopFormat(this.formOfPaymentRefundFormModel.get(
-      'formOfPaymentAmounts'
-    ).value);
-    refund.tourCode = this.formOfPaymentRefundFormModel.get('tourCode').value;
+    refund.formOfPaymentAmounts = this._fopFormat(
+      this.formOfPaymentRefundFormModel.formOfPaymentAmounts.value
+    );
+    refund.tourCode = this.formOfPaymentRefundFormModel.tourCode.value;
     refund.currency.code = this.currency.name;
     refund.currency.decimals = this.currency.numDecimals;
-    refund.customerFileReference = this.formOfPaymentRefundFormModel.get(
-      'customerFileReference'
-    ).value;
-    refund.settlementAuthorisationCode = this.formOfPaymentRefundFormModel.get(
-      'settlementAuthorisationCode'
-    ).value;
+    refund.customerFileReference = this.formOfPaymentRefundFormModel.customerFileReference.value;
+    refund.settlementAuthorisationCode = this.formOfPaymentRefundFormModel.settlementAuthorisationCode.value;
 
     // AMOUNT
-    refund.partialRefund = this.amountRefundFormModel.get('partialRefund').value;
-    refund.netReporting = this.amountRefundFormModel.get('netRemit').value;
-    refund.amounts = this._refundAmount(this.amountRefundFormModel.get('amounts').value);
-    const taxArr = this.amountRefundFormModel.get('amounts').get('taxMiscellaneousFees');
-    refund.taxMiscellaneousFees = taxArr ? taxArr.value : [];
+    refund.partialRefund = this.amountRefundFormModel.partialRefund.value;
+    refund.netReporting = this.amountRefundFormModel.netRemit.value;
+    refund.amounts = this._refundAmount(
+      this.amountRefundFormModel.amounts.value
+    );
+    const taxArr = this.amountRefundFormModel.taxMiscellaneousFees.value.filter(
+      x => x.type != ''
+    );
+    refund.taxMiscellaneousFees = taxArr ? taxArr : [];
 
     return refund;
   }
 
   private _refundAmount(val: RefundAmount) {
-    val.cancellationPenalty = val.cancellationPenalty ? val.cancellationPenalty : 0;
+    val.cancellationPenalty = val.cancellationPenalty
+      ? val.cancellationPenalty
+      : 0;
     val.commissionAmount = val.commissionAmount ? val.commissionAmount : 0;
-    val.commissionOnCpAndMfAmount = val.commissionOnCpAndMfAmount ? val.commissionOnCpAndMfAmount : 0;
-    val.commissionOnCpAndMfRate = val.commissionOnCpAndMfRate ? val.commissionOnCpAndMfRate : 0;
+    val.commissionOnCpAndMfAmount = val.commissionOnCpAndMfAmount
+      ? val.commissionOnCpAndMfAmount
+      : 0;
+    val.commissionOnCpAndMfRate = val.commissionOnCpAndMfRate
+      ? val.commissionOnCpAndMfRate
+      : 0;
     val.commissionRate = val.commissionRate ? val.commissionRate : 0;
     val.grossFare = val.grossFare ? val.grossFare : 0;
     val.lessGrossFareUsed = val.lessGrossFareUsed ? val.lessGrossFareUsed : 0;
@@ -411,8 +436,12 @@ export class RefundComponent extends AbstractComponent implements OnInit{
     val.spam = val.spam ? val.spam : 0;
     val.refundToPassenger = val.refundToPassenger ? val.refundToPassenger : 0;
     val.tax = val.tax ? val.tax : 0;
-    val.taxOnCancellationPenalty = val.taxOnCancellationPenalty ? val.taxOnCancellationPenalty : 0;
-    val.taxOnMiscellaneousFee = val.taxOnMiscellaneousFee ? val.taxOnMiscellaneousFee : 0;
+    val.taxOnCancellationPenalty = val.taxOnCancellationPenalty
+      ? val.taxOnCancellationPenalty
+      : 0;
+    val.taxOnMiscellaneousFee = val.taxOnMiscellaneousFee
+      ? val.taxOnMiscellaneousFee
+      : 0;
 
     return val;
   }

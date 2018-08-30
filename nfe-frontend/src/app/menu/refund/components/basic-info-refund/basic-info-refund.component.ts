@@ -1,3 +1,4 @@
+import { BasicInfoRefundFormModel } from './../../models/basic-info-refund-form.model';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
@@ -14,13 +15,10 @@ import { RefundIsuePermissionService } from '../../services/refund-isue-permissi
   styleUrls: ['./basic-info-refund.component.scss']
 })
 
-export class BasicInfoRefundComponent extends ReactiveFormHandler implements OnInit {
+export class BasicInfoRefundComponent extends ReactiveFormHandler<BasicInfoRefundFormModel> implements OnInit {
 
   public refundConfiguration: RefundConfiguration;
   public user: User;
-  @Input() basicInfoRefundFormModel: FormGroup;
-
-  @Output()clickMoreDetails: EventEmitter<any> = new EventEmitter();
 
   private validDATA = false;
 
@@ -33,12 +31,11 @@ export class BasicInfoRefundComponent extends ReactiveFormHandler implements OnI
   }
 
   ngOnInit() {
-    this.subscribe(this.basicInfoRefundFormModel);
 
     this.subscriptions.push(
       this._refundConfigurationService.getConfiguration().subscribe(config => {
         this.refundConfiguration = config;
-        this.basicInfoRefundFormModel
+        this.model.basicInfoRefundGroup
           .get('isoCountryCode')
           .setValue(config.isoCountryCode);
       })
@@ -49,11 +46,7 @@ export class BasicInfoRefundComponent extends ReactiveFormHandler implements OnI
     );
   }
 
-  onClickMoreDetails(event) {
-    this.clickMoreDetails.emit(event);
-  }
-
-  onChangeAirline() {
+  private _onChangeAirline() {
     this._refundIsuePermissionService
       .getRefundIssuePermission('TEST_ISO', 'TEST_AIRLINE', 'TEST_AGENT')
       .subscribe(

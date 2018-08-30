@@ -1,10 +1,12 @@
 export const environment = {
   environment: 'uat',
+  token: '',
   basePath: 'http://servicesuat.nfedev.accelya.com',
-  ionic: false,
   production: false,
-  mock: false,
   api: {
+    masterData: {
+      agent: 'masterdata/agent/v1/agents/'
+    },
     refund: {
       agent: 'refund/v1/agents/', // {agentCode}
       airline: 'refund/v1/airlines/', // /{isoCountryCode}/{airlineCode}
@@ -27,7 +29,9 @@ export const environment = {
       reasons: 'agencymemo/v1/reasons'
     },
     user: {
-      user: '/assets/mocks/user.json'
+      user: '/assets/mocks/user.json',
+      template: 'assets/mocks/templates.json',
+      countryTerritory: 'assets/mocks/countries.json'
     }
   },
   files: {
@@ -40,35 +44,14 @@ export const environment = {
       apiConfiguration: '/v1/configurations',
       apiUpload: '/v1/files'
     },
-    basePath: '/files'
+    basePath: 'files'
   },
   sftAccount: {
     api: {
       create: '?u=register&p=register&path=/WebInterface/jQuery/messageForm.html&registration_username={1}&registration_email={2}',
-      modify: '?command=request_reset&reset_username_email={1}&currentURL=http://sftp.nfedev.accelya.com:8443/WebInterface/jQuery/reset.html'
+      modify: '?command=request_reset&reset_username_email={1}&currentURL=http://ftp.nfedev.accelya.com/WebInterface/jQuery/reset.html'
     },
-    basePath: 'http://sftp.nfedev.accelya.com:8443/'
-  },
-  adm_acm: {
-    api: {
-      acdm: '/v1/acdms', // post: save | /{id} | /{id}/files
-      configuration: '/v1/configurations',
-      company: '/v1/airlines', // /{isoCountryCode}/{airlineCode}
-      agent: '/v1/agents', // {code}
-      country: '/v1/countries', // creo v1/configurations/isocs ¿?¿?
-      toca: '/v1/tctps', // {isoc} | {isoc}/{code}: remove
-      currency: '/v1/general-info/currencies', // {isoc}
-      period: '/v1/general-info/periods', // {isoc}
-      reasons: '/v1/reasons'
-    },
-    basePath: '/agencymemo'
-  },
-  refunds: {
-    api: {
-      agent: '/v1/agents',
-      company: '/v1/airlines', // /{isoCountryCode}/{airlineCode}
-    },
-    basePath: '/refund'
+    basePath: 'http://ftp.nfedev.accelya.com/'
   },
   monitorUrl: 'http://yade.nfedev.accelya.com'
 };

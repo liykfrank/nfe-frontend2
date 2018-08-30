@@ -1,26 +1,26 @@
 <div *ngIf="!freeStat && select == false; then freeStatFalse else freeStatTrue"></div>
 
 <ng-template #freeStatTrue>
-  <div [formGroup]="inputForm" class="resizeCategory">
+  <div [formGroup]="groupForm" class="resizeCategory">
     <bspl-input-form-control l10nTranslate
       [label]="label"
       [wrapText]="true"
       [inputMaxTextLength]="3"
-      [formGroupParent]="inputForm"
-      [formControlParentName]="'inputFormControl'">
+      [groupForm]="groupForm"
+      [controlName]="controlName">
   </bspl-input-form-control>
   </div>
 </ng-template>
 
 <ng-template #freeStatFalse>
-  <div [formGroup]="inputForm">
+  <div [formGroup]="groupForm">
     <label class="text-nowrap" l10nTranslate>{{label}}</label>
     <div class="form-row pt-1">
       <div class="custom-radio col-5 mr-2">
         <input id="r_domestic"
           value="D"
           type="radio"
-          formControlName="inputFormControl"
+          [formControlName]="controlName"
           [checked]="value == 'D'">
         <label for="r_domestic" class="text-nowrap" l10nTranslate><span></span>{{domesticLabel}}</label>
       </div>
@@ -29,7 +29,7 @@
         <input id="r_internacional"
           value="I"
           type="radio"
-          formControlName="inputFormControl"
+          [formControlName]="controlName"
           [checked]="value == 'I'">
         <label for="r_internacional" class="text-nowrap" l10nTranslate><span></span>{{internacionalLabel}}</label>
       </div>

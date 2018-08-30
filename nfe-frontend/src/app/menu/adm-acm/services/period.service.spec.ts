@@ -1,14 +1,12 @@
-import { TestBed, inject } from '@angular/core/testing';
-
-import { PeriodService } from './period.service';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { TranslationModule, LocalizationModule } from 'angular-l10n';
-import { l10nConfig } from '../../../../shared/base/conf/l10n.config';
-import { AlertsService } from '../../../../core/services/alerts.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { inject, TestBed } from '@angular/core/testing';
+import { LocalizationModule, TranslationModule } from 'angular-l10n';
 import { Observable } from 'rxjs/Observable';
 
+import { PeriodService } from './period.service';
+import { l10nConfig } from '../../../shared/base/conf/l10n.config';
+
 describe('PeriodService', () => {
-  const _AlertsService = jasmine.createSpyObj<AlertsService>('AlertsService', ['setAlertTranslate']);
   const _HttpClient = jasmine.createSpyObj<HttpClient>('HttpClient', ['get']);
 
   beforeEach(() => {
@@ -18,11 +16,7 @@ describe('PeriodService', () => {
         TranslationModule.forRoot(l10nConfig),
         LocalizationModule
       ],
-      providers: [
-        PeriodService,
-        {provide: AlertsService, useValue: _AlertsService},
-        {provide: HttpClient, useValue: _HttpClient}
-      ]
+      providers: [PeriodService, { provide: HttpClient, useValue: _HttpClient }]
     });
   });
 
@@ -30,18 +24,16 @@ describe('PeriodService', () => {
     expect(service).toBeTruthy();
   }));
 
-  it('getToca', inject([PeriodService], (service: PeriodService) => {
-    expect(service.getPeriod()).toBeTruthy();
-  }));
+  it('getPeriodWithISO, 200', inject(
+    [PeriodService],
+    (service: PeriodService) => {
+      _HttpClient.get.and.returnValue(Observable.of(200));
+      _HttpClient.get.calls.reset();
+      const url = service.getUrl();
 
-  it('getPeriodWithISO, 200', inject([PeriodService], (service: PeriodService) => {
-    _HttpClient.get.and.returnValue(Observable.of(200));
-    _HttpClient.get.calls.reset();
-    const url = service.getUrl();
-
-    service.getPeriodWithISO('AAA');
-    expect(_HttpClient.get.calls.count()).toBe(1, 'OK');
-    expect(service.getUrl() == url).toBe(true);
-  }));
-
+      service.getPeriodWithISO('AAA');
+      expect(_HttpClient.get.calls.count()).toBe(1, 'OK');
+      expect(service.getUrl() == url).toBe(true);
+    }
+  ));
 });

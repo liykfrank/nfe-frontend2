@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" appIdentifier [base]="'REFUND.RA.basic_info'">
   <div class="col-6">
     <bspl-airline
       [airlineVatNumberEnabled]="refundConfiguration.airlineVatNumberEnabled"
@@ -6,21 +6,19 @@
       [showAirlineName] = "true"
       [showContact]= "true"
       [disabledContact] = "true"
-      [airlineFormModelGroup]="basicInfoRefundFormModel.get('airline')"
-      [isoCountryCode]="user.isoc"
-      (clickMoreDetails)="onClickMoreDetails($event)">
+      [model]="model.airline"
+      [isoCountryCode]="user.isoc">
     </bspl-airline>
   </div>
   <div class="col-6">
     <bspl-agent
-    [agentFormModelGroup]="basicInfoRefundFormModel.get('agent')"
+      [model]="model.agent"
       [agentVatNumberEnabled]="refundConfiguration.agentVatNumberEnabled"
       [companyRegistrationNumberEnabled]="refundConfiguration.companyRegistrationNumberEnabled"
       [showAgentName]="true"
       [showContact]="true"
       [showMoreDetails]="true"
-      [agentCode]="user.iataCode"
-      (clickMoreDetails)="onClickMoreDetails($event)">
+      [agentCode]="user.iataCode">
     </bspl-agent>
   </div>
 </div>
