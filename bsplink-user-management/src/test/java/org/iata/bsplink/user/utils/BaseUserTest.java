@@ -1,4 +1,4 @@
-package org.iata.bsplink.utils;
+package org.iata.bsplink.user.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

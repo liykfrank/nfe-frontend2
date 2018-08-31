@@ -1,4 +1,4 @@
-package org.iata.bsplink.service;
+package org.iata.bsplink.user.service;
 
 import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
@@ -15,12 +15,13 @@ import java.util.Optional;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import org.iata.bsplink.commons.rest.exception.ApplicationInternalServerError;
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.iata.bsplink.user.model.entity.User;
 import org.iata.bsplink.user.model.repository.UserRepository;
 import org.iata.bsplink.user.service.KeycloakService;
 import org.iata.bsplink.user.service.UserServiceImpl;
-import org.iata.bsplink.utils.BaseUserTest;
+import org.iata.bsplink.user.utils.BaseUserTest;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -105,6 +106,58 @@ public class UserServiceImplTest extends BaseUserTest {
         verify(userRepository, times(2)).save(any(User.class));
     }
 
+    @Test
+    public void testCreateUserAlreadyExistsInKeycloak() throws URISyntaxException {
+
+        expectedException.expect(ApplicationInternalServerError.class);
+
+        doReturn(Optional.empty()).when(userRepository).findByUsername(userPending.getUsername());
+        when(keycloakService.findUser(userPending)).thenReturn(getUserRepresentation());
+
+        ResponseBuilder responseBuilder = Response.created(new URI("mock-url"));
+        when(keycloakService.createUser(userPending)).thenReturn(responseBuilder.build());
+
+        userPending = userService.createUser(userPending, errors);
+
+        verify(userRepository, times(2)).save(any(User.class));
+    }
+
+    @Test
+    public void testCreateUserKeycloakError() throws URISyntaxException {
+
+        expectedException.expect(ApplicationInternalServerError.class);
+
+        doReturn(Optional.of(userPending)).when(userRepository)
+                .findByUsername(userPending.getUsername());
+
+        when(userRepository.save(any(User.class))).thenReturn(userPending);
+        when(keycloakService.findUser(userPending)).thenReturn(getUserRepresentation());
+
+        ResponseBuilder responseBuilder = Response.serverError();
+        when(keycloakService.createUser(userPending)).thenReturn(responseBuilder.build());
+
+        userPending = userService.createUser(userPending, errors);
+
+    }
+
+    @Test
+    public void testCreateCreatedKeycloakNull() throws URISyntaxException {       
+        
+        doReturn(Optional.of(userCreated)).when(userRepository)
+                .findByUsername(userCreated.getUsername());
+
+        UserRepresentation userRepresentation = new UserRepresentation();
+        userRepresentation.setId(USER_ID);
+
+        ResponseBuilder responseBuilder = Response.created(new URI("mock-url"));
+        when(keycloakService.createUser(any())).thenReturn(responseBuilder.build());        
+        when(keycloakService.findUser(userPending)).thenReturn(null);       
+
+        expectedException.expect(ApplicationInternalServerError.class);
+        userService.createUser(userPending, errors);
+
+    }
+
 
     /**
      * Create user already exists.
@@ -124,6 +177,23 @@ public class UserServiceImplTest extends BaseUserTest {
         userCreated = userService.createUser(userCreated, errors);
 
         verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    public void testCreateUserNull() throws URISyntaxException {
+
+        expectedException.expect(ApplicationInternalServerError.class);
+
+        when(userRepository.save(any(User.class))).thenReturn(null);
+        doReturn(Optional.of(userPending)).when(userRepository)
+                .findByUsername(userPending.getUsername());
+        when(keycloakService.findUser(userPending)).thenReturn(getUserRepresentation());
+
+        ResponseBuilder responseBuilder = Response.created(new URI("mock-url"));
+        when(keycloakService.createUser(userPending)).thenReturn(responseBuilder.build());
+
+        userPending = userService.createUser(userPending, errors);
+
     }
 
     /**
@@ -165,6 +235,20 @@ public class UserServiceImplTest extends BaseUserTest {
         doReturn(Optional.empty()).when(userRepository).findById(USER_ID);
 
         userService.deleteUser(userPending);
+
+        verify(userRepository, times(1)).delete(userPending);
+    }
+
+    @Test
+    public void testDeleteUserFoundInKeycloak() {
+
+        doReturn(Optional.empty()).when(userRepository).findById(USER_ID);
+
+        when(keycloakService.findUser(any())).thenReturn(new UserRepresentation());
+
+        userService.deleteUser(userPending);
+
+        verify(keycloakService, times(1)).deleteUser(userPending.getId());
     }
 
     private UserRepresentation getUserRepresentation() {

@@ -1,4 +1,4 @@
-package org.iata.bsplink.controller;
+package org.iata.bsplink.user.controller;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,8 +29,8 @@ import org.iata.bsplink.user.service.AgentService;
 import org.iata.bsplink.user.service.AirlineService;
 import org.iata.bsplink.user.service.KeycloakService;
 import org.iata.bsplink.user.service.UserService;
-import org.iata.bsplink.utils.BaseUserTest;
-import org.iata.bsplink.utils.TestUtils;
+import org.iata.bsplink.user.utils.BaseUserTest;
+import org.iata.bsplink.user.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -131,6 +131,22 @@ public class UserControllerTest extends BaseUserTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
+    @Test
+    public void createUserAirlineNotFoundTest() throws Exception {
+
+        doReturn(userPending).when(userService).createUser(any(), any());
+        when(airlineService.findAirline(any(String.class), any(String.class))).thenReturn(null);
+
+        String userRequestString = TestUtils.getJson("/mock/requests/create-user-request.json");
+
+        mockMvc.perform(post(CREATE_USER_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(userRequestString))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("userCode")))
+                .andExpect(jsonPath("$.validationErrors[0].message",
+                        equalTo("Airline does not exist.")));
+    }
+
 
     @Test
     public void createUserTestUserAlreadyExists() throws Exception {
@@ -160,6 +176,8 @@ public class UserControllerTest extends BaseUserTest {
 
         User userToSave = MAPPER.readValue(userRequestString, User.class);
         userToSave.setUsername("not-well-formed-user");
+        userToSave.setUserCode("782000101");
+        userToSave.setUserType(UserType.AGENT);
 
         mockMvc.perform(post(CREATE_USER_URL).contentType(MediaType.APPLICATION_JSON)
                 .content(MAPPER.writeValueAsString(userToSave)))
@@ -167,6 +185,25 @@ public class UserControllerTest extends BaseUserTest {
                 .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("username")))
                 .andExpect(jsonPath("$.validationErrors[0].message",
                         equalTo("must be a well-formed email address")));
+    }
+
+    @Test
+    public void createUserAgentNotExists() throws Exception {
+
+        String userRequestString = TestUtils.getJson("/mock/requests/create-user-request.json");
+        User userToSave = MAPPER.readValue(userRequestString, User.class);
+        userToSave.setUserCode("78200021");
+        userToSave.setUserType(UserType.AGENT);
+
+        doReturn(userPending).when(userService).createUser(any(), any());
+        when(agentService.findAgent(userToSave.getUserCode())).thenReturn(null);
+
+        mockMvc.perform(post(CREATE_USER_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(MAPPER.writeValueAsString(userToSave)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(jsonPath("$.validationErrors[0].fieldName", equalTo("userCode")))
+                .andExpect(jsonPath("$.validationErrors[0].message",
+                        equalTo("The agent does not exist.")));
     }
 
     @Test

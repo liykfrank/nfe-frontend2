@@ -1,4 +1,4 @@
-package org.iata.bsplink.test.fixtures;
+package org.iata.bsplink.user.fixtures;
 
 import java.util.Arrays;
 import java.util.List;

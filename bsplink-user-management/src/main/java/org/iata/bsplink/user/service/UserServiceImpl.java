@@ -60,24 +60,30 @@ public class UserServiceImpl implements UserService {
 
         log.info("Creating new user: " + user);
 
+        User newUser = null;
         verifyFoundUserAndStatus(user, errors);
-        UserRepresentation newUserKeycloak = createUserInKeycloak(user);
+        UserRepresentation newUserKeycloak = createUserInKeycloak(user);        
 
-        user.setId(newUserKeycloak.getId());
-        user.setStatus(UserStatus.PENDING);
-        User newUser = userRepository.save(user);
+        if (newUserKeycloak != null) {
 
-        if (newUser != null) {
+            user.setId(newUserKeycloak.getId());
+            user.setStatus(UserStatus.PENDING);
+            newUser = userRepository.save(user);
 
-            keycloakService.changeUserStatus(user.getUsername(), true, errors);
-            newUser.setStatus(UserStatus.CREATED);
-            userRepository.save(newUser);
+            if (newUser != null) {
 
+                keycloakService.changeUserStatus(user.getUsername(), true, errors);
+                newUser.setStatus(UserStatus.CREATED);
+                userRepository.save(newUser);
+
+            } else {
+                throw new ApplicationInternalServerError(CREATING_USER_ERROR_MESSAGE);
+            }
+
+            log.info("New user created: " + newUser);
         } else {
             throw new ApplicationInternalServerError(CREATING_USER_ERROR_MESSAGE);
         }
-
-        log.info("New user created: " + newUser);
 
         return newUser;
     }

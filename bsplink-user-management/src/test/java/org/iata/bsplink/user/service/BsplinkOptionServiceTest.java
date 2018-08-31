@@ -1,4 +1,4 @@
-package org.iata.bsplink.service;
+package org.iata.bsplink.user.service;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;

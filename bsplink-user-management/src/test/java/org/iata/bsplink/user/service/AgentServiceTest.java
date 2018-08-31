@@ -1,10 +1,10 @@
-package org.iata.bsplink.service;
+package org.iata.bsplink.user.service;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.iata.bsplink.test.fixtures.AgentFixtures.getAgents;
+import static org.iata.bsplink.user.fixtures.AgentFixtures.getAgents;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

@@ -1,4 +1,4 @@
-package org.iata.bsplink.entity;
+package org.iata.bsplink.user.entity;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 

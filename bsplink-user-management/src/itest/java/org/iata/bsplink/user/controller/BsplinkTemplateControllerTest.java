@@ -1,4 +1,4 @@
-package org.iata.bsplink.controller;
+package org.iata.bsplink.user.controller;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -29,8 +29,8 @@ import org.iata.bsplink.user.model.entity.BsplinkTemplate;
 import org.iata.bsplink.user.model.entity.UserType;
 import org.iata.bsplink.user.model.repository.BsplinkOptionRepository;
 import org.iata.bsplink.user.model.repository.BsplinkTemplateRepository;
+import org.iata.bsplink.user.utils.BaseUserTest;
 import org.iata.bsplink.user.validation.BsplinkTemplateOptionUserTypeValidator;
-import org.iata.bsplink.utils.BaseUserTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

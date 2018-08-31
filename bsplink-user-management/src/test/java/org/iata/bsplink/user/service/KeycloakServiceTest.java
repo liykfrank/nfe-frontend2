@@ -1,4 +1,4 @@
-package org.iata.bsplink.service;
+package org.iata.bsplink.user.service;
 
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.iata.bsplink.user.model.entity.User;
 import org.iata.bsplink.user.service.KeycloakService;
-import org.iata.bsplink.utils.BaseUserTest;
+import org.iata.bsplink.user.utils.BaseUserTest;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

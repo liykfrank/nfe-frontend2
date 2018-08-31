@@ -1,4 +1,4 @@
-package org.iata.bsplink.utils;
+package org.iata.bsplink.user.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

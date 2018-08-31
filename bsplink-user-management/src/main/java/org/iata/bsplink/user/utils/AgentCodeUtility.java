@@ -7,6 +7,8 @@ import org.springframework.validation.Errors;
 public class AgentCodeUtility {
 
     private static final String USER_CODE = "userCode";
+    public static final String INCORRECT_NUMERIC_USER_CODE =
+            "Incorrect user code. Must be numeric.";
     public static final String INCORRECT_CHECK_DIGIT_MSG = "Incorrect Check-Digit";
     public static final String INVALID_CHECK_DIGIT_MSG =
             "Incorrect Format. Expected: 7 digit agent code + Check-Digit";
@@ -26,15 +28,18 @@ public class AgentCodeUtility {
             errors.rejectValue(USER_CODE, "", INVALID_CHECK_DIGIT_MSG);
         }
 
-        if (errors.hasErrors()) {
-            throw new ApplicationValidationException(errors);
-        }
-        
-        int code = Integer.parseInt(agentCode.substring(0, 7));
-        int checkDigit = Integer.parseInt(agentCode.substring(7));
+        try {
 
-        if (code % 7 != checkDigit) {
-            errors.rejectValue(USER_CODE, "", INCORRECT_CHECK_DIGIT_MSG);
+            int code = Integer.parseInt(agentCode.substring(0, 7));
+            int checkDigit = Integer.parseInt(agentCode.substring(7));
+
+            if (code % 7 != checkDigit) {
+                errors.rejectValue(USER_CODE, "", INCORRECT_CHECK_DIGIT_MSG);
+            }           
+
+        } catch (NumberFormatException e) {
+            errors.rejectValue(USER_CODE, "", INCORRECT_NUMERIC_USER_CODE);
+            throw new ApplicationValidationException(errors);
         }
     }
 }

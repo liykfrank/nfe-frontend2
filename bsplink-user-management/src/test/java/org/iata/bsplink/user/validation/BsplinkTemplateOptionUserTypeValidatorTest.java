@@ -1,4 +1,4 @@
-package org.iata.bsplink.validation;
+package org.iata.bsplink.user.validation;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertFalse;
