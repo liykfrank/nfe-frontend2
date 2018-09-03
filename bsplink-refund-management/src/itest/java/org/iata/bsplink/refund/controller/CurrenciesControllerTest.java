@@ -36,7 +36,9 @@ public class CurrenciesControllerTest {
         String json = "[{\"isoc\":\"AA\",\"currencies\":[{\"name\":\"ABC\",\"numDecimals\":2,"
                 + "\"expirationDate\":\"2058-12-24\"},{\"name\":\"DEF\",\"numDecimals\":3,"
                 + "\"expirationDate\":\"2058-12-25\"},{\"name\":\"GHI\",\"numDecimals\":0,"
-                + "\"expirationDate\":\"2058-12-25\"}]}]";
+                + "\"expirationDate\":\"2058-12-25\"},{\"name\":\"JKL\",\"numDecimals\":1,"
+                + "\"expirationDate\":\"2058-12-25\"},{\"name\":\"ZZZ\",\"numDecimals\":0,"
+                + "\"expirationDate\":\"2017-01-01\"}]}]";
         mockMvc.perform(get("/v1/currencies/AA")).andExpect(status().isOk())
                 .andExpect(content().json(json));
     }

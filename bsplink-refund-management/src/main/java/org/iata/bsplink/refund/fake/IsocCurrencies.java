@@ -52,6 +52,19 @@ public class IsocCurrencies {
             ghi.setExpirationDate(LocalDate.of(2058, 12, 25));
             listCurrencies.add(ghi);
 
+
+            Currency jkl = new Currency();
+            jkl.setName("JKL");
+            jkl.setNumDecimals(1);
+            jkl.setExpirationDate(LocalDate.of(2058, 12, 25));
+            listCurrencies.add(jkl);
+
+            Currency zzz = new Currency();
+            zzz.setName("ZZZ");
+            zzz.setNumDecimals(0);
+            zzz.setExpirationDate(LocalDate.of(2017, 1, 1));
+            listCurrencies.add(zzz);
+
             currency.setCurrencies(listCurrencies);
 
             list.add(currency);
