@@ -149,6 +149,10 @@
       "COUNTRY": {
         "title": "WARNING",
         "text": "This action will reset your data. Continue?"
+      },
+      "CURRENCY": {
+        "title": "WARNING",
+        "text": "This action will reset your amount data. Continue?"
       }
     },
     "AMOUNT": {
@@ -367,7 +371,8 @@
     }
   },
   "CURRENCY": {
-    "label": "Currency"
+    "label": "Currency",
+    "error": "There is no currencies in this country"
   },
   "MONTHS": {
     "1": "January",
@@ -393,8 +398,10 @@
     "minLength": "The length must be at least",
     "airline": "The airline is invalid",
     "agent": "The agent is invalid",
+    "agent_checkDigit": "Invalid control digit",
     "maxFop": "This form of payment exceeds the maximum allowed",
-    "partialRefund": "The maximum number of coupons in releated document has been exceeded"
+    "partialRefund": "The maximum number of coupons in releated document has been exceeded",
+    "email": "Email is invalid"
   },
 
   "STATUS": {
@@ -402,13 +409,32 @@
     "DETAIL": "DETAIL"
   },
   "USERS": {
+    "views": {
+      "newUser": {
+        "title": "New User",
+        "message": "User created correctly"
+      },
+      "modUser": {
+        "title": "Modify User",
+        "message": "User modified correctly"
+      },
+      "newSubUser": {
+        "title": "New Sub-User",
+        "message": "Sub-User created correctly"
+      },
+      "modSubUser": {
+        "title": "Mod Sub-User",
+        "message": "Sub-User modified correctly"
+      }
+    },
     "choose": "Choose",
     "type": "Type",
     "id": "ID",
     "userCode": "User Code",
     "company": "Company",
     "name": "Name",
-    "lastName": "Last Name",
+    "lastname": "Last Name",
+    "username": "User Name",
     "email": "Email",
     "template": "Template",
     "countryTerritory": "Country / Territory",

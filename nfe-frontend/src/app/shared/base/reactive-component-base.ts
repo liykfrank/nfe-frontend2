@@ -11,10 +11,7 @@ export class ReactiveComponentBase {
   checkIfErrorExist(): boolean {
     const elem = this.groupForm.get(this.controlName);
 
-    if (
-      ((elem.dirty || elem.touched) && elem.errors) ||
-      (elem.errors && elem.errors.backendError)
-    ) {
+    if ((elem.dirty || elem.touched) && elem.errors) {
       return true;
     }
 

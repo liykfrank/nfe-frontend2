@@ -11,11 +11,6 @@ export class AgentService {
 
   constructor(private http: HttpClient) {}
 
-  // public validateAgent(isRefund: boolean, agentCode: string): Observable<Agent> {
-  //   const pathUrl = isRefund ? environment.api.refund.agent : environment.api.adm_acm.agent;
-  //   return this.http.get<Agent>(environment.basePath + pathUrl + agentCode);
-  // }
-
   public validateAgent(type: EnvironmentType, agentCode: string): Observable<Agent> {
     let pathUrl;
 

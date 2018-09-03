@@ -1,4 +1,5 @@
-export interface UserAddress {
+export interface UserAddressInterface {
+
   city: string;
   country: string;
   description: string;
@@ -6,3 +7,13 @@ export interface UserAddress {
   zip: string;
 }
 
+export class UserAddress {
+
+  constructor(
+    public city: string,
+    public country: string,
+    public description: string,
+    public locality: string,
+    public zip: string,
+  ) {}
+}

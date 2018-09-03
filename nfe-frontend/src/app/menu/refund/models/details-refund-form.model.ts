@@ -29,8 +29,8 @@ export class DetailsRefundFormModel extends ReactiveFormHandlerModel {
 
   createFormControls() {
     this.statisticalCode = new FormControl('DOM', [Validators.required]);
-    this.passenger = new FormControl('', [Validators.pattern(GLOBALS.PATTERNS.PASSSENGER)]);
-    this.issueReason = new FormControl('', []);
+    this.passenger = new FormControl('', [Validators.pattern(GLOBALS.PATTERNS.PASSSENGER), Validators.required]);
+    this.issueReason = new FormControl('', [Validators.required]);
     this.airlineCodeRelatedDocument = new FormControl('', [
       Validators.pattern(GLOBALS.PATTERNS.AIRLINE),
       Validators.required,

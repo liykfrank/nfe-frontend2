@@ -1,14 +1,10 @@
 {
-  "user": {
-    "id": "2d9429f0-fb99-4237-b2ce-bbfbb3e00ae9",
-    "name": "Accelya User",
-    "lastname": "Accelya Group",
-    "email": "airline@accelya.com",
-    "isoc": "AA",
-    "role": "AGENT"
-  },
-  "agents": [
-    { 
+  "refund_indirect":[],
+  "acdm":[],
+  "user": [],
+  "agent": [
+    {
+      "id": "78200021",
       "billingCity": "CITY_78200021",
       "billingCountry": "COUNTRY_78200021",
       "billingPostalCode": "PC_78200021",
@@ -24,291 +20,167 @@
       "vatNumber": "00000078200021"
     }
   ],
-
-  "remfiles": {
-    "content": [
-      {
-        "id": 1,
-        "name": "file1",
-        "type": "some file type",
-        "bytes": 1024,
-        "uploadDate": "2018-03-23T10:00:00",
-        "status": "UNREADED"
-      },
-      {
-        "id": 2,
-        "name": "file2",
-        "type": "some file type",
-        "bytes": 1024,
-        "uploadDate": "2018-03-23T10:00:00",
-        "status": "UNREADED"
-      },
-      {
-        "id": 3,
-        "name": "file3",
-        "type": "some file type",
-        "bytes": 1024,
-        "uploadDate": "2018-03-23T10:00:00",
-        "status": "UNREADED"
-      },
-      {
-        "id": 4,
-        "name": "file4",
-        "type": "some file type",
-        "bytes": 1024,
-        "uploadDate": "2018-03-23T10:00:00",
-        "status": "UNREADED"
-      },
-      {
-        "id": 5,
-        "name": "file5",
-        "type": "some file type",
-        "bytes": 1024,
-        "uploadDate": "2018-03-23T10:00:00",
-        "status": "UNREADED"
-      }
-    ],
-    "pageable": {
-      "sort": {
-        "sorted": false,
-        "unsorted": true
-      },
-      "offset": 0,
-      "pageSize": 20,
-      "pageNumber": 0,
-      "unpaged": false,
-      "paged": true
+  "airline": [
+    {
+      "id": "123",
+      "address1": "ADDRESS_123",
+      "airlineCode": "123",
+      "city": "CITY_123",
+      "country": "COUNTRY_123",
+      "globalName": "AIRLINE_123",
+      "isoCountryCode": "AA",
+      "postalCode": "PC_123",
+      "taxNumber": "000000123",
+      "toDate": null
     },
-    "last": true,
-    "totalPages": 1,
-    "totalElements": 5,
-    "size": 20,
-    "number": 0,
-    "sort": {
-      "sorted": false,
-      "unsorted": true
+    {
+      "id": "321",
+      "address1": "ADDRESS_321",
+      "airlineCode": "321",
+      "city": "CITY_321",
+      "country": "COUNTRY_321",
+      "globalName": "AIRLINE_321",
+      "isoCountryCode": "AA",
+      "postalCode": "PC_321",
+      "taxNumber": "000000321",
+      "toDate": null
+    }
+  ],
+  "currencies": [
+    {
+      "id": "AA",
+      "isoc": "AA",
+      "currencies": [
+        { "name": "ABC", "numDecimals": 2, "expirationDate": "2058-12-24" },
+        { "name": "DEF", "numDecimals": 3, "expirationDate": "2058-12-25" },
+        { "name": "GHI", "numDecimals": 0, "expirationDate": "2058-12-25" }
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "detail": "FULL REVERSAL OF REFUND",
+      "id": 80,
+      "isoCountryCode": "AA",
+      "title": "FULL REVERSAL OF REFUND"
     },
-    "numberOfElements": 5,
-    "first": true
-  },
-  "remfile": {
-    "content": [
-      {
-        "id": 1,
-        "name": "file1",
-        "type": "some file type",
-        "bytes": 1024,
-        "uploadDate": "2018-03-23T10:00:00",
-        "status": "UNREADED"
-      },
-      {
-        "id": 2,
-        "name": "file2",
-        "type": "some file type",
-        "bytes": 1024,
-        "uploadDate": "2018-03-23T10:00:00",
-        "status": "UNREADED"
-      },
-      {
-        "id": 3,
-        "name": "file3",
-        "type": "some file type",
-        "bytes": 1024,
-        "uploadDate": "2018-03-23T10:00:00",
-        "status": "UNREADED"
-      },
-      {
-        "id": 4,
-        "name": "file4",
-        "type": "some file type",
-        "bytes": 1024,
-        "uploadDate": "2018-03-23T10:00:00",
-        "status": "UNREADED"
-      },
-      {
-        "id": 5,
-        "name": "file5",
-        "type": "some file type",
-        "bytes": 1024,
-        "uploadDate": "2018-03-23T10:00:00",
-        "status": "UNREADED"
-      }
-    ],
-    "pageable": {
-      "sort": {
-        "sorted": false,
-        "unsorted": true
-      },
-      "offset": 0,
-      "pageSize": 20,
-      "pageNumber": 0,
-      "unpaged": false,
-      "paged": true
+    {
+      "detail": "FULL REVERSAL OF REFUND DUPLICATE REFUND",
+      "id": 81,
+      "isoCountryCode": "AA",
+      "title": "FULL REVERSAL OF REFUND DUPLICATE REFUND"
     },
-    "last": true,
-    "totalPages": 1,
-    "totalElements": 5,
-    "size": 20,
-    "number": 0,
-    "sort": {
-      "sorted": false,
-      "unsorted": true
-    },
-    "numberOfElements": 5,
-    "first": true
-  },
-  "listfiles": {
-    "content": [
-      {
-        "id": 1,
-        "name": "file1",
-        "type": "some file type",
-        "bytes": 1024,
-        "uploadDate": "2018-03-23T10:00:00",
-        "status": "UNREADED"
-      },
-      {
-        "id": 2,
-        "name": "file2",
-        "type": "some file type",
-        "bytes": 1024,
-        "uploadDate": "2018-03-23T10:00:00",
-        "status": "UNREADED"
-      },
-      {
-        "id": 3,
-        "name": "file3",
-        "type": "some file type",
-        "bytes": 1024,
-        "uploadDate": "2018-03-23T10:00:00",
-        "status": "UNREADED"
-      },
-      {
-        "id": 4,
-        "name": "file4",
-        "type": "some file type",
-        "bytes": 1024,
-        "uploadDate": "2018-03-23T10:00:00",
-        "status": "UNREADED"
-      },
-      {
-        "id": 5,
-        "name": "file5",
-        "type": "some file type",
-        "bytes": 1024,
-        "uploadDate": "2018-03-23T10:00:00",
-        "status": "UNREADED"
-      }
-    ],
-    "pageable": {
-      "sort": {
-        "sorted": false,
-        "unsorted": true
-      },
-      "offset": 0,
-      "pageSize": 20,
-      "pageNumber": 0,
-      "unpaged": false,
-      "paged": true
-    },
-    "last": true,
-    "totalPages": 1,
-    "totalElements": 5,
-    "size": 20,
-    "number": 0,
-    "sort": {
-      "sorted": false,
-      "unsorted": true
-    },
-    "numberOfElements": 5,
-    "first": true
-  },
-  "billingPeriod": {
-    "address1": "mi dirección 1",
-    "airlineCode": "ABC",
-    "city": "Ciudad1",
-    "country": "Pais1",
-    "globalName": "Name",
-    "isoCountryCode": "NA",
-    "postalCode": "12345",
-    "taxNumber": "taxNumber",
-    "toDate": "Date"
-  },
-  "adm-acm-configuration": {
-    "agentVatNumberEnabled": "false",
-    "airlineVatNumberEnabled": "false",
-    "companyRegistrationNumberEnabled": "false",
-    "cpPermittedForConcerningIssue": "false",
-    "cpPermittedForConcerningRefund": "false",
-    "defaultStat": "false",
-    "freeStat": "false",
-    "isoc": "",
-    "maxNumberOfRelatedDocuments": 3,
-    "mfPermittedForConcerningIssue": "false",
-    "mfPermittedForConcerningRefund": "false",
-    "nridAndSpamEnabled": "false",
-    "taxOnCommissionEnabled": "false",
-    "taxOnCommissionSign": -1
-  },
-  "refund-configuration": {},
-  "countries": [
+    {
+      "detail": "REISSUE FEE NON REFUNDABLE",
+      "id": 82,
+      "isoCountryCode": "AA",
+      "title": "REISSUE FEE NON REFUNDABLE"
+    }
+  ],
+  "refund-configuration": [
+    {
+      "id": "AA",
+      "isoCountryCode": "AA",
+      "agentVatNumberEnabled": false,
+      "airlineVatNumberEnabled": false,
+      "companyRegistrationNumberEnabled": false,
+      "defaultStat": "INT",
+      "easyPayEnabled": false,
+      "freeStat": false,
+      "creditOnIndirectRefundsEnabled": false,
+      "creditOnDirectRefundsEnabled": false,
+      "fareAdjustmentAmountEnabled": false,
+      "mfAmount": 0,
+      "handlingFeeEnabled": false,
+      "penaltyChargeEnabled": false,
+      "commissionOnCpAndMfEnabled": false,
+      "mixedTaxesAllowed": false,
+      "nrRefundsAllowed": false,
+      "airlineMfAndCpConfigurationAllowed": false,
+      "electronicTicketValidationsEnabled": false,
+      "refundNoticeNumberConsidered": false,
+      "tctpForVatOnCp": null,
+      "tctpForVatOnMf": null,
+      "vatOnMfAndVatOnCpEnabled": false,
+      "issueRefundsWithoutCouponsAllowed": false,
+      "allGdsAgentsIssueRefundNoticeAllowed": false,
+      "defaultCurrency": null,
+      "maxCouponsInRelatedDocuments": 16,
+      "maxConjunctions": 5
+    }
+  ],
+  "adm-acm-configuration": [
+    {
+      "id": "AA",
+      "isoCountryCode": "AA",
+      "maxNumberOfRelatedDocuments": -1,
+      "cpPermittedForConcerningIssue": false,
+      "mfPermittedForConcerningIssue": false,
+      "cpPermittedForConcerningRefund": false,
+      "mfPermittedForConcerningRefund": true,
+      "nridAndSpamEnabled": true,
+      "taxOnCommissionEnabled": true,
+      "taxOnCommissionSign": -1,
+      "agentVatNumberEnabled": true,
+      "airlineVatNumberEnabled": true,
+      "companyRegistrationNumberEnabled": true,
+      "defaultStat": "DOM",
+      "freeStat": true,
+      "defaultCurrency": null
+    }
+  ],
+  "country": [
     { "isoCountryCode": "AA", "name": "Country AA" },
     { "isoCountryCode": "BB", "name": "Country BB" },
     { "isoCountryCode": "CC", "name": "Country CC" }
   ],
-  "curreny": [
+  "tctps": [
+    { "id":"AA",
+      "isoCountryCode": "AA",
+      "code": "TCPAU",
+      "description": "Australian GST"
+    },
+    { "id":"AA",
+      "isoCountryCode": "AA",
+      "code": "TCPHC",
+      "description": "Harmonised Sales Tax"
+    },
+    { "id":"AA",
+      "isoCountryCode": "AA",
+      "code": "TCPNZ",
+      "description": "New Zealand GST"
+    },
+    { "id":"AA",
+      "isoCountryCode": "AA",
+      "code": "TCPPC",
+      "description": "PTA Surcharge"
+    },
+    { "id":"AA",
+      "isoCountryCode": "AA",
+      "code": "UOTC",
+      "description": " "
+    }
+  ],
+  "periods": [
     {
-      "isoc": "BB",
-      "currencies": [
-        { "name": "ZZZ", "numDecimals": 0, "expirationDate": "2017-01-01" }
+      "id": "AA",
+      "isoc": "AA",
+      "values": [
+        2018061,
+        2018062,
+        2018071,
+        2018072,
+        2018081,
+        2018082,
+        2018091,
+        2018092,
+        2018101,
+        2018102,
+        2018111,
+        2018112,
+        2018121,
+        2018122
       ]
-    }
-  ],
-  "adm-acm-reasons": [
-    {
-      "detail": "Prueba1",
-      "id": 0,
-      "isoCountryCode": "AAA",
-      "title": "Prueba1 Tit"
-    },
-    {
-      "detail": "Prueba2",
-      "id": 1,
-      "isoCountryCode": "BBB",
-      "title": "Prueba2 Tit"
-    },
-    {
-      "detail": "Prueba3",
-      "id": 2,
-      "isoCountryCode": "CCC",
-      "title": "Prueba3 Tit"
-    }
-  ],
-  "refund-reasons": [
-    {
-      "detail": "Prueba1",
-      "id": 0,
-      "isoCountryCode": "AAA",
-      "title": "Prueba1 Tit"
-    },
-    {
-      "detail": "Prueba2",
-      "id": 1,
-      "isoCountryCode": "BBB",
-      "title": "Prueba2 Tit"
-    },
-    {
-      "detail": "Prueba3",
-      "id": 2,
-      "isoCountryCode": "CCC",
-      "title": "Prueba3 Tit"
-    }
-  ],
-  "toca": [
-    {
-      "code": "AAA",
-      "description": "pppp",
-      "isoCountryCode": "AA"
     }
   ]
 }

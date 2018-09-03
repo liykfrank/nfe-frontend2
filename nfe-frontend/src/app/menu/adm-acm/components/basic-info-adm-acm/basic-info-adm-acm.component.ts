@@ -34,7 +34,6 @@ import { TocaService } from './../../services/toca.service';
 export class BasicInfoAdmAcmComponent
   extends ReactiveFormHandler<AcdmBasicInfoFormModel>
   implements OnInit, OnChanges {
-
   basicInfoFormModelGroup: FormGroup;
 
   private listPeriods: number[] = [];
@@ -56,6 +55,9 @@ export class BasicInfoAdmAcmComponent
   periodNumber: number[] = [];
   periodMonth: KeyValue[] = [];
   periodYear: number[] = [];
+
+  currency: CurrencyPost = new CurrencyPost();
+
   private selectPeriodNumber: number;
   private selectPeriodMonth: number;
   private selectPeriodYear: number;
@@ -117,21 +119,6 @@ export class BasicInfoAdmAcmComponent
     );
 
     this.subscriptions.push(
-      this._currencyService.getCurrencyState().subscribe(data => {
-        const currencyModel = this.basicInfoFormModelGroup.get('currency');
-
-        currencyModel.get('code').setValue(data.name);
-        currencyModel.get('decimals').setValue(data.numDecimals);
-
-        const currency: CurrencyPost = new CurrencyPost();
-        currency.code = data.name;
-        currency.decimals = data.numDecimals;
-
-        this._basicInfoService.setCurrency(currency);
-      })
-    );
-
-    this.subscriptions.push(
       this.basicInfoFormModelGroup
         .get('taxOnCommissionType')
         .valueChanges.subscribe(data => {
@@ -155,6 +142,7 @@ export class BasicInfoAdmAcmComponent
               .getAccept()
               .subscribe(accept => {
                 if (accept) {
+                  this.currency = new CurrencyPost();
                   this._changeCountry(iso);
                   this.lastISO = iso;
                 } else {
@@ -173,6 +161,35 @@ export class BasicInfoAdmAcmComponent
           }
         })
     );
+
+    this.subscriptions.push(
+      this._currencyService.getCurrencyState().subscribe(data => {
+
+        if (this.currency.code != '' && this.currency.code != data.name) {
+          const subscriptionCurrency = this._alertsService
+            .getAccept()
+            .subscribe(accept => {
+              if (accept) {
+                this._setCurrency(data);
+              } else {
+                const last = this.currency.code;
+                this.currency.code = '';
+                setTimeout(() => this.currency.code = last, 50);
+              }
+
+              subscriptionCurrency.unsubscribe();
+            });
+
+          this._alertsService.setAlertTranslate(
+            'ADM_ACM.BASIC_INFO.CURRENCY.title',
+            'ADM_ACM.BASIC_INFO.CURRENCY.text',
+            AlertType.CONFIRM
+          );
+        } else {
+          this._setCurrency(data);
+        }
+      }
+    ));
 
     this.basicInfoFormModelGroup
       .get('transactionCode')
@@ -235,6 +252,14 @@ export class BasicInfoAdmAcmComponent
     } else {
       this._filterPeriods();
     }
+  }
+
+  showTOCA() {
+    return this.configuration.taxOnCommissionEnabled;
+  }
+
+  showNRID() {
+    return this.configuration.nridAndSpamEnabled;
   }
 
   private _changeCountry(iso) {
@@ -321,11 +346,13 @@ export class BasicInfoAdmAcmComponent
     }
   }
 
-  private showTOCA() {
-    return this.configuration.taxOnCommissionEnabled;
-  }
+  private _setCurrency(data: Currency) {
+    this.basicInfoFormModelGroup.get('currency').get('code').setValue(data.name);
+    this.basicInfoFormModelGroup.get('currency').get('decimals').setValue(data.numDecimals);
 
-  private showNRID() {
-    return this.configuration.nridAndSpamEnabled;
+    this.currency.code = data.name;
+    this.currency.decimals = data.numDecimals;
+
+    this._basicInfoService.setCurrency(this.currency);
   }
 }

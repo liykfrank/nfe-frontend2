@@ -23,13 +23,21 @@ export class TemplateService extends HttpServiceAbstract<TemplateModel[], any> {
     }
 
     removeTemplate(template) {
-        const position = this.templatesCloned.indexOf(template);
-        this.templatesCloned.splice(position, 1);
+        const position = this.templates.indexOf(template);
+        this.templatesCloned[position].flag = true;
     }
 
     restoreTemplate(template) {
         const position = this.templates.indexOf(template);
-        this.templatesCloned.splice(position, 0, template);
+        this.templatesCloned[position].flag = false;
+    }
+
+    getArrTemplates(){
+      return this.templatesCloned.filter(x => !x.flag);
+    }
+
+    reset() {
+        this.templatesCloned = this.templates.slice();
     }
 
 }

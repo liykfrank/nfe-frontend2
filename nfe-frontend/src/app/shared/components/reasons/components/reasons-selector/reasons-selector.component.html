@@ -1,6 +1,6 @@
 <div>
   <label class="text-nowrap" for="reason_refund" l10nTranslate>{{dropdownTitle}}</label>
-  <select class="form-control" (change)="onChangeSelector($event.target.value)">
+  <select class="form-control" (change)="onChangeSelector($event.target.value)" [disabled]="reasonList.length == 0">
     <option value="" selected disabled>Select an option</option>
     <option *ngFor="let reason of reasonList" [value]="reason.detail">{{reason.title}}</option>
   </select>

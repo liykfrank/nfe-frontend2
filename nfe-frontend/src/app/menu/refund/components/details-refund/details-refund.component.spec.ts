@@ -2,7 +2,6 @@ import { DetailsRefundFormModel } from './../../models/details-refund-form.model
 import { HttpClientModule } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl } from '@angular/forms';
 import { TranslationModule } from 'angular-l10n';
 import { of } from 'rxjs/observable/of';
 

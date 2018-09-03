@@ -91,21 +91,30 @@ export class AgentComponent extends ReactiveFormHandler<AgentFormModel> implemen
     const iataCode = this.getIataCode();
 
     if (iataCode != null) {
+      const validMod = (Number(this.model.agentCode.value) % 7) == Number(this.model.agentControlDigit.value);
+      if (!validMod) {
+        this.model.agentControlDigit.setErrors({
+          customError: {
+            invalid: true,
+            message: 'FORM_CONTROL_VALIDATORS.agent_checkDigit'
+          }
+        });
+        return;
+      }
+
       this._agentService.validateAgent(EnvironmentType.REFUND_INDIRECT, iataCode).subscribe(
         agent => {
           this.changeAgent.emit(agent);
           this.agent = agent;
 
           if (this.agentVatNumberEnabled) {
-            this.model.agentFormModelGroup
-              .get('agentVatNumber')
-              .setValue(agent.vatNumber);
+            this.model.agentVatNumber.setValue(agent.vatNumber);
           }
 
           this.agentCode = agent.iataCode;
           this.disabledMoreDetails = false;
         },
-        error => {
+        () => {
           this._clean();
           this._setErros();
         }
@@ -114,14 +123,13 @@ export class AgentComponent extends ReactiveFormHandler<AgentFormModel> implemen
   }
 
   private _clean() {
-    this.agentFormModelGroup.get('agentVatNumber').reset();
+    this.model.agentVatNumber.reset();
     this.agent = new Agent();
     this.disabledMoreDetails = true;
   }
 
-  // FIXME: fix name
   private _setErros() {
-    this.agentFormModelGroup.get('agentCode').setErrors({
+    this.model.agentCode.setErrors({
       customError: {
         invalid: true,
         message: 'FORM_CONTROL_VALIDATORS.agent'
@@ -130,21 +138,19 @@ export class AgentComponent extends ReactiveFormHandler<AgentFormModel> implemen
   }
 
   private getIataCode(): string {
-    const agentCode = this.model.agentFormModelGroup.get('agentCode').value;
-    const agentControlDigit = this.model.agentFormModelGroup.get('agentControlDigit')
-      .value;
+    const agentCode = this.model.agentCode.value;
+    const agentControlDigit = this.model.agentControlDigit.value;
+
     if (
       agentCode &&
       agentControlDigit &&
       agentCode.length == 7 &&
       agentControlDigit.length == 1
     ) {
-      return (
-        this.model.agentFormModelGroup.get('agentCode').value +
-        this.model.agentFormModelGroup.get('agentControlDigit').value
-      );
-    } else {
-      return null;
+      return agentCode + agentControlDigit;
     }
+
+    return null;
+
   }
 }

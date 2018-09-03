@@ -99,6 +99,7 @@
 
         <div class="form-group col-2">
           <bspl-currency
+            [defaultCurrency]="currency.code"
             [iso]="configuration.isoCountryCode || null"
             [type]="type">
           </bspl-currency>

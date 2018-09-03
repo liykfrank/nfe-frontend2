@@ -40,6 +40,7 @@ export class AlertsService {
       this._translationService.translate(message),
       alert_type
     );
+    
     this.setAlert(alert);
   }
 }

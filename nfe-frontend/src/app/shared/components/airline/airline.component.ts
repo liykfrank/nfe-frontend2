@@ -1,3 +1,4 @@
+import { EnvironmentType } from './../../enums/environment-type.enum';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
@@ -50,7 +51,7 @@ export class AirlineComponent extends ReactiveFormHandler<AirlineFormModel> impl
 
   private _validateAirline(airlineCode: string) {
     this._airlineService
-      .validateAirlinet(true, this.isoCountryCode, airlineCode)
+      .validateAirlinet(EnvironmentType.REFUND_INDIRECT, this.isoCountryCode, airlineCode)
       .subscribe(
         airline => {
           this.airline = airline;
