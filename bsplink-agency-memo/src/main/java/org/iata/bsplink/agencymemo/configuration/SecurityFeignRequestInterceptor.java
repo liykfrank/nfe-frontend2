@@ -20,10 +20,13 @@ public class SecurityFeignRequestInterceptor implements RequestInterceptor {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
 
-        if (authentication != null) {
+        if (authentication != null && authentication.getDetails() != null
+                && authentication.getDetails() instanceof SimpleKeycloakAccount) {
+
             SimpleKeycloakAccount details = (SimpleKeycloakAccount) authentication.getDetails();
             template.header(AUTHORIZATION_HEADER, String.format("%s %s", BEARER_TOKEN_TYPE,
                     details.getKeycloakSecurityContext().getTokenString()));
+
         }
     }
 }
