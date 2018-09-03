@@ -8,6 +8,7 @@ import { Currency } from './models/currency.model';
 import { CurrencyService } from './services/currency.service';
 import { AlertsService } from '../../../core/services/alerts.service';
 import { AlertType } from '../../../core/enums/alert-type.enum';
+import { log } from 'util';
 
 @Component({
   selector: 'bspl-currency',
@@ -30,13 +31,22 @@ export class CurrencyComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.iso.currentValue) {
+    if (changes.iso && this.iso && this.iso.length > 0) {
       this._findCurrencyList(this.iso, this.defaultCurrency);
+    }
+
+    if (changes.defaultCurrency && this._changeCurrencySelected()) {
+      const idx = this.currencyList.findIndex(x => x.name == this.defaultCurrency);
+
+      if (idx >= 0) {
+        this.currencySelected = this.currencyList[idx];
+      }
     }
   }
 
 
   onChangeCurrency(currency) {
+    this.currencySelected = currency;
     this._currencyService.setCurrencyState(currency);
   }
 
@@ -56,12 +66,18 @@ export class CurrencyComponent implements OnInit, OnChanges {
           );
           this._currencyService.setCurrencyState(new Currency());
         } else {
-          const currencyFound = this.currencyList.find( currency => currency.name === currencyDefault);
+          const currencyFound = data[0].currencies.find( currency => currency.name === currencyDefault);
           this.currencySelected = currencyFound ? currencyFound : this.currencyList[0];
           this._currencyService.setCurrencyState(this.currencySelected);
         }
       });
+  }
 
+  private _changeCurrencySelected() {
+    return this.currencyList.length > 0 &&
+      this.defaultCurrency &&
+      this.defaultCurrency.length > 0 &&
+      this.defaultCurrency != this.currencySelected.name;
   }
 
 }

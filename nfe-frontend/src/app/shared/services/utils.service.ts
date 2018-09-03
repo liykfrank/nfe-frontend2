@@ -17,13 +17,15 @@ export class UtilsService {
     return Object.assign({}, obj);
   }
 
-  getProv(real, mock) {
-    return { provide: real, useClass: this.env.mock ? mock : real };
-  }
-
   touchAllForms(forms: FormGroup[]) {
     for (const form of forms) {
       this._travelForm(form, null, null, this._touch);
+    }
+  }
+
+  untouchAllForms(forms: FormGroup[]) {
+    for (const form of forms) {
+      this._travelForm(form, null, null, this._unTouch);
     }
   }
 
@@ -75,7 +77,14 @@ export class UtilsService {
 
   private _touch(form: FormGroup, keys: string[], msg): boolean {
     Object.keys(form.controls).forEach(key => {
-      form.get(key).markAsDirty();
+      form.get(key).markAsTouched();
+    });
+    return false;
+  }
+
+  private _unTouch(form: FormGroup, keys: string[], msg): boolean {
+    Object.keys(form.controls).forEach(key => {
+      form.get(key).markAsUntouched();
     });
     return false;
   }
@@ -100,7 +109,7 @@ export class UtilsService {
           message: msg
         }
       });
-      formAux.markAsDirty();
+      formAux.markAsTouched();
     } else {
       ret = false;
     }

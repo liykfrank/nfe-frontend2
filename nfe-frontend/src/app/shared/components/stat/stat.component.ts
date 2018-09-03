@@ -1,7 +1,6 @@
-import { ReactiveComponentBase } from './../../base/reactive-component-base';
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
-import { FormControl, FormGroup } from '../../../../../node_modules/@angular/forms';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 
+import { ReactiveComponentBase } from './../../base/reactive-component-base';
 
 @Component({
   selector: 'bspl-stat',
@@ -17,6 +16,8 @@ export class StatComponent extends ReactiveComponentBase implements OnInit, OnCh
   @Input() domesticLabel: string;
   @Input() internacionalLabel: string;
 
+  value: string = '';
+
   constructor() {
     super();
   }
@@ -28,6 +29,7 @@ export class StatComponent extends ReactiveComponentBase implements OnInit, OnCh
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.freeStat && this.defaultStat && this.defaultStat.length > 0) {
       this.groupForm.get(this.controlName).setValue(this.defaultStat.substr(0, 1).toUpperCase());
+      this.value = this.defaultStat.substr(0, 1).toUpperCase();
     }
   }
 

@@ -1,6 +1,6 @@
-
 export const environment = {
   environment: 'mock',
+  token: '',
   basePath: 'http://localhost:3000/',
   production: false,
   api: {
@@ -8,25 +8,24 @@ export const environment = {
       agent: 'masterdata/agent/v1/agents/'
     },
     refund: {
-      agent: 'agents/', // {agentCode}
-      airline: 'refund/v1/airlines/', // /{isoCountryCode}/{airlineCode}
-      configurations: 'refund/v1/configurations',
+      agent: 'agent/', // {agentCode}
+      airline: 'airline/', // /{isoCountryCode}/{airlineCode}
+      configurations: 'refund-configuration',
+      refund_indirect: 'refund-indirect',
       issuePermission: 'refund/v1/refunds/indirects/permissions',
-      refund_indirect: 'refund/v1/refunds/indirects/',
-      issuePermissionController: 'refund/v1/refunds/indirects/permissions',
-      reasons_indirects: 'refund/v1/reasons/indirects',
-      currency: 'refund/v1/currencies/', // {isoc}
+      reasons_indirects: 'reasons',
+      currency: 'currencies/', // {isoc}
     },
     adm_acm: {
-      configuration: 'agencymemo/v1/configurations',
-      airline: 'agencymemo/v1/airlines', // /{isoCountryCode}/{airlineCode}
-      agent: 'agencymemo/v1/agents/', // {agentCode}
-      acdm: 'agencymemo/v1/acdms', // {id} | /{id}/files
-      country: 'agencymemo/v1/countries',
-      toca: 'agencymemo/v1/tctps', // {isoc} | {isoc}/{code}: remove
-      currency: 'agencymemo/v1/general-info/currencies/', // {isoc}
-      period: 'agencymemo/v1/general-info/periods', // {isoc}
-      reasons: 'agencymemo/v1/reasons'
+      configuration: 'adm-acm-configuration',
+      airline: 'airline/', // /{isoCountryCode}/{airlineCode}
+      agent: 'agent/', // {agentCode}
+      acdm: 'acdm', // {id} | /{id}/files
+      country: 'country',
+      toca: 'tctps', // {isoc} | {isoc}/{code}: remove
+      currency: 'currencies/', // {isoc}
+      period: 'periods', // {isoc}
+      reasons: 'reasons',
     },
     user: {
       user: '/assets/mocks/user.json',

@@ -11,7 +11,6 @@ export class CountryTerritoryService extends HttpServiceAbstract<Country[], any>
 
     constructor(private http: HttpClient) {
         super(http, environment.api.user.countryTerritory);
-        this.getCountriesAndTerritory();
     }
 
     getCountriesAndTerritory() {

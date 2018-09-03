@@ -42,12 +42,17 @@
 }
 
 .ico-save-container {
-  background-image:url("/assets/images/files/ico_save.svg");
+  background-image:url("/assets/images/utils/ico_save.svg");
   background-repeat: no-repeat;
   background-position-x: 2px;
   background-position-y: 6px;
   background-size: 20px;
   cursor: pointer;
+}
+
+.ico-btn {
+  width: 25px;
+  height: 25px;
 }
 
 .custom-container {

@@ -37,6 +37,9 @@ export class FieldErrorComponent implements OnChanges {
     if (this.errors.customError) {
       errorString += this._translationService.translate(this.errors.customError.message) + '\n';
     }
+    if (this.errors.emailWithDomain) {
+      errorString += this._translationService.translate('FORM_CONTROL_VALIDATORS.email') + '\n';
+    }
     if (this.errors.backendError) {
       errorString += this.errors.backendError.message + '\n';
     }

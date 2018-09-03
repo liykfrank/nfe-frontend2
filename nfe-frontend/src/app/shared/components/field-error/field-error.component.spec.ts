@@ -7,9 +7,31 @@ describe('FieldErrorComponent', () => {
   let component: FieldErrorComponent;
   let fixture: ComponentFixture<FieldErrorComponent>;
 
+  let count = 0;
+
+  const errors = {
+    backendError: {
+      invalid: true,
+      message: 'msg'
+    },
+    required: {
+      invalid: true
+    },
+    pattern: {
+      invalid: true
+    },
+    minlength: {
+      invalid: true,
+      requiredLength: 1
+    },
+    customError: {
+      message: 'TEST'
+    }
+  };
+
   beforeEach(async(() => {
     const translationServiceStub = {
-      translate: () => ({})
+      translate: () => (count++).toString()
     };
 
     TestBed.configureTestingModule({
@@ -29,4 +51,25 @@ describe('FieldErrorComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('hasErrorClass no errors', () => {
+    component.errors = null;
+    expect(component.hasErrorClass()).toBe('hide');
+    expect(component.errorString).toBeUndefined();
+  });
+
+  it('hasErrorClass all errors', () => {
+    component.errors = errors;
+    component.ngOnChanges(null);
+    expect(component.hasErrorClass()).toBe('show');
+    expect(component.errorString.length).toBeGreaterThan(1);
+  });
+
+  it('hasErrorClass unknown errors', () => {
+    component.errors = {test:{invalid: true}};
+    component.ngOnChanges(null);
+    expect(component.hasErrorClass()).toBe('show');
+    expect(component.errorString.length).toBe(0);
+  });
+
 });

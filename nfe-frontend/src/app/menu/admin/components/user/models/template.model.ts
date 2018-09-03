@@ -1,3 +1,4 @@
-export interface TemplateModel {
+export class TemplateModel {
     name: string;
+    flag = false;
 }

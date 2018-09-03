@@ -15,7 +15,7 @@ export const GLOBALS = {
     TOUR_CODE: /[ \!#-~]{0,15}/,
     ELECTRONIC_TICKET_AUTH: /[A-Za-z0-9 ]{0,14}/,
     PASSSENGER: /[0-9A-Za-z\-\.\/ ]{0,49}/,
-    EMAIL: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,3}$/
+    EMAIL: /^[\w\.]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
   },
   HTML_PATTERN: {
     WAIVER_CODE: '^[A-Za-z0-9 /.-]*$',

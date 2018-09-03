@@ -1,3 +1,4 @@
+import { ReactiveComponentBase } from './../base/reactive-component-base';
 import { Directive, HostListener, ElementRef, Input } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { GLOBALS } from '../constants/globals';

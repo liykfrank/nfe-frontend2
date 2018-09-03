@@ -1,3 +1,4 @@
+import { CustomValidators } from './../../../../../shared/classes/CustomValidators';
 import { ReactiveFormHandlerModel } from '../../../../../shared/base/reactive-form-handler-model';
 import { FormGroup, Validators, FormControl } from '../../../../../../../node_modules/@angular/forms';
 
@@ -10,8 +11,8 @@ export class NewUserModel extends ReactiveFormHandlerModel {
     locality: FormControl;
     zip: FormControl;
     expiryDate: FormControl;
-    id: FormControl;
     lastModifiedDate: FormControl;
+    lastname: FormControl;
     name: FormControl;
     organization: FormControl;
     registerDate: FormControl;
@@ -19,11 +20,12 @@ export class NewUserModel extends ReactiveFormHandlerModel {
     userCode: FormControl;
     userType: FormControl;
     username: FormControl;
+    email: FormControl;
     isoCountry: FormControl;
 
     // FORMSGROUPS
     address: FormGroup;
-    newUserGroup: FormGroup;
+    groupForm: FormGroup;
     groupIsoCountry: FormGroup;
 
     constructor() {
@@ -32,21 +34,22 @@ export class NewUserModel extends ReactiveFormHandlerModel {
 
     createFormControls() {
         this.isoCountry = new FormControl('');
-        this.city = new FormControl({value: '', disabled: false}, [Validators.required]);
-        this.country = new FormControl({value: '', disabled: false}, [Validators.required]);
-        this.description = new FormControl({value: '', disabled: false}, [Validators.required]);
-        this.locality = new FormControl({value: '', disabled: false}, [Validators.required]);
-        this.zip = new FormControl({value: '', disabled: false}, [Validators.required]);
-        this.expiryDate = new FormControl({value: '', disabled: true}, [Validators.required]);
-        this.id = new FormControl({value: '', disabled: false}, [Validators.required]);
+        this.city = new FormControl({value: '', disabled: false}, []);
+        this.country = new FormControl({value: '', disabled: false}, []);
+        this.description = new FormControl({value: '', disabled: false}, []);
+        this.locality = new FormControl({value: '', disabled: false}, []);
+        this.zip = new FormControl({value: '', disabled: false}, []);
+        this.expiryDate = new FormControl({value: '', disabled: true}, []);
         this.lastModifiedDate = new FormControl({value: '', disabled: false}, []);
         this.name = new FormControl({value: '', disabled: false}, [Validators.required]);
+        this.lastname = new FormControl({value: '', disabled: false}, [Validators.required]);
         this.organization = new FormControl({value: '', disabled: false}, [Validators.required]);
         this.registerDate = new FormControl({value: '', disabled: false}, []);
         this.telephone = new FormControl({value: '', disabled: false}, [Validators.required]);
         this.userCode = new FormControl('', {validators: [Validators.required], updateOn: 'blur'});
         this.userType = new FormControl({value: '', disabled: false}, [Validators.required]);
-        this.username = new FormControl({value: '', disabled: false}, [Validators.required, Validators.email]);
+        this.email = new FormControl({value: '', disabled: false}, [Validators.required, CustomValidators.email]);
+        this.username = new FormControl({value: '', disabled: false}, [Validators.required, CustomValidators.email]);
     }
 
     createFormGroups() {
@@ -57,18 +60,19 @@ export class NewUserModel extends ReactiveFormHandlerModel {
     }
 
     createForm() {
-        if (!this.newUserGroup) {
-            this.newUserGroup = new FormGroup({
+        if (!this.groupForm) {
+            this.groupForm = new FormGroup({
                 address: this.address,
                 expiryDate: this.expiryDate,
-                id: this.id,
                 lastModifiedDate: this.lastModifiedDate,
                 name: this.name,
+                lastname: this.lastname,
                 organization: this.organization,
                 registerDate: this.registerDate,
                 telephone: this.telephone,
                 userCode: this.userCode,
                 userType: this.userType,
+                email: this.email,
                 username: this.username
             });
         }

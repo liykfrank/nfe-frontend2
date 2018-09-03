@@ -33,6 +33,8 @@
     "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdocking",
     "../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxmaskedinput"
   ],
-
-  "include": ["**/*.spec.ts", "**/*.d.ts"]
+  "include": [
+    "**/*.spec.ts",
+    "**/*.d.ts"
+  ]
 }

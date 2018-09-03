@@ -27,4 +27,5 @@ export class UserService extends HttpServiceAbstract<User, Object> {
   getUser(): Observable<User> {
     return Observable.of(this._user);
   }
+
 }

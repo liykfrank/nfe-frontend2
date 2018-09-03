@@ -4,7 +4,8 @@ const router = jsonServer.router('./mocks/data.json')
 const middlewares = jsonServer.defaults()
 
 server.use(jsonServer.rewriter({
-  //endpoints rewriter 
+  '/airline/*/:id': '/airline/:id',
+  '/currencies/*': '/currencies',
 }))
 
 server.use(middlewares)

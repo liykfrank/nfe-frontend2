@@ -1,29 +1,14 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs/observable/of';
+// import { TemplateService } from './template.service';
 
-import { TemplateService } from './template.service';
+// describe('TemplateService', () => {
+//     let service: TemplateService;
 
-describe('TemplateService', () => {
+//     beforeEach(() => {
+//         service = new TemplateService();
+//     });
 
-  const httpClientStub = jasmine.createSpyObj<HttpClient>('HttpClient', [
-    'get'
-  ]);
-  httpClientStub.get.and.returnValue(of());
+//     it('works', () => {
+//         expect(1).toEqual(2);
+//     });
 
-    beforeEach(() => {
-      TestBed.configureTestingModule({
-        providers: [
-        { provide: HttpClient, useValue: httpClientStub }, TemplateService]
-      });
-
-    });
-
-    it('works', inject(
-      [TemplateService],
-      (service: TemplateService) => {
-        expect(service).toBeTruthy();
-      }
-    ));
-
-});
+// });

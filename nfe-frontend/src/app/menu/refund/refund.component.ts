@@ -23,6 +23,8 @@ import { DetailsRefundFormModel } from './models/details-refund-form.model';
 import { FormOfPaymentRefundFormModel } from './models/form-of-payment-refund-form.model';
 import { RefundConfigurationService } from './services/refund-configuration.service';
 import { RefundIndirectService } from './services/refund-indirect.service';
+import { Validators } from '@angular/forms';
+import { GLOBALS } from '../../shared/constants/globals';
 
 @Component({
   selector: 'bspl-refund',
@@ -127,12 +129,26 @@ export class RefundComponent extends AbstractComponent implements OnInit {
   }
 
   onReturnSave() {
+    this.detailsRefundFormModel.passenger.setValidators([Validators.pattern(GLOBALS.PATTERNS.PASSSENGER)]);
+    this.detailsRefundFormModel.issueReason.setValidators([]);
+
+    const forms = [
+      this.basicInfoRefundFormModel.basicInfoRefundGroup,
+      this.detailsRefundFormModel.detailsRefundGroup,
+      this.formOfPaymentRefundFormModel.formOfPaymentRefundGroup,
+      this.amountRefundFormModel.amountRefundGroup
+    ];
+    this._utilsService.untouchAllForms(forms);
+
     const refund = this._buildRequestRefundIndirect();
     refund.status = 'DRAFT';
     this._postRefundIndirect(refund);
   }
 
   onReturnIssue() {
+    this.detailsRefundFormModel.passenger.setValidators([Validators.pattern(GLOBALS.PATTERNS.PASSSENGER), Validators.required, Validators.minLength(1)]);
+    this.detailsRefundFormModel.issueReason.setValidators([Validators.required, Validators.minLength(1)]);
+
     const testBasicInfo = this.basicInfoRefundFormModel.basicInfoRefundGroup
       .valid;
     const testDetails = this.detailsRefundFormModel.detailsRefundGroup.valid;
@@ -148,7 +164,7 @@ export class RefundComponent extends AbstractComponent implements OnInit {
         this.amountRefundFormModel.amountRefundGroup
       ];
 
-      this._utilsService.touchAllForms(forms.filter(x => x != null));
+      this._utilsService.touchAllForms(forms);
 
       this._alertService.setAlertTranslate(
         'error',

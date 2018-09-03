@@ -11,18 +11,13 @@ import { EnvironmentType } from '../../../../enums/environment-type.enum';
 })
 export class ReasonsSelectorComponent implements  OnChanges {
 
-  private reasonList: Reason[];
-  @Input()
-  public  dropdownTitle: string;
+  reasonList: Reason[] = [];
 
-  @Input()
-  public type: EnvironmentType;
+  @Input() dropdownTitle: string;
+  @Input() type: EnvironmentType;
+  @Input() isoCode: string;
 
-  @Input()
-  public isoCode: string;
-  
   @Output() changeSelect: EventEmitter<string> = new EventEmitter();
-
 
   constructor(private _reasonsService: ReasonsService) { }
 
@@ -40,6 +35,8 @@ export class ReasonsSelectorComponent implements  OnChanges {
     } else if ( this.isoCode  && this.type == EnvironmentType.REFUND_INDIRECT) {
       this._reasonsService.getReasonsByIndirectRefund(this.isoCode).subscribe(reasons => {
           this.reasonList = reasons;
+        }, () => {
+          this.reasonList = []
         });
     }
   }

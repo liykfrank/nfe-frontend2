@@ -114,6 +114,7 @@ export class AmountAdmAcmComponent extends ReactiveFormHandler<AcdmAmountForm> i
 
     this.subscriptions.push(
       this._basicInfoService.getCurrency().subscribe(currency => {
+        this.amountForm.reset();
         this.currency = currency;
       })
     );
