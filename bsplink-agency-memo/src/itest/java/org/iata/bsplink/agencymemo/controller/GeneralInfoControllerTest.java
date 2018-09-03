@@ -28,17 +28,17 @@ public class GeneralInfoControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    
+
     @Autowired
     protected WebApplicationContext webAppContext;
-    
+
     @Before
     public void setUp() throws Exception {
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
     }
 
     @Test
-    public void testGetAllPeriods() throws Exception {       
+    public void testGetAllPeriods() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         String jsonInString = mapper.writeValueAsString(getPeriodsList());
 
@@ -70,7 +70,8 @@ public class GeneralInfoControllerTest {
                 + "{\"name\":\"DEF\",\"numDecimals\":3,\"expirationDate\":"
                 + "\"2058-12-25\"},{\"name\":\"GHI\",\"numDecimals\":0"
                 + ",\"expirationDate\":\"2058-12-25\"},{\"name\":\"JKL\",\"numDecimals\":1"
-                + ",\"expirationDate\":\"2058-12-25\"}]},{\"isoc\"" + ":\"BB\""
+                + ",\"expirationDate\":\"2058-12-25\"},{\"name\":\"ZZZ\",\"numDecimals\":0"
+                + ",\"expirationDate\":\"2017-01-01\"}]},{\"isoc\"" + ":\"BB\""
                 + ",\"currencies\":[{\"name\":\"ZZZ\","
                 + "\"numDecimals\":0,\"expirationDate\":\"2017-01-01\"}]}"
                 + ",{\"isoc\":\"CC\",\"currencies\":[{\"name\":\"ERR\","
@@ -88,7 +89,8 @@ public class GeneralInfoControllerTest {
                 + "\"numDecimals\":2,\"expirationDate\":" + "\"2058-12-24\"},{\"name\":\"DEF\","
                 + "\"numDecimals\":3,\"expirationDate\":" + "\"2058-12-25\"},{\"name\":\"GHI\""
                 + ",\"numDecimals\":0,\"expirationDate\"" + ":\"2058-12-25\"},{\"name\":\"JKL\""
-                + ",\"numDecimals\":1,\"expirationDate\"" + ":\"2058-12-25\"}]}]";
+                + ",\"numDecimals\":1,\"expirationDate\"" + ":\"2058-12-25\"},{\"name\":\"ZZZ\""
+                + ",\"numDecimals\":0,\"expirationDate\"" + ":\"2017-01-01\"}]}]";
 
         mockMvc.perform(get("/v1/general-info/currencies/AA"))
                 .andExpect(content().json(jsonInString)).andExpect(status().isOk());
