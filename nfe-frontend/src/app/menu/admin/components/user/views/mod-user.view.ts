@@ -12,7 +12,7 @@ export class ModUserView extends ReactiveFormHandler<NewUserModel> {
 
     _model = new NewUserModel();
 
-    _types_of_users;
+    types_of_users;
 
     // TEMPLATES
     groupIsoCountry: FormGroup;
@@ -21,15 +21,15 @@ export class ModUserView extends ReactiveFormHandler<NewUserModel> {
     templates: ArrayTemplateModel[] = [];
     countries: Country[] = [];
 
-    constructor(private _translationService: TranslationService,
-        private templateService: TemplateService,
+    constructor(public _translationService: TranslationService,
+        public templateService: TemplateService,
         private countryTerritoryService: CountryTerritoryService) {
         super();
         this.load();
     }
 
     load() {
-        this._types_of_users = GLOBALS.TYPES_OF_USER;
+        this.types_of_users = GLOBALS.TYPES_OF_USER;
         this.loadControlForCountryTerritory();
         this.disableControl(this._model.userType);
         this.disableControl(this._model.userCode);
@@ -73,7 +73,6 @@ export class ModUserView extends ReactiveFormHandler<NewUserModel> {
 
     onReturnCountryTerritory(event) {
         this.countries = event;
-        console.log(this.countries);
     }
 
     toogleEdit(position) {
@@ -90,18 +89,11 @@ export class ModUserView extends ReactiveFormHandler<NewUserModel> {
     }
 
     callApi() {
-        // Llamada a la api;
+        return true;
     }
 
     get model(): NewUserModel {
         return this._model;
-    }
-
-    get types_of_users() {
-        if (!this._types_of_users) {
-            this._types_of_users = GLOBALS.TYPES_OF_USER;
-        }
-        return this._types_of_users;
     }
 
 }

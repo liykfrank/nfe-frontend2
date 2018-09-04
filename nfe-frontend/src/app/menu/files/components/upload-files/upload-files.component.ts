@@ -1,15 +1,9 @@
-
-import { forEach } from '@angular/router/src/utils/collection';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from '../../services/configuration.service';
 import { Configuration } from '../../models/configuration';
 
 import { Message } from 'primeng/components/common/api';
-import { any } from 'codelyzer/util/function';
-import { environment } from '../../../../../environments/environment';
-
-const API_URL = environment.files.api.apiUpload;
-const BASE_URL = environment.basePath + environment.files.basePath;
+import { FilesService } from '../../services/files.service';
 
 @Component({
   selector: 'bspl-upload-files',
@@ -17,56 +11,64 @@ const BASE_URL = environment.basePath + environment.files.basePath;
   styleUrls: ['./upload-files.component.scss']
 })
 
-export class UploadFilesComponent implements OnInit, AfterViewInit {
-  @ViewChild('uploadComp') myFileUpload: any;
+export class UploadFilesComponent implements OnInit {
   configuration: Configuration;
-  url: string;
   multipleUpload: boolean;
-  name: string;
   chooseLabel: string;
   customUpload: boolean;
+  files: any[];
   uploadedFiles: any[];
-
 
   // TODO: revisar este sistema de mensajes Toast y acondicionarlo al actual.
   msgs: Message[];
 
-  constructor(private configurationService: ConfigurationService) {
-  }
+  MAX_LENGHT = 40;
+
+  constructor(
+    private configurationService: ConfigurationService,
+    private _FilesService: FilesService
+  ) {  }
 
   ngOnInit() {
-    this.url = BASE_URL + API_URL;
     this.multipleUpload = true;
-    this.name = 'file';
     this.chooseLabel = 'Select Files';
     this.customUpload = false;
     this.uploadedFiles = [];
+    this.files = [];
     this.msgs = [];
-    this.getconfiguration();
+    this.getConfiguration();
   }
 
-
-  ngAfterViewInit(): void { }
-
-  private getconfiguration(): void {
+  private getConfiguration(): void {
     this.configurationService.get().subscribe(
       data => { this.configuration = data; },
       err => console.error(err),
       () => console.log('done loading configuration' + this.configuration.maxUploadFilesNumber)
     );
-    console.log('configuration ' + this.configuration);
   }
 
-  onBeforeUpload(event) {
-    this.myFileUpload.customUpload = true;
+  sendUpload() {
+    if (this.files && this.files.length > 0) {
+
+      this._FilesService.uploadFiles(this.files)
+        .finally(() => {
+          this.files = [];
+        })
+        .subscribe(
+          data => {
+            this.uploadedFiles = data;
+          },
+          err => { }
+        );
+    }
   }
 
-  onUpload(event): void {
-    this.myFileUpload.customUpload = false;
-    this.uploadedFiles = event.files;
+  cancelUpdate() {
+    this.files = [];
   }
 
   onSelect(event): void {
+    this.uploadedFiles = [];
     this.checkErrors(event.files);
   }
 
@@ -78,17 +80,15 @@ export class UploadFilesComponent implements OnInit, AfterViewInit {
 
   isValidFileExtension(file: any): boolean {
     const filename: string = file.name;
-    const allowedExtensions: string[] = this.configuration.allowedFileExtensions;
     const fileExtension: string = filename.slice((Math.max(0, filename.lastIndexOf('.')) || Infinity) + 1);
-    const validExtension: boolean = this.configuration.allowedFileExtensions.some(function (element, index, array) {
-      return element == fileExtension;
-    });
+    const validExtension: boolean = this.configuration.allowedFileExtensions.
+        some( elem => elem == fileExtension);
     let errSummary: string;
     let errDetail: string;
 
 
     if (!validExtension) {
-      errSummary = `${file.name}: Invalid file extension,`;
+      errSummary = `${file.name}: Invalid file extension.`;
       // errDetail = `allowed file extensions: '${allowedExtensions.join('\', \'').toString()}'`;
       errDetail = '';
       this.msgs.push({ severity: 'error', summary: errSummary, detail: errDetail });
@@ -98,10 +98,10 @@ export class UploadFilesComponent implements OnInit, AfterViewInit {
   }
 
   isValidNumFiles(): boolean {
-    const errMsg = 'Maximum number of allowable file uploads has been exceeded';
+    const errMsg = 'Maximum number of allowable file uploads has been exceeded.';
     let isValidNumFiles = true;
 
-    if (this.myFileUpload.files.length > this.configuration.maxUploadFilesNumber) {
+    if (this.files.length > this.configuration.maxUploadFilesNumber) {
       isValidNumFiles = false;
       this.msgs.push({ severity: 'error', summary: errMsg, detail: '' });
     }
@@ -117,8 +117,8 @@ export class UploadFilesComponent implements OnInit, AfterViewInit {
 
     if (file.size > maxUploadFileSize) {
       validSize = false;
-      errSummary = `${file.name}: Invalid file size,`;
-      errDetail = `maximum upload size is ${file.size}`;
+      errSummary = `${file.name}: Invalid file size.`;
+      errDetail = `Maximum upload size is ${file.size}`;
       this.msgs.push({ severity: 'error', summary: errSummary, detail: errDetail });
     }
 
@@ -136,44 +136,58 @@ export class UploadFilesComponent implements OnInit, AfterViewInit {
 
 
     if (!validName) {
-      errSummary = `${file.name}: Invalid file name,`;
-      errDetail = `the file should have a valid name`;
+      errSummary = `${file.name}: Invalid file name.`;
+      errDetail = `The file should have a valid name.`;
       this.msgs.push({ severity: 'error', summary: errSummary, detail: errDetail });
     }
 
     return validName;
   }
 
-  checkErrors(selectedFiles: any): void {
-    let isValidNumFiles, isValidFileSize, isValidFileExtension, isValidFileName: boolean;
-    this.msgs = [];
+  checkErrors(selectedFiles: any[]): void {
+    let isValidNumFiles,
+        isValidFileSize,
+        isValidFileExtension,
+        isValidFileName: boolean;
+    // this.msgs = [];
 
-    for (const file of selectedFiles) {
+    for (let index = 0; index < selectedFiles.length; index++) {
       isValidNumFiles = this.isValidNumFiles();
-      isValidFileName = this.isValidFileName(file);
-      isValidFileExtension = this.isValidFileExtension(file);
-      isValidFileSize = this.isValidFileSize(file);
+      isValidFileName = this.isValidFileName(selectedFiles[index]);
+      isValidFileExtension = this.isValidFileExtension(selectedFiles[index]);
+      isValidFileSize = this.isValidFileSize(selectedFiles[index]);
 
-      if (!isValidFileName || !isValidFileExtension || !isValidFileSize) {
-        this.removeSelectedFile(file);
+      if (isValidNumFiles && isValidFileName && isValidFileExtension && isValidFileSize) {
+        this.files.push(selectedFiles[index]);
       }
     }
 
-    for (const file of this.myFileUpload.files) {
+    for (const file of this.files) {
       isValidNumFiles = this.isValidNumFiles();
       if (!isValidNumFiles) {
         this.removeSelectedFile(file);
       }
     }
-
   }
 
   private removeSelectedFile(file: any): void {
-    const index = this.getFileIndexInArray(file, this.myFileUpload.files);
+    const index = this.getFileIndexInArray(file, this.files);
 
     if (index > -1) {
-      this.myFileUpload.files.splice(index, 1);
+      this.files.splice(index, 1);
     }
+  }
+
+  removeMessage(message: any): void {
+    const index = this.msgs.indexOf(message);
+
+    if (index > -1) {
+      this.msgs.splice(index, 1);
+    }
+  }
+
+  removeAllMessages() {
+    this.msgs = [];
   }
 
   private convertIntoBytes(fileSize: string): number {
@@ -189,4 +203,11 @@ export class UploadFilesComponent implements OnInit, AfterViewInit {
     return fileSizeNumb;
   }
 
+  checkMessagesLength() {
+    return this.msgs.length == 0;
+  }
+
+  checkFilesLength() {
+    return this.files.length == 0;
+  }
 }

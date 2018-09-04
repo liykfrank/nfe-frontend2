@@ -5,7 +5,7 @@ export const environment = {
   production: false,
   api: {
     masterData: {
-      agent: 'masterdata/agent/v1/agents/'
+      agent: 'agent/'
     },
     refund: {
       agent: 'agent/', // {agentCode}
@@ -27,10 +27,20 @@ export const environment = {
       period: 'periods', // {isoc}
       reasons: 'reasons',
     },
+    files: {
+      listFiles: 'files/v1/files',
+      downloadFile: 'files/v1/files',
+      downloadFiles: 'files/v1/files/zip',
+      removeFile: 'files/v1/files',
+      removeFiles: 'files/v1/files',
+      apiConfiguration: '/v1/configurations',
+      apiUpload: 'files/v1/files'
+    },
     user: {
-      user: '/assets/mocks/user.json',
-      template: 'assets/mocks/templates.json',
-      countryTerritory: 'assets/mocks/countries.json'
+      user: 'http://localhost:3000/user',
+      template: 'http://localhost:3000/create-user-template',
+      createUser: 'users-create',
+      countryTerritory: 'http://localhost:3000/country'
     }
   },
   files: {

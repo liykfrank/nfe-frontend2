@@ -11,11 +11,14 @@
     "build-uat": "ng build --env=uat",
     "start-mock": "ng serve --env=mock",
     "test": "ts-node setkarma && ng test --watch=false --cc",
-    "e2e": "ts-node setproct && ng e2e --env=mock",
+    "e2e": "ng e2e --config protractor.conf.js --env=mock --silent",
+    "e2e-jenkins": "ng e2e --config protractor.jenkins.conf.js --env=mock --silent",
     "coverage": "ng test --watch=false --single-run --cc",
     "lint": "ng lint",
     "json-server": "node json-server.js",
-    "mock": "concurrently --kill-others \"npm run json-server\" \"npm run start-mock\""
+    "mock": "concurrently --kill-others \"npm run json-server\" \"npm run start-mock\"",
+    "protractor": "concurrently --success first --kill-others \"npm run json-server\" \"npm run e2e\"",
+    "protractor-jenkins": "concurrently --success first --kill-others \"npm run json-server\" \"npm run e2e-jenkins\""
   },
   "dependencies": {
     "@angular/animations": "^5.2.0",

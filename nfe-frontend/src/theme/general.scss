@@ -1,4 +1,3 @@
-
 @import 'general/form.scss';
 @import 'general/select.scss';
 @import 'general/input.scss';
@@ -9,14 +8,13 @@
 @import 'general/checkboxs';
 @import 'general/radio-buttons';
 
-
-.centered-left{
+.centered-left {
   overflow: auto;
   height: 100%;
   @include centerLeftDiv();
 }
 
-.centered{
+.centered {
   overflow: auto;
   height: 100%;
   @include centerDiv();
@@ -30,7 +28,6 @@
   background-size: 20px;
   cursor: pointer;
 }
-
 
 .ico-edit-container {
   background-image:url("/assets/images/utils/ico_edit.svg");
@@ -58,6 +55,3 @@
 .custom-container {
   padding: 20px;
 }
-
-
-

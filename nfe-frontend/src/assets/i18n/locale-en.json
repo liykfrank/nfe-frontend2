@@ -19,6 +19,8 @@
   "notifications": "Notifications",
   "clear": "Clear",
   "save": "Save",
+  "cancel": "Cancel",
+  "update": "Update",
   "issue": "Issue",
   "total": "TOTAL",
   "search_button": "Search",
@@ -295,6 +297,11 @@
     }
   },
   "FILES": {
+    "UPLOAD_FILES": {
+      "drag-and-drop": "Drag and Drop files here or",
+      "browse": "Browse",
+      "file": "File"
+    },
     "upload_file": "Drag and Drop files here",
     "upload": "Upload files",
     "download": "Download",

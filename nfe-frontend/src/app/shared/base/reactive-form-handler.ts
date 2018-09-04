@@ -13,20 +13,20 @@ export class ReactiveFormHandler<T extends ReactiveFormHandlerModel> extends Abs
     super();
   }
 
-  enableControl(formControl: AbstractControl): void {
-    formControl.enable(GLOBALS.REACTIVE_FORMS.EMIT_EVENT_FALSE);
+  enableControl(control: AbstractControl): void {
+    control.enable(GLOBALS.REACTIVE_FORMS.EMIT_EVENT_FALSE);
   }
 
-  disableControl(formControl: AbstractControl): void {
-    formControl.disable(GLOBALS.REACTIVE_FORMS.EMIT_EVENT_FALSE);
+  disableControl(control: AbstractControl): void {
+    control.disable(GLOBALS.REACTIVE_FORMS.EMIT_EVENT_FALSE);
   }
 
-  resetControl(formControl: AbstractControl): void {
-    formControl.reset('', GLOBALS.REACTIVE_FORMS.EMIT_EVENT_FALSE);
+  resetControl(control: AbstractControl): void {
+    control.reset('', GLOBALS.REACTIVE_FORMS.EMIT_EVENT_FALSE);
   }
 
-  enableGroup(group: FormGroup, exceptions?: AbstractControl[]): void {
-    this.enableControl(group);
+  enableFormGroup(formGroup: FormGroup, exceptions?: AbstractControl[]): void {
+    this.enableControl(formGroup);
 
     if (!exceptions) { return; }
 
@@ -35,8 +35,8 @@ export class ReactiveFormHandler<T extends ReactiveFormHandlerModel> extends Abs
     }
   }
 
-  disableGroup(group: FormGroup, exceptions?: AbstractControl[]): void {
-    this.disableControl(group);
+  disableFormGroup(formGroup: FormGroup, exceptions?: AbstractControl[]): void {
+    this.disableControl(formGroup);
 
     if (!exceptions) { return; }
 

@@ -47,7 +47,7 @@ export class UserComponent implements OnInit {
   }
 
   loadView() {
-    this.getView(this.router.routerState.snapshot.url);
+    this.setScreenType(this.router.routerState.snapshot.url);
     switch (this.screenType) {
       case this.typesOfScreens.NEW_USER:
         this.view = new NewUserView(this._translationService,
@@ -61,20 +61,20 @@ export class UserComponent implements OnInit {
 
       case this.typesOfScreens.MOD_USER:
         this.view = new ModUserView(this._translationService,
-          this.templateService,
-          this.countryTerritoryService);
+        this.templateService,
+        this.countryTerritoryService);
         break;
 
       case this.typesOfScreens.NEW_SUB_USER:
         this.view = new NewSubUserView(this._translationService,
-          this.templateService,
-          this.countryTerritoryService);
+        this.templateService,
+        this.countryTerritoryService);
         break;
 
       case this.typesOfScreens.MOD_SUB_USER:
         this.view = new ModSubUserView(this._translationService,
-          this.templateService,
-          this.countryTerritoryService);
+        this.templateService,
+        this.countryTerritoryService);
         break;
     }
 
@@ -84,13 +84,11 @@ export class UserComponent implements OnInit {
     return this.screenType == view;
   }
 
-  getView(url): string {
+  setScreenType(url): void {
     const arr_url = url.split('/');
     if (arr_url.length > 0) {
       this.screenType = arr_url[2];
-      return arr_url[2];
     }
-    return url;
   }
 
 }

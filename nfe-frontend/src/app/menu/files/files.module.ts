@@ -26,6 +26,7 @@ import { jqxDateTimeInputComponent } from 'jqwidgets-scripts/jqwidgets-ts/angula
 import { JqxNwComboComponent } from '../../shared/components/jqx-nw-combo/jqx-nw-combo.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { TranslationModule } from 'angular-l10n';
+import { FilesService } from './services/files.service';
 
 @NgModule({
   imports: [
@@ -62,6 +63,7 @@ import { TranslationModule } from 'angular-l10n';
     RemoveFileResource,
     ListFilesService,
     ConfigurationService,
+    FilesService,
     UtilsService
   ]
 })

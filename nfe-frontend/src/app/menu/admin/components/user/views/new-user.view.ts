@@ -56,10 +56,10 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
     this._types_of_users = GLOBALS.TYPES_OF_USER;
     this.loadControlForCountryTerritory();
 
-    this.disableGroup(this._model.groupForm, [this._model.userType]);
+    this.disableFormGroup(this._model.groupForm, [this._model.userType]);
 
     this.subsType = this._model.userType.valueChanges.subscribe(userType => {
-      this.disableGroup(this._model.groupForm, [
+      this.disableFormGroup(this._model.groupForm, [
         this._model.userType,
         this._model.userCode
       ]);
@@ -107,7 +107,7 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
           break;
       }
     } else {
-      this.disableGroup(this._model.groupForm, [
+      this.disableFormGroup(this._model.groupForm, [
         this._model.userType,
         this._model.userCode
       ]);
@@ -137,13 +137,12 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
       .validateAgent(EnvironmentType.MASTER_AGENT, userCode)
       .subscribe(
         agent => {
-          this.enableGroup(this._model.groupForm);
+          this.enableFormGroup(this._model.groupForm);
           this.userValid = true;
           this.isoCountry.setValue(agent.isoCountryCode);
-          this.countryTerritoryService.getCountriesAndTerritory();
         },
         error => {
-          this.disableGroup(this._model.groupForm, [
+          this.disableFormGroup(this._model.groupForm, [
             this._model.userType,
             this._model.userCode
           ]);
@@ -157,7 +156,7 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
     // TODO: Hacer la llamada al servicio validarUserCode
     // TODO: Hacer la llamada al servicio countries
     this.userValid = userCode != '' ? true : false;
-    this.enableGroup(this._model.groupForm);
+    this.enableFormGroup(this._model.groupForm);
     this.countryTerritoryService.getCountriesAndTerritory();
   }
 
@@ -165,14 +164,14 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
     // TODO: Hacer la llamada al servicio validarUserCode
     // TODO: Hacer la llamada al servicio countries
     this.userValid = userCode != '' ? true : false;
-    this.enableGroup(this._model.groupForm);
+    this.enableFormGroup(this._model.groupForm);
     this.countryTerritoryService.getCountriesAndTerritory();
   }
 
   caseUserTypeIsOther(userCode): void {
     // TODO: Hacer la llamada al servicio countries
     this.userValid = userCode != '' ? true : false;
-    this.enableGroup(this._model.groupForm);
+    this.enableFormGroup(this._model.groupForm);
     this.countryTerritoryService.getCountriesAndTerritory();
   }
 
@@ -256,6 +255,7 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
   }
 
   callApi() {
+
     // Llamada a la api;
     const user: UserInterface = this.buildRequestUser();
     this._userMaintenanceService.createUser(user).subscribe(
@@ -273,6 +273,7 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
         this.disableAllExceptUserTypeAndCode(true);
         this.isoCountry.setValue('');
         this.countries = [];
+        this.templates = [];
         this.templateService.reset();
       }, err => {
         this.setErrors(err.error);

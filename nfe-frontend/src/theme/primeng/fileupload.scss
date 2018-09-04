@@ -30,3 +30,207 @@
         display: none;
     }
 }
+
+////////////////////////////////////////////////////////////
+// VIEW FILE UPLOAD
+.view-fileupload.ui-fileupload {
+    display: flex;
+    flex-direction: column;
+
+    .ui-fileupload-content {
+        order: 1;
+
+        display: flex;
+        flex-direction: column;
+        background: none transparent;
+        padding: 0;
+        border: none;
+        
+        .dragdrop-section {
+            order: 1;
+            width: 100%;
+            background-color: #FFFFFF;
+            padding-top: 30px;
+            padding-bottom: 30px;
+            border: 1px dashed #D1D1D1 !important;
+            margin-bottom: 20px;
+        }
+
+        .ui-fileupload-files {
+            display: none;
+        }
+
+        .files-uploaded {
+            order: 2;
+            
+            min-height: 47px;
+            display: block;
+            border: 1px solid #D1D1D1;	
+            border-radius: 10px;	
+            background-color: #FAFAFA;
+            margin-bottom: 20px;
+
+            .check-accept {
+                text-align: center;
+                color: #1B6100;
+            }
+
+            .single-file {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                border: transparent;
+
+                .file-name {
+                    color: #00A3E0;
+                }
+
+                &:nth-child(2n) {
+                    background-color: #F2F2F2;
+                }
+
+                &:first-child {
+                    border-top-left-radius: 10px;
+                    border-top-right-radius: 10px;
+                }
+
+                &:last-child {
+                    border-bottom-left-radius: 10px;
+                    border-bottom-right-radius: 10px;
+                }
+
+                .remove-button {
+                    cursor: pointer;
+                }
+            }
+        }
+        
+        .fileupload-label {
+            color: #00A3E0;
+            cursor: pointer;
+            
+            & ~ input[type=file] {
+                display: none;
+            }
+        }
+
+        .messages-bar {
+            order: 3;
+
+            margin-top: 0;
+            margin-bottom: 20px;
+            border: 1px solid #B20101;
+            border-radius: 10px;	
+            background-color: #FAFAFA;
+
+            .remove-all-button {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                color: #B20101;
+                text-align: right;
+                cursor: pointer;
+            }
+
+            .single-message {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                border: transparent;
+                color: #B20101;
+
+                &:nth-child(2n) {
+                    background-color: #F2F2F2;
+                }
+
+                &:first-child {
+                    border-top-left-radius: 10px;
+                    border-top-right-radius: 10px;
+                }
+
+                &:last-child {
+                    border-bottom-left-radius: 10px;
+                    border-bottom-right-radius: 10px;
+                }
+
+                .remove-button {
+                    cursor: pointer;
+                }
+            }
+        }
+        
+        .buttons-bar {
+            order: 4;
+            margin-top: 0;
+            margin-bottom: 20px;
+
+            button {
+                min-width: 120px;
+                margin-left: 10px;
+                border: none;
+
+                &.button-cancel {
+                    background-color: #1989CF;
+                }
+
+                &.button-update {
+                    background-color: #152C5A;
+                }
+
+                &:disabled {
+                    background-color: #BDC3C9;
+                }
+            }
+        }
+    }
+
+
+    
+    .ui-fileupload-buttonbar {
+        display: none;
+    }
+
+    //     order: 2;
+        
+    //     width: 100%;
+    //     border: none;
+    //     padding: 0px;
+    //     background: none transparent;
+
+    //     display: flex;
+    //     flex-direction: row-reverse;
+
+    //     .ui-fileupload-choose {
+    //         display: none;
+    //     }
+        
+    //     button[icon=fa-upload] {
+    //         order: 1;
+    //         background-color: #152C5A;
+    //     }
+        
+    //     button[icon=fa-close] {
+    //         order: 2;
+    //         background-color: #1989CF;
+    //     }
+
+        
+    //     button[icon=fa-upload],
+    //     button[icon=fa-close] {
+    //         border: none;
+    //         text-align: center;
+    //         border-radius: 2px;
+    //         min-width: 120px;
+    //         margin-left: 22px;
+            
+    //         &:disabled {
+    //             background-color: #BDC3C9;
+    //         }
+
+    //         .ui-button-icon-left {
+    //             display: none;
+    //         }
+            
+    //         .ui-button-text {
+    //             padding: 8px 0;
+    //         }
+    //     }
+    // }
+}

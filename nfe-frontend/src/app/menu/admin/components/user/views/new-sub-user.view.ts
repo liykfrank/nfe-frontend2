@@ -24,7 +24,7 @@ export class NewSubUserView extends ReactiveFormHandler<NewUserModel> {
     countries: Country[] = [];
 
     constructor(private _translationService: TranslationService,
-        private templateService: TemplateService,
+        public templateService: TemplateService,
         private countryTerritoryService: CountryTerritoryService) {
         super();
         this.load();
@@ -49,12 +49,6 @@ export class NewSubUserView extends ReactiveFormHandler<NewUserModel> {
     }
 
     addTemplate() {
-        if (this.userType == this.types_of_users.AGENT && this.countries.length < 1) {
-            const country = new Country();
-            country.isoCountryCode = this.isoCountry.value;
-            country.name = this.isoCountry.value;
-            this.countries.push(country);
-        }
 
         if (this.selectedTemplate && this.countries.length > 0) {
             this.templates.push(new ArrayTemplateModel(this.selectedTemplate, this.countries, (this._model.userType.value == this.types_of_users.AGENT)));
@@ -73,7 +67,6 @@ export class NewSubUserView extends ReactiveFormHandler<NewUserModel> {
 
     onReturnCountryTerritory(event) {
         this.countries = event;
-        console.log(this.countries);
     }
 
     toogleEdit(position) {
@@ -90,10 +83,11 @@ export class NewSubUserView extends ReactiveFormHandler<NewUserModel> {
     }
 
     callApi() {
-        // Llamada a la api;
+        return true;
     }
 
     get model(): NewUserModel {
         return this._model;
     }
+
 }

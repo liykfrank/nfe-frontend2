@@ -1,6 +1,7 @@
-<div class="row" appIdentifier [base]="'REFUND.RA.basic_info'">
+<div class="row" >
   <div class="col-6">
     <bspl-airline
+      appIdentifier [base]="'REFUND.RA.basic_info.AIRLINE'"
       [airlineVatNumberEnabled]="refundConfiguration.airlineVatNumberEnabled"
       [companyRegistrationNumberEnabled]="refundConfiguration.companyRegistrationNumberEnabled"
       [showAirlineName] = "true"
@@ -12,6 +13,7 @@
   </div>
   <div class="col-6">
     <bspl-agent
+      appIdentifier [base]="'REFUND.RA.basic_info.AGENT'"
       [model]="model.agent"
       [agentVatNumberEnabled]="refundConfiguration.agentVatNumberEnabled"
       [companyRegistrationNumberEnabled]="refundConfiguration.companyRegistrationNumberEnabled"
