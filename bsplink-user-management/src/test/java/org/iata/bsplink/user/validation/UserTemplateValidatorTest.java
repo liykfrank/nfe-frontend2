@@ -292,4 +292,27 @@ public class UserTemplateValidatorTest {
 
         assertFalse(errors.hasErrors());
     }
+
+
+    @Test
+    public void testTemplatesAirlineUserNotFound() {
+        String airlineCode = "123";
+        String isoc = "BZ";
+
+        when(airlineService.findAirline(isoc, airlineCode)).thenReturn(null);
+
+        user.setUserType(UserType.AIRLINE);
+        user.setUserCode(airlineCode);
+        userTemplate.setTemplate(bsplinkTemplate.getId());
+        userTemplate.setIsoCountryCodes(Arrays.asList(isoc));
+
+        user.getTemplates().add(userTemplate);
+        validator.validate(user, errors);
+
+        assertTrue(errors.hasErrors());
+        assertTrue(errors.hasFieldErrors());
+        assertThat(errors.getFieldError().getDefaultMessage(),
+                equalTo(UserTemplateValidator
+                        .ISOC_AIRLINE_MESSAGE));
+    }
 }
