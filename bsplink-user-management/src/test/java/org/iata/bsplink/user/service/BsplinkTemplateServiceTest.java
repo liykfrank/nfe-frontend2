@@ -1,6 +1,8 @@
 package org.iata.bsplink.user.service;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -12,11 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.hamcrest.collection.IsEmptyCollection;
+import org.iata.bsplink.user.model.entity.BsplinkOption;
 import org.iata.bsplink.user.model.entity.BsplinkTemplate;
 import org.iata.bsplink.user.model.entity.UserType;
 import org.iata.bsplink.user.model.repository.BsplinkTemplateRepository;
 import org.iata.bsplink.user.model.repository.UserTemplateRepository;
-import org.iata.bsplink.user.service.BsplinkTemplateService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,7 +43,7 @@ public class BsplinkTemplateServiceTest {
     public void testFindById() {
 
         BsplinkTemplate template = new BsplinkTemplate();
-        template.setId("OPTION");
+        template.setId("TEMPLATE");
         when(repository.findById(template.getId())).thenReturn(Optional.of(template));
         Optional<BsplinkTemplate> templateFound = service.findById(template.getId());
         verify(repository).findById(template.getId());
@@ -99,5 +101,15 @@ public class BsplinkTemplateServiceTest {
         BsplinkTemplate template = new BsplinkTemplate();
         service.delete(template);
         verify(repository).delete(template);
+    }
+
+    @Test
+    public void testDeleteOption() {
+        BsplinkOption option = new BsplinkOption();
+        BsplinkTemplate template = new BsplinkTemplate();
+        template.getOptions().add(option);
+        service.deleteOption(template, option);
+        verify(repository).save(template);
+        assertThat(template.getOptions(), not(hasItem(option)));
     }
 }
