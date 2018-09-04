@@ -28,6 +28,8 @@ public class UserTemplateValidator implements Validator {
             "The template was not found.";
     public static final String ISOC_NULL_MESSAGE =
             "The ISO Country Code cannot be null.";
+    public static final String TEMPLATE_NULL_MESSAGE =
+            "The Template cannot be null.";
     public static final String ISOC_FORMAT_MESSAGE =
             "ISO Country Code format is incorrect.";
     public static final String ISOC_AIRLINE_MESSAGE =
@@ -69,10 +71,9 @@ public class UserTemplateValidator implements Validator {
             return;
         }
 
+        validateNullTemplate(user, errors);
         validateUserTypes(user, errors);
-
         validateTemplateUniqueness(user, errors);
-
         validateIsoCountryCodes(user, errors);
     }
 
@@ -96,12 +97,34 @@ public class UserTemplateValidator implements Validator {
 
 
 
+
+    private void validateNullTemplate(User user, Errors errors) {
+
+        int t = -1;
+
+        for (UserTemplate template: user.getTemplates()) {
+
+            t++;
+
+            if (template == null) {
+
+                reject(errors, t, TEMPLATE_NULL_MESSAGE);
+            }
+        }
+    }
+
+
     private void validateIsoCountryCodes(User user, Errors errors) {
         int t = -1;
 
         for (UserTemplate template: user.getTemplates()) {
 
             t++;
+
+            if (template == null || template.getIsoCountryCodes() == null) {
+
+                continue;
+            }
 
             int i = -1;
 
