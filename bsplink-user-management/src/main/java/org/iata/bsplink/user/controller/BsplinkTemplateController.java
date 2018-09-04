@@ -215,11 +215,10 @@ public class BsplinkTemplateController {
             return ResponseEntity.notFound().build();
         }
 
-        template.setId(templateToUpdate.get().getId());
-
         optionUserTypeValidator.validate(template, errors);
 
-        return ResponseEntity.status(HttpStatus.OK).body(templateService.save(template));
+        return ResponseEntity.status(HttpStatus.OK).body(templateService
+                .update(templateToUpdate.get(), template));
     }
 
 
@@ -324,9 +323,8 @@ public class BsplinkTemplateController {
             throw new ApplicationValidationException(errors);
         }
 
-        template.get().getOptions().add(option.get());
-        templateService.save(template.get());
-        return ResponseEntity.status(HttpStatus.CREATED).body(option.get());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(templateService.saveOption(template.get(), option.get()));
     }
 
 
@@ -479,9 +477,8 @@ public class BsplinkTemplateController {
             throw new ApplicationValidationException(errors);
         }
 
-        template.getUserTypes().add(userType);
-        templateService.save(template);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userType);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(templateService.saveUserType(template, userType));
     }
 
 
@@ -506,13 +503,13 @@ public class BsplinkTemplateController {
             return ResponseEntity.notFound().build();
         }
 
-        if (template.get().getUserTypes().remove(userType)) {
-
-            templateService.save(template.get());
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } else {
+        if (!template.get().getUserTypes().contains(userType)) {
 
             return ResponseEntity.notFound().build();
         }
+
+        templateService.deleteUserType(template.get(), userType);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 }

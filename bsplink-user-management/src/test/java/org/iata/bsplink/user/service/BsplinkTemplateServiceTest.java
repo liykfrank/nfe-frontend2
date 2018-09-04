@@ -15,6 +15,7 @@ import org.hamcrest.collection.IsEmptyCollection;
 import org.iata.bsplink.user.model.entity.BsplinkTemplate;
 import org.iata.bsplink.user.model.entity.UserType;
 import org.iata.bsplink.user.model.repository.BsplinkTemplateRepository;
+import org.iata.bsplink.user.model.repository.UserTemplateRepository;
 import org.iata.bsplink.user.service.BsplinkTemplateService;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,11 +26,15 @@ public class BsplinkTemplateServiceTest {
 
     private BsplinkTemplateService service;
 
+    private UserTemplateRepository userRepository;
+
 
     @Before
     public void setUp() {
+
         repository = mock(BsplinkTemplateRepository.class);
-        service = new BsplinkTemplateService(repository);
+        userRepository = mock(UserTemplateRepository.class);
+        service = new BsplinkTemplateService(repository, userRepository);
     }
 
     @Test

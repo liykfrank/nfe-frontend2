@@ -1,7 +1,5 @@
 package org.iata.bsplink.user.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -16,7 +14,6 @@ import lombok.extern.java.Log;
 
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.iata.bsplink.user.model.entity.User;
-import org.iata.bsplink.user.model.view.UserTemplateView;
 import org.iata.bsplink.user.service.UserService;
 import org.iata.bsplink.user.validation.AgentValidator;
 import org.iata.bsplink.user.validation.AirlineValidator;
@@ -83,7 +80,6 @@ public class UserController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "User found"),
             @ApiResponse(code = 400, message = "Invalid user ID"),
             @ApiResponse(code = 404, message = "User not found")})
-    @JsonView(UserTemplateView.class)
     public ResponseEntity<User> getUser(@NotBlank @PathVariable("id") String userId) {
 
         log.info("received request for getting user with id: {}" + userId);
@@ -109,7 +105,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE},
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
-    @JsonView(UserTemplateView.class)
     public User createUser(@Valid @RequestBody User request, Errors errors) {
 
         log.info("received request for creating user: " + request);
@@ -137,7 +132,6 @@ public class UserController {
      */
     @PutMapping(path = "/{id}", consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE},
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
-    @JsonView(UserTemplateView.class)
     public ResponseEntity<User> updateUser(@Valid @RequestBody User request, Errors errors,
             @NotBlank @PathVariable("id") String userId) {
 

@@ -7,8 +7,10 @@ import org.iata.bsplink.user.model.entity.BsplinkTemplate;
 import org.iata.bsplink.user.model.entity.User;
 import org.iata.bsplink.user.model.entity.UserTemplate;
 import org.iata.bsplink.user.model.entity.UserType;
+import org.iata.bsplink.user.pojo.Agent;
+import org.iata.bsplink.user.service.AgentService;
+import org.iata.bsplink.user.service.AirlineService;
 import org.iata.bsplink.user.service.BsplinkTemplateService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -20,18 +22,35 @@ public class UserTemplateValidator implements Validator {
             "The template is not available for the user type.";
     public static final String TEMPLATE_DUPLICATED_MESSAGE =
             "Templates for a user have to be unique.";
+    public static final String ISOC_DUPLICATED_MESSAGE =
+            "ISO Country Code to be assigned only once.";
     public static final String TEMPLATE_NOT_FOUND_MESSAGE =
             "The template was not found.";
     public static final String ISOC_NULL_MESSAGE =
             "The ISO Country Code cannot be null.";
-    public static final String ISOC_DUPLICATED_MESSAGE =
-            "ISO Country Codes in a template have to be unique.";
     public static final String ISOC_FORMAT_MESSAGE =
             "ISO Country Code format is incorrect.";
+    public static final String ISOC_AIRLINE_MESSAGE =
+            "The airline does not exist in the country corresponding to the ISO Country Code.";
+    public static final String ISOC_AGENT_MESSAGE =
+            "The agent does not exist in the country corresponding to the ISO Country Code.";
 
 
-    @Autowired
     private BsplinkTemplateService bsplinkTemplateService;
+    private AirlineService airlineService;
+    private AgentService agentService;
+
+    /**
+     * Creates an instance of the validator for the UserTemplate of a User.
+     */
+    public UserTemplateValidator(BsplinkTemplateService bsplinkTemplateService,
+            AirlineService airlineService, AgentService agentService) {
+        this.bsplinkTemplateService = bsplinkTemplateService;
+        this.airlineService = airlineService;
+        this.agentService = agentService;
+    }
+
+
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -84,30 +103,55 @@ public class UserTemplateValidator implements Validator {
 
             t++;
 
-            if (template.getIsoCountryCodes() != null) {
-                int i = -1;
-                for (String isoc: template.getIsoCountryCodes()) {
+            int i = -1;
 
-                    i++;
+            for (String isoc : template.getIsoCountryCodes()) {
 
-                    if (isoc == null) {
+                i++;
 
-                        rejectIsoc(errors, t, i, ISOC_NULL_MESSAGE);
+                if (isoc == null) {
 
-                    } else if (!isoc.matches("^[A-Z][0-9A-Z]$")) {
+                    reject(errors, t, i, ISOC_NULL_MESSAGE);
 
-                        rejectIsoc(errors, t, i, ISOC_FORMAT_MESSAGE);
+                } else if (!isoc.matches("^[A-Z][0-9A-Z]$")) {
 
-                    } else if (template.getIsoCountryCodes().stream().limit(i)
-                        .anyMatch(isoc::equals)) {
+                    reject(errors, t, i, ISOC_FORMAT_MESSAGE);
 
-                        rejectIsoc(errors, t, i, ISOC_DUPLICATED_MESSAGE);
+                } else if (i > 0 && template.getIsoCountryCodes().subList(0, i).contains(isoc)) {
 
-                    }
+                    reject(errors, t, i, ISOC_DUPLICATED_MESSAGE);
+
+                } else {
+
+                    validateUserCountry(t, i, isoc, user, errors);
                 }
             }
         }
     }
+
+
+
+    private void validateUserCountry(int templateNr, int isocNr, String isoc, User user,
+            Errors errors) {
+
+        if (UserType.AIRLINE.equals(user.getUserType())
+                && user.getUserCode() != null
+                && airlineService.findAirline(isoc, user.getUserCode()) == null) {
+
+            reject(errors, templateNr, isocNr, ISOC_AIRLINE_MESSAGE);
+
+        } else if (UserType.AGENT.equals(user.getUserType())
+                && user.getUserCode() != null) {
+
+            Agent agent = agentService.findAgent(user.getUserCode());
+
+            if (!isoc.equals(agent.getIsoCountryCode())) {
+
+                reject(errors, templateNr, isocNr, ISOC_AGENT_MESSAGE);
+            }
+        }
+    }
+
 
 
     private void validateUserTypes(User user, Errors errors) {
@@ -128,9 +172,9 @@ public class UserTemplateValidator implements Validator {
             }
 
             Optional<BsplinkTemplate> templateOpt =
-                    bsplinkTemplateService.findById(template.getTemplate().getId());
+                    bsplinkTemplateService.findById(template.getTemplate());
 
-            if (template.getTemplate().getId() == null || !templateOpt.isPresent()) {
+            if (template.getTemplate() == null || !templateOpt.isPresent()) {
 
                 reject(errors, i, TEMPLATE_NOT_FOUND_MESSAGE);
             } else {
@@ -145,12 +189,16 @@ public class UserTemplateValidator implements Validator {
         }
     }
 
-    private void rejectIsoc(Errors errors, int templateNr, int isocNr, String message) {
-        errors.rejectValue("templates[" + templateNr + "].isoCountryCodes[" + isocNr + "]",
-                "", message);
+
+    private void reject(Errors errors, int templateNr, int isocNr, String message) {
+
+        errors.rejectValue("templates[" + templateNr + "].isoCountryCodes[" + isocNr + "]", "",
+                message);
     }
 
+
     private void reject(Errors errors, int templateNr, String message) {
+
         errors.rejectValue("templates[" + templateNr + "]", "", message);
     }
 }

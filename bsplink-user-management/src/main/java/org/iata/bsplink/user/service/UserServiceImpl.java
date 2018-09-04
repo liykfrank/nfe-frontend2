@@ -1,19 +1,29 @@
 package org.iata.bsplink.user.service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import javax.ws.rs.core.Response;
+
 import lombok.extern.apachecommons.CommonsLog;
+
 import org.apache.http.HttpStatus;
 import org.iata.bsplink.commons.rest.exception.ApplicationInternalServerError;
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.iata.bsplink.user.model.entity.User;
 import org.iata.bsplink.user.model.entity.UserStatus;
+import org.iata.bsplink.user.model.entity.UserTemplate;
 import org.iata.bsplink.user.model.repository.UserRepository;
+import org.iata.bsplink.user.model.repository.UserTemplateRepository;
 import org.iata.bsplink.user.utils.UserUtils;
 import org.iata.bsplink.user.validation.ValidationMessages;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 
 @Service
@@ -21,6 +31,7 @@ import org.springframework.validation.Errors;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+    private UserTemplateRepository userTemplateRepository;
     private KeycloakService keycloakService;
 
     private static final String USER_DELETED = "User deleted.";
@@ -28,16 +39,21 @@ public class UserServiceImpl implements UserService {
     private static final String CREATING_USER_IN_KEYCLOAK_ERROR_MESSAGE =
             "Could not create user in keycloak.";
 
+
     /**
      * Parameters constructor.
-     * 
+     *
      * @param userRepository helps to save user.
      * @param keycloakService saves user in keycloak.
      */
-    public UserServiceImpl(UserRepository userRepository, KeycloakService keycloakService) {
+    public UserServiceImpl(
+            UserRepository userRepository,
+            UserTemplateRepository userTemplateRepository,
+            KeycloakService keycloakService) {
 
         this.userRepository = userRepository;
         this.keycloakService = keycloakService;
+        this.userTemplateRepository = userTemplateRepository;
     }
 
     /**
@@ -53,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Creates user.
-     * 
+     *
      */
     @Override
     public User createUser(User user, Errors errors) {
@@ -62,7 +78,7 @@ public class UserServiceImpl implements UserService {
 
         User newUser = null;
         verifyFoundUserAndStatus(user, errors);
-        UserRepresentation newUserKeycloak = createUserInKeycloak(user);        
+        UserRepresentation newUserKeycloak = createUserInKeycloak(user);
 
         if (newUserKeycloak != null) {
 
@@ -93,20 +109,40 @@ public class UserServiceImpl implements UserService {
      * Updates user.
      */
     @Override
+    @Transactional
     public User updateUser(User userToUpdate, User newUser, Errors errors) {
 
         log.info("Updating resource with id: " + userToUpdate);
 
+        Set<String> newTemplatesIds;
+
+        if (newUser.getTemplates() == null) {
+            newTemplatesIds = Collections.emptySet();
+        } else {
+            newTemplatesIds = newUser.getTemplates().stream().map(UserTemplate::getId)
+                    .collect(Collectors.toSet());
+        }
+
+        List<UserTemplate> oldTemplates;
+
+        if (userToUpdate.getTemplates() == null) {
+            oldTemplates = Collections.emptyList();
+        } else {
+            oldTemplates = userToUpdate.getTemplates().stream()
+                    .filter(t -> newTemplatesIds.contains(t.getId())).collect(Collectors.toList());
+        }
+
         userToUpdate = UserUtils.mapUserToUpdate(userToUpdate, newUser);
         userToUpdate.setLastModifiedDate(LocalDateTime.now());
         User userUpdated = userRepository.save(userToUpdate);
+        userTemplateRepository.deleteAll(oldTemplates);
         keycloakService.updateUser(userUpdated, errors);
 
         log.info("User updated");
 
         return userUpdated;
-
     }
+
 
     /**
      * Deletes user.

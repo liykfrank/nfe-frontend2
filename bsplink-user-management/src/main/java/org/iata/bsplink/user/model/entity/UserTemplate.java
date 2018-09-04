@@ -1,40 +1,43 @@
 package org.iata.bsplink.user.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
-import org.iata.bsplink.user.model.view.UserTemplateView;
-
 @Data
 @Entity
-@JsonView(UserTemplateView.class)
+@Embeddable
 public class UserTemplate implements Serializable {
 
-    private static final long serialVersionUID = 4030651341786929422L;
+    private static final long serialVersionUID = 1107405596572166130L;
 
+    @ApiModelProperty(value = "Identifier")
     @Id
-    @GeneratedValue
-    private Long id;
+    @Column(length = 69)
+    @JsonIgnore
+    private String id;
 
-    @NotNull
-    @ManyToOne
-    private BsplinkTemplate template;
+    @ApiModelProperty(value = "Id for User")
+    @Column(name = "user_id", length = 36)
+    @JsonIgnore
+    private String userId;
+
+    @ApiModelProperty(value = "Id for Bsplink Template")
+    @Column(name = "template", length = 32)
+    private String template;
 
     @ElementCollection
-    @NotNull
     @Column(length = 2)
-    private List<String> isoCountryCodes = new ArrayList<>();
+    private List<String> isoCountryCodes;
 }

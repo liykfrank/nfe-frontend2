@@ -2,6 +2,7 @@ package org.iata.bsplink.user.model.entity;
 
 import static org.iata.bsplink.user.validation.ValidationMessages.NON_NULL_MESSAGE;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -18,18 +19,27 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.UniqueConstraint;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import org.iata.bsplink.user.model.view.BsplinkOptionTemplateView;
-import org.iata.bsplink.user.model.view.UserTemplateView;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
+@ToString(exclude = "userTemplates")
+@EqualsAndHashCode
 @Entity
 public class BsplinkTemplate implements Serializable {
 
@@ -39,7 +49,7 @@ public class BsplinkTemplate implements Serializable {
     @Id
     @Size(max = 32)
     @Column(length = 32)
-    @JsonView({ BsplinkOptionTemplateView.class, UserTemplateView.class })
+    @JsonView(BsplinkOptionTemplateView.class)
     private String id;
 
     @ApiModelProperty(value = "List of Bsplink Options", required = true)
@@ -59,4 +69,9 @@ public class BsplinkTemplate implements Serializable {
     @NotNull
     @JsonView(BsplinkOptionTemplateView.class)
     private List<UserType> userTypes = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name = "template")
+    @JsonIgnore
+    private List<UserTemplate> userTemplates;
 }

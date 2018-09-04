@@ -3,7 +3,6 @@ package org.iata.bsplink.user.model.entity;
 import static org.iata.bsplink.user.validation.ValidationMessages.INCORRECT_SIZE;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -18,14 +17,12 @@ import javax.validation.constraints.Size;
 
 import lombok.Data;
 
-import org.iata.bsplink.user.model.view.UserTemplateView;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Data
 @Entity
 @Table(name = "address")
 @EntityListeners(AuditingEntityListener.class)
-@JsonView(UserTemplateView.class)
 public class Address implements Serializable {
 
     private static final long serialVersionUID = -9049001224698825736L;

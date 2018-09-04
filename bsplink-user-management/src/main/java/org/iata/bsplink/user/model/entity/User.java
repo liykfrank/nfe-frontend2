@@ -4,7 +4,8 @@ import static org.iata.bsplink.user.validation.ValidationMessages.INCORRECT_SIZE
 import static org.iata.bsplink.user.validation.ValidationMessages.NON_NULL_MESSAGE;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
+
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -14,6 +15,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -26,7 +29,6 @@ import javax.validation.constraints.Size;
 
 import lombok.Data;
 
-import org.iata.bsplink.user.model.view.UserTemplateView;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -35,7 +37,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(name = "user")
 @EntityListeners(AuditingEntityListener.class)
-@JsonView(UserTemplateView.class)
 public class User implements Serializable {
 
     private static final long serialVersionUID = -4263626642022961775L;
@@ -64,6 +65,7 @@ public class User implements Serializable {
 
     @Column(name = "user_type")
     @NotNull(message = NON_NULL_MESSAGE)
+    @Enumerated(EnumType.STRING)
     private UserType userType;
 
     @Column(name = "user_code")
@@ -94,10 +96,25 @@ public class User implements Serializable {
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @Valid
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<UserTemplate> templates;
-
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UserStatus status;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    @ApiModelProperty(value = "User Templates", required = false)
+    private List<UserTemplate> templates;
+
+    /**
+     * Set User Templates.
+     */
+    public void setTemplates(List<UserTemplate> templates) {
+
+        this.templates = templates;
+        if (templates != null) {
+            this.templates.forEach(template -> {
+                template.setId(id + "@" + template.getTemplate());
+                template.setUserId(id);
+            });
+        }
+    }
 }

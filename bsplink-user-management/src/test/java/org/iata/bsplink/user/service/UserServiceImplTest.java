@@ -19,8 +19,7 @@ import org.iata.bsplink.commons.rest.exception.ApplicationInternalServerError;
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.iata.bsplink.user.model.entity.User;
 import org.iata.bsplink.user.model.repository.UserRepository;
-import org.iata.bsplink.user.service.KeycloakService;
-import org.iata.bsplink.user.service.UserServiceImpl;
+import org.iata.bsplink.user.model.repository.UserTemplateRepository;
 import org.iata.bsplink.user.utils.BaseUserTest;
 import org.junit.Before;
 import org.junit.Rule;
@@ -41,6 +40,9 @@ public class UserServiceImplTest extends BaseUserTest {
     private UserRepository userRepository;
 
     @MockBean
+    private UserTemplateRepository userTemplateRepository;
+
+    @MockBean
     private KeycloakService keycloakService;
 
     @MockBean
@@ -51,7 +53,8 @@ public class UserServiceImplTest extends BaseUserTest {
 
     @Before
     public void init() {
-        this.userService = new UserServiceImpl(userRepository, keycloakService);
+        this.userService = new UserServiceImpl(userRepository, userTemplateRepository,
+                keycloakService);
         userPending = new User();
         userCreated = new User();
         createPendingUser();
@@ -86,7 +89,7 @@ public class UserServiceImplTest extends BaseUserTest {
 
     /**
      * Creates user.
-     * 
+     *
      * @throws URISyntaxException when no URL provided.
      */
     @Test
@@ -141,8 +144,8 @@ public class UserServiceImplTest extends BaseUserTest {
     }
 
     @Test
-    public void testCreateCreatedKeycloakNull() throws URISyntaxException {       
-        
+    public void testCreateCreatedKeycloakNull() throws URISyntaxException {
+
         doReturn(Optional.of(userCreated)).when(userRepository)
                 .findByUsername(userCreated.getUsername());
 
@@ -150,8 +153,8 @@ public class UserServiceImplTest extends BaseUserTest {
         userRepresentation.setId(USER_ID);
 
         ResponseBuilder responseBuilder = Response.created(new URI("mock-url"));
-        when(keycloakService.createUser(any())).thenReturn(responseBuilder.build());        
-        when(keycloakService.findUser(userPending)).thenReturn(null);       
+        when(keycloakService.createUser(any())).thenReturn(responseBuilder.build());
+        when(keycloakService.findUser(userPending)).thenReturn(null);
 
         expectedException.expect(ApplicationInternalServerError.class);
         userService.createUser(userPending, errors);
@@ -161,7 +164,7 @@ public class UserServiceImplTest extends BaseUserTest {
 
     /**
      * Create user already exists.
-     * 
+     *
      * @throws URISyntaxException URISyntaxException when no URL provided.
      */
     @Test
