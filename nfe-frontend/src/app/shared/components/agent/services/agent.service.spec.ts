@@ -1,10 +1,9 @@
-
-import { TestBed, inject } from '@angular/core/testing';
-
-import { AgentService } from './agent.service';
 import { HttpClient } from '@angular/common/http';
+import { inject, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs/observable/of';
-import { EnvironmentType } from '../../../enums/environment-type.enum';
+import { EnvironmentType } from './../../../enums/environment-type.enum';
+import { AgentService } from './agent.service';
+
 
 describe('AgentService', () => {
   const httpClientStub = jasmine.createSpyObj<HttpClient>('HttpClient', [

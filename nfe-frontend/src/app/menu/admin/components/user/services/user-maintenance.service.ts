@@ -13,8 +13,6 @@ export class UserMaintenanceService extends HttpServiceAbstract<UserInterface, O
   }
 
   createUser(user: User): Observable<UserInterface> {
-    return this.post(user).map(res => {
-      return res;
-    });
+    return this.post(user);
   }
 }

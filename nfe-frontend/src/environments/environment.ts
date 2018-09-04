@@ -29,6 +29,15 @@ export const environment = {
       period: 'agencymemo/v1/general-info/periods', // {isoc}
       reasons: 'agencymemo/v1/reasons'
     },
+    files: {
+      listFiles: 'files/v1/files',
+      downloadFile: 'files/v1/files',
+      downloadFiles: 'files/v1/files/zip',
+      removeFile: 'files/v1/files',
+      removeFiles: 'files/v1/files',
+      apiConfiguration: '/v1/configurations',
+      apiUpload: 'files/v1/files'
+    },
     user: {
       user: '/assets/mocks/user.json',
       createUser: 'user/v1/users',

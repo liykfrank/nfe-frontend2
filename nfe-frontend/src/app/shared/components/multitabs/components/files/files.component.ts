@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FileDataServer } from '../../models/file-data-server.model';
 
 @Component({

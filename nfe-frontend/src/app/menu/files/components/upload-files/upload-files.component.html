@@ -1,20 +1,99 @@
-<div class="files-upload" *ngIf="configuration">
-  <p-fileUpload #uploadComp
-    [customUpload]="customUpload"
-    [url]="url"
-    [name]="name"
-    [multiple]="multipleUpload"
-    [chooseLabel]="chooseLabel"
-    (onSelect)="onSelect($event)"
-    (onBeforeUpload)="onBeforeUpload($event)"
-    (onUpload)="onUpload($event)">
-    <ng-template pTemplate="content">
-      <ul *ngIf="uploadedFiles.length">
-        <b>Next Files have been uploaded correctly :</b>
-        <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
-      </ul>
-      <p-messages [(value)]="msgs"></p-messages>
-    </ng-template>
-  </p-fileUpload>
-</div>
+<div class="container-fluid custom-container">
+  
+  <div class="row mr-0 ml-0">
+    <div class="col-12" *ngIf="configuration">
 
+      <div class="row files-upload">
+        <div class="col-4 offset-4">
+          <p-fileUpload
+            #uploadComp
+            [styleClass]="'view-fileupload'"
+            [customUpload]="true"
+            [name]="name"
+            [multiple]="multipleUpload"
+            [chooseLabel]="chooseLabel"
+            (onSelect)="onSelect($event)">
+            
+            <ng-template pTemplate="content">
+              <div class="dragdrop-section">
+                <img src="assets/images/files/ico_upload.svg" class="mx-auto mb-3 d-block">
+                <div class="text-center">
+                  <span l10nTranslate>FILES.UPLOAD_FILES.drag-and-drop</span>  
+                  <label for="myFileInput" class="fileupload-label"
+                     l10nTranslate>
+                     FILES.UPLOAD_FILES.browse
+                  </label>                    
+                  <input 
+                    id="myFileInput"
+                    type="file"
+                    name="myFileInput" 
+                    (change)="onSelect($event)">
+                  <span l10nTranslate>FILES.UPLOAD_FILES.file</span>
+                </div>
+              </div>
+
+              <div class="files-uploaded">
+                <div *ngFor="let file of uploadedFiles" class="col-12 single-file">
+                  <div class="row">
+                    <div class="col-10 file-name" title="{{ file.subject }}">
+                      {{ (file.subject.length>MAX_LENGHT)? (file.subject | slice:0:MAX_LENGHT)+'..':(file.subject) }}
+                    </div>
+                    <div class="col check-accept">
+                      <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngFor="let aux of files" class="col-12 single-file">
+                  <div class="row">
+                    <div class="col-10 file-name" title="{{ aux.name }}">
+                      {{ (aux.name.length>MAX_LENGHT)? (aux.name | slice:0:MAX_LENGHT)+'..':(aux.name) }}
+                    </div>
+                    <div class="col remove-button" (click)="removeSelectedFile(aux)">
+                      <i class="fa fa-trash-o" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="!checkMessagesLength()" class="messages-bar">
+                <div class="remove-all-button col-12" (click)="removeAllMessages()">Remove all
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                </div>
+                <div *ngFor="let message of msgs" class="col-12 single-message">
+                  <div class="row">
+                    <div class="col-10" title="{{ message.detail }}">{{ message.summary }}</div>
+                    <div class="col remove-button" (click)="removeMessage(message)">
+                      <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="buttons-bar no-gutters">
+                <div class="col-12">
+                  <div class="row justify-content-end">
+                    <div class="col-12">
+                      <button class="btn btn-primary button-update float-right" 
+                        [disabled]="checkFilesLength()"
+                        (click)="sendUpload()" l10nTranslate>update</button>
+                      <button class="btn btn-primary button-cancel float-right" 
+                        [disabled]="checkFilesLength()" 
+                        (click)="cancelUpdate()" l10nTranslate>cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </ng-template>
+
+            <ng-template pTemplate="file"></ng-template>
+        
+          </p-fileUpload>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+</div>

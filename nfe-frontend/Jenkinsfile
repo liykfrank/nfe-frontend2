@@ -44,7 +44,7 @@ pipeline {
             steps {
                 nodejs('nodejs') {
                     sh 'npm run test'
-                   // sh 'npm run e2e'
+                    sh 'npm run protractor-jenkins'
                 }
 			}
         }

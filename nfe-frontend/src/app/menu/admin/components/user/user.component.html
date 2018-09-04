@@ -2,7 +2,7 @@
 
   <div class="col-12">
 
-    <form class="body-form pb-5" [formGroup]="view.model.groupForm">
+    <form class="body-form pb-5" [formGroup]="view.model.groupForm" appIdentifier [base]="'USER.CREATE.USER'">
 
       <div class="row">
 
@@ -69,7 +69,7 @@
               </div>
 
               <!-- LAST NAME -->
-              <div class="form-group" *ngIf="isView(typesOfScreens.NEW_USER) || isView(typesOfScreens.MOD_USER)">
+              <div class="form-group">
                 <bspl-input-form-control l10nTranslate [wrapText]="true" [label]="'USERS.lastname'" [type]="'regex'" [typingPattern]="patterns.ALPHANUMERIC_LOWERCASE_WITH_SPACE"
                   [inputMaxTextLength]="'49'" [groupForm]="view.model.groupForm" [controlName]="'lastname'">
                 </bspl-input-form-control>

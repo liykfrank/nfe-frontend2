@@ -32,12 +32,16 @@ export class TemplateService extends HttpServiceAbstract<TemplateModel[], any> {
         this.templatesCloned[position].flag = false;
     }
 
-    getArrTemplates(){
+    getArrTemplates() {
       return this.templatesCloned.filter(x => !x.flag);
     }
 
     reset() {
-        this.templatesCloned = this.templates.slice();
+        for (const t of this.templatesCloned) {
+            if (t.flag) {
+                t.flag = !t.flag;
+            }
+        }
     }
 
 }
