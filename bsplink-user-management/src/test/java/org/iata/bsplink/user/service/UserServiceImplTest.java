@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Optional;
 
 import javax.ws.rs.core.Response;
@@ -18,6 +19,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import org.iata.bsplink.commons.rest.exception.ApplicationInternalServerError;
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.iata.bsplink.user.model.entity.User;
+import org.iata.bsplink.user.model.entity.UserTemplate;
 import org.iata.bsplink.user.model.repository.UserRepository;
 import org.iata.bsplink.user.model.repository.UserTemplateRepository;
 import org.iata.bsplink.user.utils.BaseUserTest;
@@ -258,6 +260,23 @@ public class UserServiceImplTest extends BaseUserTest {
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.setId("1d26b494-64e1-41d7-8144-cd8f0b634d07");
         return userRepresentation;
+    }
+
+    /**
+     * Update user test.
+     */
+    @Test
+    public void testUpdateUserWithTemplates() {
+
+        userPending.setTemplates(Arrays.asList(new UserTemplate()));
+        doReturn(Optional.of(userPending)).when(userRepository).findById(USER_ID);
+        doReturn(userPending).when(userRepository).save(any(User.class));
+
+        userPending = userService.updateUser(userPending, userPending, errors);
+
+        commonResponseAssertions(userPending);
+
+        verify(userRepository, times(1)).save(any(User.class));
     }
 
 }
