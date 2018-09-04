@@ -34,6 +34,8 @@ public class UserTemplateValidator implements Validator {
             "ISO Country Code format is incorrect.";
     public static final String ISOC_AIRLINE_MESSAGE =
             "The airline does not exist in the country corresponding to the ISO Country Code.";
+    public static final String AGENT_NOT_FOUND_MESSAGE =
+            "The agent was not found.";
     public static final String ISOC_AGENT_MESSAGE =
             "The agent does not exist in the country corresponding to the ISO Country Code.";
 
@@ -168,7 +170,10 @@ public class UserTemplateValidator implements Validator {
 
             Agent agent = agentService.findAgent(user.getUserCode());
 
-            if (!isoc.equals(agent.getIsoCountryCode())) {
+            if (agent == null) {
+
+                reject(errors, templateNr, isocNr, AGENT_NOT_FOUND_MESSAGE);
+            } else if (!isoc.equals(agent.getIsoCountryCode())) {
 
                 reject(errors, templateNr, isocNr, ISOC_AGENT_MESSAGE);
             }

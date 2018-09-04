@@ -15,6 +15,7 @@ import org.iata.bsplink.user.model.entity.BsplinkTemplate;
 import org.iata.bsplink.user.model.entity.User;
 import org.iata.bsplink.user.model.entity.UserTemplate;
 import org.iata.bsplink.user.model.entity.UserType;
+import org.iata.bsplink.user.pojo.Agent;
 import org.iata.bsplink.user.pojo.Airline;
 import org.iata.bsplink.user.service.AgentService;
 import org.iata.bsplink.user.service.AirlineService;
@@ -314,5 +315,90 @@ public class UserTemplateValidatorTest {
         assertThat(errors.getFieldError().getDefaultMessage(),
                 equalTo(UserTemplateValidator
                         .ISOC_AIRLINE_MESSAGE));
+    }
+
+
+    @Test
+    public void testTemplatesAgentUser() {
+        String agentCode = "78200102";
+        String isoc = "BZ";
+
+        Agent agent = new Agent();
+        agent.setIsoCountryCode(isoc);
+
+        when(agentService.findAgent(agentCode)).thenReturn(agent);
+
+        user.setUserType(UserType.AGENT);
+        user.setUserCode(agentCode);
+        userTemplate.setTemplate(bsplinkTemplate.getId());
+        userTemplate.setIsoCountryCodes(Arrays.asList(isoc));
+
+        user.getTemplates().add(userTemplate);
+        validator.validate(user, errors);
+
+        assertFalse(errors.hasErrors());
+    }
+
+
+    @Test
+    public void testTemplatesNullAgentUser() {
+
+        user.setUserType(UserType.AGENT);
+        String agentCode = null;
+        user.setUserCode(agentCode);
+        userTemplate.setTemplate(bsplinkTemplate.getId());
+        userTemplate.setIsoCountryCodes(Arrays.asList("BZ"));
+
+        user.getTemplates().add(userTemplate);
+        validator.validate(user, errors);
+
+        assertFalse(errors.hasErrors());
+    }
+
+
+    @Test
+    public void testTemplatesAgentUserNotFound() {
+        String agentCode = "78200102";
+
+        when(agentService.findAgent(agentCode)).thenReturn(null);
+
+        user.setUserType(UserType.AGENT);
+        user.setUserCode(agentCode);
+        userTemplate.setTemplate(bsplinkTemplate.getId());
+        userTemplate.setIsoCountryCodes(Arrays.asList("BZ"));
+
+        user.getTemplates().add(userTemplate);
+        validator.validate(user, errors);
+
+        assertTrue(errors.hasErrors());
+        assertTrue(errors.hasFieldErrors());
+        assertThat(errors.getFieldError().getDefaultMessage(),
+                equalTo(UserTemplateValidator
+                        .AGENT_NOT_FOUND_MESSAGE));
+    }
+
+
+    @Test
+    public void testTemplatesAgentUserIncorrectIsoc() {
+        String agentCode = "78200102";
+
+        Agent agent = new Agent();
+        agent.setIsoCountryCode("ZB");
+
+        when(agentService.findAgent(agentCode)).thenReturn(agent);
+
+        user.setUserType(UserType.AGENT);
+        user.setUserCode(agentCode);
+        userTemplate.setTemplate(bsplinkTemplate.getId());
+        userTemplate.setIsoCountryCodes(Arrays.asList("BZ"));
+
+        user.getTemplates().add(userTemplate);
+        validator.validate(user, errors);
+
+        assertTrue(errors.hasErrors());
+        assertTrue(errors.hasFieldErrors());
+        assertThat(errors.getFieldError().getDefaultMessage(),
+                equalTo(UserTemplateValidator
+                        .ISOC_AGENT_MESSAGE));
     }
 }
