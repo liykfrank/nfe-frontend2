@@ -54,12 +54,18 @@ export class AlertsComponent implements OnInit {
 
   onClickAccept() {
     this._AlertsService.setAccept(true);
+    this.onDismiss();
     this.display = false;
   }
 
   onClickCancel() {
     this._AlertsService.setAccept(false);
+    this.onDismiss();
     this.display = false;
+  }
+
+  onDismiss() {
+    this._AlertsService.setDismiss();
   }
 
   checkCancelButton() {

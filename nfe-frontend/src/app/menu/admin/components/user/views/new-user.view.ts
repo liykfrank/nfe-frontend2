@@ -1,28 +1,29 @@
-import { UserMaintenanceService } from './../services/user-maintenance.service';
 import { OnDestroy } from '@angular/core';
-import { GLOBALS } from '../../../../../shared/constants/globals';
-import { NewUserModel } from '../models/new-user.model';
-import { FormControl, FormGroup, AbstractControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { TranslationService } from 'angular-l10n';
-import { ArrayTemplateModel } from '../models/array-template.model';
+import { AlertType } from '../../../../../core/enums/alert-type.enum';
+import { AlertModel } from '../../../../../core/models/alert.model';
+import { AlertsService } from '../../../../../core/services/alerts.service';
+import { ReactiveFormHandler } from '../../../../../shared/base/reactive-form-handler';
+import { AgentService } from '../../../../../shared/components/agent/services/agent.service';
+import { GLOBALS } from '../../../../../shared/constants/globals';
+import { EnvironmentType } from '../../../../../shared/enums/environment-type.enum';
+import { UtilsService } from '../../../../../shared/services/utils.service';
 import { Country } from '../../../../adm-acm/models/country.model';
 import { TemplateService } from '../../../services/template.service';
-import { CountryTerritoryService } from '../services/country-territory.service';
-import { EnvironmentType } from '../../../../../shared/enums/environment-type.enum';
-import { AgentService } from '../../../../../shared/components/agent/services/agent.service';
-import { ReactiveFormHandler } from '../../../../../shared/base/reactive-form-handler';
-import { UserInterface, User } from '../models/api/user.model';
 import { UserAddress } from '../models/api/user-address.model';
-import { UtilsService } from '../../../../../shared/services/utils.service';
-import { AlertsService } from '../../../../../core/services/alerts.service';
-import { AlertModel } from '../../../../../core/models/alert.model';
-import { AlertType } from '../../../../../core/enums/alert-type.enum';
+import { User, UserInterface } from '../models/api/user.model';
+import { ArrayTemplateModel } from '../models/array-template.model';
+import { NewUserModel } from '../models/new-user.model';
+import { CountryTerritoryService } from '../services/country-territory.service';
+import { UserMaintenanceService } from './../services/user-maintenance.service';
 
 export class NewUserView extends ReactiveFormHandler<NewUserModel>
   implements OnDestroy {
+
   _model = new NewUserModel();
 
-  _types_of_users;
+  _types_of_users = GLOBALS.TYPES_OF_USER;
 
   // TEMPLATES
   groupIsoCountry: FormGroup;
@@ -33,23 +34,24 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
 
   userValid = false;
 
-  private subsType;
+  subsType;
 
   constructor(
     private _translationService: TranslationService,
-    private templateService: TemplateService,
+    public templateService: TemplateService,
     private countryTerritoryService: CountryTerritoryService,
     private _agentService: AgentService,
     private _userMaintenanceService: UserMaintenanceService,
     private _utilsService: UtilsService,
     private _alertService: AlertsService
   ) {
-    super();
+    super()/* istanbul ignore next */;
     this.load();
   }
 
   ngOnDestroy(): void {
     this.subsType.unsubscribe();
+    this.subsType = undefined;
   }
 
   load() {
@@ -73,11 +75,6 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
         userType,
         GLOBALS.REACTIVE_FORMS.EMIT_EVENT_FALSE
       );
-
-      if (userType == 'null') {
-        this.disableControl(this._model.userCode);
-        this.countries = [];
-      }
     });
 
     this.subscriptions.push(
@@ -89,7 +86,6 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
 
   switchUserType() {
     const userCode = this._model.userCode.value;
-    console.log(userCode);
 
     if (userCode && this._model.userCode.valid) {
       switch (this._model.userType.value) {
@@ -112,22 +108,12 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
         this._model.userCode
       ]);
       this.resetControl(this.isoCountry);
+      // TODO: Meter en una función
       this.templates = [];
       this.isoCountry.setValue('');
       this.countries = [];
       this.templateService.reset();
       this.userValid = false;
-    }
-  }
-
-  // TYPES
-  disableAllExceptUserTypeAndCode(disabled: boolean) {
-    if (disabled) {
-      this.disableControl(this._model.groupForm);
-      this.enableControl(this._model.userType);
-      this.enableControl(this._model.userCode);
-    } else {
-      this.enableControl(this._model.groupForm);
     }
   }
 
@@ -242,7 +228,6 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
 
   onReturnCountryTerritory(event) {
     this.countries = event;
-    console.log(this.countries);
   }
 
   toogleEdit(position) {
@@ -255,7 +240,6 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
   }
 
   callApi() {
-
     // Llamada a la api;
     const user: UserInterface = this.buildRequestUser();
     this._userMaintenanceService.createUser(user).subscribe(
@@ -268,14 +252,14 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
         );
 
         this._alertService.setAlert(alert);
-
         this.resetControl(this.model.groupForm);
-        this.disableAllExceptUserTypeAndCode(true);
+        this.disableFormGroup(this._model.groupForm, [this._model.userType]);
         this.isoCountry.setValue('');
         this.countries = [];
         this.templates = [];
         this.templateService.reset();
       }, err => {
+        console.log(err);
         this.setErrors(err.error);
       }
     );
@@ -283,7 +267,9 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
   }
 
   private buildRequestUser(): UserInterface {
+
     const userCode = this._model.userType.value == this.types_of_users.AGENT ? this.agentCodeCd(this._model.userCode.value) : this._model.userCode.value;
+
     return new User(
       new UserAddress(
         this._model.city.value,
@@ -333,7 +319,9 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
         AlertType.ERROR
       );
       this._alertService.setAlert(alert);
+      return true;
     }
+    return false;
   }
 
   get model(): NewUserModel {
@@ -341,14 +329,11 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
   }
 
   get types_of_users() {
-    if (!this._types_of_users) {
-      this._types_of_users = GLOBALS.TYPES_OF_USER;
-    }
     return this._types_of_users;
   }
 
   // TODO: Meterla en un Utils
-  private agentCodeCd(s: string): string {
+  public agentCodeCd(s: string): string {
     return s + (+s % 7);
   }
 }

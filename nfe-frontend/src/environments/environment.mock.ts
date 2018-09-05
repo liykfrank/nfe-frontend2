@@ -28,13 +28,8 @@ export const environment = {
       reasons: 'reasons',
     },
     files: {
-      listFiles: 'files/v1/files',
-      downloadFile: 'files/v1/files',
-      downloadFiles: 'files/v1/files/zip',
-      removeFile: 'files/v1/files',
-      removeFiles: 'files/v1/files',
-      apiConfiguration: '/v1/configurations',
-      apiUpload: 'files/v1/files'
+      configuration: 'file-configuration',
+      files: 'file'
     },
     user: {
       user: 'http://localhost:3000/user',

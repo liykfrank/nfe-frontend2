@@ -24,7 +24,7 @@ export class ModUserView extends ReactiveFormHandler<NewUserModel> {
     constructor(public _translationService: TranslationService,
         public templateService: TemplateService,
         private countryTerritoryService: CountryTerritoryService) {
-        super();
+        super()/* istanbul ignore next */;
         this.load();
     }
 

@@ -29,13 +29,8 @@ export const environment = {
       reasons: 'agencymemo/v1/reasons'
     },
     files: {
-      listFiles: 'files/v1/files',
-      downloadFile: 'files/v1/files',
-      downloadFiles: 'files/v1/files/zip',
-      removeFile: 'files/v1/files',
-      removeFiles: 'files/v1/files',
-      apiConfiguration: '/v1/configurations',
-      apiUpload: 'files/v1/files'
+      configuration: 'files/v1/configurations',
+      files: 'files/v1/files'
     },
     user: {
       user: '/assets/mocks/user.json',
@@ -51,7 +46,6 @@ export const environment = {
       downloadFiles: '/v1/files/zip',
       removeFile: '/v1/files',
       removeFiles: '/v1/files',
-      apiConfiguration: '/v1/configurations',
       apiUpload: '/v1/files'
     },
     basePath: 'files'

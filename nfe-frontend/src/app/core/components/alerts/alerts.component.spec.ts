@@ -17,7 +17,9 @@ describe('AlertsComponent', () => {
   const _AlertsService = jasmine.createSpyObj<AlertsService>('AlertsService', [
     'getAlert',
     'setAccept',
-    'getAccept'
+    'setDismiss',
+    'getAccept',
+    'getDismiss'
   ]);
 
   beforeEach(async(() => {

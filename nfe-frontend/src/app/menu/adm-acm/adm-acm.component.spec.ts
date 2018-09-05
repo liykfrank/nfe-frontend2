@@ -41,6 +41,11 @@ describe('AdmAcmComponent', () => {
                 subscribe: () => ({
                     unsubscribe: () => ({})
                 })
+            }),
+            getDismiss: () => ({
+                subscribe: () => ({
+                    unsubscribe: () => ({})
+                })
             })
         };
         const utilsServiceStub = {

@@ -26,7 +26,7 @@ export class NewSubUserView extends ReactiveFormHandler<NewUserModel> {
     constructor(private _translationService: TranslationService,
         public templateService: TemplateService,
         private countryTerritoryService: CountryTerritoryService) {
-        super();
+        super()/* istanbul ignore next */;
         this.load();
     }
 

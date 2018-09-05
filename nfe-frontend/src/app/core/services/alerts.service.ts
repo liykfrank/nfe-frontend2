@@ -11,6 +11,7 @@ import { AlertModel } from './../models/alert.model';
 export class AlertsService {
   private alert = new BehaviorSubject<AlertModel>(null);
   private onAccept = new Subject<boolean>();
+  private onDismiss = new Subject();
 
   constructor(private _translationService: TranslationService) {}
 
@@ -26,8 +27,17 @@ export class AlertsService {
     return this.onAccept.asObservable();
   }
 
+  public getDismiss(): Observable<any> {
+    return this.onDismiss.asObservable();
+  }
+
   public setAccept(value: boolean) {
     this.onAccept.next(value);
+    this.setDismiss();
+  }
+
+  public setDismiss() {
+    this.onDismiss.next();
   }
 
   public setAlertTranslate(
@@ -40,7 +50,7 @@ export class AlertsService {
       this._translationService.translate(message),
       alert_type
     );
-    
+
     this.setAlert(alert);
   }
 }

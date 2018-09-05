@@ -1,16 +1,14 @@
 {
   "refund_indirect": [],
   "acdm": [],
-  "user": [
-    {
-      "name": "Accelya User",
-      "lastname": "Accelya Group",
-      "email": "airline@accelya.com",
-      "isoc": "AA",
-      "role": "AGENT",
-      "iataCode": "78200021"
-    }
-  ],
+  "user": {
+    "name": "Accelya User",
+    "lastname": "Accelya Group",
+    "email": "airline@accelya.com",
+    "isoc": "AA",
+    "role": "AGENT",
+    "iataCode": "78200021"
+  },
   "users-create": [
     {
       "address": {
@@ -53,6 +51,18 @@
       "userType": "AGENT",
       "username": "TEST2@TEST.ES",
       "id": 2
+    }
+  ],
+  "file": [
+    {
+      "id": 0,
+      "subject": "A0aaAAA0_20180521.txt",
+      "status": 200
+    },
+    {
+      "id": 1,
+      "subject": "B0aaAAA0_20180521.txt",
+      "status": 200
     }
   ],
   "agent": [
@@ -200,6 +210,19 @@
       "defaultCurrency": null
     }
   ],
+  "file-configuration": {
+    "fileNamePatterns": [
+      "^[A-Z][A-Z0-9][a-z0-9]{2}[A-Z0-9]{3}[0-6]_[0-9]{8}.*$"
+    ],
+    "allowedFileExtensions": [
+      "txt",
+      "TXT"
+    ],
+    "maxDownloadTotalFileSizeForMultipleFiles": -1,
+    "maxUploadFilesNumber": -1,
+    "maxDownloadFilesNumber": -1,
+    "maxUploadFileSize": "2MB"
+  },
   "country": [
     {
       "isoCountryCode": "AA",

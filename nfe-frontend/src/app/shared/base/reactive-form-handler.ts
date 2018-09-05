@@ -4,7 +4,7 @@ import { GLOBALS } from '../constants/globals';
 import { AbstractComponent } from './abstract-component';
 import { ReactiveFormHandlerModel } from './reactive-form-handler-model';
 
-
+// spec in src\app\menu\admin\components\user\user.component.spec.ts
 export class ReactiveFormHandler<T extends ReactiveFormHandlerModel> extends AbstractComponent {
 
   @Input() model: T;

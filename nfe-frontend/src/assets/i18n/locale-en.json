@@ -175,6 +175,7 @@
       "spam": "Spam",
       "toca": "TOCA",
       "tax_error": "There are error in tax table",
+      "toca_error": "If you select a TOCA Type its value can not be 0 in amount",
       "total_error": "Total is wrong"
     },
     "DETAILS": {

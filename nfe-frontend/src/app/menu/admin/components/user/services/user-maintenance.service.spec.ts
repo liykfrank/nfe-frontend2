@@ -1,9 +1,6 @@
 import { UserMaintenanceService } from './user-maintenance.service';
 import { inject, TestBed } from '@angular/core/testing';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { TranslationModule, LocalizationModule } from 'angular-l10n';
-import { l10nConfig } from '../../../../../shared/base/conf/l10n.config';
-import { AlertsService } from '../../../../../core/services/alerts.service';
 import { User } from '../models/api/user.model';
 import { UserAddress } from '../models/api/user-address.model';
 import { of } from 'rxjs/observable/of';

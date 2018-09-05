@@ -17,7 +17,7 @@
                 <!-- TYPE -->
                 <div class="form-group col pb-0 mb-0">
                   <bspl-dropdown-single *ngIf="isView(typesOfScreens.NEW_USER)" l10nTranslate [groupForm]="view.model.groupForm" [controlName]="'userType'"
-                    [label]="'USERS.type'" [wrapText]="true" [options]="view.getTypeOfUsersArray()">
+                    [label]="'USERS.type'" [wrapText]="true" [options]="view.getTypeOfUsersArray()" [optionSelected]="view.model.userType.value">
                   </bspl-dropdown-single>
 
                   <bspl-input-form-control l10nTranslate *ngIf="isView(typesOfScreens.MOD_USER)" [wrapText]="true" [label]="'USERS.type'" [groupForm]="view.model.groupForm"

@@ -7,6 +7,7 @@
   [modal]="true"
   [styleClass]="style_class"
   [dismissableMask]="true"
+  (onHide)="onDismiss()"
   [baseZIndex]="10000">
   <img src="assets/images/alerts/ico_{{image_type}}.svg">
   <p class="title">

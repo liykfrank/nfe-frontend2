@@ -161,6 +161,7 @@ export class AdmAcmComponent extends AbstractComponent implements OnInit {
         this.detailsFormModel.acdmDetailsFormGroup
       ];
       this._utils.touchAllForms(forms);
+      this._focusErrorAfterAlert();
       this._alertService.setAlertTranslate(
         'error',
         'ADM_ACM.error',
@@ -179,6 +180,7 @@ export class AdmAcmComponent extends AbstractComponent implements OnInit {
     }
 
     if (this.amountFormModel.amountModelGroup.get('amountPaidByCustomer').value <= 0) {
+      this._focusErrorAfterAlert();
       this._alertService.setAlertTranslate(
         'ADM_ACM.AMOUNT.title',
         'ADM_ACM.AMOUNT.total_error',
@@ -188,9 +190,20 @@ export class AdmAcmComponent extends AbstractComponent implements OnInit {
     }
 
     if (!this._checkTaxes()) {
+      this._focusErrorAfterAlert();
       this._alertService.setAlertTranslate(
         'ADM_ACM.AMOUNT.title',
         'ADM_ACM.AMOUNT.tax_error',
+        AlertType.ERROR
+      );
+      return;
+    }
+
+    if (!this._checkToca()) {
+      this._focusErrorAfterAlert();
+      this._alertService.setAlertTranslate(
+        'ADM_ACM.AMOUNT.title',
+        'ADM_ACM.AMOUNT.toca_error',
         AlertType.ERROR
       );
       return;
@@ -353,6 +366,37 @@ export class AdmAcmComponent extends AbstractComponent implements OnInit {
     return agent == agentAmountTax && airline == airlineAmountTax;
   }
 
+  private _checkToca() {
+    let ret = true;
+    const elem = this.basicInfoFormModel.basicInfoModelGroup.get('taxOnCommissionType').value;
+
+    if (elem != '') {
+      const agentTOCA = this.amountFormModel.agentCalculations.get('taxOnCommission').value;
+      const airlineTOCA = this.amountFormModel.airlineCalculations.get('taxOnCommission').value;
+
+      ret = agentTOCA != 0 || airlineTOCA != 0;
+
+      if (agentTOCA == 0) {
+        this.amountFormModel.agentCalculations.get('taxOnCommission').setErrors({
+          customError: {
+            invalid: true,
+            message: ''
+          }
+        });
+      }
+
+      if (airlineTOCA == 0) {
+        this.amountFormModel.airlineCalculations.get('taxOnCommission').setErrors({
+          customError: {
+            invalid: true,
+            message: ''
+          }
+        });
+      }
+    }
+    return ret;
+  }
+
   private _createModel(): Acdm {
     const acdm = new Acdm();
 
@@ -428,6 +472,15 @@ export class AdmAcmComponent extends AbstractComponent implements OnInit {
     return ret;
   }
 
+  private _focusErrorAfterAlert() {
+    const subscription = this._alertService
+      .getDismiss()
+      .subscribe(() => {
+        this.setFocus();
+        subscription.unsubscribe();
+      });
+  }
+
   private _filterTaxes(ret: TaxAmountServer[]) {
     for (const aux of ret) {
       aux.agentAmount = (aux as any).agentAmount != '' ? aux.agentAmount : 0;
@@ -488,6 +541,7 @@ export class AdmAcmComponent extends AbstractComponent implements OnInit {
           }
 
           const alert = new AlertModel(this._translationService.translate('error'), msg, AlertType.ERROR);
+          this._focusErrorAfterAlert();
           this._alertService.setAlert(alert);
         }
       }

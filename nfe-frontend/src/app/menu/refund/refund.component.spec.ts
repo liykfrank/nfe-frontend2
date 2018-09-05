@@ -59,7 +59,12 @@ describe('RefundComponent', () => {
         };
         const alertsServiceStub = {
             setAlertTranslate: () => ({}),
-            setAlert: () => ({})
+            setAlert: () => ({}),
+            getDismiss: () => ({
+                subscribe: () => ({
+                    unsubscribe: () => ({})
+                })
+            })
         };
         TestBed.configureTestingModule({
           imports: [

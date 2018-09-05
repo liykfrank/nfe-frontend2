@@ -1,5 +1,5 @@
 <div class="container-fluid custom-container">
-  
+
   <div class="row mr-0 ml-0">
     <div class="col-12" *ngIf="configuration">
 
@@ -9,25 +9,25 @@
             #uploadComp
             [styleClass]="'view-fileupload'"
             [customUpload]="true"
-            [name]="name"
+
             [multiple]="multipleUpload"
             [chooseLabel]="chooseLabel"
-            (onSelect)="onSelect($event)">
-            
+            (onSelect)="onSelect($event)"><!-- [name]="name" -->
+
             <ng-template pTemplate="content">
               <div class="dragdrop-section">
                 <img src="assets/images/files/ico_upload.svg" class="mx-auto mb-3 d-block">
                 <div class="text-center">
-                  <span l10nTranslate>FILES.UPLOAD_FILES.drag-and-drop</span>  
-                  <label for="myFileInput" class="fileupload-label"
+                  <span l10nTranslate>FILES.UPLOAD_FILES.drag-and-drop</span>
+                  <label for="file-browser-input" class="fileupload-label"
                      l10nTranslate>
                      FILES.UPLOAD_FILES.browse
-                  </label>                    
-                  <input 
-                    id="myFileInput"
+                  </label>
+                  <input
+                    id="file-browser-input"
                     type="file"
-                    name="myFileInput" 
-                    (change)="onSelect($event)">
+                    name="file-browser-input"
+                    (change)="onSelect($event.currentTarget)">
                   <span l10nTranslate>FILES.UPLOAD_FILES.file</span>
                 </div>
               </div>
@@ -74,25 +74,25 @@
                 <div class="col-12">
                   <div class="row justify-content-end">
                     <div class="col-12">
-                      <button class="btn btn-primary button-update float-right" 
+                      <button class="btn btn-primary button-update float-right"
                         [disabled]="checkFilesLength()"
                         (click)="sendUpload()" l10nTranslate>update</button>
-                      <button class="btn btn-primary button-cancel float-right" 
-                        [disabled]="checkFilesLength()" 
+                      <button class="btn btn-primary button-cancel float-right"
+                        [disabled]="checkFilesLength()"
                         (click)="cancelUpdate()" l10nTranslate>cancel</button>
                     </div>
                   </div>
                 </div>
               </div>
-              
+
             </ng-template>
 
             <ng-template pTemplate="file"></ng-template>
-        
+
           </p-fileUpload>
         </div>
       </div>
-      
+
     </div>
   </div>
 

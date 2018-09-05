@@ -36,15 +36,8 @@ export class UploadFilesComponent implements OnInit {
     this.uploadedFiles = [];
     this.files = [];
     this.msgs = [];
-    this.getConfiguration();
-  }
 
-  private getConfiguration(): void {
-    this.configurationService.get().subscribe(
-      data => { this.configuration = data; },
-      err => console.error(err),
-      () => console.log('done loading configuration' + this.configuration.maxUploadFilesNumber)
-    );
+    this.configurationService.get().subscribe(data => this.configuration = data);
   }
 
   sendUpload() {
@@ -57,8 +50,7 @@ export class UploadFilesComponent implements OnInit {
         .subscribe(
           data => {
             this.uploadedFiles = data;
-          },
-          err => { }
+          }
         );
     }
   }
@@ -101,7 +93,7 @@ export class UploadFilesComponent implements OnInit {
     const errMsg = 'Maximum number of allowable file uploads has been exceeded.';
     let isValidNumFiles = true;
 
-    if (this.files.length > this.configuration.maxUploadFilesNumber) {
+    if (this.configuration.maxUploadFilesNumber != -1 && this.files.length > this.configuration.maxUploadFilesNumber) {
       isValidNumFiles = false;
       this.msgs.push({ severity: 'error', summary: errMsg, detail: '' });
     }
@@ -148,16 +140,17 @@ export class UploadFilesComponent implements OnInit {
     let isValidNumFiles,
         isValidFileSize,
         isValidFileExtension,
+        isNotInserted,
         isValidFileName: boolean;
-    // this.msgs = [];
 
     for (let index = 0; index < selectedFiles.length; index++) {
       isValidNumFiles = this.isValidNumFiles();
       isValidFileName = this.isValidFileName(selectedFiles[index]);
       isValidFileExtension = this.isValidFileExtension(selectedFiles[index]);
       isValidFileSize = this.isValidFileSize(selectedFiles[index]);
+      isNotInserted = this.files.findIndex(x => x.name == selectedFiles[index].name) == -1;
 
-      if (isValidNumFiles && isValidFileName && isValidFileExtension && isValidFileSize) {
+      if (isValidNumFiles && isValidFileName && isValidFileExtension && isValidFileSize && isNotInserted) {
         this.files.push(selectedFiles[index]);
       }
     }
@@ -167,14 +160,6 @@ export class UploadFilesComponent implements OnInit {
       if (!isValidNumFiles) {
         this.removeSelectedFile(file);
       }
-    }
-  }
-
-  private removeSelectedFile(file: any): void {
-    const index = this.getFileIndexInArray(file, this.files);
-
-    if (index > -1) {
-      this.files.splice(index, 1);
     }
   }
 
@@ -190,6 +175,22 @@ export class UploadFilesComponent implements OnInit {
     this.msgs = [];
   }
 
+  checkMessagesLength() {
+    return this.msgs.length == 0;
+  }
+
+  checkFilesLength() {
+    return this.files.length == 0;
+  }
+
+  private removeSelectedFile(file: any): void {
+    const index = this.getFileIndexInArray(file, this.files);
+
+    if (index > -1) {
+      this.files.splice(index, 1);
+    }
+  }
+
   private convertIntoBytes(fileSize: string): number {
     const unit = fileSize.substr(fileSize.length - 2, fileSize.length);
     let fileSizeNumb = parseInt(fileSize.substr(0, fileSize.length - 2), 10);
@@ -203,11 +204,4 @@ export class UploadFilesComponent implements OnInit {
     return fileSizeNumb;
   }
 
-  checkMessagesLength() {
-    return this.msgs.length == 0;
-  }
-
-  checkFilesLength() {
-    return this.files.length == 0;
-  }
 }
