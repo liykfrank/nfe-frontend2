@@ -17,21 +17,24 @@ public abstract class BaseUserTest {
     protected static final String DELETE_USER_URL = "/v1/users/{id}";
 
     protected static final String USER_ID = "b348f80e-59sa-4a2f-9ci4-879805d92920";
+    protected static final String USER_ID_NOT_EXISTS = "wrong_id";
     protected static final String REALM = "realm";
 
     protected User userPending;
     protected User userCreated;
 
-    private User getBaseUser() {
+    protected User getBaseUser() {
 
         User user = new User();
         user.setId(USER_ID);
-        user.setUsername("bsplink.test");
+        user.setEmail("email@email.com");
+        user.setUsername("email@email.com");
         user.setName("Test");
+        user.setLastName("Test");
         user.setUserType(UserType.AIRLINE);
         user.setUserCode("code");
         user.setTelephone("654987321");
-        user.setOrganization("Organization");
+        user.setOrganization("Organization");      
 
         Address address = new Address();
         address.setDescription("Direction");
@@ -49,7 +52,7 @@ public abstract class BaseUserTest {
     /**
      * Creates the user for the tests.
      */
-    protected void createPendingUser() {
+    protected void initiatePendingUser() {
 
         userPending = getBaseUser();
         userPending.setStatus(UserStatus.PENDING);
@@ -58,7 +61,7 @@ public abstract class BaseUserTest {
     /**
      * Creates the user for the tests.
      */
-    protected void createCreatedUser() {
+    protected void initiateCreatedUser() {
 
         userCreated = getBaseUser();
         userCreated.setStatus(UserStatus.CREATED);
@@ -70,10 +73,12 @@ public abstract class BaseUserTest {
      *
      * @param response the response that is going to be checked
      */
-    protected void commonResponseAssertions(User user) {
-
-        assertNotNull(user);
-        assertEquals(USER_ID, user.getId());
+    protected void commonResponseAssertions(User user, User userReturned) {
+        assertNotNull(userReturned);
+        assertEquals(user.getId(), userReturned.getId());
+        assertEquals(user.getUsername(), userReturned.getUsername());
+        assertEquals(user.getUserCode(), userReturned.getUserCode());
+        assertEquals(user.getEmail(), userReturned.getEmail());
     }
 
     /**

@@ -89,9 +89,9 @@ public class UserControllerTest extends BaseUserTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
 
         userPending = new User();
-        createPendingUser();
+        initiatePendingUser();
         userCreated = new User();
-        createCreatedUser();
+        initiateCreatedUser();
 
         MAPPER.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 

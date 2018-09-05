@@ -34,10 +34,12 @@ public class UserServiceImpl implements UserService {
     private UserTemplateRepository userTemplateRepository;
     private KeycloakService keycloakService;
 
-    private static final String USER_DELETED = "User deleted.";
-    private static final String CREATING_USER_ERROR_MESSAGE = "Could not create user.";
-    private static final String CREATING_USER_IN_KEYCLOAK_ERROR_MESSAGE =
+    public static final String USER_DELETED = "User deleted.";
+    public static final String CREATE_USER_ERROR_MESSAGE = "Could not create user.";
+    public static final String CREATE_USER_IN_KEYCLOAK_ERROR_MESSAGE =
             "Could not create user in keycloak.";
+    public static final String CHANGE_USER_STATUS_IN_KEYCLOAK_ERROR_MESSAGE =
+            "Error changing user status in keycloak.";
 
 
     /**
@@ -46,10 +48,8 @@ public class UserServiceImpl implements UserService {
      * @param userRepository helps to save user.
      * @param keycloakService saves user in keycloak.
      */
-    public UserServiceImpl(
-            UserRepository userRepository,
-            UserTemplateRepository userTemplateRepository,
-            KeycloakService keycloakService) {
+    public UserServiceImpl(UserRepository userRepository,
+            UserTemplateRepository userTemplateRepository, KeycloakService keycloakService) {
 
         this.userRepository = userRepository;
         this.keycloakService = keycloakService;
@@ -86,19 +86,23 @@ public class UserServiceImpl implements UserService {
             user.setStatus(UserStatus.PENDING);
             newUser = userRepository.save(user);
 
-            if (newUser != null) {
+            UserRepresentation userRepresentation =
+                    keycloakService.changeUserStatus(user.getUsername(), true, errors);
 
-                keycloakService.changeUserStatus(user.getUsername(), true, errors);
+            if (userRepresentation != null) {
+
                 newUser.setStatus(UserStatus.CREATED);
-                userRepository.save(newUser);
+                newUser = userRepository.save(newUser);
+
+                log.info("New user created: " + newUser);
 
             } else {
-                throw new ApplicationInternalServerError(CREATING_USER_ERROR_MESSAGE);
+                throw new ApplicationInternalServerError(
+                        CHANGE_USER_STATUS_IN_KEYCLOAK_ERROR_MESSAGE);
             }
 
-            log.info("New user created: " + newUser);
         } else {
-            throw new ApplicationInternalServerError(CREATING_USER_ERROR_MESSAGE);
+            throw new ApplicationInternalServerError(CREATE_USER_ERROR_MESSAGE);
         }
 
         return newUser;
@@ -173,7 +177,7 @@ public class UserServiceImpl implements UserService {
         if (response.getStatus() == HttpStatus.SC_CREATED) {
             return keycloakService.findUser(user);
         } else {
-            throw new ApplicationInternalServerError(CREATING_USER_IN_KEYCLOAK_ERROR_MESSAGE);
+            throw new ApplicationInternalServerError(CREATE_USER_IN_KEYCLOAK_ERROR_MESSAGE);
         }
     }
 

@@ -61,8 +61,8 @@ public class KeycloakServiceTest extends BaseUserTest {
         keycloakService.setRealm(REALM);
         userPending = new User();
         userCreated = new User();
-        createPendingUser();
-        createCreatedUser();
+        initiatePendingUser();
+        initiateCreatedUser();
     }
 
     @Test

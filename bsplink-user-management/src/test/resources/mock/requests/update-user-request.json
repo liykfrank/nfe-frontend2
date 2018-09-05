@@ -6,6 +6,7 @@
 	"name": "Test",
 	"telephone": "654987321",
 	"email": "bsplink.test@test.com",
+	"expiryDate": "2030-01-01T10:10:10.00000001",
 	"address": {
 		"description": "Description",
 		"locality": "Locality",
