@@ -166,6 +166,7 @@ export class RefundComponent extends AbstractComponent implements OnInit {
 
       this._utilsService.touchAllForms(forms);
 
+      this._focusErrorAfterAlert();
       this._alertService.setAlertTranslate(
         'error',
         'REFUNDS.error',
@@ -175,6 +176,7 @@ export class RefundComponent extends AbstractComponent implements OnInit {
     }
 
     if (this.formOfPaymentRefundFormModel.formOfPaymentAmounts.length == 0) {
+      this._focusErrorAfterAlert();
       this._alertService.setAlertTranslate(
         'error',
         'REFUNDS.error_min_fop',
@@ -357,11 +359,21 @@ export class RefundComponent extends AbstractComponent implements OnInit {
                 : msg,
               AlertType.ERROR
             );
+            this._focusErrorAfterAlert();
             this._alertService.setAlert(alert);
           }
         }
       );
     }
+  }
+
+  private _focusErrorAfterAlert() {
+    const subscription = this._alertService
+      .getDismiss()
+      .subscribe(() => {
+        this.setFocus();
+        subscription.unsubscribe();
+      });
   }
 
   private _buildRequestRefundIndirect(): Refund {

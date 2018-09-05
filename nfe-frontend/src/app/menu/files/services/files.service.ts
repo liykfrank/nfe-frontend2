@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class FilesService extends HttpServiceAbstract<any, Object> {
     constructor(private http: HttpClient) {
-        super(http, environment.basePath + environment.api.files.apiUpload);
+        super(http, environment.basePath + environment.api.files.files);
     }
 
     uploadFiles(files: File[]): Observable<any> {

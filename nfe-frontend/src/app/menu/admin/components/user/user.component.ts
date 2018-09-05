@@ -51,12 +51,12 @@ export class UserComponent implements OnInit {
     switch (this.screenType) {
       case this.typesOfScreens.NEW_USER:
         this.view = new NewUserView(this._translationService,
-          this.templateService,
-          this.countryTerritoryService,
-          this._agentService,
-          this._userMaintenanceService,
+        this.templateService,
+        this.countryTerritoryService,
+        this._agentService,
+        this._userMaintenanceService,
         this._utilsService,
-      this._alertService);
+        this._alertService);
         break;
 
       case this.typesOfScreens.MOD_USER:

@@ -21,4 +21,12 @@ export abstract class AbstractComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.removeSubscriptions();
   }
+
+  setFocus() {
+    const errores = document.getElementsByClassName('form-control error');
+    const aux = errores.length > 0 ? <HTMLElement>errores[0] : null;
+    if (aux) {
+      aux.focus();
+    }
+  }
 }

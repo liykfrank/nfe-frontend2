@@ -9,6 +9,12 @@ server.use(jsonServer.rewriter({
 }))
 
 server.use(middlewares)
+
+server.post('/file', function(req, res, next) {
+  req.method = 'GET';
+  next();
+})
+
 server.use(router)
 
 server.listen(3000, () => {

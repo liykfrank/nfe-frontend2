@@ -11,8 +11,7 @@ export class ConfigurationService extends HttpServiceAbstract<any, Configuration
     super(
       http,
       environment.basePath +
-        environment.files.basePath +
-        environment.files.api.apiConfiguration
+      environment.api.files.configuration
     );
   }
 }

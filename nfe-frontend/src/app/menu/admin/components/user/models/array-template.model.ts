@@ -4,7 +4,7 @@ export class ArrayTemplateModel {
 
     modeEdit = false;
 
-    constructor(public template: TemplateModel, public arrCountries: Country[], public agent = false) {}
+    constructor(public template: TemplateModel, public arrCountries: Country[], public agent) {}
 
 
     getCountriesHtml() {
@@ -23,10 +23,6 @@ export class ArrayTemplateModel {
         }
         const response = `<div class="countries">${this.getCountriesInText(size)} ${span}</div>`;
         return response;
-    }
-
-    setArrCountries(newArray) {
-        this.arrCountries = newArray;
     }
 
     getCountriesInText(size) {
