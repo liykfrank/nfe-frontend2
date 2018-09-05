@@ -13,6 +13,7 @@ export function initApp(userService: UserService ) {
   return () => userService.initializeUser();
 }
 
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -32,7 +33,6 @@ export function initApp(userService: UserService ) {
       deps: [UserService],
       multi: true
     },
-
   ],
   bootstrap: [
     AppComponent
