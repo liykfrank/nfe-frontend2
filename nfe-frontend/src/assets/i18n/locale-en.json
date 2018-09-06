@@ -219,7 +219,7 @@
     }
   },
   "REFUNDS": {
-    "error": "Can not create refund",
+    "error": "Refund cannot be created",
     "error_min_fop": "At least there must be a selected form of payment",
     "totalAmount_refundToPassenger": "Totals on Form of payment and Amount must be equal and greater than 0",
     "OK": "Refund number: ",
@@ -455,6 +455,7 @@
     "active": "Active",
     "btnCreate": "Create",
     "btnUpdate": "Update",
+    "error": "User cannot be created",
     "types_of_users": {
       "AGENT": "Agent",
       "AIRLINE": "Airline",

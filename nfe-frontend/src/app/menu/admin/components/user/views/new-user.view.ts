@@ -259,7 +259,6 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
         this.templates = [];
         this.templateService.reset();
       }, err => {
-        console.log(err);
         this.setErrors(err.error);
       }
     );
@@ -298,13 +297,10 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
         this.model.groupForm
       ];
 
-
       const errors = this._utilsService.setBackErrorsOnForms(
         forms.filter(x => x != null),
         error.validationErrors
       );
-
-      console.log(errors);
 
       let msg = '';
       for (const aux of errors) {
@@ -314,7 +310,7 @@ export class NewUserView extends ReactiveFormHandler<NewUserModel>
       const alert = new AlertModel(
         this._translationService.translate('error'),
         msg == ''
-          ? this._translationService.translate('REFUNDS.error')
+          ? this._translationService.translate('USERS.error')
           : msg,
         AlertType.ERROR
       );

@@ -16,7 +16,6 @@ export class CountryTerritoryService extends HttpServiceAbstract<Country[], any>
     getCountriesAndTerritory() {
         return this.get().subscribe(val => {
             this.countryTerritory = val;
-            console.log(val);
         });
     }
 

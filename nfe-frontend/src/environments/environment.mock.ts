@@ -34,7 +34,8 @@ export const environment = {
     user: {
       user: 'http://localhost:3000/user',
       template: 'http://localhost:3000/create-user-template',
-      createUser: 'users-create',
+      userMaintenance: 'http://localhost:3000/user/v1/users',
+      createUser: 'http://localhost:3000/users-create',
       countryTerritory: 'http://localhost:3000/country'
     }
   },

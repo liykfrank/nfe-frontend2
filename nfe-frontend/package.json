@@ -11,7 +11,7 @@
     "build-uat": "ng build --env=uat",
     "start-mock": "ng serve --env=mock",
     "test": "ts-node setkarma && ng test --watch=false --cc",
-    "e2e": "ng e2e --config protractor.conf.js --env=mock --silent",
+    "e2e": "ng e2e --config protractor.conf.js --env=mock",
     "e2e-jenkins": "ng e2e --config protractor.jenkins.conf.js --env=mock --silent",
     "coverage": "ng test --watch=false --single-run --cc",
     "lint": "ng lint",

@@ -533,8 +533,6 @@ export class AdmAcmComponent extends AbstractComponent implements OnInit {
             err.error.validationErrors
           );
 
-          console.log(errors);
-
           let msg = this._translationService.translate('error');
           for (const aux of errors) {
             msg += '\n' + aux.message;

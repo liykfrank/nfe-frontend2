@@ -68,15 +68,19 @@ export class NewUser {
   getCity() {
     return element(by.id(this.baseID + 'city'));
   }
+
   getCountry() {
     return element(by.id(this.baseID + 'country'));
   }
+
   getDescription() {
     return element(by.id(this.baseID + 'description'));
   }
+
   getLocality() {
     return element(by.id(this.baseID + 'locality'));
   }
+
   getZip() {
     return element(by.id(this.baseID + 'zip'));
   }

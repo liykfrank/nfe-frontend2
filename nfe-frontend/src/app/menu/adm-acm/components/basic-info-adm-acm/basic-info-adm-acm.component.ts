@@ -31,9 +31,8 @@ import { TocaService } from './../../services/toca.service';
   templateUrl: './basic-info-adm-acm.component.html',
   styleUrls: ['./basic-info-adm-acm.component.scss']
 })
-export class BasicInfoAdmAcmComponent
-  extends ReactiveFormHandler<AcdmBasicInfoFormModel>
-  implements OnInit, OnChanges {
+export class BasicInfoAdmAcmComponent extends ReactiveFormHandler<AcdmBasicInfoFormModel> implements OnInit, OnChanges {
+
   basicInfoFormModelGroup: FormGroup;
 
   private listPeriods: number[] = [];
@@ -75,12 +74,12 @@ export class BasicInfoAdmAcmComponent
     private _translationService: TranslationService
   ) {
     super();
-
-    this.typeList = this.isAdm ? GLOBALS.ACDM.ADM : GLOBALS.ACDM.ACM;
   }
 
   ngOnInit() {
     this.basicInfoFormModelGroup = this.model.basicInfoModelGroup;
+
+    this.typeList = this.isAdm ? GLOBALS.ACDM.ADM : GLOBALS.ACDM.ACM;
 
     this.subscriptions.push(
       this._acdmConfigurationService.getConfiguration().subscribe(data => {

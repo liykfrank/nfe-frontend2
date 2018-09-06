@@ -23,8 +23,8 @@ export class BasicInfoRefundFormModel extends ReactiveFormHandlerModel {
 
   public createForm() {
     this.basicInfoRefundGroup = new FormGroup({
-      agent: this.agent.agentFormModelGroup,
       airline: this.airline.airlineFormModelGroup,
+      agent: this.agent.agentFormModelGroup,
       isoCountryCode: new FormControl('', [Validators.required])
     });
   }

@@ -6,11 +6,10 @@ export interface UserInterface {
   email: string;
   expiryDate: string;
   lastModifiedDate: string;
-  lastname: string;
+  lastName: string;
   name: string;
   organization: string;
   registerDate: string;
-  // TODO: Status?
   telephone: string;
   // TODO: templates
   userCode: string;
@@ -25,7 +24,7 @@ export class User implements UserInterface {
     public email: string,
     public expiryDate: string,
     public lastModifiedDate: string,
-    public lastname: string,
+    public lastName: string,
     public name: string,
     public organization: string,
     public registerDate: string,

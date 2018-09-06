@@ -1,9 +1,10 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslationService, TranslationModule } from 'angular-l10n';
+import { TranslationModule, TranslationService } from 'angular-l10n';
 import { of } from 'rxjs/observable/of';
 
+import { l10nConfig } from '../../../../shared/base/conf/l10n.config';
 import { EnvironmentType } from '../../../../shared/enums/environment-type.enum';
 import { IssueSharedModule } from '../../../../shared/issue-shared.module';
 import { AcdmBasicInfoFormModel } from '../../models/acdm-basic-info-form.model';
@@ -15,7 +16,6 @@ import { CurrencyService } from './../../../../shared/components/currency/servic
 import { PeriodService } from './../../services/period.service';
 import { TocaService } from './../../services/toca.service';
 import { BasicInfoAdmAcmComponent } from './basic-info-adm-acm.component';
-import { l10nConfig } from '../../../../shared/base/conf/l10n.config';
 
 describe('BasicInfoAdmAcmComponent', () => {
   let comp: BasicInfoAdmAcmComponent;
@@ -117,10 +117,6 @@ describe('BasicInfoAdmAcmComponent', () => {
 
   it('type defaults to: EnvironmentType.ACDM', () => {
     expect(comp.type).toEqual(EnvironmentType.ACDM);
-  });
-
-  it('typeList defaults to: []', () => {
-    expect(comp.typeList.length).toBeGreaterThan(0);
   });
 
   it('forList defaults to: [I, R, X, E]', () => {

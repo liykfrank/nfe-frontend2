@@ -62,7 +62,8 @@ export class UserComponent implements OnInit {
       case this.typesOfScreens.MOD_USER:
         this.view = new ModUserView(this._translationService,
         this.templateService,
-        this.countryTerritoryService);
+        this.countryTerritoryService,
+        this._userMaintenanceService);
         break;
 
       case this.typesOfScreens.NEW_SUB_USER:
@@ -74,7 +75,8 @@ export class UserComponent implements OnInit {
       case this.typesOfScreens.MOD_SUB_USER:
         this.view = new ModSubUserView(this._translationService,
         this.templateService,
-        this.countryTerritoryService);
+        this.countryTerritoryService,
+        this._userMaintenanceService);
         break;
     }
 
@@ -86,7 +88,7 @@ export class UserComponent implements OnInit {
 
   setScreenType(url): void {
     const arr_url = url.split('/');
-    if (arr_url.length > 0) {
+    if (arr_url.length > 1) {
       this.screenType = arr_url[2];
     }
   }

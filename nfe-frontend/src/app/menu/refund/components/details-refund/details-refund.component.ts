@@ -81,9 +81,6 @@ export class DetailsRefundComponent
         .valueChanges
         .filter(() => this.model.relatedDocument.get('relatedTicketDocumentNumber').value )
         .subscribe(data => {
-          console.log(this.model.relatedDocument
-            .get('relatedTicketDocumentNumber').value)
-
 
           if ( data && data.length < 10) {
             const txt = '0'.repeat(10 - data.length) + data;

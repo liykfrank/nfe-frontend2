@@ -1,3 +1,6 @@
+<div class="container-fluid custom-container">
+
+
 <div class="row">
 
   <div class="col-12">
@@ -215,8 +218,9 @@
           <div class="form-group col">
             <img *ngIf="!template.modeEdit && !template.agent" src="/assets/images/utils/ico_edit.svg" class="float-left ico-btn mr-3"
               (click)="view.toogleEdit(i)" />
-            <img *ngIf="template.modeEdit" src="/assets/images/utils/ico_save.svg" class="float-left ico-btn mt-1 pt-1" (click)="view.toogleEdit(i)"
-            />
+            <button *ngIf="template.modeEdit" class="btn btn-primary col-1" (click)="view.toogleEdit(i)" l10nTranslate>
+              save
+            </button>
             <img *ngIf="!template.modeEdit" src="/assets/images/utils/ico_trash.svg" class="float-left ico-btn" (click)="view.removeTemplate(i)"
             />
           </div>
@@ -234,4 +238,5 @@
 
   </div>
 
+</div>
 </div>

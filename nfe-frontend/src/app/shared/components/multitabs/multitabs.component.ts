@@ -74,7 +74,6 @@ export class MultitabsComponent implements OnInit, DoCheck {
       this.enable_tab[0] = false;
       this.tab_selected = 1;
     } else {
-      console.log('load all info here');
     }
 
     if (this.disabledDocuments) {

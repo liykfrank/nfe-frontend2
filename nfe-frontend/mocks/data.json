@@ -1,6 +1,211 @@
 {
-  "refund_indirect": [],
-  "acdm": [],
+  "refund-indirect": [],
+  "acdm": [
+    {
+      "id": 1,
+      "ticketDocumentNumber": "",
+      "dateOfIssue": "2018-09-06T17:34:29.025Z",
+      "isoCountryCode": "AA",
+      "billingPeriod": 2018066,
+      "agentCode": "78200021",
+      "agentRegistrationNumber": null,
+      "agentVatNumber": "00000078200021",
+      "transactionCode": "ADMA",
+      "airlineCode": "123",
+      "airlineRegistrationNumber": null,
+      "airlineVatNumber": "000000123",
+      "airlineContact": {
+        "contactName": "TEST ISUE ADMA",
+        "email": "TEST@TEST.es",
+        "phoneFaxNumber": "+34 666 666 666"
+      },
+      "concernsIndicator": "I",
+      "taxOnCommissionType": "",
+      "currency": {
+        "code": "ABC",
+        "decimals": 2
+      },
+      "netReporting": false,
+      "statisticalCode": "DOM",
+      "agentCalculations": {
+        "commission": 0,
+        "fare": 0,
+        "spam": 0,
+        "tax": 0,
+        "taxOnCommission": 0
+      },
+      "airlineCalculations": {
+        "commission": 0,
+        "fare": 1,
+        "spam": 0,
+        "tax": 0,
+        "taxOnCommission": 0
+      },
+      "taxMiscellaneousFees": [],
+      "amountPaidByCustomer": 1,
+      "regularized": false,
+      "dateOfIssueRelatedDocument": null,
+      "passenger": null,
+      "relatedTicketDocuments": [],
+      "reasonForMemoIssuanceCode": null,
+      "reasonForMemo": null,
+      "attachedFiles": [],
+      "comments": []
+    },
+    {
+      "id": 2,
+      "ticketDocumentNumber": "",
+      "dateOfIssue": "2018-09-06T17:34:35.537Z",
+      "isoCountryCode": "AA",
+      "billingPeriod": 2018066,
+      "agentCode": "78200021",
+      "agentRegistrationNumber": null,
+      "agentVatNumber": "00000078200021",
+      "transactionCode": "ADMD",
+      "airlineCode": "123",
+      "airlineRegistrationNumber": null,
+      "airlineVatNumber": "000000123",
+      "airlineContact": {
+        "contactName": "TEST ISUE ADMA",
+        "email": "TEST@TEST.es",
+        "phoneFaxNumber": "+34 666 666 666"
+      },
+      "concernsIndicator": "I",
+      "taxOnCommissionType": "",
+      "currency": {
+        "code": "ABC",
+        "decimals": 2
+      },
+      "netReporting": false,
+      "statisticalCode": "DOM",
+      "agentCalculations": {
+        "commission": 0,
+        "fare": 0,
+        "spam": 0,
+        "tax": 0,
+        "taxOnCommission": 0
+      },
+      "airlineCalculations": {
+        "commission": 0,
+        "fare": 1,
+        "spam": 0,
+        "tax": 0,
+        "taxOnCommission": 0
+      },
+      "taxMiscellaneousFees": [],
+      "amountPaidByCustomer": 1,
+      "regularized": false,
+      "dateOfIssueRelatedDocument": null,
+      "passenger": null,
+      "relatedTicketDocuments": [],
+      "reasonForMemoIssuanceCode": null,
+      "reasonForMemo": null,
+      "attachedFiles": [],
+      "comments": []
+    },
+    {
+      "id": 3,
+      "ticketDocumentNumber": "",
+      "dateOfIssue": "2018-09-06T17:34:43.790Z",
+      "isoCountryCode": "AA",
+      "billingPeriod": 2018066,
+      "agentCode": "78200021",
+      "agentRegistrationNumber": null,
+      "agentVatNumber": "00000078200021",
+      "transactionCode": "ACMA",
+      "airlineCode": "123",
+      "airlineRegistrationNumber": null,
+      "airlineVatNumber": "000000123",
+      "airlineContact": {
+        "contactName": "TEST ISUE ADMA",
+        "email": "TEST@TEST.es",
+        "phoneFaxNumber": "+34 666 666 666"
+      },
+      "concernsIndicator": "I",
+      "taxOnCommissionType": "",
+      "currency": {
+        "code": "ABC",
+        "decimals": 2
+      },
+      "netReporting": false,
+      "statisticalCode": "DOM",
+      "agentCalculations": {
+        "commission": 0,
+        "fare": 1,
+        "spam": 0,
+        "tax": 0,
+        "taxOnCommission": 0
+      },
+      "airlineCalculations": {
+        "commission": 0,
+        "fare": 0,
+        "spam": 0,
+        "tax": 0,
+        "taxOnCommission": 0
+      },
+      "taxMiscellaneousFees": [],
+      "amountPaidByCustomer": 1,
+      "regularized": false,
+      "dateOfIssueRelatedDocument": null,
+      "passenger": null,
+      "relatedTicketDocuments": [],
+      "reasonForMemoIssuanceCode": null,
+      "reasonForMemo": null,
+      "attachedFiles": [],
+      "comments": []
+    },
+    {
+      "id": 4,
+      "ticketDocumentNumber": "",
+      "dateOfIssue": "2018-09-06T17:34:50.406Z",
+      "isoCountryCode": "AA",
+      "billingPeriod": 2018066,
+      "agentCode": "78200021",
+      "agentRegistrationNumber": null,
+      "agentVatNumber": "00000078200021",
+      "transactionCode": "ACMD",
+      "airlineCode": "123",
+      "airlineRegistrationNumber": null,
+      "airlineVatNumber": "000000123",
+      "airlineContact": {
+        "contactName": "TEST ISUE ADMA",
+        "email": "TEST@TEST.es",
+        "phoneFaxNumber": "+34 666 666 666"
+      },
+      "concernsIndicator": "I",
+      "taxOnCommissionType": "",
+      "currency": {
+        "code": "ABC",
+        "decimals": 2
+      },
+      "netReporting": false,
+      "statisticalCode": "DOM",
+      "agentCalculations": {
+        "commission": 0,
+        "fare": 1,
+        "spam": 0,
+        "tax": 0,
+        "taxOnCommission": 0
+      },
+      "airlineCalculations": {
+        "commission": 0,
+        "fare": 0,
+        "spam": 0,
+        "tax": 0,
+        "taxOnCommission": 0
+      },
+      "taxMiscellaneousFees": [],
+      "amountPaidByCustomer": 1,
+      "regularized": false,
+      "dateOfIssueRelatedDocument": null,
+      "passenger": null,
+      "relatedTicketDocuments": [],
+      "reasonForMemoIssuanceCode": null,
+      "reasonForMemo": null,
+      "attachedFiles": [],
+      "comments": []
+    }
+  ],
   "user": {
     "name": "Accelya User",
     "lastname": "Accelya Group",
@@ -9,50 +214,7 @@
     "role": "AGENT",
     "iataCode": "78200021"
   },
-  "users-create": [
-    {
-      "address": {
-        "city": null,
-        "country": null,
-        "description": null,
-        "locality": null,
-        "zip": null
-      },
-      "email": "TEST1@TEST.ES",
-      "expiryDate": null,
-      "lastModifiedDate": null,
-      "lastname": "TEST1",
-      "name": "TEST1",
-      "organization": "TEST1",
-      "registerDate": null,
-      "telephone": "TEST1",
-      "userCode": "78200021",
-      "userType": "AGENT",
-      "username": "TEST1@TEST.ES",
-      "id": 1
-    },
-    {
-      "address": {
-        "city": "TEST2",
-        "country": "TEST2",
-        "description": null,
-        "locality": "TEST2",
-        "zip": "TEST2"
-      },
-      "email": "TEST2@TEST.ES",
-      "expiryDate": null,
-      "lastModifiedDate": null,
-      "lastname": "TEST2",
-      "name": "TEST2",
-      "organization": "TEST2",
-      "registerDate": null,
-      "telephone": "TEST2",
-      "userCode": "78200021",
-      "userType": "AGENT",
-      "username": "TEST2@TEST.ES",
-      "id": 2
-    }
-  ],
+  "users-create": [],
   "file": [
     {
       "id": 0,

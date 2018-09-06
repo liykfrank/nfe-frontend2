@@ -6,13 +6,13 @@
       [typingPattern]="typingPattern" [maxLength]="inputMaxTextLength" [formControlName]="controlName" type="text">
 
     <input [ngClass]="{'error': checkIfErrorExist()}"  *ngIf="type=='decimal'" class="form-control" decimalsFormatterDirective
-      [decimals]="decimalsNumber" [formControlName]="controlName" type="text">
+      [decimals]="decimalsNumber" [formControlName]="controlName" type="text" autocomplete="off">
 
     <input [ngClass]="{'error': checkIfErrorExist()}"  *ngIf="type=='regex'" bsplInputRegex [regexPattern]="typingPattern"
-     class="form-control" [formControlName]="controlName" [maxLength]="inputMaxTextLength" type="text">
+     class="form-control" [formControlName]="controlName" [maxLength]="inputMaxTextLength" type="text" autocomplete="off">
 
     <input [ngClass]="{'error': checkIfErrorExist()}"  *ngIf="!type" class="form-control" [formControlName]="controlName"
-      [maxLength]="inputMaxTextLength" type="text">
+      [maxLength]="inputMaxTextLength" type="text" autocomplete="off">
     <!-- Errors -->
     <div *ngIf="checkIfErrorExist()" class="tooltip-container">
       <bspl-field-error [errors]="groupForm.get(controlName).errors"></bspl-field-error>
