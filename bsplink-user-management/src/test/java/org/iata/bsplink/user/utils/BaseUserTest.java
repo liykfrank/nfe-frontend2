@@ -34,7 +34,7 @@ public abstract class BaseUserTest {
         user.setUserType(UserType.AIRLINE);
         user.setUserCode("code");
         user.setTelephone("654987321");
-        user.setOrganization("Organization");      
+        user.setOrganization("Organization");
 
         Address address = new Address();
         address.setDescription("Direction");
@@ -79,11 +79,12 @@ public abstract class BaseUserTest {
         assertEquals(user.getUsername(), userReturned.getUsername());
         assertEquals(user.getUserCode(), userReturned.getUserCode());
         assertEquals(user.getEmail(), userReturned.getEmail());
+        assertEquals(user.getTemplates(), userReturned.getTemplates());
     }
 
     /**
      * Common keycloak response assertions.
-     * 
+     *
      * @param keycloakUser UserRepresentation
      */
     public void commonResponseAssertions(UserRepresentation keycloakUser) {

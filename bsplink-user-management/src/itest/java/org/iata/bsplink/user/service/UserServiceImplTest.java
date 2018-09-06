@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -18,9 +19,12 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import org.iata.bsplink.commons.rest.exception.ApplicationInternalServerError;
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.iata.bsplink.user.Application;
+import org.iata.bsplink.user.model.entity.BsplinkTemplate;
 import org.iata.bsplink.user.model.entity.User;
 import org.iata.bsplink.user.model.entity.UserTemplate;
 import org.iata.bsplink.user.model.entity.UserType;
+import org.iata.bsplink.user.model.repository.BsplinkOptionRepository;
+import org.iata.bsplink.user.model.repository.BsplinkTemplateRepository;
 import org.iata.bsplink.user.model.repository.UserRepository;
 import org.iata.bsplink.user.model.repository.UserTemplateRepository;
 import org.iata.bsplink.user.utils.BaseUserTest;
@@ -50,8 +54,14 @@ public class UserServiceImplTest extends BaseUserTest {
     @Autowired
     private UserRepository userRepository;
 
-    @MockBean
+    @Autowired
     private UserTemplateRepository userTemplateRepository;
+
+    @Autowired
+    private BsplinkTemplateRepository bsplinkTemplateRepository;
+
+    @Autowired
+    private BsplinkOptionRepository bsplinkOptionRepository;
 
     @MockBean
     private KeycloakService keycloakService;
@@ -64,9 +74,9 @@ public class UserServiceImplTest extends BaseUserTest {
 
     @Before
     public void init() {
-        
+
         MockitoAnnotations.initMocks(this);
-        
+
         this.userService =
                 new UserServiceImpl(userRepository, userTemplateRepository, keycloakService);
         userPending = new User();
@@ -78,7 +88,7 @@ public class UserServiceImplTest extends BaseUserTest {
 
     /**
      * Get user test.
-     * 
+     *
      * @throws URISyntaxException Exception.
      */
     @Test
@@ -187,7 +197,7 @@ public class UserServiceImplTest extends BaseUserTest {
 
     /**
      * Update user test.
-     * 
+     *
      * @throws URISyntaxException Exception.
      */
     @Test
@@ -204,7 +214,7 @@ public class UserServiceImplTest extends BaseUserTest {
 
     /**
      * Delete user test.
-     * 
+     *
      * @throws URISyntaxException Exception.
      */
     @Test
@@ -233,19 +243,41 @@ public class UserServiceImplTest extends BaseUserTest {
 
     /**
      * Update user with templates.
+     * @throws URISyntaxException
      */
     @Test
-    public void testUpdateUserWithTemplates() {
+    public void testUpdateUserWithTemplates() throws URISyntaxException {
 
-        userPending.setTemplates(Arrays.asList(new UserTemplate()));
-        
-        User userReturned = userService.updateUser(userPending, userPending, errors);
+        userTemplateRepository.deleteAll();
+        bsplinkTemplateRepository.deleteAll();
+
+        BsplinkTemplate bsplinkTemplate = new BsplinkTemplate();
+
+        bsplinkTemplate.setId("TEMPLATE");
+        bsplinkTemplate.setUserTypes(Arrays.asList(UserType.BSP));
+        bsplinkTemplate.setOptions(Arrays.asList(
+                bsplinkOptionRepository.findById("FileDownload").get()));
+        bsplinkTemplateRepository.save(bsplinkTemplate);
+
+        UserTemplate userTemplate = new UserTemplate();
+        userTemplate.setId("USERTEMPLATE");
+        userTemplate.setTemplate(bsplinkTemplate.getId());
+        userTemplate.setIsoCountryCodes(Arrays.asList("HU"));
+
+        userPending.setUserType(UserType.BSP);
+
+        User userCreated = createUser(userPending);
+
+        userPending.setTemplates(new ArrayList<>());
+        userPending.getTemplates().add(userTemplate);
+
+        User userReturned = userService.updateUser(userCreated, userPending, errors);
 
         assertNotNull(userReturned);
         commonResponseAssertions(userPending, userReturned);
     }
-    
-    
+
+
     private User createUser(User user) throws URISyntaxException {
 
         ResponseBuilder responseBuilder = Response.created(new URI("mock-url"));
