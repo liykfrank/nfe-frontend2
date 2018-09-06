@@ -243,7 +243,6 @@ public class UserServiceImplTest extends BaseUserTest {
 
     /**
      * Update user with templates.
-     * @throws URISyntaxException
      */
     @Test
     public void testUpdateUserWithTemplates() throws URISyntaxException {
