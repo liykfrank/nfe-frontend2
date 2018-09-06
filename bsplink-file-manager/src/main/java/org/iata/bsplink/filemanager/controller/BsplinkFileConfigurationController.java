@@ -41,7 +41,7 @@ public class BsplinkFileConfigurationController {
      * BSPlink file configurations.
      */
     @ApiOperation(value = "Configurations for Filemanager")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Congiguration attributes")})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Configuration attributes")})
     @GetMapping()
     public ResponseEntity<BsplinkFileConfiguration> getConfig() {
         BsplinkFileConfiguration cfg = new BsplinkFileConfiguration();
