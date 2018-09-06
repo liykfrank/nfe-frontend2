@@ -21,7 +21,8 @@ export abstract class HttpServiceAbstract<T, K>  {
     return this.httpService.get(this.url, {responseType: 'text'});
   }
 
-  post(body: K, params?: Array<URLSearchParams>, search?: Array<URLSearchParams>): Observable<T> {
+  post(body: K, params?: Array<URLSearchParams>, addUrl?: string[]): Observable<T> {
+    const url = addUrl ? this.url.concat('/' + addUrl.join('/')) : this.url;
     return this.httpService.post<T>(this.url, JSON.stringify(body), { headers: { 'Content-Type': 'application/json' } });
   }
 

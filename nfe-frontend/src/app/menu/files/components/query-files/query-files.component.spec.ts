@@ -121,7 +121,6 @@ xdescribe('QueryFilesComponent', () => {
     expect(spyList.calls.any()).toBe(true, 'spi list called');
     expect(component.dataFiles).toBeDefined();
     expect(component.dataFiles.length).toBeGreaterThan(0);
-    console.log('size files ' + component.dataFiles.length);
   }));
 
   it('load data files on table', async(() => {
@@ -219,7 +218,6 @@ xdescribe('QueryFilesComponent', () => {
     fixture.detectChanges();
     expect(component.searchCl).toHaveBeenCalled();
     expect(spyList.calls.count()).toBe(2, 'spi list called');
-    console.log('list calls ' + spyList.calls.count());
   });
 
   it('should reset All Filters    ', () => {

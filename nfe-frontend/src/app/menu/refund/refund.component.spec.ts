@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { TranslationModule, TranslationService } from 'angular-l10n';
 import { of } from 'rxjs/observable/of';
 
@@ -19,6 +19,7 @@ import { RefundIndirectService } from './services/refund-indirect.service';
 import { ScreenType } from '../../shared/enums/screen-type.enum';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { RefundConfiguration } from './models/refund-configuration.model';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('RefundComponent', () => {
     let comp: RefundComponent;
@@ -43,6 +44,10 @@ describe('RefundComponent', () => {
     const currencyServiceStub = jasmine.createSpyObj<CurrencyService>('CurrencyService', ['getCurrencyState']);
     currencyServiceStub.getCurrencyState.and.returnValue(of(new Currency()));
 
+    const translationServiceStub = jasmine.createSpyObj<TranslationService>('TranslationService', ['translate', 'translationChanged']);
+    translationServiceStub.translate.and.returnValue(of('test'));
+    translationServiceStub.translationChanged.and.returnValue(of());
+
     beforeEach(() => {
         const utilsServiceStub = {
             touchAllForms: () => ({}),
@@ -53,9 +58,6 @@ describe('RefundComponent', () => {
             post: () => ({
                 subscribe: () => ({})
             })
-        };
-        const translationServiceStub = {
-            translate: () => ({})
         };
         const alertsServiceStub = {
             setAlertTranslate: () => ({}),
@@ -70,7 +72,9 @@ describe('RefundComponent', () => {
           imports: [
             HttpClientModule,
             TranslationModule.forRoot(l10nConfig),
-            IssueSharedModule
+            IssueSharedModule,
+            BrowserAnimationsModule,
+            NoopAnimationsModule
           ],
             declarations: [ RefundComponent ],
             schemas: [ NO_ERRORS_SCHEMA ],
@@ -103,11 +107,79 @@ describe('RefundComponent', () => {
     });
 
     describe('ngOnInit', () => {
-        it('makes expected calls', () => {
+
+        it('changeConfigurationByIso', () => {
             comp.ngOnInit();
-            expect(currencyServiceStub.getCurrencyState).toHaveBeenCalled();
             expect(refundConfigurationServiceStub.changeConfigurationByISO).toHaveBeenCalled();
         });
+
+        it('changeAgentAndAirlineSubscription toBeFalsy', () => {
+
+            const data = {
+                agentVatNumberEnabled: true,
+                companyRegistrationNumberEnabled: true,
+                airlineVatNumberEnabled: true
+
+            };
+            refundConfigurationServiceStub.getConfiguration.and.returnValue(of(data));
+            comp.ngOnInit();
+            expect(refundConfigurationServiceStub.getConfiguration).toHaveBeenCalled();
+            expect(comp.basicInfoRefundFormModel.agent.agentVatNumber.disabled).toBeFalsy();
+            expect(comp.basicInfoRefundFormModel.agent.agentRegistrationNumber.disabled).toBeFalsy();
+            expect(comp.basicInfoRefundFormModel.airline.airlineVatNumber.disabled).toBeFalsy();
+            expect(comp.basicInfoRefundFormModel.airline.airlineRegistrationNumber.disabled).toBeFalsy();
+        });
+
+        it('changeAgentAndAirlineSubscription toBeTruthy', () => {
+
+            const data = {
+                agentVatNumberEnabled: false,
+                companyRegistrationNumberEnabled: false,
+                airlineVatNumberEnabled: false
+
+            };
+            refundConfigurationServiceStub.getConfiguration.and.returnValue(of(data));
+            comp.ngOnInit();
+            expect(refundConfigurationServiceStub.getConfiguration).toHaveBeenCalled();
+            expect(comp.basicInfoRefundFormModel.agent.agentVatNumber.disabled).toBeTruthy();
+            expect(comp.basicInfoRefundFormModel.agent.agentRegistrationNumber.disabled).toBeTruthy();
+            expect(comp.basicInfoRefundFormModel.airline.airlineVatNumber.disabled).toBeTruthy();
+            expect(comp.basicInfoRefundFormModel.airline.airlineRegistrationNumber.disabled).toBeTruthy();
+        });
+
+
+        it('resumeBarSubscriptions with real value', fakeAsync(() => {
+            comp.ngOnInit();
+            comp.basicInfoRefundFormModel.agent.agentCode.setValue('7820001');
+            comp.basicInfoRefundFormModel.agent.agentControlDigit.setValue('1');
+            comp.basicInfoRefundFormModel.airline.airlineCode.setValue('123');
+            tick();
+            expect((comp.elementsResumeBar[3] as any).value).toBe('78200011');
+            expect((comp.elementsResumeBar[2] as any).value).toBe('123');
+        }));
+
+        it('resumeBarSubscriptions with value -', fakeAsync(() => {
+            comp.ngOnInit();
+            comp.basicInfoRefundFormModel.agent.agentCode.setValue('7820');
+            comp.basicInfoRefundFormModel.agent.agentControlDigit.setValue('1');
+            comp.basicInfoRefundFormModel.airline.airlineCode.setValue('1');
+            tick();
+            expect((comp.elementsResumeBar[3] as any).value).toBe('-');
+            expect((comp.elementsResumeBar[2] as any).value).toBe('-');
+        }));
+
+        it('totalAmountSubscription', fakeAsync(() => {
+            comp.ngOnInit();
+            comp.formOfPaymentRefundFormModel.totalAmount.setValue('1');
+            tick();
+            expect((comp.elementsResumeBar[6] as any).value.trim()).toBe('1');
+        }));
+
+        it('currencyStateSubscription', () => {
+            comp.ngOnInit();
+            expect(currencyServiceStub.getCurrencyState).toHaveBeenCalled();
+        });
+
     });
 
     describe('onReturnIssue', () => {

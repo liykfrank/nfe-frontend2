@@ -41,7 +41,7 @@ export class BsplInterceptor implements HttpInterceptor {
       (error: any) => {
         if (error instanceof HttpErrorResponse) {
           // this._checkRemoveSpinner();
-          if (error.status === 404) {
+          if (error.status === 404 || error.status == 500) {
             this._alertsService.setAlertTranslate(
               'ERROR404.title',
               'ERROR404.desc',
@@ -49,8 +49,6 @@ export class BsplInterceptor implements HttpInterceptor {
             );
           }
         }
-
-        console.log(error);
       }
     );
   }

@@ -1,14 +1,20 @@
 import { Component, DebugElement, Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 import { IdentifierDirective } from './identifier.directive';
 
 @Component({
-  template: `<div appIdentifier [formGroup]="test"> <input type="text" formControlName="elem"/> </div>`
+  template: `<div appIdentifier [formGroup]="test" [base]="'testname'">
+    <input formControlName="elem">
+  </div>`
 })
-class TestInputComponent {}
+class TestInputComponent {
+  test = new FormGroup({
+    elem: new FormControl()
+  });
+}
 
 describe('IdentifierDirective', () => {
   let component: TestInputComponent;
@@ -19,11 +25,18 @@ describe('IdentifierDirective', () => {
     'setProperty'
   ]);
 
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
-      declarations: [TestInputComponent, IdentifierDirective],
-      providers: [{ provide: Renderer2, useValue: rendererMock }]
+      providers: [
+        { provide: Renderer2, useValue: rendererMock }
+
+      ],
+      declarations: [
+        TestInputComponent,
+        IdentifierDirective
+      ]
     });
 
     fixture = TestBed.createComponent(TestInputComponent);
@@ -35,4 +48,5 @@ describe('IdentifierDirective', () => {
     const directive = new IdentifierDirective(rendererMock, inputEl);
     expect(directive).toBeTruthy();
   });
+
 });

@@ -8,6 +8,8 @@ import { Country } from '../../../../adm-acm/models/country.model';
 import { TemplateService } from '../../../services/template.service';
 import { ReactiveFormHandler } from '../../../../../shared/base/reactive-form-handler';
 import { CountryTerritoryService } from '../services/country-territory.service';
+import { UserMaintenanceService } from '../services/user-maintenance.service';
+import { UserInterface } from '../models/api/user.model';
 
 export class ModSubUserView extends ReactiveFormHandler<NewUserModel> implements OnDestroy {
 
@@ -30,7 +32,8 @@ export class ModSubUserView extends ReactiveFormHandler<NewUserModel> implements
 
     constructor(private _translationService: TranslationService,
         public templateService: TemplateService,
-        private countryTerritoryService: CountryTerritoryService) {
+        private countryTerritoryService: CountryTerritoryService,
+        private _userMaintenanceService: UserMaintenanceService) {
         super()/* istanbul ignore next */;
         this.load();
     }
@@ -43,6 +46,12 @@ export class ModSubUserView extends ReactiveFormHandler<NewUserModel> implements
     load() {
         this.loadControlForCountryTerritory();
         this.loadSwitchActive();
+
+        this._userMaintenanceService.getUser('c0658a16-d36c-4337-8ed7-2471bc188f34').subscribe(
+          user => {
+            this.populateForm(user);
+          }
+        );
     }
 
     // TEMPLATES
@@ -113,7 +122,20 @@ export class ModSubUserView extends ReactiveFormHandler<NewUserModel> implements
         return true;
     }
 
+    private populateForm(user: UserInterface): void {
+      this._model.name.setValue(user.name);
+      this._model.lastname.setValue(user.lastName);
+      this._model.username.setValue(user.username);
+      this._model.email.setValue(user.email);
+      this._model.organization.setValue(user.organization);
+      this._model.locality.setValue(user.address.locality);
+      this._model.city.setValue(user.address.city);
+      this._model.zip.setValue(user.address.zip);
+      this._model.country.setValue(user.address.country);
+      this._model.telephone.setValue(user.telephone);
+    }
+
     get model(): NewUserModel {
         return this._model;
     }
-}
+  }

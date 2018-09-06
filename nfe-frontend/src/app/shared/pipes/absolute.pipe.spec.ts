@@ -15,4 +15,10 @@ describe('AbsolutePipe', () => {
     const directive = new AbsolutePipe();
     expect(directive).toBeTruthy();
   });
+
+  it('transform', () => {
+    const pipe = new AbsolutePipe();
+    const number = 2;
+    expect(pipe.transform(number)).toBe(Math.abs(number));
+  });
 });

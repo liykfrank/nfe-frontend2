@@ -1,17 +1,17 @@
 .custom.ui-scrollpanel {
     border: none;
-    
+
     .ui-scrollpanel-wrapper {
         border: none;
     }
 
-    .ui-scrollpanel-bar { 
-        opacity: 1;  
+    .ui-scrollpanel-bar {
+        opacity: 0;
         width: 5px;
     }
 
-    .ui-scrollpanel-bar:hover {
-
+    &:hover .ui-scrollpanel-bar {
+      opacity: 1;
     }
 }
 

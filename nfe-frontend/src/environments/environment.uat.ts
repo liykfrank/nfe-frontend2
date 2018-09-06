@@ -34,6 +34,7 @@ export const environment = {
     },
     user: {
       user: '/assets/mocks/user.json',
+      userMaintenance: 'user/v1/users',
       createUser: 'user/v1/users',
       template: 'assets/mocks/templates.json',
       countryTerritory: 'assets/mocks/countries.json',

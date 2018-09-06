@@ -1,6 +1,6 @@
 import { NewUser } from './new-user.po';
 
-describe('new User', () => {
+xdescribe('new User', () => {
   const page = new NewUser();
 
   describe('new Agent', () => {

@@ -1,0 +1,17 @@
+{
+  "address":{
+    "city":"Madrid",
+    "country":"Spain",
+    "description":"C/ Martínez Villergas",
+    "locality":"Madrid",
+    "zip":"28027"
+  },
+  "email":"pedro@iberia.com",
+  "lastname":"Sánchez",
+  "name":"Pedro",
+  "organization":"Fake",
+  "telephone":"912386955",
+  "userCode":"075",
+  "userType":"Airline",
+  "username":"pedrosanchez@iberia.com"
+}

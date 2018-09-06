@@ -71,8 +71,18 @@ export class RefundComponent extends AbstractComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.refundConfigurationService.changeConfigurationByISO(this.user.isoc);
+    this.changeConfigurationByIso();
+    this.changeAgentAndAirlineSubscription();
+    this.resumeBarSubscriptions();
+    this.totalAmountSubscription();
+    this.currencyStateSubscription();
+  }
 
+  changeConfigurationByIso() {
+    this.refundConfigurationService.changeConfigurationByISO(this.user.isoc);
+  }
+
+  changeAgentAndAirlineSubscription() {
     this.subscriptions.push(
       this.refundConfigurationService.getConfiguration().subscribe(data => {
         this.basicInfoRefundFormModel.changeAgent(
@@ -85,7 +95,9 @@ export class RefundComponent extends AbstractComponent implements OnInit {
         );
       })
     );
+  }
 
+  resumeBarSubscriptions() {
     this.subscriptions.push(
       this.basicInfoRefundFormModel.basicInfoRefundGroup.valueChanges.subscribe(
         data => {
@@ -110,7 +122,9 @@ export class RefundComponent extends AbstractComponent implements OnInit {
         }
       )
     );
+  }
 
+  totalAmountSubscription() {
     this.subscriptions.push(
       this.formOfPaymentRefundFormModel.totalAmount.valueChanges.subscribe(
         () => {
@@ -118,11 +132,14 @@ export class RefundComponent extends AbstractComponent implements OnInit {
         }
       )
     );
-
-    this._currencyService
-      .getCurrencyState()
-      .subscribe(data => (this.currency = data));
   }
+
+  currencyStateSubscription(){
+    this._currencyService
+    .getCurrencyState()
+    .subscribe(data => (this.currency = data));
+  }
+
 
   onClickMoreDetails(event) {
     this.showMoreDetails = event;
@@ -344,8 +361,6 @@ export class RefundComponent extends AbstractComponent implements OnInit {
               forms.filter(x => x != null),
               err.error.validationErrors
             );
-
-            console.log(errors);
 
             let msg = '';
             for (const aux of errors) {

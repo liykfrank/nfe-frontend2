@@ -4,7 +4,7 @@ export class ArrayTemplateModel {
 
     modeEdit = false;
 
-    constructor(public template: TemplateModel, public arrCountries: Country[], public agent) {}
+    constructor(public template: TemplateModel, public arrCountries: Country[], public agent: boolean) {}
 
 
     getCountriesHtml() {
