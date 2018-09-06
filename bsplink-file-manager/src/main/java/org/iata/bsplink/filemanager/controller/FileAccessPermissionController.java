@@ -37,10 +37,10 @@ public class FileAccessPermissionController {
 
 
     /**
-     * XXX.
+     * Return File Access Permissions from the user.
      */
-    @ApiOperation(value = "XXX")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "XXX")})
+    @ApiOperation(value = "Get File Access Permissions by user")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @GetMapping(params = "user")
     public ResponseEntity<List<FileAccessPermission>> getByUser(
             @RequestParam(required = true) String user) {
@@ -50,10 +50,10 @@ public class FileAccessPermissionController {
 
 
     /**
-     * XXX.
+     * Return all File Access Permissions.
      */
-    @ApiOperation(value = "XXX")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "XXX")})
+    @ApiOperation(value = "Get all File Access Permissions")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @GetMapping()
     public ResponseEntity<List<FileAccessPermission>> getAll() {
 
@@ -62,10 +62,10 @@ public class FileAccessPermissionController {
 
 
     /**
-     * XXX.
+     * Return the File Access Permission with the indicated id.
      */
-    @ApiOperation(value = "XXX")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "XXX")})
+    @ApiOperation(value = "Get File Access Permissions by id")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @GetMapping("/{id}")
     public ResponseEntity<FileAccessPermission> get(
             @PathVariable("id") Optional<FileAccessPermission> optionalfileAccessPermission) {
@@ -79,10 +79,10 @@ public class FileAccessPermissionController {
 
 
     /**
-     * XXX.
+     * Delete the File Access Permissions with the indicated id.
      */
-    @ApiOperation(value = "XXX")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "XXX")})
+    @ApiOperation(value = "Delete a File Access Permission by id")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     @DeleteMapping("/{id}")
     public ResponseEntity<FileAccessPermission> delete(
             @NotBlank @PathVariable("id") Optional<FileAccessPermission> fileAccessPermission) {
@@ -98,10 +98,10 @@ public class FileAccessPermissionController {
 
 
     /**
-     * XXX.
+     * Create a File Access Permission.
      */
-    @ApiOperation(value = "XXX")
-    @ApiResponses(value = {@ApiResponse(code = 201, message = "XXX")})
+    @ApiOperation(value = "Create a File Access Permission")
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "Created")})
     @PostMapping()
     public ResponseEntity<Object> create(
             @Valid @RequestBody FileAccessPermission fileAccessPermission, Errors errors) {
