@@ -1,5 +1,6 @@
 package org.iata.bsplink.user.service;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -10,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -94,12 +96,34 @@ public class UserServiceImplTest extends BaseUserTest {
     @Test
     public void testGetUser() throws URISyntaxException {
 
-        createUser(userPending);
+        createUser(userPending, USER_ID);
 
         User userReturned = userService.getUser(USER_ID).get();
 
         commonResponseAssertions(userPending, userReturned);
 
+    }
+
+    /**
+     * Get users by type.
+     * 
+     * @throws URISyntaxException Exception.
+     */
+    @Test
+    public void testGetUserByType() throws URISyntaxException {
+
+        User firstUser = userPending;
+        createUser(firstUser, USER_ID);
+
+        User secondUser = userPending;
+        secondUser.setUsername(NEW_USERNAME);
+        secondUser.setId(NEW_USER_ID);        
+        createUser(secondUser, NEW_USER_ID);
+
+        List<User> listUsers = userService.findByUserType(UserType.AIRLINE);
+
+        assertFalse(listUsers.isEmpty());
+        assertEquals(2, listUsers.size());
     }
 
     /**
@@ -122,9 +146,9 @@ public class UserServiceImplTest extends BaseUserTest {
 
         ResponseBuilder responseBuilder = Response.created(new URI("mock-url"));
         when(keycloakService.createUser(userPending)).thenReturn(responseBuilder.build());
-        when(keycloakService.findUser(userPending)).thenReturn(getUserRepresentation());
+        when(keycloakService.findUser(userPending)).thenReturn(getUserRepresentation(USER_ID));
         when(keycloakService.changeUserStatus(userPending.getUsername(), true, errors))
-                .thenReturn(getUserRepresentation());
+                .thenReturn(getUserRepresentation(USER_ID));
 
         userService.createUser(userPending, errors);
         Optional<User> userSaved = userRepository.findById(USER_ID);
@@ -142,7 +166,7 @@ public class UserServiceImplTest extends BaseUserTest {
 
         ResponseBuilder responseBuilder = Response.serverError();
         when(keycloakService.createUser(userPending)).thenReturn(responseBuilder.build());
-        when(keycloakService.findUser(userPending)).thenReturn(getUserRepresentation());
+        when(keycloakService.findUser(userPending)).thenReturn(getUserRepresentation(USER_ID));
 
         userService.createUser(userPending, errors);
     }
@@ -173,8 +197,8 @@ public class UserServiceImplTest extends BaseUserTest {
         expectedException.expect(ApplicationValidationException.class);
         expectedException.expectMessage("Validation error");
 
-        createUser(userCreated);
-        when(keycloakService.findUser(userCreated)).thenReturn(getUserRepresentation());
+        createUser(userCreated, USER_ID);
+        when(keycloakService.findUser(userCreated)).thenReturn(getUserRepresentation(USER_ID));
 
         userService.createUser(userCreated, errors);
     }
@@ -188,7 +212,7 @@ public class UserServiceImplTest extends BaseUserTest {
 
         ResponseBuilder responseBuilder = Response.created(new URI("mock-url"));
         when(keycloakService.createUser(userPending)).thenReturn(responseBuilder.build());
-        when(keycloakService.findUser(userPending)).thenReturn(getUserRepresentation());
+        when(keycloakService.findUser(userPending)).thenReturn(getUserRepresentation(USER_ID));
         when(keycloakService.changeUserStatus(any(String.class), any(Boolean.class),
                 any(Errors.class))).thenReturn(null);
 
@@ -203,7 +227,7 @@ public class UserServiceImplTest extends BaseUserTest {
     @Test
     public void testUpdateUser() throws URISyntaxException {
 
-        User userCreated = createUser(userPending);
+        User userCreated = createUser(userPending, USER_ID);
 
         userService.updateUser(userCreated, setNewData(getBaseUser()), errors);
         Optional<User> userReturned = userRepository.findById(userCreated.getId());
@@ -220,7 +244,7 @@ public class UserServiceImplTest extends BaseUserTest {
     @Test
     public void testDeleteUser() throws URISyntaxException {
 
-        User userCreated = createUser(userPending);
+        User userCreated = createUser(userPending, USER_ID);
 
         userService.deleteUser(userCreated);
 
@@ -232,7 +256,7 @@ public class UserServiceImplTest extends BaseUserTest {
     @Test
     public void testDeleteUserFoundInKeycloak() throws URISyntaxException {
 
-        createUser(userPending);
+        createUser(userPending, USER_ID);
         when(keycloakService.findUser(userPending)).thenReturn(new UserRepresentation());
 
         userService.deleteUser(userPending);
@@ -265,24 +289,26 @@ public class UserServiceImplTest extends BaseUserTest {
 
         userPending.setUserType(UserType.BSP);
 
-        User userCreated = createUser(userPending);
+        User userCreated = createUser(userPending, USER_ID);
 
         userPending.setTemplates(new ArrayList<>());
         userPending.getTemplates().add(userTemplate);
 
         User userReturned = userService.updateUser(userCreated, userPending, errors);
 
+
         assertNotNull(userReturned);
         commonResponseAssertions(userPending, userReturned);
     }
 
 
-    private User createUser(User user) throws URISyntaxException {
+
+    private User createUser(User user, String userId) throws URISyntaxException {
 
         ResponseBuilder responseBuilder = Response.created(new URI("mock-url"));
-        when(keycloakService.findUser(user)).thenReturn(getUserRepresentation());
+        when(keycloakService.findUser(user)).thenReturn(getUserRepresentation(userId));
         when(keycloakService.changeUserStatus(user.getUsername(), true, errors))
-                .thenReturn(getUserRepresentation());
+                .thenReturn(getUserRepresentation(userId));
         when(keycloakService.createUser(user)).thenReturn(responseBuilder.build());
 
         return userService.createUser(user, errors);
@@ -295,9 +321,9 @@ public class UserServiceImplTest extends BaseUserTest {
         return newUser;
     }
 
-    private UserRepresentation getUserRepresentation() {
+    private UserRepresentation getUserRepresentation(String userId) {
         UserRepresentation userRepresentation = new UserRepresentation();
-        userRepresentation.setId(USER_ID);
+        userRepresentation.setId(userId);
         return userRepresentation;
     }
 

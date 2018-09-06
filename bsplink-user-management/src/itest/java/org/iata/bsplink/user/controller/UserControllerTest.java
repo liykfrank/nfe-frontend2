@@ -15,6 +15,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -116,6 +118,17 @@ public class UserControllerTest extends BaseUserTest {
 
         mockMvc.perform(get(GET_USER_URL, USER_ID))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    public void getUsersByTypeTest() throws Exception {
+
+        when(userService.findByUserType(UserType.AGENT)).thenReturn(getUsersList());
+
+        mockMvc.perform(get(BASE_USER_URL).param("userType", UserType.AGENT.name()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().json(MAPPER.writer().writeValueAsString(getUsersList())))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
     @Test

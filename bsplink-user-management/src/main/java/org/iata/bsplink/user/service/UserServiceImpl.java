@@ -17,6 +17,7 @@ import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.iata.bsplink.user.model.entity.User;
 import org.iata.bsplink.user.model.entity.UserStatus;
 import org.iata.bsplink.user.model.entity.UserTemplate;
+import org.iata.bsplink.user.model.entity.UserType;
 import org.iata.bsplink.user.model.repository.UserRepository;
 import org.iata.bsplink.user.model.repository.UserTemplateRepository;
 import org.iata.bsplink.user.utils.UserUtils;
@@ -65,6 +66,11 @@ public class UserServiceImpl implements UserService {
         log.info("Getting user with id: " + userId);
 
         return userRepository.findById(userId);
+    }
+    
+    @Override
+    public List<User> findByUserType(UserType userType) {
+        return userRepository.findByUserType(userType);
     }
 
     /**
@@ -215,5 +221,5 @@ public class UserServiceImpl implements UserService {
 
             log.info(USER_DELETED);
         }
-    }
+    }   
 }

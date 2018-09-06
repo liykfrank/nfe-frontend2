@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -14,6 +15,7 @@ import lombok.extern.java.Log;
 
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.iata.bsplink.user.model.entity.User;
+import org.iata.bsplink.user.model.entity.UserType;
 import org.iata.bsplink.user.service.UserService;
 import org.iata.bsplink.user.validation.AgentValidator;
 import org.iata.bsplink.user.validation.AirlineValidator;
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -66,7 +69,27 @@ public class UserController {
                         .ifPresent(o -> binder.addValidators(validator)));
     }
 
+    /**
+     * Returns all found users by user type.  
+     * @param userType type.
+     * @return List of users.
+     */
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+    @ApiImplicitParam(name = "userType", value = "User type to filter by", required = true,
+            type = "UserType")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Users found"),
+            @ApiResponse(code = 400, message = "Invalid user type")})
+    public List<User> getUsers(
+            @RequestParam(name = "userType", required = true) UserType userType) {
 
+        log.info("received request for getting users with user type: {}" + userType);
+
+        List<User> users = userService.findByUserType(userType);
+
+        log.info("responding with users: " + users);
+
+        return userService.findByUserType(userType);
+    }
 
     /**
      * Exposes a REST endpoint that returns the user matching the provided id.
