@@ -18,12 +18,12 @@ public class UserUtils {
 
         oldUser.setEmail(newUser.getEmail());
         oldUser.setExpiryDate(newUser.getExpiryDate());
-        oldUser.setUserType(newUser.getUserType());
         oldUser.setUserCode(newUser.getUserCode());
         oldUser.setName(newUser.getName());
         oldUser.setLastName(newUser.getLastName());
         oldUser.setTelephone(newUser.getTelephone());
         oldUser.setOrganization(newUser.getOrganization());
+        oldUser.setTemplates(newUser.getTemplates());
         Address address = newUser.getAddress();
         address.setId(oldUser.getAddress() != null ? oldUser.getAddress().getId() : null);
         oldUser.setAddress(address);
