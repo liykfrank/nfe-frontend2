@@ -42,6 +42,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-devtools')
 	compile('org.springframework.boot:spring-boot-starter-security')
+	compile('org.springframework.cloud:spring-cloud-starter-openfeign:2.0.0.RELEASE')
 	compile('org.keycloak:keycloak-spring-boot-starter:4.2.1.Final')
 	compile('io.springfox:springfox-swagger2:2.8.0')
 	compile('io.springfox:springfox-swagger-ui:2.8.0')
@@ -53,6 +54,7 @@ dependencies {
 	runtime('org.postgresql:postgresql')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('commons-io:commons-io:2.6')
+    testCompile('nl.jqno.equalsverifier:equalsverifier:2.4.6')
 }
 
 apply from: 'gradle/scripts/itest.gradle'

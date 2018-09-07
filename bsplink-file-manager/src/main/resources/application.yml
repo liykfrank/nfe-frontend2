@@ -49,3 +49,10 @@ keycloak:
   realm: 
   resource: 
   bearer-only: true
+  
+###
+#  Feign clients
+###
+feign:
+  users:
+    url: http://localhost:8085/v1/users

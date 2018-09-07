@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -21,12 +22,14 @@ import org.iata.bsplink.filemanager.exception.BsplinkValidationException;
 import org.iata.bsplink.filemanager.model.entity.FileAccessPermission;
 import org.iata.bsplink.filemanager.model.entity.FileAccessType;
 import org.iata.bsplink.filemanager.model.repository.FileAccessPermissionRepository;
+import org.iata.bsplink.filemanager.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -51,6 +54,9 @@ public class FileAccessPermissionControllerTest {
 
     @Autowired
     private ObjectMapper mapper;
+
+    @MockBean
+    private UserService userService;
 
 
     @Before
@@ -134,6 +140,7 @@ public class FileAccessPermissionControllerTest {
     public void testCreate() throws Exception {
 
         FileAccessPermission fap = faps().get(0);
+        when(userService.existsUser(fap.getUser())).thenReturn(true);
 
         String json = mapper.writeValueAsString(fap);
 
@@ -152,6 +159,7 @@ public class FileAccessPermissionControllerTest {
     public void testCreateReturnsValue() throws Exception {
 
         FileAccessPermission fap = faps().get(0);
+        when(userService.existsUser(fap.getUser())).thenReturn(true);
 
         String json = mockMvc.perform(post(BASE_URL)
                 .content(mapper.writeValueAsString(fap))
@@ -169,6 +177,7 @@ public class FileAccessPermissionControllerTest {
     public void testConflict() throws Exception {
 
         FileAccessPermission fap = savedFaps().get(0);
+        when(userService.existsUser(fap.getUser())).thenReturn(true);
 
         String json = mapper.writeValueAsString(fap);
 
@@ -190,6 +199,24 @@ public class FileAccessPermissionControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.validationErrors[0].fieldName",
                         equalTo("isoCountryCode")));
+    }
+
+
+    @Test
+    public void testBadRequestUserNotFound() throws Exception {
+
+        String userNotFound = "userNotFound";
+
+        FileAccessPermission fap = faps().get(0);
+
+        fap.setUser(userNotFound);
+
+        String json = mapper.writeValueAsString(fap);
+
+        mockMvc.perform(post(BASE_URL).content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.validationErrors[0].fieldName",
+                        equalTo("user")));
     }
 
 

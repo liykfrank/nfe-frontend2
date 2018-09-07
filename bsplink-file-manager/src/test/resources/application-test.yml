@@ -47,4 +47,10 @@ app:
         directory: 
         protocol: local
         port:
-        
+          
+###
+#  Feign clients
+###
+feign:
+  users:
+    url: http://localhost:8085/v1/users

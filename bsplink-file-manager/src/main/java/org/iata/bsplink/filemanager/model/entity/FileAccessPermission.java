@@ -22,7 +22,7 @@ public class FileAccessPermission {
     private Long id;
 
     @NotNull
-    @Column(name = "user_id")
+    @Column(name = "user_id", length = 36)
     private String user;
 
     @ApiModelProperty(value = "ISO Country Code, two letter code", required = true)
@@ -31,11 +31,13 @@ public class FileAccessPermission {
     @Pattern(regexp = "[A-Z][A-Z0-9]")
     private String isoCountryCode;
 
+    @ApiModelProperty(value = "File descriptor, two letter code", required = true)
     @NotNull
     @Column(length = 2)
     @Pattern(regexp = "[a-z0-9]{2}")
     private String fileType;
 
+    @ApiModelProperty(value = "File Access Type (READ/ WRITE)", required = true)
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(length = 5)

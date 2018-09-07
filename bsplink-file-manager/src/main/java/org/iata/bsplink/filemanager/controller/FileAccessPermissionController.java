@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.iata.bsplink.filemanager.model.entity.FileAccessPermission;
 import org.iata.bsplink.filemanager.service.FileAccessPermissionService;
+import org.iata.bsplink.filemanager.validation.FileAccessPermissionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,9 @@ public class FileAccessPermissionController {
 
     @Autowired
     private FileAccessPermissionService service;
+
+    @Autowired
+    private FileAccessPermissionValidator validator;
 
 
     /**
@@ -105,6 +109,8 @@ public class FileAccessPermissionController {
     @PostMapping()
     public ResponseEntity<Object> create(
             @Valid @RequestBody FileAccessPermission fileAccessPermission, Errors errors) {
+
+        validator.validate(fileAccessPermission, errors);
 
         if (errors.hasErrors()) {
 

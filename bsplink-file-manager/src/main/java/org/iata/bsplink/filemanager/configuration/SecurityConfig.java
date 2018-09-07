@@ -24,7 +24,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     /**
      * Builder.
-     * 
+     *
      * @param auth AuthenticationManagerBuilder
      */
     @Autowired
