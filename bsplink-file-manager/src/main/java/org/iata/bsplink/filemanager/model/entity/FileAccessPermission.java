@@ -22,6 +22,7 @@ public class FileAccessPermission {
     private Long id;
 
     @NotNull
+    @Column(name = "user_id")
     private String user;
 
     @ApiModelProperty(value = "ISO Country Code, two letter code", required = true)
