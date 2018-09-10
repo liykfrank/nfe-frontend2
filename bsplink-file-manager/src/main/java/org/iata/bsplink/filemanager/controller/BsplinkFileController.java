@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,10 +18,12 @@ import lombok.extern.apachecommons.CommonsLog;
 import org.iata.bsplink.filemanager.exception.BsplinkValidationException;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFile;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFileStatus;
+import org.iata.bsplink.filemanager.model.entity.FileAccessType;
 import org.iata.bsplink.filemanager.pojo.BsplinkFileSearchCriteria;
 import org.iata.bsplink.filemanager.response.EntityActionResponse;
 import org.iata.bsplink.filemanager.response.SimpleResponse;
 import org.iata.bsplink.filemanager.service.BsplinkFileService;
+import org.iata.bsplink.filemanager.service.FileAccessPermissionService;
 import org.iata.bsplink.filemanager.service.MultipartFileService;
 import org.iata.bsplink.filemanager.utils.BsplinkFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +59,10 @@ public class BsplinkFileController {
 
     @Autowired
     private BsplinkFileUtils bsplinkFileUtils;
+
+    @Autowired
+    private FileAccessPermissionService fileAccessPermissionService;
+
 
     /**
      * Returns a list of files.
@@ -97,10 +104,18 @@ public class BsplinkFileController {
             @ApiResponse(code = 400, message = "Invalid ID supplied"),
             @ApiResponse(code = 404, message = "File not found")})
     public ResponseEntity<Object> downloadFile(@PathVariable("id") BsplinkFile bsFile,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            Principal principal) {
 
         if (bsFile == null) {
+
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (!fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
+                bsFile, FileAccessType.READ, principal.getName())) {
+
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         if (bsFile.getStatus().equals(BsplinkFileStatus.TRASHED)) {
@@ -122,6 +137,7 @@ public class BsplinkFileController {
 
     /**
      * Returns a zip file.
+     * @param authentication
      *
      */
     @GetMapping("/zip")
@@ -135,10 +151,16 @@ public class BsplinkFileController {
             @ApiResponse(code = 400, message = "Invalid ids supplied"),
             @ApiResponse(code = 404, message = "File not found")})
     public ResponseEntity<Object> downloadZip(@RequestParam("id") List<BsplinkFile> bsFileList,
-            HttpServletResponse response) {
+            HttpServletResponse response, Principal principal) {
 
         if (!bsplinkFileUtils.checkIfListIsNotEmpty(bsFileList)) {
             return new ResponseEntity<>("Files not found", HttpStatus.NOT_FOUND);
+        }
+
+        if (!fileAccessPermissionService.isBsplinkFilesAccessPermittedForUser(
+                bsFileList, FileAccessType.READ, principal.getName())) {
+
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         try {
@@ -168,10 +190,17 @@ public class BsplinkFileController {
             @ApiResponse(code = 400, message = "Bad request"),
             @ApiResponse(code = 500, message = "Internal server error")})
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteOneFile(@PathVariable("id") BsplinkFile bsFile) {
+    public ResponseEntity<String> deleteOneFile(
+            @PathVariable("id") BsplinkFile bsFile, Principal principal) {
 
         if (bsFile == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (!fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
+                bsFile, FileAccessType.WRITE, principal.getName())) {
+
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         if (BsplinkFileStatus.DELETED.equals(bsFile.getStatus())
@@ -200,9 +229,10 @@ public class BsplinkFileController {
     @DeleteMapping()
     @Transactional
     public ResponseEntity<List<EntityActionResponse<Long>>> deleteMultipleFiles(
-            @RequestParam(value = "id", required = true) List<Long> ids) {
+            @RequestParam(value = "id", required = true) List<Long> ids, Principal principal) {
 
-        return new ResponseEntity<>(bsplinkFileService.deleteMultipleFiles(ids),
+        return new ResponseEntity<>(
+                bsplinkFileService.deleteMultipleFiles(ids, principal.getName()),
                 HttpStatus.MULTI_STATUS);
     }
 
@@ -215,14 +245,16 @@ public class BsplinkFileController {
             message = "An array with an HTTP status code per file representing the upload "
                     + "result.")})
     public ResponseEntity<List<SimpleResponse>> send(
-            @RequestParam("file") List<MultipartFile> files, WebRequest webRequest) {
+            @RequestParam("file") List<MultipartFile> files,
+            WebRequest webRequest,
+            Principal principal) {
 
         if (files.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.emptyList());
         }
 
         return ResponseEntity.status(HttpStatus.MULTI_STATUS)
-                .body(multipartFileSaveService.saveFiles(files));
+                .body(multipartFileSaveService.saveFiles(files, principal.getName()));
     }
 
     /**
@@ -240,5 +272,17 @@ public class BsplinkFileController {
         bsplinkFileService.save(bsFile);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("File registered");
+    }
+
+
+    /**
+     * Hola.
+     */
+    //TODO remove
+    @GetMapping("/hola")
+    public ResponseEntity<String> hola(Principal principal) {
+        String p = principal.getName();
+
+        return ResponseEntity.status(HttpStatus.OK).body("hola " + p);
     }
 }

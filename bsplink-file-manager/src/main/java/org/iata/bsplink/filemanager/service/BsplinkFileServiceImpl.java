@@ -10,6 +10,7 @@ import lombok.extern.apachecommons.CommonsLog;
 import org.iata.bsplink.filemanager.exception.BsplinkFileManagerException;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFile;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFileStatus;
+import org.iata.bsplink.filemanager.model.entity.FileAccessType;
 import org.iata.bsplink.filemanager.model.repository.BsplinkFileRepository;
 import org.iata.bsplink.filemanager.pojo.BsplinkFileSearchCriteria;
 import org.iata.bsplink.filemanager.response.EntityActionResponse;
@@ -25,11 +26,19 @@ import org.springframework.stereotype.Service;
 public class BsplinkFileServiceImpl implements BsplinkFileService {
     private BsplinkFileRepository bsplinkFileRepository;
     private BsplinkFileUtils bsplinkFileUtils;
+    private FileAccessPermissionService fileAccessPermissionService;
 
-    public BsplinkFileServiceImpl(BsplinkFileRepository bsplinkFileRepository,
-            BsplinkFileUtils bsplinkFileUtils) {
+    /**
+     * Creates instance of a Bsplink File Service.
+     */
+    public BsplinkFileServiceImpl(
+            BsplinkFileRepository bsplinkFileRepository,
+            BsplinkFileUtils bsplinkFileUtils,
+            FileAccessPermissionService fileAccessPermissionService) {
+
         this.bsplinkFileRepository = bsplinkFileRepository;
         this.bsplinkFileUtils = bsplinkFileUtils;
+        this.fileAccessPermissionService = fileAccessPermissionService;
     }
 
     @Override
@@ -102,7 +111,7 @@ public class BsplinkFileServiceImpl implements BsplinkFileService {
     }
 
     @Override
-    public List<EntityActionResponse<Long>> deleteMultipleFiles(List<Long> ids) {
+    public List<EntityActionResponse<Long>> deleteMultipleFiles(List<Long> ids, String user) {
 
         List<EntityActionResponse<Long>> result = new ArrayList<>();
 
@@ -116,6 +125,9 @@ public class BsplinkFileServiceImpl implements BsplinkFileService {
 
                     if (BsplinkFileStatus.DELETED.equals(optionalFile.get().getStatus())) {
                         result.add(new EntityActionResponse<>(id, HttpStatus.BAD_REQUEST));
+                    } else if (!fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
+                            optionalFile.get(), FileAccessType.WRITE, user)) {
+                        result.add(new EntityActionResponse<>(id, HttpStatus.UNAUTHORIZED));
                     } else {
                         BsplinkFile file = optionalFile.get();
                         deleteOneFile(file);
@@ -139,5 +151,6 @@ public class BsplinkFileServiceImpl implements BsplinkFileService {
 
         return result;
     }
+
 
 }

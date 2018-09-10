@@ -3,6 +3,8 @@ package org.iata.bsplink.filemanager.controller;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -11,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +21,12 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.iata.bsplink.filemanager.configuration.ApplicationConfiguration;
 import org.iata.bsplink.filemanager.configuration.BsplinkFileBasicConfig;
-import org.iata.bsplink.filemanager.configuration.SecurityConfig;
 import org.iata.bsplink.filemanager.exception.BsplinkValidationException;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFile;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFileStatus;
 import org.iata.bsplink.filemanager.model.repository.BsplinkFileRepository;
 import org.iata.bsplink.filemanager.service.BsplinkFileConfigService;
+import org.iata.bsplink.filemanager.service.FileAccessPermissionService;
 import org.iata.bsplink.filemanager.utils.BsplinkFileUtils;
 import org.iata.bsplink.yadeutils.YadeUtils;
 import org.junit.After;
@@ -34,7 +37,6 @@ import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -67,23 +69,36 @@ public class BsplinkFileControllerDownloadTest {
     @MockBean
     private YadeUtils yadeUtils;
 
+    @MockBean
+    private FileAccessPermissionService fileAccessPermissionService;
+
+    @MockBean
+    private Principal principal;
+
     @Value("${app.local_downloaded_files_directory}")
     private String localDownloadedFilesDirectory;
 
     private Path uploadedFilesDirectory;
 
     private static File dirUploadedFiles;
-    
+
     @Autowired
     protected WebApplicationContext webAppContext;
 
     @Before
     public void setUp() throws IOException, BsplinkValidationException {
-        
+
         MockitoAnnotations.initMocks(this);
 
+        when(fileAccessPermissionService.isFileAccessPermittedForUser(any(), any(), any()))
+                .thenReturn(true);
+        when(fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(any(), any(), any()))
+                .thenReturn(true);
+        when(fileAccessPermissionService.isBsplinkFilesAccessPermittedForUser(any(), any(), any()))
+                .thenReturn(true);
+
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
-        
+
         File uploadFolder = new File(applicationConfiguration.getLocalUploadedFilesDirectory());
         if (uploadFolder.exists()) {
             FileUtils.cleanDirectory(uploadFolder);
@@ -138,7 +153,7 @@ public class BsplinkFileControllerDownloadTest {
     @Test
     public void testDownloadSingleFile() throws Exception {
 
-        mockMvc.perform(get("/v1/files/1")).andExpect(status().isOk());
+        mockMvc.perform(get("/v1/files/1").principal(principal)).andExpect(status().isOk());
         assertThat(getBspinkFileStatus(1L), equalTo(BsplinkFileStatus.DOWNLOADED.toString()));
 
     }
@@ -146,28 +161,29 @@ public class BsplinkFileControllerDownloadTest {
     @Test
     public void testDownloadSingleFileNotFound() throws Exception {
 
-        mockMvc.perform(get("/v1/files/1335")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/v1/files/1335").principal(principal)).andExpect(status()
+                .isNotFound());
 
     }
 
     @Test
     public void testDownloadSingleFileBadRequest() throws Exception {
 
-        mockMvc.perform(get("/v1/files/notValidId")).andExpect(status().isBadRequest());
-
+        mockMvc.perform(get("/v1/files/notValidId").principal(principal)).andExpect(status()
+                .isBadRequest());
     }
 
     @Test
     public void testDownloadSingleFileThrowsException() throws Exception {
 
-        mockMvc.perform(get("/v1/files/15")).andExpect(status().isInternalServerError());
-
+        mockMvc.perform(get("/v1/files/15").principal(principal)).andExpect(status()
+                .isInternalServerError());
     }
 
     @Test
     public void testDownloadZipFileOneFile() throws Exception {
 
-        mockMvc.perform(get("/v1/files/zip?id=1")).andExpect(status().isOk());
+        mockMvc.perform(get("/v1/files/zip?id=1").principal(principal)).andExpect(status().isOk());
 
         assertThat(getBspinkFileStatus(1L), equalTo(BsplinkFileStatus.DOWNLOADED.toString()));
     }
@@ -175,7 +191,8 @@ public class BsplinkFileControllerDownloadTest {
     @Test
     public void testDownloadZipFileSeveralFiles() throws Exception {
 
-        mockMvc.perform(get("/v1/files/zip?id=1&id=2&id=3")).andExpect(status().isOk());
+        mockMvc.perform(get("/v1/files/zip?id=1&id=2&id=3").principal(principal))
+                .andExpect(status().isOk());
 
         assertThat(getBspinkFileStatus(1L), equalTo(BsplinkFileStatus.DOWNLOADED.toString()));
         assertThat(getBspinkFileStatus(2L), equalTo(BsplinkFileStatus.DOWNLOADED.toString()));
@@ -185,21 +202,24 @@ public class BsplinkFileControllerDownloadTest {
     @Test
     public void testDownloadZipFileBadRequest() throws Exception {
 
-        mockMvc.perform(get("/v1/files/zip")).andExpect(status().isBadRequest());
+        mockMvc.perform(get("/v1/files/zip").principal(principal)).andExpect(status()
+                .isBadRequest());
 
     }
 
     @Test
     public void testDownloadZipFileNotFound() throws Exception {
 
-        mockMvc.perform(get("/v1/files/zip?id=100")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/v1/files/zip?id=100").principal(principal)).andExpect(status()
+                .isNotFound());
 
     }
 
     @Test
     public void testDownloadZipFileThrowsException() throws Exception {
 
-        mockMvc.perform(get("/v1/files/zip?id=15666")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/v1/files/zip?id=15666").principal(principal)).andExpect(status()
+                .isNotFound());
 
     }
 
@@ -209,7 +229,8 @@ public class BsplinkFileControllerDownloadTest {
         cfg.setMaxDownloadFilesNumber(2);
         bsplinkFileConfigurationService.update(cfg);
 
-        mockMvc.perform(get("/v1/files/zip?id=1&id=3&id=5")).andExpect(status().isBadRequest())
+        mockMvc.perform(get("/v1/files/zip?id=1&id=3&id=5").principal(principal))
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error",
                         containsString(BsplinkFileUtils.ERROR_MSG_NUMBER_EXCEEDED)));
     }
@@ -220,7 +241,8 @@ public class BsplinkFileControllerDownloadTest {
         cfg.setMaxDownloadTotalFileSizeForMultipleFiles(1L);
         bsplinkFileConfigurationService.update(cfg);
 
-        mockMvc.perform(get("/v1/files/zip?id=1&id=3&id=5")).andExpect(status().isBadRequest())
+        mockMvc.perform(get("/v1/files/zip?id=1&id=3&id=5").principal(principal))
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error",
                         containsString(BsplinkFileUtils.ERROR_MSG_SIZE_EXCEEDED)));
     }
@@ -231,7 +253,8 @@ public class BsplinkFileControllerDownloadTest {
         cfg.setMaxDownloadFilesNumber(-2);
         bsplinkFileConfigurationService.update(cfg);
 
-        mockMvc.perform(get("/v1/files/zip?id=1&id=2&id=3&id=4")).andExpect(status().isOk());
+        mockMvc.perform(get("/v1/files/zip?id=1&id=2&id=3&id=4").principal(principal))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -240,7 +263,7 @@ public class BsplinkFileControllerDownloadTest {
         cfg.setMaxDownloadTotalFileSizeForMultipleFiles(-1L);
         bsplinkFileConfigurationService.update(cfg);
 
-        mockMvc.perform(get("/v1/files/zip?id=1&id=2&id=3&id=4"))
+        mockMvc.perform(get("/v1/files/zip?id=1&id=2&id=3&id=4").principal(principal))
                 .andExpect(status().isBadRequest());
     }
 
@@ -304,5 +327,4 @@ public class BsplinkFileControllerDownloadTest {
 
         return listbsplinkFiles;
     }
-
 }

@@ -28,13 +28,20 @@ public class BsplinkFileServiceImplTest {
     private BsplinkFileRepository bsplinkFileRepository;
     private BsplinkFileService bsplinkFileService;
     private BsplinkFileUtils bsplinkFileUtils;
+    private FileAccessPermissionService fileAccessPermissionService;
+    private String user;
 
     @Before
     public void setUp() {
-
+        user = "USER";
         bsplinkFileRepository = mock(BsplinkFileRepository.class);
         bsplinkFileUtils = mock(BsplinkFileUtils.class);
-        bsplinkFileService = new BsplinkFileServiceImpl(bsplinkFileRepository, bsplinkFileUtils);
+        fileAccessPermissionService = mock(FileAccessPermissionService.class);
+
+        when(fileAccessPermissionService.existsByUserAndIsoCountryCodeAndFileTypeAndAccess(any()))
+                .thenReturn(true);
+        bsplinkFileService = new BsplinkFileServiceImpl(
+                bsplinkFileRepository, bsplinkFileUtils, fileAccessPermissionService);
     }
 
     @Test
@@ -53,7 +60,9 @@ public class BsplinkFileServiceImplTest {
 
         List<Long> ids = Arrays.asList(1L, 2L);
 
-        List<EntityActionResponse<Long>> result = bsplinkFileService.deleteMultipleFiles(ids);
+        when(fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(any(), any(), any()))
+            .thenReturn(true);
+        List<EntityActionResponse<Long>> result = bsplinkFileService.deleteMultipleFiles(ids, user);
 
         for (EntityActionResponse<Long> response : result) {
             assertThat(response.getStatus(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR.value()));
@@ -75,7 +84,7 @@ public class BsplinkFileServiceImplTest {
 
         List<Long> ids = Arrays.asList(1L, 2L);
 
-        List<EntityActionResponse<Long>> result = bsplinkFileService.deleteMultipleFiles(ids);
+        List<EntityActionResponse<Long>> result = bsplinkFileService.deleteMultipleFiles(ids, user);
 
         for (EntityActionResponse<Long> response : result) {
             assertThat(response.getStatus(), equalTo(HttpStatus.BAD_REQUEST.value()));
@@ -149,7 +158,7 @@ public class BsplinkFileServiceImplTest {
 
         return optionalFile;
     }
-    
+
     private List<BsplinkFile> getList() {
         List<BsplinkFile> list = new ArrayList<>();
         list.add(getBspLinkFileMock().get());

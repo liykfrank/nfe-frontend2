@@ -3,6 +3,7 @@ package org.iata.bsplink.filemanager.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -20,7 +21,6 @@ import org.apache.commons.io.FileUtils;
 import org.iata.bsplink.filemanager.configuration.ApplicationConfiguration;
 import org.iata.bsplink.filemanager.configuration.BsplinkFileBasicConfig;
 import org.iata.bsplink.filemanager.exception.BsplinkValidationException;
-import org.iata.bsplink.filemanager.model.entity.BsplinkFileStatus;
 import org.iata.bsplink.filemanager.response.SimpleResponse;
 import org.iata.bsplink.yadeutils.YadeUtils;
 import org.junit.After;
@@ -53,10 +53,20 @@ public class MultipartFileServiceTest {
     private BsplinkFileConfigService bsplinkFileConfigurationService;
 
     @MockBean
+    private FileAccessPermissionService fileAccessPermissionService;
+
+    @MockBean
     private YadeUtils yadeUtils;
+
+    private String user;
 
     @Before
     public void setUp() throws IOException, BsplinkValidationException {
+
+        user = "USER";
+        when(fileAccessPermissionService.isFileAccessPermittedForUser(any(), any(), any()))
+                .thenReturn(true);
+
         createUploadFolder();
         updateBsplinkFileBasicConfig();
     }
@@ -83,10 +93,8 @@ public class MultipartFileServiceTest {
                 new MockMultipartFile("file", fileNames[2], "text/plain",
                         fileTextContents[2].getBytes()));
 
-        String requestPathPrefix = "/xxx/files";
-
         List<SimpleResponse> simpleResponses =
-                multipartFileService.saveFiles(multipartFiles);
+                multipartFileService.saveFiles(multipartFiles, user);
 
         assertEquals(3, simpleResponses.size());
 
@@ -119,7 +127,7 @@ public class MultipartFileServiceTest {
         assertEquals(Files.size(path.resolve(fileNames[0])), fileTextContents[0].getBytes().length);
 
         List<SimpleResponse> simpleResponsesAlreadySaved =
-                multipartFileService.saveFiles(multipartFiles);
+                multipartFileService.saveFiles(multipartFiles, user);
 
         assertEquals(Integer.valueOf(HttpStatus.OK.value()),
                 simpleResponsesAlreadySaved.get(0).getStatus());
@@ -138,7 +146,7 @@ public class MultipartFileServiceTest {
                 Arrays.asList(new MockMultipartFile("file", fileName, "text/plain", fileContent));
 
         List<SimpleResponse> simpleResponses =
-                multipartFileService.saveFiles(multipartFiles);
+                multipartFileService.saveFiles(multipartFiles, user);
 
         assertEquals(1, simpleResponses.size());
 
@@ -162,7 +170,7 @@ public class MultipartFileServiceTest {
             .collect(Collectors.toList());
 
         List<SimpleResponse> simpleResponses =
-                multipartFileService.saveFiles(multipartFiles);
+                multipartFileService.saveFiles(multipartFiles, user);
 
         assertEquals(1, simpleResponses.size());
         assertNull(simpleResponses.get(0).getId());
@@ -186,7 +194,7 @@ public class MultipartFileServiceTest {
             i -> new MockMultipartFile("file", "file" + i + ".txt", "text/plain", fileContent))
             .collect(Collectors.toList());
 
-        List<SimpleResponse> responses = multipartFileService.saveFiles(multipartFile);
+        List<SimpleResponse> responses = multipartFileService.saveFiles(multipartFile, user);
         assertEquals(responses.size(), multipartFile.size());
 
         assertTrue(responses.stream().allMatch(r -> r.getStatus().equals(HttpStatus.OK.value())));
@@ -203,7 +211,7 @@ public class MultipartFileServiceTest {
         when(multipartFile.getInputStream()).thenThrow(new IOException());
         when(multipartFile.getBytes()).thenThrow(new IOException());
         List<SimpleResponse> simpleResponses =
-                multipartFileService.saveFiles(Arrays.asList(multipartFile));
+                multipartFileService.saveFiles(Arrays.asList(multipartFile), user);
 
         assertEquals(1, simpleResponses.size());
 

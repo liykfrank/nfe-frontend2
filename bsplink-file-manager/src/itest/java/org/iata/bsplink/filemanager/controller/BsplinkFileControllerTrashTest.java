@@ -3,12 +3,15 @@ package org.iata.bsplink.filemanager.controller;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,7 @@ import org.iata.bsplink.filemanager.model.entity.BsplinkFile;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFileStatus;
 import org.iata.bsplink.filemanager.model.repository.BsplinkFileRepository;
 import org.iata.bsplink.filemanager.service.BsplinkFileConfigService;
+import org.iata.bsplink.filemanager.service.FileAccessPermissionService;
 import org.iata.bsplink.yadeutils.YadeUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,17 +57,23 @@ public class BsplinkFileControllerTrashTest {
 
     @Autowired
     private BsplinkFileConfigService bsplinkFileConfigurationService;
-    
+
     @Autowired
     protected WebApplicationContext webAppContext;
 
+    @MockBean
+    private Principal principal;
+
+    @MockBean
+    private FileAccessPermissionService fileAccessPermissionService;
+
     @Before
     public void setUp() throws IOException, BsplinkValidationException {
-        
+
         MockitoAnnotations.initMocks(this);
 
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
-        
+
         bsplinkFileRepository.deleteAll();
         bsplinkFileConfigurationService.update(testConfiguration());
     }
@@ -108,7 +118,12 @@ public class BsplinkFileControllerTrashTest {
         Long id1 = bsplinkFile1.getId();
         Long id2 = bsplinkFile2.getId();
 
-        mockMvc.perform(delete("/v1/files/" + id2)).andExpect(status().isOk());
+        when(fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
+                any(), any(), any()))
+                .thenReturn(true);
+
+        mockMvc.perform(delete("/v1/files/" + id2).principal(principal))
+                .andExpect(status().isOk());
 
         assertEquals(BsplinkFileStatus.TRASHED,
                 bsplinkFileRepository.findById(id1).get().getStatus());

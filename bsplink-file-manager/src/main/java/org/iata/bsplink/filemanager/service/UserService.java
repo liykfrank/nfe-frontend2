@@ -16,10 +16,12 @@ public class UserService {
         this.userClient = userClient;
     }
 
+
     /**
      * Returns a User.
      */
     public User findUser(String id) {
+
         ResponseEntity<User> respUser = userClient.findUser(id);
 
         if (!respUser.getStatusCode().isError()) {

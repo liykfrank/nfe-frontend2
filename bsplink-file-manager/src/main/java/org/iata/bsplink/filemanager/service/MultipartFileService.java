@@ -17,6 +17,7 @@ import org.iata.bsplink.filemanager.configuration.ApplicationConfiguration;
 import org.iata.bsplink.filemanager.configuration.BsplinkFileBasicConfig;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFile;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFileStatus;
+import org.iata.bsplink.filemanager.model.entity.FileAccessType;
 import org.iata.bsplink.filemanager.model.repository.BsplinkFileRepository;
 import org.iata.bsplink.filemanager.response.SimpleResponse;
 import org.iata.bsplink.filemanager.utils.BsplinkFileUtils;
@@ -35,6 +36,7 @@ public class MultipartFileService {
     public static final String BAD_REQUEST_MSG_PATTERN = "File name not accepted.";
     public static final String BAD_REQUEST_MSG_EXTENSION = "File extension not accepted.";
     public static final String BAD_REQUEST_MSG_COUNT = "Maximum number of files exceeded.";
+    public static final String MSG_UNAUTHORIZED = "File upload is unauthorized";
     public static final String BAD_REQUEST_MSG_TOTAL_SIZE =
             "Maximum total upload file size exceeded.";
 
@@ -50,13 +52,16 @@ public class MultipartFileService {
     @Autowired
     private BsplinkFileRepository bsplinkFileRepository;
 
+    @Autowired
+    private FileAccessPermissionService fileAccessPermissionService;
+
     @Value("${app.yade.save_in_bbdd_and_user_outbox_enable}")
     private boolean saveInBbddAndUserOutboxEnable;
 
     /**
      * Save MultipartFiles in FS.
      */
-    public List<SimpleResponse> saveFiles(List<MultipartFile> files) {
+    public List<SimpleResponse> saveFiles(List<MultipartFile> files, String user) {
         List<SimpleResponse> simpleResponses = new ArrayList<>(files.size());
         BsplinkFileBasicConfig cfg = bsplinkFileConfigService.find();
 
@@ -78,6 +83,10 @@ public class MultipartFileService {
                 simpleResponse = badRequestResponse(BAD_REQUEST_MSG_PATTERN);
             } else if (!isFileExtensionAllowed(fileName)) {
                 simpleResponse = badRequestResponse(BAD_REQUEST_MSG_EXTENSION);
+            } else if (!fileAccessPermissionService.isFileAccessPermittedForUser(fileName,
+                    FileAccessType.WRITE, user)) {
+                simpleResponse = new SimpleResponse(null, HttpStatus.UNAUTHORIZED,
+                        HttpStatus.BAD_REQUEST.name() + ": " + MSG_UNAUTHORIZED);
             } else {
                 try {
                     saveFile(file);

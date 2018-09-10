@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +36,7 @@ import org.iata.bsplink.filemanager.model.entity.BsplinkFile;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFileStatus;
 import org.iata.bsplink.filemanager.model.repository.BsplinkFileRepository;
 import org.iata.bsplink.filemanager.service.BsplinkFileConfigService;
+import org.iata.bsplink.filemanager.service.FileAccessPermissionService;
 import org.iata.bsplink.filemanager.service.MultipartFileService;
 import org.iata.bsplink.yadeutils.YadeUtils;
 import org.junit.After;
@@ -83,10 +85,24 @@ public class BsplinkFileControllerTest {
     @Autowired
     protected WebApplicationContext webAppContext;
 
+    @MockBean
+    private FileAccessPermissionService fileAccessPermissionService;
+
+    @MockBean
+    private Principal principal;
+
+
     @Before
     public void setUp() throws IOException, BsplinkValidationException {
 
         MockitoAnnotations.initMocks(this);
+
+        when(fileAccessPermissionService.isFileAccessPermittedForUser(any(), any(), any()))
+                .thenReturn(true);
+        when(fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(any(), any(), any()))
+                .thenReturn(true);
+        when(fileAccessPermissionService.isBsplinkFilesAccessPermittedForUser(any(), any(), any()))
+                .thenReturn(true);
 
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
 
@@ -123,7 +139,7 @@ public class BsplinkFileControllerTest {
         MockMultipartFile multipartFile =
                 new MockMultipartFile("file", fileName, "text/plain", fileContent);
 
-        mockMvc.perform(multipart("/v1/files").file(multipartFile))
+        mockMvc.perform(multipart("/v1/files").file(multipartFile).principal(principal))
                 .andExpect(status().isMultiStatus()).andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].subject", equalTo(fileName)))
                 .andExpect(jsonPath("$[0].status", equalTo(HttpStatus.OK.value())));
@@ -158,7 +174,8 @@ public class BsplinkFileControllerTest {
                         fileTextContents[2].getBytes())};
 
         mockMvc.perform(multipart("/v1/files").file(multipartFiles[0]).file(multipartFiles[1])
-                .file(multipartFiles[2])).andExpect(status().isMultiStatus())
+                .file(multipartFiles[2]).principal(principal))
+                .andExpect(status().isMultiStatus())
                 .andExpect(jsonPath("$[0].subject", equalTo(fileNames[0])))
                 .andExpect(jsonPath("$[0].status", equalTo(HttpStatus.OK.value())))
 
@@ -195,7 +212,7 @@ public class BsplinkFileControllerTest {
         MockMultipartFile multipartFile =
                 new MockMultipartFile("file", fileName, "text/plain", fileContent);
 
-        mockMvc.perform(multipart("/v1/files").file(multipartFile))
+        mockMvc.perform(multipart("/v1/files").file(multipartFile).principal(principal))
                 .andExpect(status().isMultiStatus()).andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", nullValue()))
                 .andExpect(jsonPath("$[0].subject", equalTo(fileName)))
@@ -216,7 +233,7 @@ public class BsplinkFileControllerTest {
 
         assertThat(getBspinkFileStatus(5L), not(BsplinkFileStatus.DELETED.toString()));
 
-        mockMvc.perform(delete("/v1/files/5")).andExpect(status().isOk());
+        mockMvc.perform(delete("/v1/files/5").principal(principal)).andExpect(status().isOk());
 
         assertThat(getBspinkFileStatus(5L), equalTo(BsplinkFileStatus.DELETED.toString()));
     }
@@ -234,7 +251,8 @@ public class BsplinkFileControllerTest {
 
         when(yadeUtils.transfer(any(), any(), any(), any())).thenThrow(new Exception());
 
-        mockMvc.perform(delete("/v1/files/" + id)).andExpect(status().isInternalServerError());
+        mockMvc.perform(delete("/v1/files/" + id).principal(principal)).andExpect(status()
+                .isInternalServerError());
     }
 
     @Test
@@ -249,13 +267,15 @@ public class BsplinkFileControllerTest {
         bsplinkFileRepository.saveAndFlush(bsplinkFile);
         Long id = bsplinkFile.getId();
 
-        mockMvc.perform(delete("/v1/files/" + id)).andExpect(status().isBadRequest());
+        mockMvc.perform(delete("/v1/files/" + id).principal(principal)).andExpect(status()
+                .isBadRequest());
     }
 
     @Test
     public void testDeleteSingleFileReturnsNotFound() throws Exception {
 
-        mockMvc.perform(delete("/v1/files/999")).andExpect(status().isNotFound());
+        mockMvc.perform(delete("/v1/files/999").principal(principal)).andExpect(status()
+                .isNotFound());
     }
 
     private String getBspinkFileStatus(Long id) {
@@ -270,7 +290,8 @@ public class BsplinkFileControllerTest {
         assertThat(getBspinkFileStatus(4L), not(BsplinkFileStatus.DELETED.toString()));
         assertThat(getBspinkFileStatus(5L), not(BsplinkFileStatus.DELETED.toString()));
 
-        mockMvc.perform(delete("/v1/files?id=3&id=4&id=5")).andExpect(status().isMultiStatus());
+        mockMvc.perform(delete("/v1/files?id=3&id=4&id=5").principal(principal))
+                .andExpect(status().isMultiStatus());
 
         assertThat(getBspinkFileStatus(3L), equalTo(BsplinkFileStatus.DELETED.toString()));
         assertThat(getBspinkFileStatus(4L), equalTo(BsplinkFileStatus.DELETED.toString()));
@@ -280,7 +301,8 @@ public class BsplinkFileControllerTest {
     @Test
     public void testDeleteMultipleFilesReturnsNotFoundFiles() throws Exception {
 
-        mockMvc.perform(delete("/v1/files?id=5&id=999")).andExpect(status().isMultiStatus())
+        mockMvc.perform(delete("/v1/files?id=5&id=999").principal(principal))
+                .andExpect(status().isMultiStatus())
                 .andExpect(jsonPath("$", hasSize(2)))
 
                 .andExpect(jsonPath("$[0].id", equalTo(5)))

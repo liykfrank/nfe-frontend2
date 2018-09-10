@@ -18,8 +18,8 @@ import org.springframework.http.ResponseEntity;
 
 public class UserServiceTest {
 
-    UserClient client;
-    UserService service;
+    private UserClient client;
+    private UserService service;
 
     @Before
     public void setUp() {
