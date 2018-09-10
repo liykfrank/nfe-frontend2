@@ -34,6 +34,7 @@ import org.iata.bsplink.filemanager.configuration.BsplinkFileBasicConfig;
 import org.iata.bsplink.filemanager.exception.BsplinkValidationException;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFile;
 import org.iata.bsplink.filemanager.model.entity.BsplinkFileStatus;
+import org.iata.bsplink.filemanager.model.entity.FileAccessType;
 import org.iata.bsplink.filemanager.model.repository.BsplinkFileRepository;
 import org.iata.bsplink.filemanager.service.BsplinkFileConfigService;
 import org.iata.bsplink.filemanager.service.FileAccessPermissionService;
@@ -362,4 +363,120 @@ public class BsplinkFileControllerTest {
         assertEquals(bsplinkFile.getUploadDateTime(), instant);
     }
 
+
+    @Test
+    public void testDownloadFileUnauthorized() throws Exception {
+        BsplinkFile bsplinkFile = new BsplinkFile();
+        bsplinkFile.setName("ESna2203_20180910_testt");
+        bsplinkFile.setType("na");
+        bsplinkFile.setBytes(1L);
+        bsplinkFile.setUploadDateTime(Instant.now());
+        bsplinkFileRepository.saveAndFlush(bsplinkFile);
+        Long id = bsplinkFile.getId();
+
+        when(fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
+                bsplinkFile, FileAccessType.READ, principal.getName()))
+                .thenReturn(false);
+
+        mockMvc.perform(get("/v1/files/" + id).principal(principal))
+                .andExpect(status().isUnauthorized());
+    }
+
+
+    @Test
+    public void testDownloadFileTrashed() throws Exception {
+        BsplinkFile bsplinkFile = new BsplinkFile();
+        bsplinkFile.setName("ESna2203_20180910_test");
+        bsplinkFile.setType("na");
+        bsplinkFile.setBytes(1L);
+        bsplinkFile.setStatus(BsplinkFileStatus.TRASHED);
+        bsplinkFile.setUploadDateTime(Instant.now());
+        bsplinkFileRepository.saveAndFlush(bsplinkFile);
+        Long id = bsplinkFile.getId();
+
+        when(fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
+                bsplinkFile, FileAccessType.READ, principal.getName()))
+                .thenReturn(true);
+
+        mockMvc.perform(get("/v1/files/" + id).principal(principal))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    public void testDownloadZipUnauthorized() throws Exception {
+        BsplinkFile bsplinkFile = new BsplinkFile();
+        bsplinkFile.setName("ESna2203_20180910_test");
+        bsplinkFile.setType("na");
+        bsplinkFile.setBytes(1L);
+        bsplinkFile.setUploadDateTime(Instant.now());
+        bsplinkFileRepository.saveAndFlush(bsplinkFile);
+        Long id = bsplinkFile.getId();
+
+        when(fileAccessPermissionService.isBsplinkFilesAccessPermittedForUser(
+                Arrays.asList(bsplinkFile), FileAccessType.READ, principal.getName()))
+                .thenReturn(false);
+
+        mockMvc.perform(get("/v1/files/zip?id=" + id).principal(principal))
+                .andExpect(status().isUnauthorized());
+    }
+
+
+    @Test
+    public void testDeletesFileUnauthorized() throws Exception {
+
+        BsplinkFile bsplinkFile = new BsplinkFile();
+        bsplinkFile.setName("ESxx2203_20181011_test");
+        bsplinkFile.setType("xx");
+        bsplinkFile.setBytes(1212L);
+        bsplinkFile.setUploadDateTime(Instant.now());
+        bsplinkFile.setStatus(BsplinkFileStatus.DELETED);
+        bsplinkFileRepository.saveAndFlush(bsplinkFile);
+        Long id = bsplinkFile.getId();
+
+        when(fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
+                bsplinkFile, FileAccessType.WRITE, principal.getName()))
+                .thenReturn(false);
+
+        mockMvc.perform(delete("/v1/files/" + id).principal(principal)).andExpect(status()
+                .isUnauthorized());
+    }
+
+
+    @Test
+    public void testDeletesFilesListUnauthorized() throws Exception {
+
+        BsplinkFile bsplinkFile1 = new BsplinkFile();
+        bsplinkFile1.setName("ESxx2203_20181011_test");
+        bsplinkFile1.setType("xx");
+        bsplinkFile1.setBytes(1212L);
+        bsplinkFile1.setUploadDateTime(Instant.now());
+        bsplinkFile1.setStatus(BsplinkFileStatus.NOT_DOWNLOADED);
+        bsplinkFileRepository.saveAndFlush(bsplinkFile1);
+
+        BsplinkFile bsplinkFile2 = new BsplinkFile();
+        bsplinkFile2.setName("ESxx2203_20181011_test2");
+        bsplinkFile2.setType("xx");
+        bsplinkFile2.setBytes(1212L);
+        bsplinkFile2.setUploadDateTime(Instant.now());
+        bsplinkFile2.setStatus(BsplinkFileStatus.DOWNLOADED);
+        bsplinkFileRepository.saveAndFlush(bsplinkFile2);
+        bsplinkFile2.getId();
+
+        when(fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
+                bsplinkFile1, FileAccessType.WRITE, principal.getName()))
+                .thenReturn(false);
+        when(fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
+                bsplinkFile2, FileAccessType.WRITE, principal.getName()))
+                .thenReturn(false);
+
+        mockMvc.perform(
+                delete("/v1/files?id=" + bsplinkFile1.getId() + "&id=" + bsplinkFile2.getId())
+                .principal(principal))
+                .andExpect(status().isMultiStatus())
+                .andExpect(jsonPath("$[0].id", equalTo(bsplinkFile1.getId().intValue())))
+                .andExpect(jsonPath("$[0].status", equalTo(HttpStatus.UNAUTHORIZED.value())))
+                .andExpect(jsonPath("$[1].id", equalTo(bsplinkFile2.getId().intValue())))
+                .andExpect(jsonPath("$[1].status", equalTo(HttpStatus.UNAUTHORIZED.value())));
+    }
 }

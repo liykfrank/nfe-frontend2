@@ -273,16 +273,4 @@ public class BsplinkFileController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body("File registered");
     }
-
-
-    /**
-     * Hola.
-     */
-    //TODO remove
-    @GetMapping("/hola")
-    public ResponseEntity<String> hola(Principal principal) {
-        String p = principal.getName();
-
-        return ResponseEntity.status(HttpStatus.OK).body("hola " + p);
-    }
 }
