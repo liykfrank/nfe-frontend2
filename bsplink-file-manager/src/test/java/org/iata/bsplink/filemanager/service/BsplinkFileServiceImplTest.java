@@ -98,7 +98,7 @@ public class BsplinkFileServiceImplTest {
         bsplinkFile2.setStatus(BsplinkFileStatus.DELETED);
 
         when(bsplinkFileRepository.findById(any())).thenReturn(Optional.of(bsplinkFile1))
-                .thenReturn(Optional.of(bsplinkFile2));;
+                .thenReturn(Optional.of(bsplinkFile2));
     }
 
     @Test
@@ -131,6 +131,22 @@ public class BsplinkFileServiceImplTest {
         assertThat(bsplinkFileService.save(getBspLinkFileMock().get()))
                 .isEqualToComparingFieldByField(getBsplinkFileMockDownloadStatus().get());
 
+    }
+
+
+    @Test
+    public void testDeleteMultipleFilesUnauthorized() {
+        BsplinkFile bsplinkFile = new BsplinkFile();
+        bsplinkFile.setStatus(BsplinkFileStatus.NOT_DOWNLOADED);
+
+        when(bsplinkFileRepository.findById(any())).thenReturn(Optional.of(bsplinkFile));
+        when(fileAccessPermissionService.existsByUserAndIsoCountryCodeAndFileTypeAndAccess(any()))
+            .thenReturn(false);
+
+        List<EntityActionResponse<Long>> result = bsplinkFileService
+                .deleteMultipleFiles(Arrays.asList(1L), user);
+
+        assertThat(result.get(0).getStatus(), equalTo(HttpStatus.UNAUTHORIZED.value()));
     }
 
 
