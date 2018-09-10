@@ -1,0 +1,21 @@
+{
+	"id": "b348f80e-59sa-4a2f-9ci4-879805d92920",
+	"username": "bsplink.test@gmail.com",
+	"userType": "AIRLINE",
+	"userCode": "123",
+	"name": "Test",
+	"telephone": "654987321",
+	"email": "tbsplink.test@gmail.com",
+	"address": {
+		"description": "Description",
+		"locality": "Locality",
+		"city": "City",
+		"zip": "Zip",
+		"country": "Country"
+	},
+	"preferences": {
+        "language": "XX",
+        "timeZone": "Europe/Berlin",
+        "regions": []
+    }
+}

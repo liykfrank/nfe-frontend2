@@ -15,10 +15,12 @@ import lombok.extern.java.Log;
 
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.iata.bsplink.user.model.entity.User;
+import org.iata.bsplink.user.model.entity.UserPreferences;
 import org.iata.bsplink.user.model.entity.UserType;
 import org.iata.bsplink.user.service.UserService;
 import org.iata.bsplink.user.validation.AgentValidator;
 import org.iata.bsplink.user.validation.AirlineValidator;
+import org.iata.bsplink.user.validation.UserPreferencesValidator;
 import org.iata.bsplink.user.validation.UserTemplateValidator;
 import org.iata.bsplink.user.validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,16 +63,19 @@ public class UserController {
     @Autowired
     private UserValidator userValidator;
 
+    @Autowired
+    private UserPreferencesValidator userPreferencesValidator;
+
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
-        Stream.of(agentValidator, airlineValidator, userTemplateValidator)
+        Stream.of(agentValidator, airlineValidator, userTemplateValidator, userPreferencesValidator)
                 .forEach(validator -> Optional.ofNullable(binder.getTarget())
                         .filter(o -> validator.supports(o.getClass()))
                         .ifPresent(o -> binder.addValidators(validator)));
     }
 
     /**
-     * Returns all found users by user type.  
+     * Returns all found users by user type.
      * @param userType type.
      * @return List of users.
      */
@@ -201,6 +206,42 @@ public class UserController {
         log.info("user successfully deleted");
 
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Returns the user preferences.
+     */
+    @GetMapping(path = "/{id}/preferences")
+    public ResponseEntity<UserPreferences> getUserPreferences(@PathVariable("id") String id) {
+
+        Optional<User> optionalUser = userService.getUser(id);
+
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(optionalUser.get().getPreferences());
+    }
+
+    /**
+     * Updates the user preferences.
+     */
+    @PutMapping(path = "/{id}/preferences")
+    public ResponseEntity<UserPreferences> updateUserPreferences(@PathVariable("id") String id,
+            @Valid @RequestBody UserPreferences userPreferences, Errors errors) {
+
+        if (errors.hasErrors()) {
+            throw new ApplicationValidationException(errors);
+        }
+
+        Optional<User> optionalUser = userService.getUser(id);
+
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.updateUserPreferences(optionalUser.get(), userPreferences));
     }
 
 }

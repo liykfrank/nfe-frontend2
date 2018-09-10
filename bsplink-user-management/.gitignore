@@ -5,6 +5,7 @@ config/application*.yml
 attached_files
 !attached_files/.gitkeep
 *.log
+*.log.*gz
 
 # Created by https://www.gitignore.io/api/gradle,eclipse
 

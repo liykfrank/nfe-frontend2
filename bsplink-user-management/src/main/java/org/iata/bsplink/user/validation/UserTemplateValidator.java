@@ -1,8 +1,13 @@
 package org.iata.bsplink.user.validation;
 
+import static org.iata.bsplink.user.validation.CountryValidationMessages.ISOC_DUPLICATED_MESSAGE;
+import static org.iata.bsplink.user.validation.CountryValidationMessages.ISOC_EMPTY_MESSAGE;
+import static org.iata.bsplink.user.validation.CountryValidationMessages.ISOC_FORMAT_MESSAGE;
+
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.iata.bsplink.user.model.entity.BsplinkTemplate;
 import org.iata.bsplink.user.model.entity.User;
 import org.iata.bsplink.user.model.entity.UserTemplate;
@@ -22,23 +27,16 @@ public class UserTemplateValidator implements Validator {
             "The template is not available for the user type.";
     public static final String TEMPLATE_DUPLICATED_MESSAGE =
             "Templates for a user have to be unique.";
-    public static final String ISOC_DUPLICATED_MESSAGE =
-            "ISO Country Code to be assigned only once.";
     public static final String TEMPLATE_NOT_FOUND_MESSAGE =
             "The template was not found.";
-    public static final String ISOC_NULL_MESSAGE =
-            "The ISO Country Code cannot be null.";
     public static final String TEMPLATE_NULL_MESSAGE =
             "The Template cannot be null.";
-    public static final String ISOC_FORMAT_MESSAGE =
-            "ISO Country Code format is incorrect.";
     public static final String ISOC_AIRLINE_MESSAGE =
             "The airline does not exist in the country corresponding to the ISO Country Code.";
     public static final String AGENT_NOT_FOUND_MESSAGE =
             "The agent was not found.";
     public static final String ISOC_AGENT_MESSAGE =
             "The agent does not exist in the country corresponding to the ISO Country Code.";
-
 
     private BsplinkTemplateService bsplinkTemplateService;
     private AirlineService airlineService;
@@ -134,9 +132,9 @@ public class UserTemplateValidator implements Validator {
 
                 i++;
 
-                if (isoc == null) {
+                if (StringUtils.isEmpty(isoc)) {
 
-                    reject(errors, t, i, ISOC_NULL_MESSAGE);
+                    reject(errors, t, i, ISOC_EMPTY_MESSAGE);
 
                 } else if (!isoc.matches("^[A-Z][0-9A-Z]$")) {
 

@@ -27,6 +27,7 @@ public class UserUtils {
         Address address = newUser.getAddress();
         address.setId(oldUser.getAddress() != null ? oldUser.getAddress().getId() : null);
         oldUser.setAddress(address);
+        oldUser.setPreferences(newUser.getPreferences());
 
         return oldUser;
     }

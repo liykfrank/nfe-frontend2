@@ -15,11 +15,14 @@ import org.apache.http.HttpStatus;
 import org.iata.bsplink.commons.rest.exception.ApplicationInternalServerError;
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
 import org.iata.bsplink.user.model.entity.User;
+import org.iata.bsplink.user.model.entity.UserPreferences;
 import org.iata.bsplink.user.model.entity.UserStatus;
 import org.iata.bsplink.user.model.entity.UserTemplate;
 import org.iata.bsplink.user.model.entity.UserType;
 import org.iata.bsplink.user.model.repository.UserRepository;
 import org.iata.bsplink.user.model.repository.UserTemplateRepository;
+import org.iata.bsplink.user.preferences.Languages;
+import org.iata.bsplink.user.preferences.TimeZones;
 import org.iata.bsplink.user.utils.UserUtils;
 import org.iata.bsplink.user.validation.ValidationMessages;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -67,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.findById(userId);
     }
-    
+
     @Override
     public List<User> findByUserType(UserType userType) {
         return userRepository.findByUserType(userType);
@@ -81,6 +84,8 @@ public class UserServiceImpl implements UserService {
     public User createUser(User user, Errors errors) {
 
         log.info("Creating new user: " + user);
+
+        addDefaultPreferences(user);
 
         User newUser = null;
         verifyFoundUserAndStatus(user, errors);
@@ -221,5 +226,29 @@ public class UserServiceImpl implements UserService {
 
             log.info(USER_DELETED);
         }
-    }   
+    }
+
+    private void addDefaultPreferences(User user) {
+
+        UserPreferences preferences = new UserPreferences();
+
+        preferences.setLanguage(Languages.DEFAULT.toString());
+        preferences.setTimeZone(TimeZones.DEFAULT);
+
+        user.setPreferences(preferences);
+    }
+
+    @Override
+    public UserPreferences updateUserPreferences(User user, UserPreferences userPreferences) {
+
+        user.setPreferences(userPreferences);
+
+        log.info("Updating resource with id: " + user.getId());
+
+        User updatedUser = userRepository.save(user);
+
+        log.info("User preferences updated");
+
+        return updatedUser.getPreferences();
+    }
 }

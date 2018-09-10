@@ -1,6 +1,11 @@
 package org.iata.bsplink.user.controller;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
+import static org.mockito.AdditionalAnswers.returnsArgAt;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -12,19 +17,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.iata.bsplink.user.Application;
 import org.iata.bsplink.user.model.entity.User;
+import org.iata.bsplink.user.model.entity.UserPreferences;
+import org.iata.bsplink.user.model.entity.UserRegion;
 import org.iata.bsplink.user.model.entity.UserType;
 import org.iata.bsplink.user.model.repository.UserRepository;
 import org.iata.bsplink.user.pojo.Agent;
 import org.iata.bsplink.user.pojo.Airline;
+import org.iata.bsplink.user.preferences.Languages;
 import org.iata.bsplink.user.service.AgentService;
 import org.iata.bsplink.user.service.AirlineService;
 import org.iata.bsplink.user.service.KeycloakService;
@@ -35,11 +41,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -49,8 +52,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
+@SpringBootTest
 @Transactional
 public class UserControllerTest extends BaseUserTest {
 
@@ -66,13 +68,11 @@ public class UserControllerTest extends BaseUserTest {
     @MockBean
     private AirlineService airlineService;
 
-    @Autowired
-    protected WebApplicationContext webAppContext;
-
     @MockBean
     private KeycloakService keycloakService;
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    @Autowired
+    protected WebApplicationContext webAppContext;
 
     private MockMvc mockMvc;
 
@@ -83,8 +83,6 @@ public class UserControllerTest extends BaseUserTest {
      */
     @Before
     public void init() throws Exception {
-
-        MockitoAnnotations.initMocks(this);
 
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).dispatchOptions(true).build();
 
@@ -373,4 +371,106 @@ public class UserControllerTest extends BaseUserTest {
         mockMvc.perform(delete(DELETE_USER_URL, USER_ID))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
+
+    @Test
+    public void testReturnsUserPreferencesWhenUserIsCreated() throws Exception {
+
+        doReturn(userPending).when(userService).createUser(any(), any());
+
+        String userRequestString = TestUtils.getJson("/mock/requests/create-user-request.json");
+
+        String savedUserJson = mockMvc.perform(
+                post(CREATE_USER_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(userRequestString)).andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(content().json(MAPPER.writer().writeValueAsString(userPending)))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn().getResponse().getContentAsString();
+
+        User savedUser = MAPPER.readValue(savedUserJson, User.class);
+
+        assertThat(savedUser.getPreferences(), notNullValue());
+    }
+
+    @Test
+    public void testReturnsUserPreferences() throws Exception {
+
+        when(userService.getUser(USER_ID)).thenReturn(Optional.of(userCreated));
+
+        String userPreferencesJson = mockMvc.perform(get(USER_PREFERENCES, USER_ID))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        UserPreferences savedUserPreferences =
+                MAPPER.readValue(userPreferencesJson, UserPreferences.class);
+
+        assertThat(savedUserPreferences.getLanguage(),
+                equalTo(userCreated.getPreferences().getLanguage()));
+        assertThat(savedUserPreferences.getTimeZone(),
+                equalTo(userCreated.getPreferences().getTimeZone()));
+    }
+
+    @Test
+    public void testUpdatesUserPreferences() throws Exception {
+
+        when(userService.getUser(USER_ID)).thenReturn(Optional.of(userCreated));
+        when(userService.updateUserPreferences(any(User.class), any(UserPreferences.class)))
+                .thenAnswer((returnsArgAt(1)));
+
+        String userRequestString = TestUtils.getJson("/mock/requests/update-user-preferences.json");
+
+        String savedUserPreferencesJson = mockMvc.perform(put(USER_PREFERENCES, USER_ID)
+                .contentType(MediaType.APPLICATION_JSON).content(userRequestString))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        UserPreferences savedUserPreferences =
+                MAPPER.readValue(savedUserPreferencesJson, UserPreferences.class);
+
+        assertThat(savedUserPreferences.getLanguage(), equalTo(Languages.DE.toString()));
+        assertThat(savedUserPreferences.getTimeZone(), equalTo("Europe/Berlin"));
+        assertThat(savedUserPreferences.getRegions(), hasSize(2));
+
+        UserRegion region0 = savedUserPreferences.getRegions().get(0);
+        assertThat(region0.getName(), equalTo("Europe"));
+        assertThat(region0.isDefault(), equalTo(true));
+        assertThat(region0.getIsoCountryCodes(), hasSize(3));
+
+        UserRegion region1 = savedUserPreferences.getRegions().get(1);
+        assertThat(region1.getName(), equalTo("America"));
+        assertThat(region1.isDefault(), equalTo(false));
+        assertThat(region1.getIsoCountryCodes(), hasSize(3));
+    }
+
+    @Test
+    public void testValidatesUserPreferences() throws Exception {
+
+        when(userService.getUser(USER_ID)).thenReturn(Optional.of(userCreated));
+        when(userService.updateUserPreferences(any(User.class), any(UserPreferences.class)))
+                .thenAnswer((returnsArgAt(1)));
+
+        String userRequestString =
+                TestUtils.getJson("/mock/requests/update-wrong-user-preferences.json");
+
+        mockMvc.perform(put(USER_PREFERENCES, USER_ID)
+                .contentType(MediaType.APPLICATION_JSON).content(userRequestString))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(jsonPath("$.validationErrors[0].message",
+                        is("Not supported language preference 'XX'")));
+    }
+
+    @Test
+    public void testValidatesUserPreferencesWhenUserIsCreated() throws Exception {
+
+        doReturn(userPending).when(userService).createUser(any(), any());
+
+        String userRequestString =
+                TestUtils.getJson("/mock/requests/create-user-request-with-wrong-preferences.json");
+
+        mockMvc.perform(post(CREATE_USER_URL)
+                .contentType(MediaType.APPLICATION_JSON).content(userRequestString))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(jsonPath("$.validationErrors[0].message",
+                        is("Not supported language preference 'XX'")));
+    }
+
 }

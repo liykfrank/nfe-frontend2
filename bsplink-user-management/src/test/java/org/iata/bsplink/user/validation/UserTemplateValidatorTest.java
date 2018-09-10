@@ -1,6 +1,9 @@
 package org.iata.bsplink.user.validation;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.iata.bsplink.user.validation.CountryValidationMessages.ISOC_DUPLICATED_MESSAGE;
+import static org.iata.bsplink.user.validation.CountryValidationMessages.ISOC_EMPTY_MESSAGE;
+import static org.iata.bsplink.user.validation.CountryValidationMessages.ISOC_FORMAT_MESSAGE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -213,8 +216,7 @@ public class UserTemplateValidatorTest {
         assertTrue(errors.hasErrors());
         assertTrue(errors.hasFieldErrors());
         assertThat(errors.getFieldError().getDefaultMessage(),
-                equalTo(UserTemplateValidator
-                        .ISOC_FORMAT_MESSAGE));
+                equalTo(ISOC_FORMAT_MESSAGE));
     }
 
 
@@ -234,8 +236,7 @@ public class UserTemplateValidatorTest {
         assertTrue(errors.hasErrors());
         assertTrue(errors.hasFieldErrors());
         assertThat(errors.getFieldError().getDefaultMessage(),
-                equalTo(UserTemplateValidator
-                        .ISOC_NULL_MESSAGE));
+                equalTo(ISOC_EMPTY_MESSAGE));
     }
 
 
@@ -254,8 +255,7 @@ public class UserTemplateValidatorTest {
         assertTrue(errors.hasErrors());
         assertTrue(errors.hasFieldErrors());
         assertThat(errors.getFieldError().getDefaultMessage(),
-                equalTo(UserTemplateValidator
-                        .ISOC_DUPLICATED_MESSAGE));
+                equalTo(ISOC_DUPLICATED_MESSAGE));
     }
 
 

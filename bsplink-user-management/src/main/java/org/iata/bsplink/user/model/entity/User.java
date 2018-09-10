@@ -117,4 +117,9 @@ public class User implements Serializable {
             });
         }
     }
+
+    @Valid
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserPreferences preferences;
+
 }

@@ -1,0 +1,24 @@
+{
+	"language": "de",
+	"timeZone": "Europe/Berlin",
+	"regions": [
+		{
+			"name": "Europe",
+			"default": true,
+			"isoCountryCodes": [
+				"BE",
+				"FR",
+				"IT"
+			]
+		},
+		{
+			"name": "America",
+			"default": false,
+			"isoCountryCodes": [
+				"CA",
+				"MX",
+				"CU"
+			]
+		}
+	]
+}

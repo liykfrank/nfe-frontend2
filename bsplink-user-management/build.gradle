@@ -49,7 +49,7 @@ dependencies {
 	compile('io.springfox:springfox-swagger2:2.8.0')
 	compile('io.springfox:springfox-swagger-ui:2.8.0')
 	compile('commons-io:commons-io:2.4')
-	compile('commons-lang:commons-lang:2.6')
+	compile('org.apache.commons:commons-lang3:3.8')
 	compile('org.iata.bsplink:bsplink-commons-rest:0.0.4-SNAPSHOT')
 	compile('org.flywaydb:flyway-core:5.0.7')
 	compile('org.springframework.cloud:spring-cloud-starter-openfeign:2.0.0.RELEASE')

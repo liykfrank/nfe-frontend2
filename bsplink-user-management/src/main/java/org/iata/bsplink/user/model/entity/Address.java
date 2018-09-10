@@ -29,7 +29,6 @@ public class Address implements Serializable {
 
     @Id
     @JsonIgnore
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @GeneratedValue
     private Long id;
 

@@ -1,8 +1,11 @@
 package org.iata.bsplink.user.service;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -20,15 +23,17 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.iata.bsplink.commons.rest.exception.ApplicationInternalServerError;
 import org.iata.bsplink.commons.rest.exception.ApplicationValidationException;
-import org.iata.bsplink.user.Application;
 import org.iata.bsplink.user.model.entity.BsplinkTemplate;
 import org.iata.bsplink.user.model.entity.User;
+import org.iata.bsplink.user.model.entity.UserPreferences;
 import org.iata.bsplink.user.model.entity.UserTemplate;
 import org.iata.bsplink.user.model.entity.UserType;
 import org.iata.bsplink.user.model.repository.BsplinkOptionRepository;
 import org.iata.bsplink.user.model.repository.BsplinkTemplateRepository;
 import org.iata.bsplink.user.model.repository.UserRepository;
 import org.iata.bsplink.user.model.repository.UserTemplateRepository;
+import org.iata.bsplink.user.preferences.Languages;
+import org.iata.bsplink.user.preferences.TimeZones;
 import org.iata.bsplink.user.utils.BaseUserTest;
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,17 +41,15 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.Errors;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 public class UserServiceImplTest extends BaseUserTest {
@@ -75,9 +78,7 @@ public class UserServiceImplTest extends BaseUserTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Before
-    public void init() {
-
-        MockitoAnnotations.initMocks(this);
+    public void init() throws Exception {
 
         this.userService =
                 new UserServiceImpl(userRepository, userTemplateRepository, keycloakService);
@@ -86,6 +87,18 @@ public class UserServiceImplTest extends BaseUserTest {
         initiatePendingUser();
         initiateCreatedUser();
 
+        configureKeycloakMocks(userPending);
+    }
+
+    private void configureKeycloakMocks(User user) throws URISyntaxException {
+
+        UserRepresentation userRepresentation = getUserRepresentation();
+
+        ResponseBuilder responseBuilder = Response.created(new URI("mock-url"));
+        when(keycloakService.createUser(user)).thenReturn(responseBuilder.build());
+        when(keycloakService.findUser(user)).thenReturn(userRepresentation);
+        when(keycloakService.changeUserStatus(user.getUsername(), true, errors))
+                .thenReturn(userRepresentation);
     }
 
     /**
@@ -96,28 +109,27 @@ public class UserServiceImplTest extends BaseUserTest {
     @Test
     public void testGetUser() throws URISyntaxException {
 
-        createUser(userPending, USER_ID);
+        createUser(userPending);
 
         User userReturned = userService.getUser(USER_ID).get();
 
         commonResponseAssertions(userPending, userReturned);
-
     }
 
     /**
      * Get users by type.
-     * 
+     *
      * @throws URISyntaxException Exception.
      */
     @Test
     public void testGetUserByType() throws URISyntaxException {
 
         User firstUser = userPending;
-        createUser(firstUser, USER_ID);
+        createUser(firstUser);
 
         User secondUser = userPending;
         secondUser.setUsername(NEW_USERNAME);
-        secondUser.setId(NEW_USER_ID);        
+        secondUser.setId(NEW_USER_ID);
         createUser(secondUser, NEW_USER_ID);
 
         List<User> listUsers = userService.findByUserType(UserType.AIRLINE);
@@ -144,12 +156,6 @@ public class UserServiceImplTest extends BaseUserTest {
     @Test
     public void testCreateUser() throws URISyntaxException {
 
-        ResponseBuilder responseBuilder = Response.created(new URI("mock-url"));
-        when(keycloakService.createUser(userPending)).thenReturn(responseBuilder.build());
-        when(keycloakService.findUser(userPending)).thenReturn(getUserRepresentation(USER_ID));
-        when(keycloakService.changeUserStatus(userPending.getUsername(), true, errors))
-                .thenReturn(getUserRepresentation(USER_ID));
-
         userService.createUser(userPending, errors);
         Optional<User> userSaved = userRepository.findById(USER_ID);
 
@@ -166,7 +172,6 @@ public class UserServiceImplTest extends BaseUserTest {
 
         ResponseBuilder responseBuilder = Response.serverError();
         when(keycloakService.createUser(userPending)).thenReturn(responseBuilder.build());
-        when(keycloakService.findUser(userPending)).thenReturn(getUserRepresentation(USER_ID));
 
         userService.createUser(userPending, errors);
     }
@@ -177,12 +182,9 @@ public class UserServiceImplTest extends BaseUserTest {
         expectedException.expect(ApplicationInternalServerError.class);
         expectedException.expectMessage(UserServiceImpl.CREATE_USER_ERROR_MESSAGE);
 
-        ResponseBuilder responseBuilder = Response.created(new URI("mock-url"));
-        when(keycloakService.createUser(any())).thenReturn(responseBuilder.build());
         when(keycloakService.findUser(userPending)).thenReturn(null);
 
         userService.createUser(userPending, errors);
-
     }
 
 
@@ -197,8 +199,9 @@ public class UserServiceImplTest extends BaseUserTest {
         expectedException.expect(ApplicationValidationException.class);
         expectedException.expectMessage("Validation error");
 
-        createUser(userCreated, USER_ID);
-        when(keycloakService.findUser(userCreated)).thenReturn(getUserRepresentation(USER_ID));
+        configureKeycloakMocks(userCreated);
+
+        createUser(userCreated);
 
         userService.createUser(userCreated, errors);
     }
@@ -210,9 +213,6 @@ public class UserServiceImplTest extends BaseUserTest {
         expectedException
                 .expectMessage(UserServiceImpl.CHANGE_USER_STATUS_IN_KEYCLOAK_ERROR_MESSAGE);
 
-        ResponseBuilder responseBuilder = Response.created(new URI("mock-url"));
-        when(keycloakService.createUser(userPending)).thenReturn(responseBuilder.build());
-        when(keycloakService.findUser(userPending)).thenReturn(getUserRepresentation(USER_ID));
         when(keycloakService.changeUserStatus(any(String.class), any(Boolean.class),
                 any(Errors.class))).thenReturn(null);
 
@@ -227,7 +227,7 @@ public class UserServiceImplTest extends BaseUserTest {
     @Test
     public void testUpdateUser() throws URISyntaxException {
 
-        User userCreated = createUser(userPending, USER_ID);
+        User userCreated = createUser(userPending);
 
         userService.updateUser(userCreated, setNewData(getBaseUser()), errors);
         Optional<User> userReturned = userRepository.findById(userCreated.getId());
@@ -244,7 +244,7 @@ public class UserServiceImplTest extends BaseUserTest {
     @Test
     public void testDeleteUser() throws URISyntaxException {
 
-        User userCreated = createUser(userPending, USER_ID);
+        User userCreated = createUser(userPending);
 
         userService.deleteUser(userCreated);
 
@@ -256,8 +256,7 @@ public class UserServiceImplTest extends BaseUserTest {
     @Test
     public void testDeleteUserFoundInKeycloak() throws URISyntaxException {
 
-        createUser(userPending, USER_ID);
-        when(keycloakService.findUser(userPending)).thenReturn(new UserRepresentation());
+        createUser(userPending);
 
         userService.deleteUser(userPending);
         Optional<User> userReturned = userRepository.findById(userPending.getId());
@@ -289,7 +288,7 @@ public class UserServiceImplTest extends BaseUserTest {
 
         userPending.setUserType(UserType.BSP);
 
-        User userCreated = createUser(userPending, USER_ID);
+        User userCreated = createUser(userPending);
 
         userPending.setTemplates(new ArrayList<>());
         userPending.getTemplates().add(userTemplate);
@@ -301,7 +300,10 @@ public class UserServiceImplTest extends BaseUserTest {
         commonResponseAssertions(userPending, userReturned);
     }
 
+    private User createUser(User user) throws URISyntaxException {
 
+        return createUser(user, USER_ID);
+    }
 
     private User createUser(User user, String userId) throws URISyntaxException {
 
@@ -321,10 +323,63 @@ public class UserServiceImplTest extends BaseUserTest {
         return newUser;
     }
 
+    private UserRepresentation getUserRepresentation() {
+
+        return getUserRepresentation(USER_ID);
+    }
+
     private UserRepresentation getUserRepresentation(String userId) {
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.setId(userId);
         return userRepresentation;
+    }
+
+    @Test
+    public void testAddsDefaultPreferencesWhenUserIsCreated() throws URISyntaxException {
+
+        userPending = userService.createUser(userPending, errors);
+
+        assertThat(userPending.getPreferences(), notNullValue());
+        assertThat(userPending.getPreferences().getLanguage(),
+                equalTo(Languages.DEFAULT.toString()));
+        assertThat(userPending.getPreferences().getTimeZone(), equalTo(TimeZones.DEFAULT));
+    }
+
+    @Test
+    public void testUpdatesUserPreferencesFromPreferencesInstance() throws URISyntaxException {
+
+        User userCreated = createUser(userPending);
+
+        UserPreferences returnedUserPreferences =
+                userService.updateUserPreferences(userCreated, getUpdatedPreferences());
+
+        assertThat(returnedUserPreferences.getLanguage(), equalTo(Languages.DE.toString()));
+        assertThat(returnedUserPreferences.getTimeZone(), equalTo("Europe/Berlin"));
+    }
+
+    private UserPreferences getUpdatedPreferences() {
+
+        UserPreferences userPreferences = new UserPreferences();
+        userPreferences.setLanguage(Languages.DE.toString());
+        userPreferences.setTimeZone("Europe/Berlin");
+
+        return userPreferences;
+    }
+
+    @Test
+    public void testUpdatesUserPreferencesFromUserInstance() throws URISyntaxException {
+
+        User userCreated = createUser(userPending);
+
+        User updatedUser = getBaseUser();
+        updatedUser.setPreferences(getUpdatedPreferences());
+
+        User savedUser = userService.updateUser(userCreated, updatedUser, errors);
+
+        assertThat(savedUser.getPreferences().getLanguage(),
+                equalTo(updatedUser.getPreferences().getLanguage()));
+        assertThat(savedUser.getPreferences().getTimeZone(),
+                equalTo(updatedUser.getPreferences().getTimeZone()));
     }
 
 }
