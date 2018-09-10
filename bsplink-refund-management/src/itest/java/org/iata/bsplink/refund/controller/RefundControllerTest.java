@@ -288,7 +288,7 @@ public class RefundControllerTest {
     @Test
     public void testUpdateRefundUnderInvestigationStatus() throws Exception {
         Refund refundCopied = saveAndCopyRefundWithStatus(RefundStatus.UNDER_INVESTIGATION);
-        refundCopied.setPassenger("newPassenger");
+        refundCopied.setPassenger("NEWPASSENGER");
 
         mockMvc.perform(put(BASE_URI + "/" + refundCopied.getId())
                 .content(mapper.writeValueAsString(refundCopied))

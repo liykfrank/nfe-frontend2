@@ -112,7 +112,7 @@ public class Refund {
 
     @ApiModelProperty(value = "Passenger")
     @Size(max = 49, message = INCORRECT_SIZE + "max 49")
-    @Pattern(regexp = "^[\\x20\\x2D-\\x39\\x41-\\x5A\\x61-\\x7A]*$", message = INCORRECT_FORMAT)
+    @Pattern(regexp = "^[\\x20\\x2D-\\x39\\x41-\\x5A]*$", message = INCORRECT_FORMAT)
     private String passenger;
 
     @ApiModelProperty(value = "Amounts", required = true)
@@ -131,8 +131,7 @@ public class Refund {
 
     @ApiModelProperty(value = "Waiver Code", required = false)
     @Size(max = 14, message = INCORRECT_SIZE + "max 14")
-
-    @Pattern(regexp = "^[A-Za-z0-9 /.-]*$", message = INCORRECT_FORMAT)
+    @Pattern(regexp = "^[A-Z0-9 /.-]*$", message = INCORRECT_FORMAT)
     private String waiverCode;
 
     @ApiModelProperty(value = "Tour Code", required = false)

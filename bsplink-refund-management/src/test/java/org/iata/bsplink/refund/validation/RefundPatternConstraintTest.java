@@ -55,9 +55,9 @@ public class RefundPatternConstraintTest {
      */
     public Object[][] parametersForTestIsValid() {
         return new Object[][] {
-            { "passenger", "Pepe" },
+            { "passenger", "PEPE" },
             { "passenger", "DR. MED. A-B" },
-            { "waiverCode", "Ab12/Z.0-" },
+            { "waiverCode", "AB12/Z.0-" },
             { "tourCode", "ABC" },
             { "settlementAuthorisationCode", "ABC d12" },
             { "statisticalCode", "INT" },
@@ -75,7 +75,10 @@ public class RefundPatternConstraintTest {
         return new Object[][] {
             { "passenger", "X" + (char)(Integer.parseInt("40", 16)) },
             { "passenger", "X" + (char)(Integer.parseInt("5B", 16)) },
+            { "passenger", "paszenger" },
             { "waiverCode", "Ñ" },
+            { "waiverCode", "AAa" },
+            { "waiverCode", "zZZ" },
             { "tourCode", "X" + (char)(Integer.parseInt("22", 16)) },
             { "tourCode", "X" + (char)(Integer.parseInt("7F", 16)) },
             { "settlementAuthorisationCode", "ABC,d12" },
