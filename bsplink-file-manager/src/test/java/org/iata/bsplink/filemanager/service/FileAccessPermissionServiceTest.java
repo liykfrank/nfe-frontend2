@@ -9,22 +9,37 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.iata.bsplink.filemanager.model.entity.BsplinkFile;
 import org.iata.bsplink.filemanager.model.entity.FileAccessPermission;
+import org.iata.bsplink.filemanager.model.entity.FileAccessType;
 import org.iata.bsplink.filemanager.model.repository.FileAccessPermissionRepository;
 import org.junit.Before;
 import org.junit.Test;
 
 public class FileAccessPermissionServiceTest {
 
+    private FileAccessPermissionRepository repository;
+    private FileAccessPermissionService service;
 
-    FileAccessPermissionRepository repository;
-    FileAccessPermissionService service;
+    private String fileNameAuthorized;
+    private String fileNameUnauthorized;
 
     @Before
     public void setUp() {
         repository = mock(FileAccessPermissionRepository.class);
+
+        when(repository.existsByUserAndIsoCountryCodeAndFileTypeAndAccess(
+                "user", "ES", "ab", FileAccessType.READ)).thenReturn(true);
+
+        when(repository.existsByUserAndIsoCountryCodeAndFileTypeAndAccess(
+                "user", "ES", "xy", FileAccessType.READ)).thenReturn(false);
+
+        fileNameAuthorized = "ESab2203_123456";
+        fileNameUnauthorized = "ESxy2203_123456";
+
         service = new FileAccessPermissionService(repository);
     }
 
@@ -58,6 +73,81 @@ public class FileAccessPermissionServiceTest {
                 fap.getIsoCountryCode(),
                 fap.getFileType(),
                 fap.getAccess());
+    }
+
+
+    @Test
+    public void testIsFileAccessNotPermittedForUserWithFileNameNull() {
+        assertFalse(service.isFileAccessPermittedForUser(null, FileAccessType.READ, "user"));
+    }
+
+
+    @Test
+    public void testIsFileAccessNotPermittedForUserWithTooShortFileName() {
+        assertFalse(service.isFileAccessPermittedForUser("123", FileAccessType.READ, "user"));
+    }
+
+
+    @Test
+    public void testIsFileAccessNotPermittedForUserWithUserNull() {
+        assertFalse(service.isFileAccessPermittedForUser(fileNameAuthorized,
+                FileAccessType.READ, null));
+    }
+
+
+    @Test
+    public void testIsFileAccessPermitted() {
+        assertTrue(service.isFileAccessPermittedForUser(fileNameAuthorized,
+                FileAccessType.READ, "user"));
+    }
+
+
+    @Test
+    public void testIsFileAccessNotPermitted() {
+        assertFalse(service.isFileAccessPermittedForUser(fileNameUnauthorized,
+                FileAccessType.READ, "user"));
+    }
+
+
+    @Test
+    public void testIsBsplinkFileAccessPermittedForUser() {
+        BsplinkFile file = new BsplinkFile();
+        file.setName(fileNameAuthorized);
+        assertTrue(service.isBsplinkFileAccessPermittedForUser(file,
+                FileAccessType.READ, "user"));
+    }
+
+
+    @Test
+    public void testIsBsplinkFileAccessNotPermittedForUser() {
+        BsplinkFile file = new BsplinkFile();
+        file.setName(fileNameUnauthorized);
+        assertFalse(service.isBsplinkFileAccessPermittedForUser(file,
+                FileAccessType.READ, "user"));
+    }
+
+
+    @Test
+    public void testIsBsplinkFilesAccessPermittedForUser() {
+        BsplinkFile file = new BsplinkFile();
+        file.setName(fileNameAuthorized);
+
+        List<BsplinkFile> files = Arrays.asList(file);
+        assertTrue(service.isBsplinkFilesAccessPermittedForUser(files,
+                FileAccessType.READ, "user"));
+    }
+
+
+    @Test
+    public void testIsBsplinkFilesAccessNotPermittedForUser() {
+        BsplinkFile file1 = new BsplinkFile();
+        file1.setName(fileNameAuthorized);
+        BsplinkFile file2 = new BsplinkFile();
+        file2.setName(fileNameUnauthorized);
+
+        List<BsplinkFile> files = Arrays.asList(file1, file2);
+        assertFalse(service.isBsplinkFilesAccessPermittedForUser(files,
+                FileAccessType.READ, "user"));
     }
 
 
