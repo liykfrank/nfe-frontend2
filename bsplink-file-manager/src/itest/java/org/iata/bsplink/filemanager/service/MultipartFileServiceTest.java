@@ -21,6 +21,7 @@ import org.apache.commons.io.FileUtils;
 import org.iata.bsplink.filemanager.configuration.ApplicationConfiguration;
 import org.iata.bsplink.filemanager.configuration.BsplinkFileBasicConfig;
 import org.iata.bsplink.filemanager.exception.BsplinkValidationException;
+import org.iata.bsplink.filemanager.model.entity.FileAccessType;
 import org.iata.bsplink.filemanager.response.SimpleResponse;
 import org.iata.bsplink.yadeutils.YadeUtils;
 import org.junit.After;
@@ -131,8 +132,52 @@ public class MultipartFileServiceTest {
 
         assertEquals(Integer.valueOf(HttpStatus.OK.value()),
                 simpleResponsesAlreadySaved.get(0).getStatus());
-
     }
+
+
+    @Test
+    public void testSendMultipleUnauthorized() throws Exception {
+
+        String fileName = "abcdef";
+
+        when(fileAccessPermissionService.isFileAccessPermittedForUser(
+                fileName, FileAccessType.WRITE, user)).thenReturn(false);
+
+        List<MultipartFile> multipartFiles = Arrays.asList(
+                new MockMultipartFile("file", fileName, "text/plain",
+                        "abcdefghi".getBytes()));
+
+        List<SimpleResponse> simpleResponses =
+                multipartFileService.saveFiles(multipartFiles, user);
+
+        assertEquals(1, simpleResponses.size());
+        assertEquals(fileName, simpleResponses.get(0).getSubject());
+        assertEquals(Integer.valueOf(HttpStatus.UNAUTHORIZED.value()),
+                simpleResponses.get(0).getStatus());
+    }
+
+
+    @Test
+    public void testSendMultipleUnallowedFileExtension() throws Exception {
+
+        String fileName = "abcdef.gil";
+
+        List<MultipartFile> multipartFiles = Arrays.asList(
+                new MockMultipartFile("file", fileName, "text/plain",
+                        "abc".getBytes()));
+
+        List<SimpleResponse> simpleResponses =
+                multipartFileService.saveFiles(multipartFiles, user);
+
+        assertEquals(1, simpleResponses.size());
+        assertEquals(fileName, simpleResponses.get(0).getSubject());
+        assertEquals(Integer.valueOf(HttpStatus.BAD_REQUEST.value()),
+                simpleResponses.get(0).getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST.name() + ": "
+                + MultipartFileService.BAD_REQUEST_MSG_EXTENSION,
+                simpleResponses.get(0).getMessage());
+    }
+
 
     @Test
     public void testSendFileNameTooLong() throws Exception {
