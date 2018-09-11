@@ -113,7 +113,7 @@ public class BsplinkFileController {
         }
 
         if (!fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
-                bsFile, FileAccessType.READ, principal.getName())) {
+                bsFile, FileAccessType.DOWNLOAD, principal.getName())) {
 
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -158,7 +158,7 @@ public class BsplinkFileController {
         }
 
         if (!fileAccessPermissionService.isBsplinkFilesAccessPermittedForUser(
-                bsFileList, FileAccessType.READ, principal.getName())) {
+                bsFileList, FileAccessType.DOWNLOAD, principal.getName())) {
 
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -198,7 +198,7 @@ public class BsplinkFileController {
         }
 
         if (!fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
-                bsFile, FileAccessType.WRITE, principal.getName())) {
+                bsFile, FileAccessType.DOWNLOAD, principal.getName())) {
 
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }

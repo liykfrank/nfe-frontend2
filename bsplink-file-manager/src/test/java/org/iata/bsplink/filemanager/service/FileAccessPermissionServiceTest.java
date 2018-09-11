@@ -32,10 +32,10 @@ public class FileAccessPermissionServiceTest {
         repository = mock(FileAccessPermissionRepository.class);
 
         when(repository.existsByUserAndIsoCountryCodeAndFileTypeAndAccess(
-                "user", "ES", "ab", FileAccessType.READ)).thenReturn(true);
+                "user", "ES", "ab", FileAccessType.DOWNLOAD)).thenReturn(true);
 
         when(repository.existsByUserAndIsoCountryCodeAndFileTypeAndAccess(
-                "user", "ES", "xy", FileAccessType.READ)).thenReturn(false);
+                "user", "ES", "xy", FileAccessType.DOWNLOAD)).thenReturn(false);
 
         fileNameAuthorized = "ESab2203_123456";
         fileNameUnauthorized = "ESxy2203_123456";
@@ -78,34 +78,34 @@ public class FileAccessPermissionServiceTest {
 
     @Test
     public void testIsFileAccessNotPermittedForUserWithFileNameNull() {
-        assertFalse(service.isFileAccessPermittedForUser(null, FileAccessType.READ, "user"));
+        assertFalse(service.isFileAccessPermittedForUser(null, FileAccessType.DOWNLOAD, "user"));
     }
 
 
     @Test
     public void testIsFileAccessNotPermittedForUserWithTooShortFileName() {
-        assertFalse(service.isFileAccessPermittedForUser("123", FileAccessType.READ, "user"));
+        assertFalse(service.isFileAccessPermittedForUser("123", FileAccessType.DOWNLOAD, "user"));
     }
 
 
     @Test
     public void testIsFileAccessNotPermittedForUserWithUserNull() {
         assertFalse(service.isFileAccessPermittedForUser(fileNameAuthorized,
-                FileAccessType.READ, null));
+                FileAccessType.DOWNLOAD, null));
     }
 
 
     @Test
     public void testIsFileAccessPermitted() {
         assertTrue(service.isFileAccessPermittedForUser(fileNameAuthorized,
-                FileAccessType.READ, "user"));
+                FileAccessType.DOWNLOAD, "user"));
     }
 
 
     @Test
     public void testIsFileAccessNotPermitted() {
         assertFalse(service.isFileAccessPermittedForUser(fileNameUnauthorized,
-                FileAccessType.READ, "user"));
+                FileAccessType.DOWNLOAD, "user"));
     }
 
 
@@ -114,7 +114,7 @@ public class FileAccessPermissionServiceTest {
         BsplinkFile file = new BsplinkFile();
         file.setName(fileNameAuthorized);
         assertTrue(service.isBsplinkFileAccessPermittedForUser(file,
-                FileAccessType.READ, "user"));
+                FileAccessType.DOWNLOAD, "user"));
     }
 
 
@@ -123,7 +123,7 @@ public class FileAccessPermissionServiceTest {
         BsplinkFile file = new BsplinkFile();
         file.setName(fileNameUnauthorized);
         assertFalse(service.isBsplinkFileAccessPermittedForUser(file,
-                FileAccessType.READ, "user"));
+                FileAccessType.DOWNLOAD, "user"));
     }
 
 
@@ -134,7 +134,7 @@ public class FileAccessPermissionServiceTest {
 
         List<BsplinkFile> files = Arrays.asList(file);
         assertTrue(service.isBsplinkFilesAccessPermittedForUser(files,
-                FileAccessType.READ, "user"));
+                FileAccessType.DOWNLOAD, "user"));
     }
 
 
@@ -147,7 +147,7 @@ public class FileAccessPermissionServiceTest {
 
         List<BsplinkFile> files = Arrays.asList(file1, file2);
         assertFalse(service.isBsplinkFilesAccessPermittedForUser(files,
-                FileAccessType.READ, "user"));
+                FileAccessType.DOWNLOAD, "user"));
     }
 
 

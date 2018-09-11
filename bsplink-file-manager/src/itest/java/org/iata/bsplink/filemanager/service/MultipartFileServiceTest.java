@@ -141,7 +141,7 @@ public class MultipartFileServiceTest {
         String fileName = "abcdef";
 
         when(fileAccessPermissionService.isFileAccessPermittedForUser(
-                fileName, FileAccessType.WRITE, user)).thenReturn(false);
+                fileName, FileAccessType.UPLOAD, user)).thenReturn(false);
 
         List<MultipartFile> multipartFiles = Arrays.asList(
                 new MockMultipartFile("file", fileName, "text/plain",

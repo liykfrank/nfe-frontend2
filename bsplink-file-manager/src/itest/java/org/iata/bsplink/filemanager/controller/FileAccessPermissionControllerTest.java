@@ -233,7 +233,7 @@ public class FileAccessPermissionControllerTest {
         FileAccessPermission fap;
 
         fap = new FileAccessPermission();
-        fap.setAccess(FileAccessType.WRITE);
+        fap.setAccess(FileAccessType.UPLOAD);
         fap.setFileType("xx");
         fap.setIsoCountryCode("IT");
         fap.setUser("USER1");
@@ -242,14 +242,14 @@ public class FileAccessPermissionControllerTest {
         faps.add(fap);
 
         fap = new FileAccessPermission();
-        fap.setAccess(FileAccessType.READ);
+        fap.setAccess(FileAccessType.DOWNLOAD);
         fap.setFileType("xx");
         fap.setIsoCountryCode("IT");
         fap.setUser("USER1");
         faps.add(fap);
 
         fap = new FileAccessPermission();
-        fap.setAccess(FileAccessType.WRITE);
+        fap.setAccess(FileAccessType.UPLOAD);
         fap.setFileType("yy");
         fap.setIsoCountryCode("SG");
         fap.setUser("USER2");

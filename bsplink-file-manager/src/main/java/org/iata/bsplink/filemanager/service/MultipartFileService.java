@@ -84,7 +84,7 @@ public class MultipartFileService {
             } else if (!isFileExtensionAllowed(fileName)) {
                 simpleResponse = badRequestResponse(BAD_REQUEST_MSG_EXTENSION);
             } else if (!fileAccessPermissionService.isFileAccessPermittedForUser(fileName,
-                    FileAccessType.WRITE, user)) {
+                    FileAccessType.UPLOAD, user)) {
                 simpleResponse = new SimpleResponse(null, HttpStatus.UNAUTHORIZED,
                         HttpStatus.BAD_REQUEST.name() + ": " + MSG_UNAUTHORIZED);
             } else {

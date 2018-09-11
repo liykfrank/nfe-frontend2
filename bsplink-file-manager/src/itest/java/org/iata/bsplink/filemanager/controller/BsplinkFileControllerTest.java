@@ -375,7 +375,7 @@ public class BsplinkFileControllerTest {
         Long id = bsplinkFile.getId();
 
         when(fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
-                bsplinkFile, FileAccessType.READ, principal.getName()))
+                bsplinkFile, FileAccessType.DOWNLOAD, principal.getName()))
                 .thenReturn(false);
 
         mockMvc.perform(get("/v1/files/" + id).principal(principal))
@@ -395,7 +395,7 @@ public class BsplinkFileControllerTest {
         Long id = bsplinkFile.getId();
 
         when(fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
-                bsplinkFile, FileAccessType.READ, principal.getName()))
+                bsplinkFile, FileAccessType.DOWNLOAD, principal.getName()))
                 .thenReturn(true);
 
         mockMvc.perform(get("/v1/files/" + id).principal(principal))
@@ -414,7 +414,7 @@ public class BsplinkFileControllerTest {
         Long id = bsplinkFile.getId();
 
         when(fileAccessPermissionService.isBsplinkFilesAccessPermittedForUser(
-                Arrays.asList(bsplinkFile), FileAccessType.READ, principal.getName()))
+                Arrays.asList(bsplinkFile), FileAccessType.DOWNLOAD, principal.getName()))
                 .thenReturn(false);
 
         mockMvc.perform(get("/v1/files/zip?id=" + id).principal(principal))
@@ -435,7 +435,7 @@ public class BsplinkFileControllerTest {
         Long id = bsplinkFile.getId();
 
         when(fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
-                bsplinkFile, FileAccessType.WRITE, principal.getName()))
+                bsplinkFile, FileAccessType.DOWNLOAD, principal.getName()))
                 .thenReturn(false);
 
         mockMvc.perform(delete("/v1/files/" + id).principal(principal)).andExpect(status()
@@ -464,10 +464,10 @@ public class BsplinkFileControllerTest {
         bsplinkFile2.getId();
 
         when(fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
-                bsplinkFile1, FileAccessType.WRITE, principal.getName()))
+                bsplinkFile1, FileAccessType.DOWNLOAD, principal.getName()))
                 .thenReturn(false);
         when(fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
-                bsplinkFile2, FileAccessType.WRITE, principal.getName()))
+                bsplinkFile2, FileAccessType.DOWNLOAD, principal.getName()))
                 .thenReturn(false);
 
         mockMvc.perform(

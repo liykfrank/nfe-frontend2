@@ -37,9 +37,9 @@ public class FileAccessPermission {
     @Pattern(regexp = "[a-z0-9]{2}")
     private String fileType;
 
-    @ApiModelProperty(value = "File Access Type (READ/ WRITE)", required = true)
+    @ApiModelProperty(value = "File Access Type (DOWNLOAD/ UPLOAD)", required = true)
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(length = 5)
+    @Column(length = 8)
     private FileAccessType access;
 }

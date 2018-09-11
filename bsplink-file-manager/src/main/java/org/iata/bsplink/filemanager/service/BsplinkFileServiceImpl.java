@@ -126,7 +126,7 @@ public class BsplinkFileServiceImpl implements BsplinkFileService {
                     if (BsplinkFileStatus.DELETED.equals(optionalFile.get().getStatus())) {
                         result.add(new EntityActionResponse<>(id, HttpStatus.BAD_REQUEST));
                     } else if (!fileAccessPermissionService.isBsplinkFileAccessPermittedForUser(
-                            optionalFile.get(), FileAccessType.WRITE, user)) {
+                            optionalFile.get(), FileAccessType.DOWNLOAD, user)) {
                         result.add(new EntityActionResponse<>(id, HttpStatus.UNAUTHORIZED));
                     } else {
                         BsplinkFile file = optionalFile.get();
