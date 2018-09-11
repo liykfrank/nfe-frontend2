@@ -4,7 +4,7 @@
     {
       "id": 1,
       "ticketDocumentNumber": "",
-      "dateOfIssue": "2018-09-11T15:08:15.459Z",
+      "dateOfIssue": "2018-09-11T15:43:08.876Z",
       "isoCountryCode": "AA",
       "billingPeriod": 2018066,
       "agentCode": "78200021",
@@ -55,7 +55,7 @@
     {
       "id": 2,
       "ticketDocumentNumber": "",
-      "dateOfIssue": "2018-09-11T15:08:21.760Z",
+      "dateOfIssue": "2018-09-11T15:43:15.045Z",
       "isoCountryCode": "AA",
       "billingPeriod": 2018066,
       "agentCode": "78200021",
@@ -106,7 +106,7 @@
     {
       "id": 3,
       "ticketDocumentNumber": "",
-      "dateOfIssue": "2018-09-11T15:08:29.775Z",
+      "dateOfIssue": "2018-09-11T15:43:23.125Z",
       "isoCountryCode": "AA",
       "billingPeriod": 2018066,
       "agentCode": "78200021",
@@ -157,7 +157,7 @@
     {
       "id": 4,
       "ticketDocumentNumber": "",
-      "dateOfIssue": "2018-09-11T15:08:36.123Z",
+      "dateOfIssue": "2018-09-11T15:43:29.632Z",
       "isoCountryCode": "AA",
       "billingPeriod": 2018066,
       "agentCode": "78200021",
