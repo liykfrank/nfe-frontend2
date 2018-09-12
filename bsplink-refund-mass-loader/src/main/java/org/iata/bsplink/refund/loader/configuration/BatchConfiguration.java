@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.iata.bsplink.refund.loader.dto.Refund;
+import org.iata.bsplink.refund.loader.job.CustomJobLauncherCommandLineRunner;
 import org.iata.bsplink.refund.loader.job.FileValidatorTasklet;
 import org.iata.bsplink.refund.loader.job.JobCompletionNotificationListener;
 import org.iata.bsplink.refund.loader.job.JobExitCodeGeneratorListener;
@@ -16,12 +17,15 @@ import org.iata.bsplink.refund.loader.model.record.Record;
 import org.iata.bsplink.refund.loader.model.record.RecordIdentifier;
 import org.iata.bsplink.refund.loader.model.record.RecordLayout;
 import org.iata.bsplink.refund.loader.model.record.RecordLayouts;
+import org.iata.bsplink.refund.loader.report.SimpleReportPrinter;
 import org.iata.bsplink.refund.loader.validation.RefundLoaderParametersValidator;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
@@ -35,9 +39,13 @@ import org.springframework.batch.item.file.transform.LineTokenizer;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.batch.BatchProperties;
+import org.springframework.boot.autoconfigure.batch.JobLauncherCommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
 
 @Configuration
 public class BatchConfiguration {
@@ -231,6 +239,29 @@ public class BatchConfiguration {
         }
 
         return fieldSetMappers;
+    }
+
+    /**
+     * Creates a JobLauncherCommandLineRunner that can manage job exceptions.
+     *
+     * @see org.springframework.boot.autoconfigure.batch.BatchAutoConfiguration
+     */
+    @Bean
+    @ConditionalOnProperty(prefix = "spring.batch.job", name = "enabled", havingValue = "true",
+            matchIfMissing = true)
+    public JobLauncherCommandLineRunner jobLauncherCommandLineRunner(BatchProperties properties,
+            JobLauncher jobLauncher, JobExplorer jobExplorer) {
+
+        JobLauncherCommandLineRunner runner = new CustomJobLauncherCommandLineRunner(jobLauncher,
+                jobExplorer, new SimpleReportPrinter());
+
+        String jobNames = properties.getJob().getNames();
+
+        if (StringUtils.hasText(jobNames)) {
+            runner.setJobNames(jobNames);
+        }
+
+        return runner;
     }
 
 }

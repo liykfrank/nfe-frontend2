@@ -1,31 +1,22 @@
 package org.iata.bsplink.refund.loader.report;
 
-import static org.apache.commons.io.FileUtils.writeStringToFile;
 import static org.apache.commons.lang.StringUtils.capitalize;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import lombok.extern.apachecommons.CommonsLog;
-
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
-import org.iata.bsplink.refund.loader.exception.RefundLoaderException;
 import org.springframework.stereotype.Component;
 
 /**
  * Generates the report file with the results of the refund file load.
  */
 @Component
-@CommonsLog
-public class ProcessReportPrinter {
+public class ProcessReportPrinter extends BaseErrorsReportPrinter {
 
     private static final String SUCCESSFULLY_MESSAGE =
-            "All transactions have been processed successfully.\n";
+            "All transactions have been processed successfully.";
 
     private RefundLoaderErrorToFieldLayoutMapper layoutFieldMapper;
 
@@ -34,63 +25,35 @@ public class ProcessReportPrinter {
         this.layoutFieldMapper = layoutFieldMapper;
     }
 
-    /**
-     * Generates the report file.
-     */
-    public void print(List<RefundLoaderError> errors, String reportFileName) {
+    @Override
+    protected List<String> getLinesToPrint(List<RefundLoaderError> errors) {
 
         layoutFieldMapper.addFieldLayouts(errors);
 
-        log.info("Refund loader errors: " + errors.size());
-        errors.stream().forEach(x -> log.error(x.toString()));
-
-        File reportFile = new File(reportFileName);
+        List<String> stringErrors = new ArrayList<>();
 
         if (errors.isEmpty()) {
 
-            generateReportProcessedSuccessfully(reportFile, SUCCESSFULLY_MESSAGE);
+            stringErrors.add(SUCCESSFULLY_MESSAGE);
 
         } else {
 
-            generateReportProcessedWithErrors(reportFile, errors);
+            addFormattedListOfErrors(errors, stringErrors);
         }
 
-        log.info("Result file generated: " + reportFileName);
-
+        return stringErrors;
     }
 
-    private void generateReportProcessedSuccessfully(File reportFile, String content) {
+    private void addFormattedListOfErrors(List<RefundLoaderError> errors,
+            List<String> stringErrors) {
 
-        try {
+        for (RefundLoaderError error : errors) {
 
-            writeStringToFile(reportFile, content, Charset.defaultCharset());
-
-        } catch (Exception exception) {
-
-            throw new RefundLoaderException(exception);
+            stringErrors.add(formatError(error));
         }
     }
 
-    private void generateReportProcessedWithErrors(File reportFile,
-            List<RefundLoaderError> errors) {
-
-        try (FileWriter writer = new FileWriter(reportFile);
-                BufferedWriter bufferedWriter = new BufferedWriter(writer);
-                PrintWriter printWriter = new PrintWriter(bufferedWriter);) {
-
-            for (RefundLoaderError error : errors) {
-
-                printError(error, printWriter);
-            }
-
-        } catch (Exception exception) {
-
-            throw new RefundLoaderException(exception);
-        }
-
-    }
-
-    private void printError(RefundLoaderError error, PrintWriter printWriter) {
+    private String formatError(RefundLoaderError error) {
 
         String recordIdentifierName = error.getRecordIdentifier() != null
                 ? error.getRecordIdentifier().name()
@@ -105,7 +68,7 @@ public class ProcessReportPrinter {
             abbreviation = error.getFieldLayout().getAbbreviation();
         }
 
-        printWriter.printf(
+        String formattedError = String.format(
                 "Line: %5s TRNN: %6s    Record: %4s    Element: #%2s    %4s%n",
                 Objects.toString(error.getLineNumber(), ""),
                 Objects.toString(error.getTransactionNumber(), ""),
@@ -113,7 +76,9 @@ public class ProcessReportPrinter {
                 elementNumber,
                 abbreviation);
 
-        printWriter.printf("ERROR: %s%n%n", capitalize(error.getMessage()));
+        formattedError += String.format("ERROR: %s%n", capitalize(error.getMessage()));
+
+        return formattedError;
     }
 
 }

@@ -107,7 +107,7 @@ public class ProcessReportPrinterTest {
     }
 
     @Test
-    public void testLogsErrors() throws Exception {
+    public void testLogsErrors() {
 
         errors = getValidationErrorsTransactionPhase();
 
@@ -133,6 +133,14 @@ public class ProcessReportPrinterTest {
         Resource actual = new FileSystemResource(reportFileName);
 
         assertFileEquals(expected, actual);
+    }
+
+    @Test
+    public void testLogsGeneratedFileName() {
+
+        printer.print(errors, reportFileName);
+
+        capture.expect(containsString("File generated: " + reportFileName));
     }
 
 }

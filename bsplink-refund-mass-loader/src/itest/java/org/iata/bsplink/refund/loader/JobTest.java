@@ -22,7 +22,9 @@ import org.iata.bsplink.refund.loader.dto.RefundStatusRequest;
 import org.iata.bsplink.refund.loader.job.RefundJobParametersConverter;
 import org.iata.bsplink.refund.loader.restclient.RefundClient;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
@@ -44,6 +46,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class JobTest {
 
     private static long REFUND_ID = 1;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Autowired
     private Job job;
@@ -181,4 +186,5 @@ public class JobTest {
 
         assertThat(validationStep.isAllowStartIfComplete(), equalTo(true));
     }
+
 }

@@ -3,9 +3,8 @@ package org.iata.bsplink.refund.loader.job;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.iata.bsplink.refund.loader.configuration.BatchConfiguration.LOADER_STEP_NAME;
 import static org.iata.bsplink.refund.loader.configuration.BatchConfiguration.VALIDATION_STEP_NAME;
-import static org.iata.bsplink.refund.loader.job.RefundJobParametersConverter.OUTPUT_PATH;
-import static org.iata.bsplink.refund.loader.job.RefundJobParametersConverter.REQUIRED_PARAMETER;
 import static org.iata.bsplink.refund.loader.job.ReportPrinterStepListener.VALIDATION_ERRORS_KEY;
+import static org.iata.bsplink.refund.loader.test.Tools.getJobParameters;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -14,9 +13,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.iata.bsplink.refund.loader.error.RefundLoaderError;
 import org.iata.bsplink.refund.loader.report.ProcessReportPrinter;
@@ -26,8 +23,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.JobParameter;
-import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.boot.test.rule.OutputCapture;
@@ -75,16 +70,6 @@ public class ReportPrinterStepListenerTest {
         listener.beforeStep(stepExecution);
 
         capture = new OutputCapture();
-    }
-
-    private JobParameters getJobParameters(String outputPath, String inputFileName) {
-
-        Map<String, JobParameter> parameters = new HashMap<>();
-
-        parameters.put(OUTPUT_PATH, new JobParameter(outputPath, false));
-        parameters.put(REQUIRED_PARAMETER, new JobParameter(inputFileName, false));
-
-        return new JobParameters(parameters);
     }
 
     @Test
