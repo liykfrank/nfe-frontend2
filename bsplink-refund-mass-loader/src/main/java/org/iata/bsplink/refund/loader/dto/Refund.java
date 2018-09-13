@@ -11,7 +11,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 public class Refund extends RefundEditable {
 
     private Long id;
